@@ -1,3 +1,6 @@
+import Layout from "../components/Layout"
+import "./globals.css"
+
 export const metadata = {
   title: 'Mi App en Docker',
   description: 'Generado por Next.js',
@@ -10,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <Layout>{children}</Layout>
+      </body>
     </html>
   )
 }
