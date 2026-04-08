@@ -4,15 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight } from "lucide-react";
 import clsx from "clsx";
-
-interface RegisterFormData {
-  nombre: string;
-  apellido: string;
-  carrera: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { apiClient, type ApiError } from "../../lib/apiClient";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { schemaRegistro, type RegistroFormData } from "../../schemas/zodSchemas";
 
 const inputClass = (hasError: boolean) =>
   clsx(
@@ -21,20 +16,67 @@ const inputClass = (hasError: boolean) =>
     hasError ? "border-red-400" : "border-gray-300"
   );
 
+export const extractCarnetFromEmail = (email: string): number | null => {
+  // Verificar que el email tenga el formato esperado
+  const match = email.match(/^[a-zA-Z]+(\d+)@uvg\.edu\.gt$/);
+  if (!match) {
+    return null;
+  }
+
+  return Number(match[1]);
+};
+
 export default function RegistroForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>();
+  } = useForm<RegistroFormData>({
+    resolver: zodResolver(schemaRegistro),
+    defaultValues: {
+      nombre: "",
+      apellido: "",
+      email_institucional: "",
+      password: "",
+      confirmar_password: "",
+      url_foto_perfil: "https://i.pravatar.cc/150?u=vendedor",
+      descripcion: "Sin descripción",
+    },
+  });
 
-  const onSubmit = async (data: RegisterFormData) => {
-    // TODO: conectar con el backend
-    console.log(data);
+  const onSubmit = async (data: RegistroFormData) => {
+    try {
+      setServerError(null);
+
+      const carnet = extractCarnetFromEmail(data.email_institucional);
+
+      if (!carnet) {
+        setServerError("El correo no es válido");
+        return;
+      }
+
+      await apiClient.post("/api/auth/register", {
+        nombre: `${data.nombre} ${data.apellido}`.trim(),
+        carnet,
+        email_institucional: data.email_institucional,
+        password: data.password,
+        url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
+        descripcion: data.descripcion || "Sin descripción",
+      });
+
+      alert(`Registro exitoso. Nuevo usuario creado con el email ${data.email_institucional}\nRedirigiendo a login...`);
+      router.push("/login");
+      router.refresh();
+
+    } catch (error) {
+      const apiError = error as ApiError;
+      setServerError(apiError.message || "No fue posible registrarse");
+    }
   };
 
   return (
@@ -47,7 +89,7 @@ export default function RegistroForm() {
           <input
             type="text"
             placeholder="Michael"
-            {...register("nombre", { required: "Requerido" })}
+            {...register("nombre")}
             className={inputClass(!!errors.nombre)}
           />
           {errors.nombre && (
@@ -60,7 +102,7 @@ export default function RegistroForm() {
           <input
             type="text"
             placeholder="Pérez"
-            {...register("apellido", { required: "Requerido" })}
+            {...register("apellido")}
             className={inputClass(!!errors.apellido)}
           />
           {errors.apellido && (
@@ -76,18 +118,12 @@ export default function RegistroForm() {
         </label>
         <input
           type="email"
-          placeholder="ejemplo@uvg.edu.gt"
-          {...register("email", {
-            required: "El correo es requerido",
-            pattern: {
-              value: /^[^\s@]+@uvg\.edu\.gt$/,
-              message: "Debe ser un correo @uvg.edu.gt",
-            },
-          })}
-          className={inputClass(!!errors.email)}
+          placeholder="tan25987@uvg.edu.gt"
+          {...register("email_institucional")}
+          className={inputClass(!!errors.email_institucional)}
         />
-        {errors.email && (
-          <span className="text-xs text-red-500">{errors.email.message}</span>
+        {errors.email_institucional && (
+          <span className="text-xs text-red-500">{errors.email_institucional.message}</span>
         )}
       </div>
 
@@ -100,10 +136,7 @@ export default function RegistroForm() {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Al menos 8 caracteres"
-            {...register("password", {
-              required: "La contraseña es requerida",
-              minLength: { value: 8, message: "Mínimo 8 caracteres" },
-            })}
+            {...register("password")}
             className={clsx(inputClass(!!errors.password), "pr-10")}
           />
           <button
@@ -128,12 +161,8 @@ export default function RegistroForm() {
           <input
             type={showConfirm ? "text" : "password"}
             placeholder="Al menos 8 caracteres"
-            {...register("confirmPassword", {
-              required: "Confirma tu contraseña",
-              validate: (value) =>
-                value === watch("password") || "Las contraseñas no coinciden",
-            })}
-            className={clsx(inputClass(!!errors.confirmPassword), "pr-10")}
+            {...register("confirmar_password")}
+            className={clsx(inputClass(!!errors.confirmar_password), "pr-10")}
           />
           <button
             type="button"
@@ -143,12 +172,15 @@ export default function RegistroForm() {
             {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
-        {errors.confirmPassword && (
-          <span className="text-xs text-red-500">{errors.confirmPassword.message}</span>
+        {errors.confirmar_password && (
+          <span className="text-xs text-red-500">{errors.confirmar_password.message}</span>
         )}
       </div>
 
       {/* Submit */}
+      {serverError && (
+        <span className="text-xs text-red-500">{serverError}</span>
+      )}
       <button
         type="submit"
         disabled={isSubmitting}

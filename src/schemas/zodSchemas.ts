@@ -9,14 +9,17 @@ export const schemaRegistro = z.object({
     .max(100, "El nombre no puede superar 100 caracteres.")
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, "El nombre solo puede contener letras y espacios."),
 
-  carnet: z
+  apellido: z
     .string()
-    .regex(/^\d{5}$/, "El carnet debe tener 5 dígitos."),
+    .min(2, "El apellido debe tener al menos 2 caracteres.")
+    .max(100, "El apellido no puede superar 100 caracteres.")
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, "El apellido solo puede contener letras y espacios."),
 
   email_institucional: z
     .string()
     .email("El correo no tiene un formato válido.")
-    .endsWith("@uvg.edu.gt", "Debe ser un correo institucional (@uvg.edu.gt)."),
+    .endsWith("@uvg.edu.gt", "Debe ser un correo institucional (@uvg.edu.gt).")
+    .regex(/^[a-zA-Z]+\d+@uvg\.edu\.gt$/, "Debe seguir el formato de correos (ej. tan25987@uvg.edu.gt)"),
 
   password: z
     .string()
