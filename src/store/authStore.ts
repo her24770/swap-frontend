@@ -34,10 +34,14 @@ export const useAuthStore = create<AuthState>()(
 
       login: (usuario, token, rol) => {
         set({ usuario, token, rol });
+        // Guarda el token en cookie para que el middleware del servidor pueda leerlo
+        document.cookie = `swap-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}`;
       },
 
       logout: () => {
         set({ usuario: null, token: null, rol: null });
+        // Elimina la cookie de sesión
+        document.cookie = "swap-token=; path=/; max-age=0";
       },
     }),
     {
