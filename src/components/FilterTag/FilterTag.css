@@ -1,0 +1,26 @@
+/* src/components/FilterTag/FilterTag.css */
+
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    
+    /* Aplicando tus variables */
+    background-color: var(--swap-tertiary-background);
+    border: 1px solid var(--swap-primary-border-color);
+}
+
+.filter-tag:hover {
+    background-color: #d1dfd9; /* Un tono sutilmente más oscuro que el tertiary */
+    border-color: var(--swap-primary-color);
+}
+
+.filter-tag__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--swap-tertiary-text-color);
+    user-select: none; 
+}

@@ -1,0 +1,30 @@
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--radius-md, 8px); 
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s active;
+
+    background-color: var(--swap-primary-color);
+    color: var(--swap-secondary-text-color);
+}
+
+.action-button:hover {
+    filter: brightness(1.1); 
+    box-shadow: 0 4px 12px rgba(0, 115, 41, 0.2);
+}
+
+.action-button__text {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.action-button__icon {
+    display: flex;
+    align-items: center;
+}
