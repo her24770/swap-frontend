@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Menu, UserCircle2, LogOut } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NavbarProps {
   onMenuToggle: () => void;
@@ -11,6 +12,7 @@ interface NavbarProps {
 export default function Navbar({ onMenuToggle }: NavbarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { logout } = useAuth();
 
   // Cierra el dropdown si se hace click fuera
   useEffect(() => {
@@ -25,8 +27,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
 
   const handleLogout = () => {
     setProfileOpen(false);
-    // TODO: lógica de cierre de sesión
-    console.log("Cerrar sesión");
+    logout();
   };
 
   return (
