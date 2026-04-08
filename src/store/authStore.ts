@@ -1,17 +1,30 @@
 import { create } from "zustand";
 
+export interface Usuario {
+  id_usuario: number;
+  nombre: string;
+  carnet: number;
+  email_institucional: string;
+  url_foto_perfil: string;
+  descripcion: string | null;
+}
+
 interface AuthState {
-  usuario: any | null;
+  usuario: Usuario | null;
   token: string | null;
-  rol: string | null;
-  login: (usuario: any, token: string) => void;
+  login: (usuario: Usuario, token: string) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(() => ({
+export const useAuthStore = create<AuthState>()((set) => ({
   usuario: null,
   token: null,
-  rol: null,
-  login: () => { throw new Error("Not implemented"); },
-  logout: () => { throw new Error("Not implemented"); },
+
+  login: (usuario, token) => {
+    set({ usuario, token });
+  },
+
+  logout: () => {
+    set({ usuario: null, token: null });
+  },
 }));
