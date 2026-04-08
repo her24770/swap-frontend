@@ -13,9 +13,10 @@ export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
-  // si es pagina login, no mostrar navbar ni sidebar
+  // si es pagina login o registro, no mostrar navbar ni sidebar
   const isLoginPage = pathname === "/login";
-  if (isLoginPage) {
+  const isRegistroPage = pathname === "/registro";
+  if (isLoginPage || isRegistroPage) {
     return <main>{children}</main>;
   }
 

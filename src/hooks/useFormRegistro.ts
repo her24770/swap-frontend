@@ -25,11 +25,11 @@ export function useFormRegistro() {
   const onSubmit = form.handleSubmit(async (data) => {
     // confirmar_password no se envía al backend
     const { confirmar_password: _, ...payload } = data;
-    const respuesta = await apiClient.post<{ token: string; usuario: any }>(
+    const respuesta = await apiClient.post<{ token: string; usuario: any; rol: any }>(
       "/api/auth/registro",
       { ...payload, carnet: Number(payload.carnet) }
     );
-    login(respuesta.usuario, respuesta.token);
+    login(respuesta.usuario, respuesta.token, respuesta.rol);
   });
 
   return { form, onSubmit };
