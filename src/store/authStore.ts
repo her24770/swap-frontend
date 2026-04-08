@@ -1,5 +1,10 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
+// Roles posibles en el sistema — estudiante o moderador
+export type Rol = "usuario" | "moderador";
+
+// Datos del usuario autenticado, basados en el modelo Usuario del backend
 export interface Usuario {
   id_usuario: number;
   nombre: string;
@@ -7,24 +12,36 @@ export interface Usuario {
   email_institucional: string;
   url_foto_perfil: string;
   descripcion: string | null;
+  calificacion: number | null;
 }
 
+// Estado y acciones del store de autenticación
 interface AuthState {
   usuario: Usuario | null;
   token: string | null;
-  login: (usuario: Usuario, token: string) => void;
+  rol: Rol | null;
+  login: (usuario: Usuario, token: string, rol: Rol) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()((set) => ({
-  usuario: null,
-  token: null,
+// Store persistido en localStorage bajo la clave "swap-auth"
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      usuario: null,
+      token: null,
+      rol: null,
 
-  login: (usuario, token) => {
-    set({ usuario, token });
-  },
+      login: (usuario, token, rol) => {
+        set({ usuario, token, rol });
+      },
 
-  logout: () => {
-    set({ usuario: null, token: null });
-  },
-}));
+      logout: () => {
+        set({ usuario: null, token: null, rol: null });
+      },
+    }),
+    {
+      name: "swap-auth",
+    }
+  )
+);
