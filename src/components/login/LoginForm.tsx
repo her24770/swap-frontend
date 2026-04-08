@@ -5,14 +5,27 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { apiClient, type ApiError } from "../../lib/apiClient";
+import { useAuthStore, type Rol, type Usuario } from "../../store/authStore"
 
 interface LoginFormData {
   email: string;
   password: string;
 }
 
+interface LoginResponse {
+  token: string;
+  usuario: Usuario;
+  rol: Rol;
+}
+
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const router = useRouter();
+  const login = useAuthStore((state) => state.login);
 
   const {
     register,
@@ -21,8 +34,26 @@ export default function LoginForm() {
   } = useForm<LoginFormData>();
 
   const onSubmit = async (data: LoginFormData) => {
-    // TODO: conectar con el backend
-    console.log(data);
+    try {
+      setServerError(null);
+
+      const response = await apiClient.post<LoginResponse>("/api/auth/login", {
+        email_institucional: data.email,
+        password: data.password,
+      });
+
+      login(response.usuario, response.token, response.rol);
+      if (response.rol === "moderador") {
+        router.push("/"); //TODO: Agregar ruta para moderador
+      } else {
+        router.push("/");
+      }
+      router.refresh();
+
+    } catch (error) {
+      const apiError = error as ApiError;
+      setServerError(apiError.message || "No fue posible iniciar sesión")
+    }
   };
 
   return (
