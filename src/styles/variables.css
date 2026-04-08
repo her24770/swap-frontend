@@ -1,0 +1,22 @@
+:root{
+    /*Background Colors*/
+    --swap-primary-background: #FFFFFF;
+    --swap-secondary-background: #F8FAFC;
+    --swap-tertiary-background: #E2ECE8;
+
+    /*Components Colors*/
+    --swap-primary-color: #007329;
+    --swap-secondary-color: #F8FAFC;
+
+    /*Text Colors*/
+    --swap-primary-text-color: #000000;
+    --swap-secondary-text-color: #FFFFFF;
+    --swap-tertiary-text-color: #64748B; 
+    
+    /*Border Colors*/
+    --swap-primary-border-color: #9FAAC0;
+
+
+    
+
+}
