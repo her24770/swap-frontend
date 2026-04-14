@@ -1,4 +1,9 @@
 :root{
+    /*Fuentes*/
+    --swap-font-titulos: "Jockey One", sans-serif;
+    --swap-font-subtitulos: "Lato", sans-serif;
+    --swap-font-textos: "Lato", sans-serif;
+    
     /*Background Colors*/
     --swap-primary-background: #FFFFFF;
     --swap-secondary-background: #F8FAFC;
