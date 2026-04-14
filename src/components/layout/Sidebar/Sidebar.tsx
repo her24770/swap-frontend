@@ -6,7 +6,7 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import "./Sidebar.css";
 
 const NAV_ITEMS = [
-  { icon: Compass,   label: "Descubre",   href: "/descubre"   },
+  { icon: Compass,   label: "Descubre",   href: "/"              },
   { icon: BookOpen,  label: "Tutorías",   href: "/tutorias"   },
   { icon: Package,   label: "Materiales", href: "/materiales" },
   { icon: Briefcase, label: "Negocios",   href: "/negocios"   },

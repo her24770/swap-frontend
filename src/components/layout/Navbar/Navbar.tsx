@@ -4,6 +4,7 @@ import { Menu, UserCircle2, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
+import { useAuth } from "../../../hooks/useAuth";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -14,6 +15,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
 
@@ -59,7 +61,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
           {profileOpen && (
             <div className="navbar__dropdown">
               <Link
-                href="/profile"
+                href="/perfil"
                 onClick={() => setProfileOpen(false)}
                 className="navbar__dropdown-item"
               >
@@ -69,6 +71,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
               <div className="navbar__dropdown-divider" />
               <button
                 type="button"
+                onClick={logout}
                 className="navbar__dropdown-item navbar__dropdown-item--danger"
               >
                 <LogOut size={16} />
