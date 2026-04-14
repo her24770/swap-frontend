@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { apiClient, type ApiError } from "../../lib/apiClient";
-import { useAuthStore, type Rol, type Usuario } from "../../store/authStore";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import "./LoginForm.css";
 
 interface LoginFormData {

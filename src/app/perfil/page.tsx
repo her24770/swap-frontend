@@ -1,6 +1,6 @@
 "use client";
-import PostCard from "../../components/PostCard/PostCard";
-import UserCard from "../../components/UserCard/UserCard";
+import PostCard from "../../components/posts/PostCard/PostCard";
+import UserCard from "../../components/users/UserCard/UserCard";
 
 export default function Perfil() {
   return (

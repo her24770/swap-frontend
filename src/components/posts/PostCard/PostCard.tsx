@@ -1,4 +1,4 @@
-import FilterTag from "../FilterTag/FilterTag";
+import FilterTag from "../../filters/FilterTag/FilterTag";
 import PostImage from "./PostImage/PostImage";
 import ActionButton from "./PostDetailsButton/PostDetailsButton";
 import "./PostCard.css";

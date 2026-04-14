@@ -3,7 +3,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
-import { AUTH_ROUTES } from "../../lib/authRoutes";
+import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import "./layout.css";
 
 interface LayoutProps {

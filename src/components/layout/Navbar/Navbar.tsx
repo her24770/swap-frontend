@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, UserCircle2, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AUTH_ROUTES } from "../../lib/authRoutes";
+import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import "./Navbar.css";
 
 interface NavbarProps {

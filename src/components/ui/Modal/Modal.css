@@ -1,0 +1,33 @@
+/* Modal.css - TODO: Implementar estilos del componente Modal */
+
+.modal {
+  /* estilos del modal */
+}
+
+.modal__overlay {
+  /* overlay que cubre el fondo */
+}
+
+.modal__content {
+  /* contenido del modal */
+}
+
+.modal__header {
+  /* encabezado del modal */
+}
+
+.modal__body {
+  /* cuerpo del modal */
+}
+
+.modal__footer {
+  /* pie del modal */
+}
+
+.modal--sm {
+  /* modal pequeño */
+}
+
+.modal--lg {
+  /* modal grande */
+}

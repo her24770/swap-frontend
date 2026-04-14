@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, BookOpen, Package, Briefcase } from "lucide-react";
-import { AUTH_ROUTES } from "../../lib/authRoutes";
+import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import "./Sidebar.css";
 
 const NAV_ITEMS = [

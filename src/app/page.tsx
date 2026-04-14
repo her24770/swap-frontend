@@ -1,5 +1,5 @@
 "use client";
-import PostCard from "../components/PostCard/PostCard";
+import PostCard from "../components/posts/PostCard/PostCard";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../lib/apiClient";
 import imagePath from "../../public/images/uvg.jpg" //Temporal en lo que se implementa la subida de imagenes

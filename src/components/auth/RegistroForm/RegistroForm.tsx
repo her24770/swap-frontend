@@ -4,10 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight } from "lucide-react";
 import clsx from "clsx";
-import { apiClient, type ApiError } from "../../lib/apiClient";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { schemaRegistro, type RegistroFormData } from "../../schemas/zodSchemas";
+import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 
 const inputClass = (hasError: boolean) =>
   clsx(

@@ -1,0 +1,33 @@
+/* Button.css - TODO: Implementar estilos del componente Button */
+
+.button {
+  /* estilos base del botón */
+}
+
+.button:hover {
+  /* estilos en hover */
+}
+
+.button:active {
+  /* estilos activos */
+}
+
+.button--primary {
+  /* variación primaria */
+}
+
+.button--secondary {
+  /* variación secundaria */
+}
+
+.button--danger {
+  /* variación peligrosa */
+}
+
+.button--sm {
+  /* tamaño pequeño */
+}
+
+.button--lg {
+  /* tamaño grande */
+}
