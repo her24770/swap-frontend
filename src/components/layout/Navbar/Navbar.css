@@ -34,7 +34,7 @@
 .navbar__logo {
   color: #ffffff;
   font-family: var(--swap-font-titulos), sans-serif;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 1.875rem;
   letter-spacing: 0.05em;
 }
@@ -94,7 +94,7 @@
 }
 
 .navbar__dropdown-item--danger {
-  color: #dc2626;
+  color: var(--swap-danger-color);
 }
 
 .navbar__dropdown-item--danger:hover {

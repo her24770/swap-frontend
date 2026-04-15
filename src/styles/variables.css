@@ -1,9 +1,4 @@
 :root{
-    /*Fuentes*/
-    --swap-font-titulos: "Jockey One", sans-serif;
-    --swap-font-subtitulos: "Lato", sans-serif;
-    --swap-font-textos: "Lato", sans-serif;
-    
     /*Background Colors*/
     --swap-primary-background: #FFFFFF;
     --swap-secondary-background: #F8FAFC;
@@ -21,7 +16,7 @@
     /*Border Colors*/
     --swap-primary-border-color: #9FAAC0;
 
-
-    
-
+      /* Danger */
+    --swap-danger-color: #dc2626;
+    --swap-danger-background: #fef2f2;
 }

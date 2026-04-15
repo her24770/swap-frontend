@@ -19,8 +19,6 @@
         "react-hook-form": "^7.72.0",
         "zod": "^3.23.0",
         "socket.io-client": "^4.8.0",
-        "tailwind": "^2.3.1",
-        "tailwind-merge": "^2.5.4",
         "zustand": "^4.5.2"
     },
     "devDependencies": {
@@ -30,7 +28,6 @@
         "eslint": "^9.0.0",
         "eslint-config-next": "16",
         "postcss": "^8.4.0",
-        "tailwindcss": "^3.4.0",
         "typescript": "^5.6.0"
     }
 }

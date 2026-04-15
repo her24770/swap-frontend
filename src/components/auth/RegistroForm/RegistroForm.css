@@ -1,0 +1,107 @@
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.registro-form__row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.registro-form__row .registro-form__field {
+  flex: 1;
+}
+
+.registro-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.registro-form__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-subtitulos);
+}
+
+.registro-form__input {
+  width: 100%;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--swap-font-textos);
+  box-sizing: border-box;
+}
+
+.registro-form__input:focus {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 1px var(--swap-primary-color);
+}
+
+.registro-form__input--error {
+  border-color: var(--swap-danger-color);
+}
+
+.registro-form__input--password {
+  padding-right: 2.5rem;
+}
+
+.registro-form__input-wrapper {
+  position: relative;
+}
+
+.registro-form__toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.registro-form__toggle-password:hover {
+  color: var(--swap-primary-text-color);
+}
+
+.registro-form__error {
+  font-size: 0.75rem;
+  color: var(--swap-danger-color);
+}
+
+.registro-form__submit {
+  width: 100%;
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+  font-family: var(--swap-font-textos);
+  font-weight: 500;
+  padding: 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.registro-form__submit:hover:not(:disabled) {
+  background-color: #005a25;
+}
+
+.registro-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
