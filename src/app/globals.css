@@ -1,9 +1,18 @@
-@import url("../styles/fonts.css");
 @import url("../styles/variables.css");
 
-body {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
-  font-family: var(--swap-font-textos), sans-serif;
+  height: 100%;
+}
+
+body {
+  font-family: var(--swap-font-textos);
   background-color: var(--swap-primary-background);
   color: var(--swap-primary-text-color);
 }

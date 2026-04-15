@@ -3,26 +3,15 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight } from "lucide-react";
-import clsx from "clsx";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
-
-const inputClass = (hasError: boolean) =>
-  clsx(
-    "w-full border rounded-md px-3 py-2 text-sm outline-none transition-colors",
-    "focus:border-[#006b2d] focus:ring-1 focus:ring-[#006b2d]",
-    hasError ? "border-red-400" : "border-gray-300"
-  );
+import "./RegistroForm.css";
 
 export const extractCarnetFromEmail = (email: string): number | null => {
-  // Verificar que el email tenga el formato esperado
   const match = email.match(/^[a-zA-Z]+(\d+)@uvg\.edu\.gt$/);
-  if (!match) {
-    return null;
-  }
-
+  if (!match) return null;
   return Number(match[1]);
 };
 
@@ -52,14 +41,11 @@ export default function RegistroForm() {
   const onSubmit = async (data: RegistroFormData) => {
     try {
       setServerError(null);
-
       const carnet = extractCarnetFromEmail(data.email_institucional);
-
       if (!carnet) {
         setServerError("El correo no es válido");
         return;
       }
-
       await apiClient.post("/api/auth/register", {
         nombre: `${data.nombre} ${data.apellido}`.trim(),
         carnet,
@@ -68,11 +54,9 @@ export default function RegistroForm() {
         url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
         descripcion: data.descripcion || "Sin descripción",
       });
-
       alert(`Registro exitoso. Nuevo usuario creado con el email ${data.email_institucional}\nRedirigiendo a login...`);
       router.push("/login");
       router.refresh();
-
     } catch (error) {
       const apiError = error as ApiError;
       setServerError(apiError.message || "No fue posible registrarse");
@@ -80,115 +64,106 @@ export default function RegistroForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="registro-form">
 
       {/* Nombre y Apellido */}
-      <div className="flex gap-3">
-        <div className="flex flex-col gap-1 flex-1">
-          <label className="text-sm font-medium text-gray-700">Nombre</label>
+      <div className="registro-form__row">
+        <div className="registro-form__field">
+          <label className="registro-form__label">Nombre</label>
           <input
             type="text"
             placeholder="Michael"
             {...register("nombre")}
-            className={inputClass(!!errors.nombre)}
+            className={`registro-form__input${errors.nombre ? " registro-form__input--error" : ""}`}
           />
           {errors.nombre && (
-            <span className="text-xs text-red-500">{errors.nombre.message}</span>
+            <span className="registro-form__error">{errors.nombre.message}</span>
           )}
         </div>
 
-        <div className="flex flex-col gap-1 flex-1">
-          <label className="text-sm font-medium text-gray-700">Apellido</label>
+        <div className="registro-form__field">
+          <label className="registro-form__label">Apellido</label>
           <input
             type="text"
             placeholder="Pérez"
             {...register("apellido")}
-            className={inputClass(!!errors.apellido)}
+            className={`registro-form__input${errors.apellido ? " registro-form__input--error" : ""}`}
           />
           {errors.apellido && (
-            <span className="text-xs text-red-500">{errors.apellido.message}</span>
+            <span className="registro-form__error">{errors.apellido.message}</span>
           )}
         </div>
       </div>
 
-      {/* Email */}
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700">
-          Correo electrónico
-        </label>
+      {/* Email del usuario */}
+      <div className="registro-form__field">
+        <label className="registro-form__label">Correo electrónico</label>
         <input
           type="email"
-          placeholder="tan25987@uvg.edu.gt"
+          placeholder="per0000@uvg.edu.gt"
           {...register("email_institucional")}
-          className={inputClass(!!errors.email_institucional)}
+          className={`registro-form__input${errors.email_institucional ? " registro-form__input--error" : ""}`}
         />
         {errors.email_institucional && (
-          <span className="text-xs text-red-500">{errors.email_institucional.message}</span>
+          <span className="registro-form__error">{errors.email_institucional.message}</span>
         )}
       </div>
 
       {/* Contraseña */}
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700">
-          Crea una contraseña
-        </label>
-        <div className="relative">
+      <div className="registro-form__field">
+        <label className="registro-form__label">Crea una contraseña</label>
+        <div className="registro-form__input-wrapper">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Al menos 8 caracteres"
             {...register("password")}
-            className={clsx(inputClass(!!errors.password), "pr-10")}
+            className={`registro-form__input registro-form__input--password${errors.password ? " registro-form__input--error" : ""}`}
           />
           <button
             type="button"
             onClick={() => setShowPassword((p) => !p)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="registro-form__toggle-password"
           >
             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
         {errors.password && (
-          <span className="text-xs text-red-500">{errors.password.message}</span>
+          <span className="registro-form__error">{errors.password.message}</span>
         )}
       </div>
 
       {/* Confirmar contraseña */}
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-gray-700">
-          Confirmar contraseña
-        </label>
-        <div className="relative">
+      <div className="registro-form__field">
+        <label className="registro-form__label">Confirmar contraseña</label>
+        <div className="registro-form__input-wrapper">
           <input
             type={showConfirm ? "text" : "password"}
             placeholder="Al menos 8 caracteres"
             {...register("confirmar_password")}
-            className={clsx(inputClass(!!errors.confirmar_password), "pr-10")}
+            className={`registro-form__input registro-form__input--password${errors.confirmar_password ? " registro-form__input--error" : ""}`}
           />
           <button
             type="button"
             onClick={() => setShowConfirm((p) => !p)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="registro-form__toggle-password"
           >
             {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
           </button>
         </div>
         {errors.confirmar_password && (
-          <span className="text-xs text-red-500">{errors.confirmar_password.message}</span>
+          <span className="registro-form__error">{errors.confirmar_password.message}</span>
         )}
       </div>
 
-      {/* Submit */}
       {serverError && (
-        <span className="text-xs text-red-500">{serverError}</span>
+        <span className="registro-form__error">{serverError}</span>
       )}
+
+      {/* Botón de submit */}
       <button
         type="submit"
         disabled={isSubmitting}
-        className={clsx(
-          "w-full bg-[#006b2d] text-white font-medium py-2.5 rounded-md text-sm transition-colors mt-1",
-          "flex items-center justify-center gap-2",
-          isSubmitting ? "opacity-60 cursor-not-allowed" : "hover:bg-[#005a25]"
-        )}
+        className="registro-form__submit"
       >
         {isSubmitting ? "Registrando..." : "Continuar"}
         {!isSubmitting && <ChevronRight size={16} />}

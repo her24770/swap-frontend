@@ -18,7 +18,6 @@
   overflow: auto;
 }
 
-/* Nueva clase para auth routes */
 .layout__main--auth {
   flex: 1;
   background-color: #ffffff;
