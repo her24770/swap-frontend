@@ -1,5 +1,6 @@
 "use client";
 import PostCard from "../../components/posts/PostCard/PostCard";
+import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../../lib/apiClient";
 import imagePath from "../../../public/images/uvg.jpg";
@@ -63,28 +64,18 @@ export default function NegociosPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
     setCurrentPage(1);
   };
 
   return (
     <main className="negocios-page">
-      {/* Header */}
       <div className="negocios-page__header">
         <h1 className="negocios-page__title">NEGOCIOS</h1>
-        <div className="negocios-page__search-wrapper">
-          <input
-            type="text"
-            className="negocios-page__search"
-            placeholder="Search anything..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </div>
+        <SearchBar value={searchQuery} onChange={handleSearch} />
       </div>
 
-      {/* Content */}
       {loading && (
         <div className="negocios-page__state">
           <p className="negocios-page__state-text">Cargando negocios...</p>
@@ -124,7 +115,6 @@ export default function NegociosPage() {
             ))}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="negocios-page__pagination">
               <button

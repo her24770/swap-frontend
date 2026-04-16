@@ -1,5 +1,6 @@
 "use client";
 import PostCard from "../../components/posts/PostCard/PostCard";
+import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../../lib/apiClient";
 import imagePath from "../../../public/images/uvg.jpg";
@@ -63,28 +64,18 @@ export default function MaterialesPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
     setCurrentPage(1);
   };
 
   return (
     <main className="materiales-page">
-      {/* Header */}
       <div className="materiales-page__header">
         <h1 className="materiales-page__title">MATERIALES</h1>
-        <div className="materiales-page__search-wrapper">
-          <input
-            type="text"
-            className="materiales-page__search"
-            placeholder="Search anything..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </div>
+        <SearchBar value={searchQuery} onChange={handleSearch} />
       </div>
 
-      {/* Content */}
       {loading && (
         <div className="materiales-page__state">
           <p className="materiales-page__state-text">Cargando materiales...</p>
@@ -124,7 +115,6 @@ export default function MaterialesPage() {
             ))}
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="materiales-page__pagination">
               <button

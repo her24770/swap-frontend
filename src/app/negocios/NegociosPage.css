@@ -26,34 +26,6 @@
   letter-spacing: 0.02em;
 }
 
-.negocios-page__search-wrapper {
-  flex: 1;
-  max-width: 28rem;
-}
-
-.negocios-page__search {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--swap-primary-border-color);
-  border-radius: 9999px;
-  font-family: var(--swap-font-textos);
-  font-size: 0.875rem;
-  color: var(--swap-primary-text-color);
-  background-color: var(--swap-secondary-background);
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  box-sizing: border-box;
-}
-
-.negocios-page__search:focus {
-  border-color: var(--swap-primary-color);
-  box-shadow: 0 0 0 2px rgba(0, 115, 41, 0.15);
-}
-
-.negocios-page__search::placeholder {
-  color: var(--swap-tertiary-text-color);
-}
-
 /* ── Grid ────────────────────────────────────────────────────────────────── */
 
 .negocios-page__grid {
