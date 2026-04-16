@@ -1,0 +1,165 @@
+/* NegociosPage.css */
+
+.negocios-page {
+  padding: 2rem;
+  min-height: 100%;
+  background-color: var(--swap-primary-background);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.negocios-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.negocios-page__title {
+  font-family: var(--swap-font-titulos);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.negocios-page__search-wrapper {
+  flex: 1;
+  max-width: 28rem;
+}
+
+.negocios-page__search {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 9999px;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-primary-text-color);
+  background-color: var(--swap-secondary-background);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.negocios-page__search:focus {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 115, 41, 0.15);
+}
+
+.negocios-page__search::placeholder {
+  color: var(--swap-tertiary-text-color);
+}
+
+/* ── Grid ────────────────────────────────────────────────────────────────── */
+
+.negocios-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ── States ──────────────────────────────────────────────────────────────── */
+
+.negocios-page__state {
+  display: flex;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.negocios-page__state-text {
+  font-family: var(--swap-font-textos);
+  font-size: 0.9375rem;
+  color: var(--swap-tertiary-text-color);
+  margin: 0;
+}
+
+.negocios-page__state-text--error {
+  color: var(--swap-danger-color);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.negocios-page__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 1rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.negocios-page__empty-icon {
+  font-size: 3.5rem;
+  line-height: 1;
+}
+
+.negocios-page__empty-title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.negocios-page__empty-description {
+  font-family: var(--swap-font-textos);
+  font-size: 0.9375rem;
+  color: var(--swap-tertiary-text-color);
+  margin: 0;
+  max-width: 30rem;
+  line-height: 1.6;
+}
+
+/* ── Pagination ──────────────────────────────────────────────────────────── */
+
+.negocios-page__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 2.5rem;
+  padding-bottom: 1rem;
+}
+
+.negocios-page__pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.375rem;
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.negocios-page__pagination-btn:hover:not(:disabled) {
+  border-color: var(--swap-primary-color);
+  color: var(--swap-primary-color);
+}
+
+.negocios-page__pagination-btn--active {
+  background-color: var(--swap-primary-color);
+  border-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+}
+
+.negocios-page__pagination-btn--active:hover {
+  background-color: var(--swap-primary-color) !important;
+  color: var(--swap-secondary-text-color) !important;
+}
+
+.negocios-page__pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
