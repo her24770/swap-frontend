@@ -1,6 +1,7 @@
 "use client";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import UserCard from "../../components/users/UserCard/UserCard";
+import PostRes from "../../components/posts/PostResumida/PostRes";
 
 export default function Perfil() {
   return (
@@ -21,7 +22,7 @@ export default function Perfil() {
         />
       <h1>Publicaciones Populares</h1>
       <br />
-
+      <PostRes title="Ejemplo de PostCard" price={100} images={[]}/>
       <PostCard tags={[{ id: 1, name: "EjemploTag", type: "categoria" }, { id: 2, name: "Mate", type: "categoria" }]} title="Ejemplo de PostCard" price={100} description="Descripción de ejemplo" images={[]} />
       <PostCard tags={[{ id: 3, name: "Tercero", type: "categoria" }, { id: 4, name: "Cuarto", type: "categoria" }]} title="Tercer PostCard" price={300} description="Tercera descripción de ejemplo" images={[]} />
       <hr />

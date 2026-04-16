@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
+import "../../ui/Button/Button.css"
 import "./LoginForm.css";
 
 interface LoginFormData {
@@ -117,7 +118,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="login-form__submit"
+          className="button button--large button--full-width"
         >
           {isSubmitting ? "Ingresando..." : "Continuar"}
         </button>
