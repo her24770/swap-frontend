@@ -31,3 +31,10 @@
     font-size: 12px;
     font-weight: bold;
 }
+
+.product-image--compact {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.5rem;
+  width: 100%;
+  height: 100%;
+}

@@ -1,6 +1,7 @@
 import FilterTag from "../../filters/FilterTag/FilterTag";
 import PostImage from "./PostImage/PostImage";
-import ActionButton from "./PostDetailsButton/PostDetailsButton";
+import {ChevronRight } from "lucide-react";
+import "../../ui/Button/Button";
 import "./PostCard.css";
 
 interface PostCardProps {
@@ -51,12 +52,14 @@ export default function PostCard({
           {description}
         </p>
 
-        {/* 4. Footer: Acción principal */}
         <footer className="post-card__footer">
-          <ActionButton 
-            label="Detalles" 
-            onClick={handleDetailsClick} 
-          />
+          <button
+            type="button"
+            className="button button--small"
+            onClick={handleDetailsClick}
+          >
+            Detalles <ChevronRight size={14} />
+          </button>
         </footer>
       </div>
     </article>
