@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ProfilePicture from "../../components/users/UserCard/ProfilePicture/ProfilePicture";
-import UserRating from "../../components/users/UserCard/UserRating/UserRating";
-import UserContact from "../../components/users/UserCard/UserContact/UserContact";
+import UserProfileHeader from "../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import PostRes from "../../components/posts/PostResumida/PostRes";
 import CommentSection from "../../components/users/UserCard/Comments/CommentSection";
@@ -107,39 +105,19 @@ export default function PerfilConsumidorPage() {
     <main className="perfil-consumidor">
 
       {/* ── Perfil header ──────────────────────────────────────────── */}
-      <section className="perfil-consumidor__header">
-        <div className="perfil-consumidor__avatar-col">
-          <ProfilePicture
-            imageUrl={MOCK_USER.imageUrl}
-            userName={MOCK_USER.name}
-            size="lg"
-          />
-          <UserRating score={MOCK_USER.rating} totalReviews={MOCK_USER.totalReviews} />
-        </div>
-
-        <div className="perfil-consumidor__info-col">
-          <h1 className="perfil-consumidor__name">{MOCK_USER.name}</h1>
-          <p className="perfil-consumidor__description">{MOCK_USER.description}</p>
-
-          {/* Tags */}
-          <div className="perfil-consumidor__tags">
-            {MOCK_TAGS.map((tag) => (
-              <span
-                key={tag.id}
-                className={`perfil-consumidor__tag perfil-consumidor__tag--${tag.colorKey}`}
-              >
-                {tag.name}
-              </span>
-            ))}
-          </div>
-
-          {/* Contacto */}
-          <div className="perfil-consumidor__contact-block">
-            <p className="perfil-consumidor__contact-label">Contacto</p>
-            <UserContact contacts={MOCK_USER.contacts} />
-          </div>
-        </div>
-      </section>
+      <UserProfileHeader
+        user={{
+          name: MOCK_USER.name,
+          description: MOCK_USER.description,
+          imageUrl: MOCK_USER.imageUrl,
+          rating: MOCK_USER.rating,
+          totalReviews: MOCK_USER.totalReviews,
+          contacts: MOCK_USER.contacts,
+        }}
+        onSave={async (updated) => {
+          console.log("Guardar perfil:", updated);
+        }}
+      />
 
       <hr className="perfil-consumidor__divider" />
 

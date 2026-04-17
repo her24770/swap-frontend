@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { CreditCard } from "lucide-react";
-import ProfilePicture from "../../../components/users/UserCard/ProfilePicture/ProfilePicture";
-import UserRating from "../../../components/users/UserCard/UserRating/UserRating";
-import UserContact from "../../../components/users/UserCard/UserContact/UserContact";
+import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
@@ -105,45 +103,21 @@ export default function PerfilVendedorPage() {
     <main className="perfil-vendedor">
 
       {/* ── Perfil header ──────────────────────────────────────────── */}
-      <section className="perfil-vendedor__header">
-        <div className="perfil-vendedor__avatar-col">
-          <ProfilePicture
-            imageUrl={MOCK_SELLER.imageUrl}
-            userName={MOCK_SELLER.name}
-            size="lg"
-          />
-          <UserRating score={MOCK_SELLER.rating} totalReviews={MOCK_SELLER.totalReviews} />
-        </div>
-
-        <div className="perfil-vendedor__info-col">
-          <h1 className="perfil-vendedor__name">{MOCK_SELLER.name}</h1>
-          <p className="perfil-vendedor__description">{MOCK_SELLER.description}</p>
-
-          {/* Tags */}
-          <div className="perfil-vendedor__tags">
-            {MOCK_TAGS.map((tag) => (
-              <span
-                key={tag.id}
-                className={`perfil-vendedor__tag perfil-vendedor__tag--${tag.colorKey}`}
-              >
-                {tag.name}
-              </span>
-            ))}
-          </div>
-
-          {/* Método de pago */}
-          <div className="perfil-vendedor__payment">
-            <CreditCard size={16} className="perfil-vendedor__payment-icon" />
-            <span>Método de pago: {MOCK_SELLER.paymentMethod}</span>
-          </div>
-
-          {/* Contacto */}
-          <div className="perfil-vendedor__contact-block">
-            <p className="perfil-vendedor__contact-label">Contacto</p>
-            <UserContact contacts={MOCK_SELLER.contacts} />
-          </div>
-        </div>
-      </section>
+      <UserProfileHeader
+        user={{
+          name: MOCK_SELLER.name,
+          description: MOCK_SELLER.description,
+          imageUrl: MOCK_SELLER.imageUrl,
+          rating: MOCK_SELLER.rating,
+          totalReviews: MOCK_SELLER.totalReviews,
+          contacts: MOCK_SELLER.contacts,
+          paymentMethod: MOCK_SELLER.paymentMethod,
+          tags: MOCK_TAGS,
+        }}
+        onSave={async (updated) => {
+          console.log("Guardar perfil:", updated);
+        }}
+      />
 
       <hr className="perfil-vendedor__divider" />
 
