@@ -6,19 +6,14 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
-import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
+import { useAuthStore } from "../../../store/authStore";
+import type { AuthResponse } from "../../../types/usuario";
 import "../../ui/Button/Button.css"
 import "./LoginForm.css";
 
 interface LoginFormData {
   email: string;
   password: string;
-}
-
-interface LoginResponse {
-  token: string;
-  usuario: Usuario;
-  rol: Rol;
 }
 
 export default function LoginForm() {
@@ -37,7 +32,7 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setServerError(null);
-      const response = await apiClient.post<LoginResponse>("/api/auth/login", {
+      const response = await apiClient.post<AuthResponse>("/api/auth/login", {
         email_institucional: data.email,
         password: data.password,
       });

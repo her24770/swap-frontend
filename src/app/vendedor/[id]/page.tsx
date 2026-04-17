@@ -10,21 +10,8 @@ import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/Horizo
 import imagePath from "../../../../public/images/uvg.jpg";
 import "./PerfilVendedorPage.css";
 
-// ── Tipos mock ────────────────────────────────────────────────────────────────
-
-interface Tag {
-  id: number;
-  name: string;
-  colorKey: string;
-}
-
-interface Comment {
-  id: string;
-  authorName: string;
-  timeAgo: string;
-  rating: number;
-  comment: string;
-}
+import type { Tag } from "../../../types/tag";
+import type { Comment } from "../../../types/comment";
 
 // ── Datos mock ────────────────────────────────────────────────────────────────
 

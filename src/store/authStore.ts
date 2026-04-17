@@ -1,19 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { Rol, Usuario } from "../types/usuario";
 
-// Roles posibles en el sistema — estudiante o moderador
-export type Rol = "usuario" | "moderador";
-
-// Datos del usuario autenticado, basados en el modelo Usuario del backend
-export interface Usuario {
-  id_usuario: number;
-  nombre: string;
-  carnet: number;
-  email_institucional: string;
-  url_foto_perfil: string;
-  descripcion: string | null;
-  calificacion: number | null;
-}
+export type { Rol, Usuario };
 
 // Estado y acciones del store de autenticación
 interface AuthState {

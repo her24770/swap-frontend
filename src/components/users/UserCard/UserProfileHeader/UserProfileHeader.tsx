@@ -6,36 +6,13 @@ import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
 import UserProfileEditModal from "./UserProfileEditModal/UserProfileEditModal";
+import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
 import "./UserProfileHeader.css";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-interface Tag {
-  id: number;
-  name: string;
-  colorKey: string;
-}
-
-interface Contact {
-  platform: "instagram" | "whatsapp" | "linkedin" | "facebook";
-  url: string;
-}
-
-interface UserProfileData {
-  name: string;
-  description: string;
-  imageUrl?: string;
-  rating: number;
-  totalReviews: number;
-  contacts: Contact[];
-  tags?: Tag[];
-  paymentMethod?: string;
-}
 
 interface UserProfileHeaderProps {
   user: UserProfileData;
   tagColors?: Record<string, string>;
-  onSave?: (updated: Partial<UserProfileData>) => Promise<void> | void;
+  onSave?: (updated: Partial<UserProfileEditData>) => Promise<void> | void;
 }
 
 // ── Default tag colour map ────────────────────────────────────────────────────
