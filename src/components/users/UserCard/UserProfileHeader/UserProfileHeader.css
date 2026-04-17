@@ -1,0 +1,161 @@
+/* UserProfileHeader.css */
+
+/* ── 3-column layout ───────────────────────────────────────────────────────── */
+
+.user-profile-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+@media (max-width: 767px) {
+  .user-profile-header {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  /* Side col spans full width on mobile */
+  .user-profile-header__side-col {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-profile-header {
+    grid-template-columns: 1fr;
+  }
+
+  .user-profile-header__avatar-col {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+/* ── Avatar column ─────────────────────────────────────────────────────────── */
+
+.user-profile-header__avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* ── Info column (center) ──────────────────────────────────────────────────── */
+
+.user-profile-header__info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.user-profile-header__name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.user-profile-header__name {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.user-profile-header__edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--swap-primary-color);
+  background-color: transparent;
+  border: 1.5px solid var(--swap-primary-color);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
+.user-profile-header__edit-btn:hover {
+  background-color: var(--swap-primary-color);
+  color: #ffffff;
+}
+
+.user-profile-header__description {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 36rem;
+}
+
+/* ── Payment method ────────────────────────────────────────────────────────── */
+
+.user-profile-header__payment {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  margin-top: 0.125rem;
+}
+
+.user-profile-header__payment-icon {
+  color: var(--swap-primary-color);
+  flex-shrink: 0;
+}
+
+/* ── Side column (tags + contact) ──────────────────────────────────────────── */
+
+.user-profile-header__side-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+/* ── Tags ──────────────────────────────────────────────────────────────────── */
+
+.user-profile-header__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  max-width: 18rem;
+}
+
+.user-profile-header__tag {
+  font-family: var(--swap-font-textos);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* ── Contact ───────────────────────────────────────────────────────────────── */
+
+.user-profile-header__contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.user-profile-header__contact-label {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}

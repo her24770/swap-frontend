@@ -2,7 +2,7 @@
 
 import CommentCard from "./CommentCard/CommentCard";
 import CommentForm from "./CommentForm/CommentForm";
-import "./Comments.css";
+import "./CommentSection.css";
 
 interface Comment {
   id: string;
