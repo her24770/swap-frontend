@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import UserProfileHeader from "../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
-import PostCard from "../../components/posts/PostCard/PostCard";
-import PostRes from "../../components/posts/PostResumida/PostRes";
-import CommentSection from "../../components/users/UserCard/Comments/CommentSection";
-import HorizontalCarousel from "../../components/ui/HorizontalCarousel/HorizontalCarousel";
-import imagePath from "../../../public/images/uvg.jpg";
-import "./PerfilConsumidorPage.css";
+import { useState } from "react";
+import { CreditCard } from "lucide-react";
+import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
+import PostCard from "../../../components/posts/PostCard/PostCard";
+import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
+import AdBanner from "../../../components/ui/AdBanner/AdBanner";
+import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
+import imagePath from "../../../../public/images/uvg.jpg";
+import "./PerfilVendedorPage.css";
 
 // ── Tipos mock ────────────────────────────────────────────────────────────────
 
@@ -27,13 +28,14 @@ interface Comment {
 
 // ── Datos mock ────────────────────────────────────────────────────────────────
 
-const MOCK_USER = {
+const MOCK_SELLER = {
   name: "Michael Perez",
   description:
     "Soy un estudiante de cuarto año de Ingeniería electrónica, me gusta mucho explicar sobre temas de matemática y electrónica.",
   imageUrl: undefined as string | undefined,
   rating: 2,
-  totalReviews: 12,
+  totalReviews: 15,
+  paymentMethod: "Transferencia",
   contacts: [
     { platform: "instagram" as const, url: "https://instagram.com" },
     { platform: "whatsapp" as const, url: "https://wa.me/12345678" },
@@ -49,23 +51,19 @@ const MOCK_TAGS: Tag[] = [
   { id: 6, name: "Biología", colorKey: "biologia" },
 ];
 
-const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
+const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
-  title: "Assembler",
-  price: 100,
-  description:
-    "Brinda tutorías para Assembler, específicamente para ayudar en las labs y explicar prácticas de electrónica.",
-  tags: [
-    { id: 1, name: "Assembler", type: "categoria" },
-    { id: 2, name: "Electrónica", type: "categoria" },
-  ],
+  title: "Porción pastel",
+  price: 15,
+  description: "Media porción de pastel de chocolate hecho en casa.",
+  tags: [{ id: 1, name: "Negocio", type: "categoria" }],
 }));
 
-const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
-  id: i + 1,
-  title: "Assembler",
-  price: 100,
-}));
+const MOCK_AD = {
+  imageUrl: imagePath.src,
+  title: "2x1 en porción de pasteles",
+  subtitle: "¡Oferta por tiempo limitado!",
+};
 
 const MOCK_COMMENTS: Comment[] = [
   {
@@ -87,7 +85,7 @@ const MOCK_COMMENTS: Comment[] = [
 
 // ── Componente ────────────────────────────────────────────────────────────────
 
-export default function PerfilConsumidorPage() {
+export default function PerfilVendedorPage() {
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
 
   const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
@@ -102,17 +100,18 @@ export default function PerfilConsumidorPage() {
   };
 
   return (
-    <main className="perfil-consumidor">
+    <main className="perfil-vendedor">
 
       {/* ── Perfil header ──────────────────────────────────────────── */}
       <UserProfileHeader
         user={{
-          name: MOCK_USER.name,
-          description: MOCK_USER.description,
-          imageUrl: MOCK_USER.imageUrl,
-          rating: MOCK_USER.rating,
-          totalReviews: MOCK_USER.totalReviews,
-          contacts: MOCK_USER.contacts,
+          name: MOCK_SELLER.name,
+          description: MOCK_SELLER.description,
+          imageUrl: MOCK_SELLER.imageUrl,
+          rating: MOCK_SELLER.rating,
+          totalReviews: MOCK_SELLER.totalReviews,
+          contacts: MOCK_SELLER.contacts,
+          paymentMethod: MOCK_SELLER.paymentMethod,
           tags: MOCK_TAGS,
         }}
         onSave={async (updated) => {
@@ -120,14 +119,14 @@ export default function PerfilConsumidorPage() {
         }}
       />
 
-      <hr className="perfil-consumidor__divider" />
+      <hr className="perfil-vendedor__divider" />
 
-      {/* ── Tus Guardados ─────────────────────────────────────────── */}
-      <section className="perfil-consumidor__section">
-        <h2 className="perfil-consumidor__section-title">Tus Guardados</h2>
-        <div className="perfil-consumidor__carousel-wrap">
+      {/* ── Catálogo ───────────────────────────────────────────────── */}
+      <section className="perfil-vendedor__section">
+        <h2 className="perfil-vendedor__section-title">Catálogo</h2>
+        <div className="perfil-vendedor__carousel-wrap">
           <HorizontalCarousel>
-            {MOCK_SAVED.map((pub) => (
+            {MOCK_CATALOG.map((pub) => (
               <div key={pub.id} className="h-carousel__item">
                 <PostCard
                   tags={pub.tags}
@@ -142,31 +141,26 @@ export default function PerfilConsumidorPage() {
         </div>
       </section>
 
-      <hr className="perfil-consumidor__divider" />
+      <hr className="perfil-vendedor__divider" />
 
-      {/* ── Tus Compras ───────────────────────────────────────────── */}
-      <section className="perfil-consumidor__section">
-        <h2 className="perfil-consumidor__section-title">Tus Compras</h2>
-        <div className="perfil-consumidor__purchases-grid">
-          {MOCK_PURCHASES.map((pub) => (
-            <PostRes
-              key={pub.id}
-              title={pub.title}
-              price={pub.price}
-              images={[imagePath.src]}
-            />
-          ))}
-        </div>
+      {/* ── Anuncios ───────────────────────────────────────────────── */}
+      <section className="perfil-vendedor__section">
+        <h2 className="perfil-vendedor__section-title">Anuncios</h2>
+        <AdBanner
+          imageUrl={MOCK_AD.imageUrl}
+          title={MOCK_AD.title}
+          subtitle={MOCK_AD.subtitle}
+        />
       </section>
 
-      <hr className="perfil-consumidor__divider" />
+      <hr className="perfil-vendedor__divider" />
 
       {/* ── Comentarios y Reseñas ─────────────────────────────────── */}
-      <section className="perfil-consumidor__section">
-        <h2 className="perfil-consumidor__section-title">Comentarios y Reseñas</h2>
-        <div className="perfil-consumidor__comments">
+      <section className="perfil-vendedor__section">
+        <h2 className="perfil-vendedor__section-title">Comentarios y Reseñas</h2>
+        <div className="perfil-vendedor__comments">
           <CommentSection
-            targetName={MOCK_USER.name}
+            targetName={MOCK_SELLER.name}
             comments={comments}
             onSubmit={handleCommentSubmit}
             onCancel={() => {}}
