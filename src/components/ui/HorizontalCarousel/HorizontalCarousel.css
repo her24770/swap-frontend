@@ -1,0 +1,65 @@
+/* HorizontalCarousel.css */
+
+.h-carousel {
+  position: relative;
+  width: 100%;
+}
+
+.h-carousel__track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+
+.h-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+.h-carousel__item {
+  flex: 0 0 auto;
+  width: clamp(160px, 38vw, 220px);
+  scroll-snap-align: start;
+}
+
+.h-carousel__btn {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: var(--swap-primary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--swap-primary-text-color);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-size: 1rem;
+}
+
+.h-carousel__btn:hover {
+  border-color: var(--swap-primary-color);
+  color: var(--swap-primary-color);
+}
+
+.h-carousel__btn--prev {
+  left: -1rem;
+}
+
+.h-carousel__btn--next {
+  right: -1rem;
+}
+
+@media (min-width: 640px) {
+  .h-carousel__btn {
+    display: flex;
+  }
+}
