@@ -25,11 +25,12 @@ interface ActualizarPerfilModalProps {
     foto?: File;
   }) => void;
   onCancel: () => void;
+  isSaving?: boolean;
 }
 
 let contactIdCounter = 1;
 
-const initialContacts = (): Contacto[] => [
+const getEmptyContacts = (): Contacto[] => [
   { id: contactIdCounter++, type: "", value: "" },
 ];
 
@@ -39,13 +40,20 @@ export default function ActualizarPerfilModal({
   initialNombre = "",
   initialApellido = "",
   initialDescripcion = "",
+  initialContacts = [],
+  initialFoto = null,
   onSubmit,
   onCancel,
+  isSaving = false,
 }: ActualizarPerfilModalProps) {
   const [nombre, setNombre] = useState(initialNombre);
   const [apellido, setApellido] = useState(initialApellido);
   const [descripcion, setDescripcion] = useState(initialDescripcion);
-  const [contacts, setContacts] = useState<Contacto[]>(initialContacts);
+  const [contacts, setContacts] = useState<Contacto[]>(
+    initialContacts && initialContacts.length > 0
+      ? initialContacts
+      : getEmptyContacts
+    );
   const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -55,12 +63,16 @@ export default function ActualizarPerfilModal({
       setNombre(initialNombre);
       setApellido(initialApellido);
       setDescripcion(initialDescripcion);
-      setContacts(initialContacts());
+      setContacts(
+        initialContacts && initialContacts.length > 0
+          ? initialContacts
+          : getEmptyContacts()
+      );
       setFoto(null);
       setPreviewUrl(null);
     }
-  }, [isOpen]); // Solo se dispara cuando isOpen cambia a true
-
+  }, [isOpen]); 
+  
   if (!isOpen) return null;
 
   const handleFileChange = (file: File) => {
@@ -134,8 +146,9 @@ export default function ActualizarPerfilModal({
             type="button"
             className="button button--medium"
             onClick={handleSubmit}
+            disabled = {isSaving}
           >
-            Actualizar <ChevronRight size={16} />
+            {isSaving ? "Guardando..." : "Actualizar"} <ChevronRight size={16} />
           </button>
         </div>
       </div>

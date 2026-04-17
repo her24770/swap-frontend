@@ -1,12 +1,15 @@
 "use client";
 import {X, Plus} from "lucide-react";
+import type { Contact } from "../../../../../types/comment";
 import "./ListaContactos.css";
 
-export type ContactType = "Instagram" | "WhatsApp" | "LinkedIn" | "";
+interface UserContactProps {
+    contacts: Contact[];
+}
 
 export interface Contacto {
   id: number;
-  type: ContactType;
+  type: string;
   value: string;
 }
 
@@ -41,9 +44,10 @@ export default function ListaContactos({ contacts, onAdd, onRemove, onChange }: 
             onChange={(e) => onChange(contact.id, "type", e.target.value)}
           >
             <option value="">Seleccionar tipo</option>
-            <option value="Instagram">Instagram</option>
-            <option value="WhatsApp">WhatsApp</option>
-            <option value="LinkedIn">LinkedIn</option>
+            <option value="telefono">Teléfono</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="instagram">Instagram</option>
+            <option value="correo_personal">Correo</option>
           </select>
           <input
             type="text"

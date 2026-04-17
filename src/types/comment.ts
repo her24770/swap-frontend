@@ -7,6 +7,6 @@ export interface Comment {
 }
 
 export interface Contact {
-  platform: "instagram" | "whatsapp" | "linkedin" | "facebook";
+  platform: "telefono" | "whatsapp" | "instagram" | "correo_personal";
   url: string;
 }
