@@ -7,6 +7,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
+import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
 
 export const extractCarnetFromEmail = (email: string): number | null => {
@@ -163,7 +164,7 @@ export default function RegistroForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="registro-form__submit"
+        className="button button--large button--full-width"
       >
         {isSubmitting ? "Registrando..." : "Continuar"}
         {!isSubmitting && <ChevronRight size={16} />}
