@@ -1,0 +1,37 @@
+.user-contact-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.user-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* O var(--radius-md) si prefieres cuadrados redondeados */
+    background-color: var(--swap-secondary-background);
+    border: 1px solid var(--swap-primary-border-color);
+    transition: all 0.2s ease-in-out;
+}
+
+.user-contact:hover {
+    transform: translateY(-3px);
+    border-color: var(--swap-primary-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    background-color: var(--swap-primary-background);
+}
+
+.user-contact__icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.7);
+    transition: filter 0.2s ease;
+}
+
+.user-contact:hover .user-contact__icon {
+    filter: grayscale(0%) opacity(1);
+}

@@ -1,0 +1,94 @@
+/* AdBanner.css */
+
+.ad-banner {
+  width: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+  min-height: 10rem;
+  background-color: var(--swap-tertiary-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--swap-primary-border-color);
+}
+
+.ad-banner--image {
+  border: none;
+  min-height: 12rem;
+}
+
+.ad-banner__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  max-height: 18rem;
+}
+
+.ad-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 115, 41, 0.75) 0%,
+    rgba(0, 60, 20, 0.85) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.ad-banner__badge {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.ad-banner__title {
+  font-family: var(--swap-font-titulos);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.ad-banner__subtitle {
+  font-family: var(--swap-font-subtitulos);
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 500;
+}
+
+.ad-banner__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.ad-banner__empty-icon {
+  font-size: 2rem;
+  opacity: 0.4;
+}
+
+.ad-banner__empty-text {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  margin: 0;
+}

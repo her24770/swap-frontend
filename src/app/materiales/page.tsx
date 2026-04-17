@@ -1,0 +1,134 @@
+"use client";
+import PostCard from "../../components/posts/PostCard/PostCard";
+import SearchBar from "../../components/ui/SearchBar/SearchBar";
+import { useState, useEffect } from "react";
+import { apiClient, type ApiError } from "../../lib/apiClient";
+import imagePath from "../../../public/images/uvg.jpg";
+import "./MaterialesPage.css";
+
+import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
+
+const ITEMS_PER_PAGE = 12;
+
+export default function MaterialesPage() {
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const fetchMateriales = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await apiClient.get<PublicacionesResponse>("/api/publicacion/?tipo=material");
+      setPublicaciones(response.data);
+    } catch (error) {
+      const apiError = error as ApiError;
+      console.error(apiError.message);
+      setError(apiError.message || "No fue posible obtener los materiales");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMateriales();
+  }, []);
+
+  const filtered = publicaciones.filter((p) =>
+    p.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.descripcion.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
+
+  return (
+    <main className="materiales-page">
+      <div className="materiales-page__header">
+        <h1 className="materiales-page__title">MATERIALES</h1>
+        <SearchBar value={searchQuery} onChange={handleSearch} />
+      </div>
+
+      {loading && (
+        <div className="materiales-page__state">
+          <p className="materiales-page__state-text">Cargando materiales...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="materiales-page__state">
+          <p className="materiales-page__state-text materiales-page__state-text--error">{error}</p>
+        </div>
+      )}
+
+      {!loading && !error && filtered.length === 0 && (
+        <div className="materiales-page__empty">
+          <div className="materiales-page__empty-icon">📚</div>
+          <h2 className="materiales-page__empty-title">No hay materiales disponibles</h2>
+          <p className="materiales-page__empty-description">
+            {searchQuery
+              ? `No se encontraron resultados para "${searchQuery}"`
+              : "Aún no se han publicado materiales académicos. ¡Sé el primero en compartir!"}
+          </p>
+        </div>
+      )}
+
+      {!loading && !error && paginated.length > 0 && (
+        <>
+          <div className="materiales-page__grid">
+            {paginated.map((publicacion) => (
+              <PostCard
+                key={publicacion.id_publicacion}
+                tags={[{ id: 1, name: "Material", type: "categoria" }]}
+                title={publicacion.titulo}
+                price={parseFloat(publicacion.precio)}
+                description={publicacion.descripcion}
+                images={[imagePath.src]}
+              />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="materiales-page__pagination">
+              <button
+                className="materiales-page__pagination-btn"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                ‹
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`materiales-page__pagination-btn ${
+                    page === currentPage ? "materiales-page__pagination-btn--active" : ""
+                  }`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                className="materiales-page__pagination-btn"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                ›
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </main>
+  );
+}

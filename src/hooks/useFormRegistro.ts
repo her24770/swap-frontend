@@ -13,7 +13,7 @@ export function useFormRegistro() {
     resolver: zodResolver(schemaRegistro),
     defaultValues: {
       nombre: "",
-      carnet: "",
+      apellido: "",
       email_institucional: "",
       password: "",
       confirmar_password: "",
@@ -25,11 +25,25 @@ export function useFormRegistro() {
   const onSubmit = form.handleSubmit(async (data) => {
     // confirmar_password no se envía al backend
     const { confirmar_password: _, ...payload } = data;
-    const respuesta = await apiClient.post<{ token: string; usuario: any }>(
-      "/api/auth/registro",
-      { ...payload, carnet: Number(payload.carnet) }
+    const match = data.email_institucional.match(/^[a-zA-Z]+(\d+)@uvg\.edu\.gt$/);
+
+    if (!match) {
+      throw new Error("No se pudo extraer el carnet del correo institucional.");
+    }
+
+    const carnet = Number(match[1]);
+    const respuesta = await apiClient.post<{ token: string; usuario: any; rol: any }>(
+      "/api/auth/register",
+      {
+        nombre: `${data.nombre} ${data.apellido}`.trim(),
+        carnet,
+        email_institucional: data.email_institucional,
+        password: data.password,
+        url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
+        descripcion: data.descripcion || "Sin descripción",
+      }
     );
-    login(respuesta.usuario, respuesta.token);
+    login(respuesta.usuario, respuesta.token, respuesta.rol);
   });
 
   return { form, onSubmit };

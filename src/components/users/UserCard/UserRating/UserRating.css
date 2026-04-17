@@ -1,0 +1,24 @@
+.user-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-rating__stars {
+    display: flex;
+    gap: 2px;
+}
+
+.star--filled {
+    color: var(--swap-primary-color);
+}
+
+.star--empty {
+    color: var(--swap-primary-border-color);
+}
+
+.user-rating__count {
+    font-size: 14px;
+    color: var(--swap-tertiary-text-color);
+    font-weight: 500;
+}
