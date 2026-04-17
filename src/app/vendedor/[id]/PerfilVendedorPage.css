@@ -1,0 +1,157 @@
+/* PerfilVendedorPage.css */
+
+.perfil-vendedor {
+  padding: 1.5rem;
+  min-height: 100%;
+  background-color: var(--swap-primary-background);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .perfil-vendedor {
+    padding: 2rem 2.5rem;
+  }
+}
+
+/* ── Profile header ───────────────────────────────────────────────────────── */
+
+.perfil-vendedor__header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .perfil-vendedor__header {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+}
+
+.perfil-vendedor__avatar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.perfil-vendedor__info-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.perfil-vendedor__name {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.perfil-vendedor__description {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 38rem;
+}
+
+/* Tags */
+.perfil-vendedor__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.perfil-vendedor__tag {
+  font-family: var(--swap-font-textos);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  color: var(--swap-secondary-text-color);
+}
+
+.perfil-vendedor__tag--assembler    { background-color: #007329; }
+.perfil-vendedor__tag--comunicacion { background-color: #2563eb; }
+.perfil-vendedor__tag--electronica  { background-color: #7c3aed; }
+.perfil-vendedor__tag--fisica       { background-color: #dc2626; }
+.perfil-vendedor__tag--diseno       { background-color: #d97706; }
+.perfil-vendedor__tag--biologia     { background-color: #059669; }
+.perfil-vendedor__tag--default      { background-color: var(--swap-tertiary-text-color); }
+
+/* Payment method */
+.perfil-vendedor__payment {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+}
+
+.perfil-vendedor__payment-icon {
+  color: var(--swap-primary-color);
+  flex-shrink: 0;
+}
+
+/* Contact */
+.perfil-vendedor__contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.perfil-vendedor__contact-label {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+/* ── Section ──────────────────────────────────────────────────────────────── */
+
+.perfil-vendedor__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.perfil-vendedor__section-title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+/* ── Carousel wrapper ────────────────────────────────────────────────────── */
+
+.perfil-vendedor__carousel-wrap {
+  padding: 0 0.25rem;
+}
+
+/* ── Comments section ────────────────────────────────────────────────────── */
+
+.perfil-vendedor__comments {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+
+.perfil-vendedor__divider {
+  border: none;
+  border-top: 1px solid var(--swap-tertiary-background);
+  margin: 0;
+}

@@ -3,6 +3,7 @@
 .h-carousel {
   position: relative;
   width: 100%;
+  overflow: visible; 
 }
 
 .h-carousel__track {
@@ -12,6 +13,7 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
   scrollbar-width: none;
 }
 
@@ -23,6 +25,9 @@
   flex: 0 0 auto;
   width: clamp(160px, 38vw, 220px);
   scroll-snap-align: start;
+  position: relative;
+  transition: z-index 0.3s;
+  z-index: 1;
 }
 
 .h-carousel__btn {
@@ -48,6 +53,7 @@
 .h-carousel__btn:hover {
   border-color: var(--swap-primary-color);
   color: var(--swap-primary-color);
+  z-index: 50;
 }
 
 .h-carousel__btn--prev {
