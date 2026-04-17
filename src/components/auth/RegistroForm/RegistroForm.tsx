@@ -7,6 +7,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
+import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
 
@@ -18,6 +19,7 @@ export const extractCarnetFromEmail = (email: string): number | null => {
 
 export default function RegistroForm() {
   const router = useRouter();
+  const login = useAuthStore((s) => s.login);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -47,17 +49,19 @@ export default function RegistroForm() {
         setServerError("El correo no es válido");
         return;
       }
-      await apiClient.post("/api/auth/register", {
-        nombre: `${data.nombre} ${data.apellido}`.trim(),
-        carnet,
-        email_institucional: data.email_institucional,
-        password: data.password,
-        url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
-        descripcion: data.descripcion || "Sin descripción",
-      });
-      alert(`Registro exitoso. Nuevo usuario creado con el email ${data.email_institucional}\nRedirigiendo a login...`);
-      router.push("/login");
-      router.refresh();
+      const respuesta = await apiClient.post<{ token: string; usuario: Usuario; rol: Rol }>(
+        "/api/auth/register",
+        {
+          nombre: `${data.nombre} ${data.apellido}`.trim(),
+          carnet,
+          email_institucional: data.email_institucional,
+          password: data.password,
+          url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
+          descripcion: data.descripcion || "Sin descripción",
+        }
+      );
+      login(respuesta.usuario, respuesta.token, respuesta.rol);
+      router.push("/");
     } catch (error) {
       const apiError = error as ApiError;
       setServerError(apiError.message || "No fue posible registrarse");
