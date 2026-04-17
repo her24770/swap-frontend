@@ -113,6 +113,7 @@ export default function PerfilConsumidorPage() {
           rating: MOCK_USER.rating,
           totalReviews: MOCK_USER.totalReviews,
           contacts: MOCK_USER.contacts,
+          tags: MOCK_TAGS,
         }}
         onSave={async (updated) => {
           console.log("Guardar perfil:", updated);
