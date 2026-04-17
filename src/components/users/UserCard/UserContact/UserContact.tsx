@@ -1,11 +1,7 @@
 "use client";
 
+import type { Contact } from "../../../../types/comment";
 import './UserContact.css';
-
-interface Contact {
-    platform: 'instagram' | 'whatsapp' | 'linkedin' | 'facebook';
-    url: string;
-}
 
 interface UserContactProps {
     contacts: Contact[];

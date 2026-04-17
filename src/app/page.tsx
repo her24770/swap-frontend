@@ -4,24 +4,7 @@ import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../lib/apiClient";
 import imagePath from "../../public/images/uvg.jpg" //Temporal en lo que se implementa la subida de imagenes
 
-interface Publicacion {
-  id_publicacion: number,
-  titulo: string,
-  descripcion: string,
-  precio: string,
-  estado: number,
-  tipo_publicacion: number,
-  me_gusta: number,
-  fecha_publicacion: string,
-  id_usuario: number,
-  imagenes: [],
-  etiquetas: []
-}
-
-interface PublicacionesResponse {
-  message: string,
-  data: Publicacion[]
-}
+import type { Publicacion, PublicacionesResponse } from "../types/publicacion";
 
 export default function HomePage() {
   const [error, setError] = useState<string | null>(null);

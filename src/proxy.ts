@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Rutas que no requieren autenticación
 const rutasPublicas = ["/login", "/registro"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("swap-token")?.value;
 

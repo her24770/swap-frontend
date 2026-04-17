@@ -2,15 +2,8 @@
 
 import CommentCard from "./CommentCard/CommentCard";
 import CommentForm from "./CommentForm/CommentForm";
+import type { Comment } from "../../../../types/comment";
 import "./CommentSection.css";
-
-interface Comment {
-  id: string;
-  authorName: string;
-  timeAgo: string;
-  rating: number;
-  comment: string;
-}
 
 interface CommentSectionProps {
   targetName: string;

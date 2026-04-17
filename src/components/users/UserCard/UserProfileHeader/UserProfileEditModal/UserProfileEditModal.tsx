@@ -2,22 +2,14 @@
 
 import { useState } from "react";
 import { X } from "lucide-react";
+import type { UserProfileEditData } from "../../../../../types/perfil";
 import "../../../../ui/Button/Button.css";
 import "./UserProfileEditModal.css";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-interface UserProfileData {
-  name: string;
-  description: string;
-  imageUrl?: string;
-  paymentMethod?: string;
-}
-
 interface UserProfileEditModalProps {
-  user: UserProfileData;
+  user: UserProfileEditData;
   showPaymentMethod?: boolean;
-  onSave: (updated: Partial<UserProfileData>) => Promise<void> | void;
+  onSave: (updated: Partial<UserProfileEditData>) => Promise<void> | void;
   onClose: () => void;
 }
 
