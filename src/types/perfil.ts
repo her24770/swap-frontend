@@ -2,6 +2,7 @@ import type { Tag } from "./tag";
 import type { Contact } from "./comment";
 
 export interface UserProfileData {
+  id_usuario: number;
   name: string;
   description: string;
   imageUrl?: string;
@@ -18,4 +19,8 @@ export interface UserProfileEditData {
   description: string;
   imageUrl?: string;
   paymentMethod?: string;
+  contacts?: {
+    tipo_contacto: string;
+    valor: string;
+  }[];
 }

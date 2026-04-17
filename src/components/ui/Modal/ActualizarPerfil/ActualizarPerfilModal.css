@@ -1,0 +1,55 @@
+.update-profile-modal {
+  background-color: var(--swap-primary-background);
+  border-radius: 1.25rem;
+  padding: 1.75rem 1.5rem;
+  width: 100%;
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.update-profile-modal__title {
+  font-family: var(--swap-font-titulos);
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--swap-primary-text-color);
+  margin: 0 0 0.25rem;
+}
+
+.update-profile-modal__foto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.update-profile-modal__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-primary-text-color);
+}
+
+.update-profile-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.update-profile-modal__btn-cancel {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-tertiary-text-color);
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease;
+}
+
+.update-profile-modal__btn-cancel:hover {
+  color: var(--swap-primary-text-color);
+}
