@@ -3,6 +3,7 @@
 import ProfilePicture from "./ProfilePicture/ProfilePicture";
 import UserRating from "./UserRating/UserRating";
 import UserContact from "./UserContact/UserContact";
+import { type Contact } from "../../../types/comment";
 import './UserCard.css';
 
 interface UserCardProps {
@@ -11,7 +12,7 @@ interface UserCardProps {
     imageUrl?: string;
     rating: number;
     totalReviews: number;
-    contacts: { platform: 'instagram' | 'whatsapp' | 'linkedin'; url: string }[];
+    contacts: Contact[];
 }
 
 export default function UserCard({ 

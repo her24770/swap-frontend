@@ -16,6 +16,7 @@ import type { Comment } from "../../../types/comment";
 // ── Datos mock ────────────────────────────────────────────────────────────────
 
 const MOCK_SELLER = {
+  id_usuario: 123,
   name: "Michael Perez",
   description:
     "Soy un estudiante de cuarto año de Ingeniería electrónica, me gusta mucho explicar sobre temas de matemática y electrónica.",
@@ -92,6 +93,7 @@ export default function PerfilVendedorPage() {
       {/* ── Perfil header ──────────────────────────────────────────── */}
       <UserProfileHeader
         user={{
+          id_usuario: MOCK_SELLER.id_usuario,
           name: MOCK_SELLER.name,
           description: MOCK_SELLER.description,
           imageUrl: MOCK_SELLER.imageUrl,

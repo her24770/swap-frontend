@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
+import {apiClient} from "../../lib/apiClient"
 import UserProfileHeader from "../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import PostRes from "../../components/posts/PostResumida/PostRes";
@@ -15,6 +16,7 @@ import type { Comment } from "../../types/comment";
 // ── Datos mock ────────────────────────────────────────────────────────────────
 
 const MOCK_USER = {
+  id_usuario: 1,
   name: "Michael Perez",
   description:
     "Soy un estudiante de cuarto año de Ingeniería electrónica, me gusta mucho explicar sobre temas de matemática y electrónica.",
@@ -88,22 +90,67 @@ export default function PerfilConsumidorPage() {
     setComments((prev) => [newComment, ...prev]);
   };
 
+  const[user, setUser] = useState<typeof MOCK_USER | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await apiClient.get<any>("/api/user/1");
+        const contactosData = await apiClient.get<any>(`/api/user/contactos/1/`);
+        const mapTipos: Record<number, any> = {
+          1: "telefono",
+          2: "whatsapp",
+          3: "instagram",
+          4: "correo_personal",
+        };
+        const userMapped = {
+          id_usuario: data.id_usuario,
+          name: data.nombre,
+          description: data.descripcion,
+          imageUrl: data.url_foto_perfil,
+          rating: Number(data.calificacion),
+          totalReviews: 0,
+          contacts: contactosData.map((c: any) => ({
+            platform: mapTipos[c.tipo_contacto],
+            url: c.valor,
+          })),
+        };
+
+        setUser(userMapped);
+      } catch (error) {
+        console.error("Error cargando usuario:", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  if (!user) return <p>Cargando perfil...</p>;
   return (
     <main className="perfil-consumidor">
 
       {/* ── Perfil header ──────────────────────────────────────────── */}
       <UserProfileHeader
         user={{
-          name: MOCK_USER.name,
-          description: MOCK_USER.description,
-          imageUrl: MOCK_USER.imageUrl,
-          rating: MOCK_USER.rating,
-          totalReviews: MOCK_USER.totalReviews,
-          contacts: MOCK_USER.contacts,
+          ...user,
           tags: MOCK_TAGS,
         }}
         onSave={async (updated) => {
-          console.log("Guardar perfil:", updated);
+          setUser((prev) =>
+          prev
+            ?{
+              ...prev, 
+              name: updated.name ?? prev.name,
+              description: updated.description ?? prev.description,
+              contacts: updated.contacts 
+                ? updated.contacts.map((c: any) => ({
+                    platform: c.tipo_contacto,
+                    url: c.valor,
+                  }))
+                : prev.contacts,
+             }
+            : prev
+          );
         }}
       />
 
