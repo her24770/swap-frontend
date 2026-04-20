@@ -130,23 +130,20 @@
   overflow: visible;
 }
 
-/* ── Purchases grid ──────────────────────────────────────────────────────── */
-
-.perfil-consumidor__purchases-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+.perfil-consumidor__purchase-item {
+  flex: 0 0 min(20rem, calc(100vw - 4rem));
+  width: min(20rem, calc(100vw - 4rem));
+  scroll-snap-align: start;
 }
 
-@media (min-width: 30rem) {
-  .perfil-consumidor__purchases-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.perfil-consumidor__purchase-item .post-res-card {
+  max-width: 100%;
 }
 
 @media (min-width: 48rem) {
-  .perfil-consumidor__purchases-grid {
-    grid-template-columns: repeat(4, 1fr);
+  .perfil-consumidor__purchase-item {
+    flex-basis: 20rem;
+    width: 20rem;
   }
 }
 
