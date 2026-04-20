@@ -9,7 +9,7 @@
   align-items: flex-start;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 47.9375rem) {
   .user-profile-header {
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
@@ -21,7 +21,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .user-profile-header {
     grid-template-columns: 1fr;
   }

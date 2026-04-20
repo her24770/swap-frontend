@@ -27,7 +27,7 @@
 }
 
 .comment-section__list::-webkit-scrollbar {
-  width: 6px;
+  width: 0.375rem;
 }
 
 .comment-section__list::-webkit-scrollbar-track {
@@ -48,7 +48,7 @@
 }
 
 /* Mobile: apila verticalmente */
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .comment-section {
     flex-direction: column;
   }

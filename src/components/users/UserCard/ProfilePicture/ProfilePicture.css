@@ -5,9 +5,9 @@
     justify-content: center;
     border-radius: 50%; 
     overflow: hidden; 
-    border: 3px solid var(--swap-primary-border-color);
+    border: 0.1875rem solid var(--swap-primary-border-color);
     background-color: var(--swap-secondary-background);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
 }
 
 .profile-picture__image {
@@ -29,20 +29,20 @@
 }
 
 .profile-picture--sm {
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    border-width: 2px;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+    border-width: 0.125rem;
 }
 
 .profile-picture--md {
-    width: 80px;
-    height: 80px;
-    font-size: 32px;
+    width: 5rem;
+    height: 5rem;
+    font-size: 2rem;
 }
 
 .profile-picture--lg {
-    width: 120px;
-    height: 120px;
-    font-size: 48px;
+    width: 7.5rem;
+    height: 7.5rem;
+    font-size: 3rem;
 }

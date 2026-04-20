@@ -1,12 +1,12 @@
 .user-rating {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .user-rating__stars {
     display: flex;
-    gap: 2px;
+    gap: 0.125rem;
 }
 
 .star--filled {
@@ -18,7 +18,7 @@
 }
 
 .user-rating__count {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--swap-tertiary-text-color);
     font-weight: 500;
 }

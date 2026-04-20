@@ -10,7 +10,7 @@
   overflow: visible;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .perfil-consumidor {
     padding: 2rem 2.5rem;
   }
@@ -24,7 +24,7 @@
   gap: 1.25rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 40rem) {
   .perfil-consumidor__header {
     flex-direction: row;
     align-items: flex-start;
@@ -77,7 +77,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: 999rem;
   color: var(--swap-secondary-text-color);
 }
 
@@ -126,7 +126,7 @@
 /* ── Saved carousel wrapper ──────────────────────────────────────────────── */
 
 .perfil-consumidor__carousel-wrap {
-  padding: 0.5 0.25rem;
+  padding: 0.5rem 0.25rem;
   overflow: visible;
 }
 
@@ -138,13 +138,13 @@
   gap: 0.75rem;
 }
 
-@media (min-width: 480px) {
+@media (min-width: 30rem) {
   .perfil-consumidor__purchases-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .perfil-consumidor__purchases-grid {
     grid-template-columns: repeat(4, 1fr);
   }
@@ -162,6 +162,6 @@
 
 .perfil-consumidor__divider {
   border: none;
-  border-top: 1px solid var(--swap-tertiary-background);
+  border-top: 0.0625rem solid var(--swap-tertiary-background);
   margin: 0;
 }
