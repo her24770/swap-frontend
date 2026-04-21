@@ -4,6 +4,7 @@ import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../../lib/apiClient";
 import imagePath from "../../../public/images/uvg.jpg";
+import { TAG_MATERIAL} from "../../lib/tags";
 import "./MaterialesPage.css";
 
 import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
@@ -89,7 +90,7 @@ export default function MaterialesPage() {
             {paginated.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[{ id: 1, name: "Material", type: "categoria" }]}
+                tags={[TAG_MATERIAL]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}
