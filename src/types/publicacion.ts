@@ -20,7 +20,7 @@ export interface PublicacionesResponse {
 
 // Filtros para obtener publicaciones del api.
 export interface PublicacionFilters {
-  tipo?: 'negocio' | 'servicio' | 'producto';
+  tipo?: 'negocio' | 'material' | 'tutoria';
   page?: number;
   limit?: number;
   sort?: string;

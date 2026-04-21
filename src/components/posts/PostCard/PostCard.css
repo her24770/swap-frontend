@@ -59,9 +59,9 @@
   line-height: 1.5;
   /* Limita a 3 líneas y pone puntos suspensivos */
   display: -webkit-box;
-  
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  line-clamp: 3;
   overflow: hidden;
 }
 
