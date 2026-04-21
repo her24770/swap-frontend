@@ -1,19 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { CreditCard } from "lucide-react";
 import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import imagePath from "../../../../public/images/uvg.jpg";
+import { TAGS_MATERIAS } from "../../../lib/tags";
 import "./PerfilVendedorPage.css";
 
 import type { Tag } from "../../../types/tag";
 import type { Comment } from "../../../types/comment";
-
-// ── Datos mock ────────────────────────────────────────────────────────────────
 
 const MOCK_SELLER = {
   id_usuario: 123,
@@ -30,21 +28,13 @@ const MOCK_SELLER = {
   ],
 };
 
-const MOCK_TAGS: Tag[] = [
-  { id: 1, name: "Assembler", colorKey: "assembler" },
-  { id: 2, name: "Comunicación", colorKey: "comunicacion" },
-  { id: 3, name: "Electrónica", colorKey: "electronica" },
-  { id: 4, name: "Física", colorKey: "fisica" },
-  { id: 5, name: "Diseño", colorKey: "diseno" },
-  { id: 6, name: "Biología", colorKey: "biologia" },
-];
 
 const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
   title: "Porción pastel",
   price: 15,
   description: "Media porción de pastel de chocolate hecho en casa.",
-  tags: [{ id: 1, name: "Negocio", type: "categoria" }],
+  tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }] as Tag[],
 }));
 
 const MOCK_AD = {
@@ -71,8 +61,6 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ];
 
-// ── Componente ────────────────────────────────────────────────────────────────
-
 export default function PerfilVendedorPage() {
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
 
@@ -90,18 +78,17 @@ export default function PerfilVendedorPage() {
   return (
     <main className="perfil-vendedor">
 
-      {/* ── Perfil header ──────────────────────────────────────────── */}
       <UserProfileHeader
         user={{
-          id_usuario: MOCK_SELLER.id_usuario,
-          name: MOCK_SELLER.name,
-          description: MOCK_SELLER.description,
-          imageUrl: MOCK_SELLER.imageUrl,
-          rating: MOCK_SELLER.rating,
+          id_usuario:   MOCK_SELLER.id_usuario,
+          name:         MOCK_SELLER.name,
+          description:  MOCK_SELLER.description,
+          imageUrl:     MOCK_SELLER.imageUrl,
+          rating:       MOCK_SELLER.rating,
           totalReviews: MOCK_SELLER.totalReviews,
-          contacts: MOCK_SELLER.contacts,
+          contacts:     MOCK_SELLER.contacts,
           paymentMethod: MOCK_SELLER.paymentMethod,
-          tags: MOCK_TAGS,
+          tags: TAGS_MATERIAS,
         }}
         onSave={async (updated) => {
           console.log("Guardar perfil:", updated);
@@ -110,7 +97,6 @@ export default function PerfilVendedorPage() {
 
       <hr className="perfil-vendedor__divider" />
 
-      {/* ── Catálogo ───────────────────────────────────────────────── */}
       <section className="perfil-vendedor__section">
         <h2 className="perfil-vendedor__section-title">Catálogo</h2>
         <div className="perfil-vendedor__carousel-wrap">
@@ -132,7 +118,6 @@ export default function PerfilVendedorPage() {
 
       <hr className="perfil-vendedor__divider" />
 
-      {/* ── Anuncios ───────────────────────────────────────────────── */}
       <section className="perfil-vendedor__section">
         <h2 className="perfil-vendedor__section-title">Anuncios</h2>
         <AdBanner
@@ -144,7 +129,6 @@ export default function PerfilVendedorPage() {
 
       <hr className="perfil-vendedor__divider" />
 
-      {/* ── Comentarios y Reseñas ─────────────────────────────────── */}
       <section className="perfil-vendedor__section">
         <h2 className="perfil-vendedor__section-title">Comentarios y Reseñas</h2>
         <div className="perfil-vendedor__comments">

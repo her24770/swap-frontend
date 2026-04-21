@@ -1,19 +1,18 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import {apiClient} from "../../lib/apiClient"
+import { useState, useEffect } from "react";
+import { apiClient } from "../../lib/apiClient";
 import UserProfileHeader from "../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import PostRes from "../../components/posts/PostResumida/PostRes";
 import CommentSection from "../../components/users/UserCard/Comments/CommentSection";
 import HorizontalCarousel from "../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import imagePath from "../../../public/images/uvg.jpg";
+import { TAGS_MATERIAS } from "../../lib/tags";
 import "./PerfilConsumidorPage.css";
 
 import type { Tag } from "../../types/tag";
 import type { Comment } from "../../types/comment";
-
-// ── Datos mock ────────────────────────────────────────────────────────────────
 
 const MOCK_USER = {
   id_usuario: 1,
@@ -29,14 +28,6 @@ const MOCK_USER = {
   ],
 };
 
-const MOCK_TAGS: Tag[] = [
-  { id: 1, name: "Assembler", colorKey: "assembler" },
-  { id: 2, name: "Comunicación", colorKey: "comunicacion" },
-  { id: 3, name: "Electrónica", colorKey: "electronica" },
-  { id: 4, name: "Física", colorKey: "fisica" },
-  { id: 5, name: "Diseño", colorKey: "diseno" },
-  { id: 6, name: "Biología", colorKey: "biologia" },
-];
 
 const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -45,9 +36,9 @@ const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
   description:
     "Brinda tutorías para Assembler, específicamente para ayudar en las labs y explicar prácticas de electrónica.",
   tags: [
-    { id: 1, name: "Assembler", type: "categoria" },
-    { id: 2, name: "Electrónica", type: "categoria" },
-  ],
+    { id: 1, name: "Assembler",  colorKey: "assembler" },
+    { id: 3, name: "Electrónica", colorKey: "electronica" },
+  ] as Tag[],
 }));
 
 const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
@@ -74,10 +65,9 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ];
 
-// ── Componente ────────────────────────────────────────────────────────────────
-
 export default function PerfilConsumidorPage() {
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
+  const [user, setUser] = useState<typeof MOCK_USER | null>(null);
 
   const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
     const newComment: Comment = {
@@ -89,8 +79,6 @@ export default function PerfilConsumidorPage() {
     };
     setComments((prev) => [newComment, ...prev]);
   };
-
-  const[user, setUser] = useState<typeof MOCK_USER | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -115,48 +103,42 @@ export default function PerfilConsumidorPage() {
             url: c.valor,
           })),
         };
-
         setUser(userMapped);
       } catch (error) {
         console.error("Error cargando usuario:", error);
       }
     };
-
     fetchUser();
   }, []);
 
   if (!user) return <p>Cargando perfil...</p>;
+
   return (
     <main className="perfil-consumidor">
 
-      {/* ── Perfil header ──────────────────────────────────────────── */}
       <UserProfileHeader
-        user={{
-          ...user,
-          tags: MOCK_TAGS,
-        }}
+        user={{ ...user, tags: TAGS_MATERIAS }}
         onSave={async (updated) => {
           setUser((prev) =>
-          prev
-            ?{
-              ...prev, 
-              name: updated.name ?? prev.name,
-              description: updated.description ?? prev.description,
-              contacts: updated.contacts 
-                ? updated.contacts.map((c: any) => ({
-                    platform: c.tipo_contacto,
-                    url: c.valor,
-                  }))
-                : prev.contacts,
-             }
-            : prev
+            prev
+              ? {
+                  ...prev,
+                  name: updated.name ?? prev.name,
+                  description: updated.description ?? prev.description,
+                  contacts: updated.contacts
+                    ? updated.contacts.map((c: any) => ({
+                        platform: c.tipo_contacto,
+                        url: c.valor,
+                      }))
+                    : prev.contacts,
+                }
+              : prev
           );
         }}
       />
 
       <hr className="perfil-consumidor__divider" />
 
-      {/* ── Tus Guardados ─────────────────────────────────────────── */}
       <section className="perfil-consumidor__section">
         <h2 className="perfil-consumidor__section-title">Tus Guardados</h2>
         <div className="perfil-consumidor__carousel-wrap">
@@ -178,7 +160,6 @@ export default function PerfilConsumidorPage() {
 
       <hr className="perfil-consumidor__divider" />
 
-      {/* ── Tus Compras ───────────────────────────────────────────── */}
       <section className="perfil-consumidor__section">
         <h2 className="perfil-consumidor__section-title">Tus Compras</h2>
         <div className="perfil-consumidor__carousel-wrap">
@@ -198,7 +179,6 @@ export default function PerfilConsumidorPage() {
 
       <hr className="perfil-consumidor__divider" />
 
-      {/* ── Comentarios y Reseñas ─────────────────────────────────── */}
       <section className="perfil-consumidor__section">
         <h2 className="perfil-consumidor__section-title">Comentarios y Reseñas</h2>
         <div className="perfil-consumidor__comments">

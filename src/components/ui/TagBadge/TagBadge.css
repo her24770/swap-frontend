@@ -1,0 +1,46 @@
+/* TagBadge.css */
+
+.tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  font-family: var(--swap-font-textos);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1.4;
+  border: 1px solid transparent;
+  transition: filter 0.15s ease, transform 0.15s ease;
+  cursor: default;
+  user-select: none;
+}
+
+/* Variante clickeable (para filtros) */
+.tag-badge--clickable {
+  cursor: pointer;
+}
+
+.tag-badge--clickable:hover {
+  filter: brightness(0.92);
+  transform: translateY(-1px);
+}
+
+.tag-badge--clickable:active {
+  filter: brightness(0.85);
+  transform: translateY(0);
+}
+
+/* Variante pequeña (para cards) */
+.tag-badge--sm {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+}
+
+/* Variante grande (para perfiles) */
+.tag-badge--lg {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.8rem;
+}

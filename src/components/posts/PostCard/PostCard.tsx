@@ -1,15 +1,17 @@
-import FilterTag from "../../filters/FilterTag/FilterTag";
+import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import {ChevronRight } from "lucide-react";
-import "../../ui/Button/Button";
+import "../../ui/Button/Button.css";
 import "./PostCard.css";
+import type { Tag } from "../../../types/tag";
 
 interface PostCardProps {
   title: string;
   price: number;
   description: string;
   images: string[];
-  tags: { id: number; name: string; type: string }[];
+  tags: Tag[];
+  onTagClick?: (tag: Tag) => void;
 }
 
 
@@ -18,7 +20,8 @@ export default function PostCard({
   price, 
   description, 
   images, 
-  tags 
+  tags,
+  onTagClick,
 }: PostCardProps) {
   
   const handleDetailsClick = () => {
@@ -30,10 +33,11 @@ export default function PostCard({
       
       <header className="post-card__header">
         {tags.map((tag) => (
-          <FilterTag 
-            key={tag.id} 
-            label={tag.name} 
-            onClick={() => console.log(`Filtrar por: ${tag.name}`)}
+          <TagBadge
+            key={tag.id}
+            tag={tag}
+            size="sm"
+            onClick={onTagClick}
           />
         ))}
       </header>
