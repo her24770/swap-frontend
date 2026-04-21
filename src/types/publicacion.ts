@@ -16,3 +16,14 @@ export interface PublicacionesResponse {
   message: string;
   data: Publicacion[];
 }
+
+
+// Filtros para obtener publicaciones del api.
+export interface PublicacionFilters {
+  tipo?: 'negocio' | 'servicio' | 'producto';
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
+  all?: boolean;
+}
