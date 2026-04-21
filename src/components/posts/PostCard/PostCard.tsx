@@ -1,7 +1,7 @@
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import {ChevronRight } from "lucide-react";
-import "../../ui/Button/Button";
+import "../../ui/Button/Button.css";
 import "./PostCard.css";
 import type { Tag } from "../../../types/tag";
 
