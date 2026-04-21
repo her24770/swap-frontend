@@ -98,6 +98,13 @@
   max-width: 36rem;
 }
 
+.user-profile-header__save-error {
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  color: var(--swap-danger-color);
+  margin: 0;
+}
+
 /* ── Payment method ────────────────────────────────────────────────────────── */
 
 .user-profile-header__payment {
@@ -132,16 +139,6 @@
   flex-wrap: wrap;
   gap: 0.375rem;
   max-width: 18rem;
-}
-
-.user-profile-header__tag {
-  font-family: var(--swap-font-textos);
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  color: #ffffff;
-  white-space: nowrap;
 }
 
 /* ── Contact ───────────────────────────────────────────────────────────────── */

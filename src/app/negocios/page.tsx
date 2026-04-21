@@ -10,6 +10,8 @@ import type { Publicacion, PublicacionesResponse } from "../../types/publicacion
 
 const ITEMS_PER_PAGE = 12;
 
+const TAG_NEGOCIO = { id: 2, name: "Negocio", colorKey: "diseno" };
+
 export default function NegociosPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,7 +91,7 @@ export default function NegociosPage() {
             {paginated.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[{ id: 1, name: "Negocio", type: "categoria" }]}
+                tags={[TAG_NEGOCIO]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}

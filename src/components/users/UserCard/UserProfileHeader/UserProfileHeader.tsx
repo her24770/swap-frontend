@@ -6,28 +6,19 @@ import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
+import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
+import type { Tag } from "../../../../types/tag";
 import "./UserProfileHeader.css";
 
 interface UserProfileHeaderProps {
   user: UserProfileData;
-  tagColors?: Record<string, string>;
   onSave?: (updated: Partial<UserProfileEditData>) => Promise<void> | void;
 }
 
-const DEFAULT_TAG_COLORS: Record<string, string> = {
-  assembler:    "#7c3aed",
-  comunicacion: "#db2777",
-  electronica:  "#0d9488",
-  fisica:       "#ca8a04",
-  diseno:       "#ea580c",
-  biologia:     "#16a34a",
-};
-
 export default function UserProfileHeader({
   user,
-  tagColors = DEFAULT_TAG_COLORS,
   onSave,
 }: UserProfileHeaderProps) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -115,13 +106,7 @@ export default function UserProfileHeader({
           {user.tags && user.tags.length > 0 && (
             <div className="user-profile-header__tags">
               {user.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="user-profile-header__tag"
-                  style={{ backgroundColor: tagColors[tag.colorKey] ?? "#64748b" }}
-                >
-                  {tag.name}
-                </span>
+                <TagBadge key={tag.id} tag={tag} size="lg" />
               ))}
             </div>
           )}
