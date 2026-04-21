@@ -4,13 +4,12 @@ import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../../lib/apiClient";
 import imagePath from "../../../public/images/uvg.jpg";
+import { TAG_NEGOCIO} from "../../lib/tags";
 import "./NegociosPage.css";
 
 import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
 
 const ITEMS_PER_PAGE = 12;
-
-const TAG_NEGOCIO = { id: 2, name: "Negocio", colorKey: "diseno" };
 
 export default function NegociosPage() {
   const [error, setError] = useState<string | null>(null);

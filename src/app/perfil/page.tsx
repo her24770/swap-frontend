@@ -8,6 +8,7 @@ import PostRes from "../../components/posts/PostResumida/PostRes";
 import CommentSection from "../../components/users/UserCard/Comments/CommentSection";
 import HorizontalCarousel from "../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import imagePath from "../../../public/images/uvg.jpg";
+import { TAGS_MATERIAS } from "../../lib/tags";
 import "./PerfilConsumidorPage.css";
 
 import type { Tag } from "../../types/tag";
@@ -27,14 +28,6 @@ const MOCK_USER = {
   ],
 };
 
-const MOCK_TAGS: Tag[] = [
-  { id: 1, name: "Assembler",    colorKey: "assembler" },
-  { id: 2, name: "Comunicación", colorKey: "comunicacion" },
-  { id: 3, name: "Electrónica",  colorKey: "electronica" },
-  { id: 4, name: "Física",       colorKey: "fisica" },
-  { id: 5, name: "Diseño",       colorKey: "diseno" },
-  { id: 6, name: "Biología",     colorKey: "biologia" },
-];
 
 const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -124,7 +117,7 @@ export default function PerfilConsumidorPage() {
     <main className="perfil-consumidor">
 
       <UserProfileHeader
-        user={{ ...user, tags: MOCK_TAGS }}
+        user={{ ...user, tags: TAGS_MATERIAS }}
         onSave={async (updated) => {
           setUser((prev) =>
             prev

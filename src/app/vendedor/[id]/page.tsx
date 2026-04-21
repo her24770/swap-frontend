@@ -7,6 +7,7 @@ import CommentSection from "../../../components/users/UserCard/Comments/CommentS
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import imagePath from "../../../../public/images/uvg.jpg";
+import { TAGS_MATERIAS } from "../../../lib/tags";
 import "./PerfilVendedorPage.css";
 
 import type { Tag } from "../../../types/tag";
@@ -27,14 +28,6 @@ const MOCK_SELLER = {
   ],
 };
 
-const MOCK_TAGS: Tag[] = [
-  { id: 1, name: "Assembler",    colorKey: "assembler" },
-  { id: 2, name: "Comunicación", colorKey: "comunicacion" },
-  { id: 3, name: "Electrónica",  colorKey: "electronica" },
-  { id: 4, name: "Física",       colorKey: "fisica" },
-  { id: 5, name: "Diseño",       colorKey: "diseno" },
-  { id: 6, name: "Biología",     colorKey: "biologia" },
-];
 
 const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -95,7 +88,7 @@ export default function PerfilVendedorPage() {
           totalReviews: MOCK_SELLER.totalReviews,
           contacts:     MOCK_SELLER.contacts,
           paymentMethod: MOCK_SELLER.paymentMethod,
-          tags: MOCK_TAGS,
+          tags: TAGS_MATERIAS,
         }}
         onSave={async (updated) => {
           console.log("Guardar perfil:", updated);

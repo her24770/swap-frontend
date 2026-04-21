@@ -4,13 +4,12 @@ import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../../lib/apiClient";
 import imagePath from "../../../public/images/uvg.jpg";
+import { TAG_MATERIAL} from "../../lib/tags";
 import "./MaterialesPage.css";
 
 import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
 
 const ITEMS_PER_PAGE = 12;
-
-const TAG_MATERIAL = { id: 1, name: "Material", colorKey: "biologia" };
 
 export default function MaterialesPage() {
   const [error, setError] = useState<string | null>(null);

@@ -3,15 +3,9 @@ import PostCard from "../components/posts/PostCard/PostCard";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../lib/apiClient";
 import imagePath from "../../public/images/uvg.jpg";
+import {TIPO_TAG_MAP} from "../lib/tags";
 
 import type { Publicacion, PublicacionesResponse } from "../types/publicacion";
-import type { Tag } from "../types/tag";
-
-const TIPO_TAG_MAP: Record<number, Tag> = {
-  1: { id: 1, name: "Material",  colorKey: "biologia" },
-  2: { id: 2, name: "Tutoría",   colorKey: "comunicacion" },
-  3: { id: 3, name: "Negocio",   colorKey: "diseno" },
-};
 
 export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
