@@ -162,15 +162,18 @@ export default function PerfilConsumidorPage() {
 
       <section className="perfil-consumidor__section">
         <h2 className="perfil-consumidor__section-title">Tus Compras</h2>
-        <div className="perfil-consumidor__purchases-grid">
-          {MOCK_PURCHASES.map((pub) => (
-            <PostRes
-              key={pub.id}
-              title={pub.title}
-              price={pub.price}
-              images={[imagePath.src]}
-            />
-          ))}
+        <div className="perfil-consumidor__carousel-wrap">
+          <HorizontalCarousel>
+            {MOCK_PURCHASES.map((pub) => (
+              <div key={pub.id} className="perfil-consumidor__purchase-item">
+                <PostRes
+                  title={pub.title}
+                  price={pub.price}
+                  images={[imagePath.src]}
+                />
+              </div>
+            ))}
+          </HorizontalCarousel>
         </div>
       </section>
 

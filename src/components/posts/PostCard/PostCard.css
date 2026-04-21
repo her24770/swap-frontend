@@ -23,7 +23,7 @@
 }
 
 .post-card__media {
-  padding: 0 16px; /* Para que la imagen no toque los bordes laterales */
+  padding: 0 1rem; /* Para que la imagen no toque los bordes laterales */
 }
 
 .post-card__content {
@@ -41,27 +41,27 @@
 
 .post-card__title {
   margin: 0;
-  font-size: 24px;
+  font-size: 1.5rem;
   color: var(--swap-primary-text-color);
   font-weight: 600;
 }
 
 .post-card__price {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--swap-primary-text-color);
 }
 
 .post-card__description {
   margin: 0;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--swap-tertiary-text-color);
   line-height: 1.5;
   /* Limita a 3 líneas y pone puntos suspensivos */
   display: -webkit-box;
-  
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  line-clamp: 3;
   overflow: hidden;
 }
 

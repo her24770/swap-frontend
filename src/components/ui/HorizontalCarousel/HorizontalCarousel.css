@@ -23,7 +23,7 @@
 
 .h-carousel__item {
   flex: 0 0 auto;
-  width: clamp(160px, 38vw, 220px);
+  width: clamp(10rem, 38vw, 13.75rem);
   scroll-snap-align: start;
   position: relative;
   transition: z-index 0.3s;

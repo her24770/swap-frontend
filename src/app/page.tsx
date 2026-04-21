@@ -1,11 +1,13 @@
 "use client";
+
+import { useState } from "react";
 import PostCard from "../components/posts/PostCard/PostCard";
 import { useState, useEffect } from "react";
 import { apiClient, type ApiError } from "../lib/apiClient";
 import imagePath from "../../public/images/uvg.jpg";
 import {TIPO_TAG_MAP} from "../lib/tags";
 
-import type { Publicacion, PublicacionesResponse } from "../types/publicacion";
+const ITEMS_PER_PAGE = 12;
 
 export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
@@ -27,20 +29,31 @@ export default function HomePage() {
     }
   };
 
-  useEffect(() => {
-    fetchPublicaciones();
-  }, []);
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
 
   return (
     <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       <h1>Publicaciones destacadas</h1>
       <p>Explora las publicaciones de la comunidad</p>
 
-      {loading && <p>Cargando Publicaciones...</p>}
-      {error && <p>{error}</p>}
+      {error && (
+        <div className="descubre-page__state">
+          <p className="descubre-page__state-text descubre-page__state-text--error">
+            {error}
+          </p>
+        </div>
+      )}
 
-      {!loading && !error && publicaciones.length === 0 && (
-        <p>No hay publicaciones disponibles.</p>
+      {!loading && !error && filtered.length === 0 && (
+        <div className="descubre-page__empty">
+          <div className="descubre-page__empty-icon">🏪</div>
+          <h2 className="descubre-page__empty-title">No hay negocios disponibles</h2>
+          <p className="descubre-page__empty-description">
+            {searchQuery
+              ? `No se encontraron resultados para "${searchQuery}"`
+              : "Aún no hay negocios estudiantiles publicados."}
+          </p>
+        </div>
       )}
 
       {publicaciones.map((publicacion) => {

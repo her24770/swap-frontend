@@ -24,3 +24,4 @@ export interface UserProfileEditData {
     valor: string;
   }[];
 }
+
