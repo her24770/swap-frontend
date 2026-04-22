@@ -84,12 +84,15 @@ export default function PerfilConsumidorPage() {
   };
 
   useEffect(() => {
-    const idForFetch = idUsuario ?? 1;
+    if (!idUsuario){
+      setUser(null);
+      return;
+    }
 
     const fetchUser = async () => {
       try {
-        const data = await apiClient.get<any>(`/api/user/${idForFetch}`);
-        const contacts = await obtenerContactosUsuario(idForFetch);
+        const data = await apiClient.get<any>(`/api/user/${idUsuario}`);
+        const contacts = await obtenerContactosUsuario(idUsuario);
         const userMapped = {
           id_usuario: data.id_usuario,
           name: data.nombre,
