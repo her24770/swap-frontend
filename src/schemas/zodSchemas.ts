@@ -59,6 +59,18 @@ export const schemaLogin = z.object({
 });
 
 // ─── Publicación ──────────────────────────────────────────────────────────────
+export const TIPOS_PUBLICACION = ["material", "tutoria", "negocio"] as const;
+
+export const schemaImagen = z
+  .instanceof(File, { message: "Debe ser un archivo válido." })
+  .refine(
+    (file) => file.size <= MAX_IMAGE_SIZE_BYTES,
+    { message: "Cada imagen no puede superar los 5 MB." }
+  )
+  .refine(
+    (file) => ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number]),
+    { message: "Formato no permitido. Usa JPG, PNG o WebP." }
+  );
 
 export const schemaCrearPublicacion = z.object({
   titulo: z
@@ -77,9 +89,31 @@ export const schemaCrearPublicacion = z.object({
     .optional()
     .or(z.literal("")),
 
-  tipo_publicacion: z
-    .string()
-    .min(1, "Selecciona un tipo de publicación."),
+  // tipo_publicacion: z
+  //   .string()
+  //   .min(1, "Selecciona un tipo de publicación."),
+
+  tipo_publicacion: z.enum(TIPOS_PUBLICACION, {
+    required_error: "Selecciona el tipo de publicación.",
+    invalid_type_error: "Tipo de publicación inválido.",
+  }),
+ 
+  /**
+   * IDs de las etiquetas/categorías seleccionadas.
+   * El backend recibe números; el formulario envía strings desde <select>
+   */
+  categorias: z
+    .array(z.coerce.number().int().positive("ID de categoría inválido."))
+    .min(1, "Selecciona al menos una categoría.")
+    .max(10, "No puedes seleccionar más de 10 categorías."),
+ 
+  imagenes: z
+    .array(schemaImagen)
+    .max(5, "Puedes subir un máximo de 5 imágenes.")
+    .optional()
+    .default([]),
+ 
+  destacado: z.boolean().optional().default(false),
 });
 
 export const schemaEditarPublicacion = z.object({
@@ -100,7 +134,27 @@ export const schemaEditarPublicacion = z.object({
     .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido.")
     .optional()
     .or(z.literal("")),
-});
+
+  tipo_publicacion: z
+    .enum(TIPOS_PUBLICACION, { invalid_type_error: "Tipo de publicación inválido." })
+    .optional(),
+
+  categorias: z
+    .array(z.coerce.number().int().positive())
+    .max(10, "No puedes seleccionar más de 10 categorías.")
+    .optional(),
+
+  imagenesNuevas: z
+    .array(schemaImagen)
+    .max(5, "Puedes subir un máximo de 5 imágenes nuevas.")
+    .optional()
+    .default([]),
+
+  destacado: z.boolean().optional(),
+  })
+  .refine((data) => Object.keys(data).some((k) => data[k as keyof typeof data] !== undefined), {
+    message: "Debes modificar al menos un campo.",
+  });
 
 // ─── Perfil ───────────────────────────────────────────────────────────────────
 
@@ -152,3 +206,10 @@ export type CrearPublicacionFormData = z.infer<typeof schemaCrearPublicacion>;
 export type EditarPublicacionFormData = z.infer<typeof schemaEditarPublicacion>;
 export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
+export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
+ 
+/** Tamaño máximo por imagen: 5 MB */
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+ 
+/** Tipos MIME aceptados */
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"] as const;
