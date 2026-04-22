@@ -7,7 +7,43 @@ function authHeader(): HeadersInit {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+export interface CrearPublicacionPayload {
+  titulo: string;
+  descripcion: string;
+  precio?: string;
+  tipo_publicacion: number;
+  imagen?: File;
+}
+
+export interface CrearPublicacionResult {
+  id_publicacion: number;
+  imagen_url: string;
+}
+
 export const imagenService = {
+  async crearPublicacion(payload: CrearPublicacionPayload): Promise<CrearPublicacionResult> {
+    const formData = new FormData();
+    formData.append("titulo", payload.titulo);
+    formData.append("descripcion", payload.descripcion);
+    formData.append("precio", payload.precio ? payload.precio : "0");
+    formData.append("tipo_publicacion", String(payload.tipo_publicacion));
+    if (payload.imagen) formData.append("imagen", payload.imagen);
+
+    const res = await fetch(`${BASE_URL}/api/publicacion/`, {
+      method: "POST",
+      headers: authHeader(),
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.message ?? `Error ${res.status} al crear publicación`);
+    }
+
+    const json = await res.json();
+    return json.data as CrearPublicacionResult;
+  },
+
   async uploadFotoPerfil(usuarioId: number, file: File): Promise<string> {
     const formData = new FormData();
     formData.append("imagen", file);

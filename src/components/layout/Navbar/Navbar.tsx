@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Menu, UserCircle2, LogOut } from "lucide-react";
+import { Menu, UserCircle2, LogOut, Store } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
@@ -15,7 +15,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const { logout, usuario } = useAuth();
 
   const isAuthRoute = AUTH_ROUTES.includes(pathname);
 
@@ -68,6 +68,16 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
                 <UserCircle2 size={16} className="navbar__dropdown-icon" />
                 Ver perfil
               </Link>
+              {usuario?.id_usuario && (
+                <Link
+                  href={`/vendedor/${usuario.id_usuario}`}
+                  onClick={() => setProfileOpen(false)}
+                  className="navbar__dropdown-item"
+                >
+                  <Store size={16} className="navbar__dropdown-icon" />
+                  Mi tienda
+                </Link>
+              )}
               <div className="navbar__dropdown-divider" />
               <button
                 type="button"

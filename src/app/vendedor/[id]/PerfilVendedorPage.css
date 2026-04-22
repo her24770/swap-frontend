@@ -160,3 +160,19 @@
   border-top: 1px solid var(--swap-tertiary-background);
   margin: 0;
 }
+
+.perfil-vendedor__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.perfil-vendedor__form-modal {
+  background-color: var(--swap-primary-background);
+  border-radius: var(--radius-xl, 12px);
+  padding: 1.5rem;
+  width: min(36rem, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+}

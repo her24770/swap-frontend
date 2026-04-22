@@ -4,7 +4,6 @@ import { useForm, UseFormReturn  } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import {
   schemaCrearPublicacion,
   schemaEditarPublicacion,
@@ -14,25 +13,8 @@ import {
   TIPOS_PUBLICACION,
 } from "../schemas/zodSchemas";
 import { apiClient, type ApiError} from "../lib/apiClient";
+import { imagenService } from "../services/imagenService";
 
-// ─── Tipos de respuesta del backend ──────────────────────────────────────────
- 
-interface PublicacionBackend {
-  id_publicacion: number;
-  titulo: string;
-  descripcion: string;
-  precio: string;
-  estado: number;
-  tipo_publicacion: number;
-  me_gusta: number;
-  fecha_publicacion: string;
-  id_usuario: number;
-}
- 
-interface CrearPublicacionResponse {
-  message: string;
-  publicacion: PublicacionBackend;
-}
  
 // ─── Helpers internos ─────────────────────────────────────────────────────────
  
@@ -61,34 +43,20 @@ function revocarPreviews(urls: string[]): void {
 // Hook: useFormCrearPublicacion
 
 export interface UseFormCrearPublicacionReturn {
-  /** Instancia de react-hook-form para conectar inputs */
   form: UseFormReturn<CrearPublicacionFormData>;
- 
-  /** Envía el formulario al backend */
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-
   isSubmitting: boolean;
-
   serverError: string | null;
- 
   isSuccess: boolean;
- 
   imagePreviews: string[];
- 
-  /** Agrega archivos al campo "imagenes" validando y generando previews */
   addImages: (files: FileList | File[]) => void;
- 
   removeImage: (index: number) => void;
- 
   tiposPublicacion: typeof TIPOS_PUBLICACION;
- 
-  /** Restablece el formulario a sus valores iniciales */
   resetForm: () => void;
 }
 
 
 export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
-  const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -162,31 +130,19 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     setIsSuccess(false);
 
     try {
-      // Construye el payload que espera el backend
-      const payload = {
+      const imagen = data.imagenes?.[0];
+      await imagenService.crearPublicacion({
         titulo: data.titulo,
         descripcion: data.descripcion,
-        precio: data.precio ? parseFloat(data.precio) : 0,
+        precio: data.precio,
         tipo_publicacion: TIPO_ID_MAP[data.tipo_publicacion],
-        destacado: data.destacado ?? false,
-        etiquetas: data.categorias,
-        // Las imágenes se suben como multipart/form-data en una segunda
-        // petición cuando el backend soporte ese endpoint.
-        // Por ahora se omiten del JSON principal.
-      };
- 
-      const response = await apiClient.post<CrearPublicacionResponse>(
-        "/api/publicacion",
-        payload
-      );
- 
+        imagen,
+      });
+
       setIsSuccess(true);
- 
-      // Limpia previews y navega al detalle de la publicación creada
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       form.reset();
-      router.push(`/publicacion/${response.publicacion.id_publicacion}`);
     } catch (error) {
       const apiError = error as ApiError;
       setServerError(apiError.message || "No fue posible crear la publicación. Intenta de nuevo.");

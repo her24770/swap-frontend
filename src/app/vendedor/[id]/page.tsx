@@ -1,33 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { SquarePlus } from "lucide-react";
 import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
+import CrearPublicacionForm from "../../../components/posts/PostCard/CrearPublicacionForm/CrearPublicacionForm";
 import imagePath from "../../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../../lib/tags";
+import { apiClient } from "../../../lib/apiClient";
+import { obtenerContactosUsuario } from "../../../lib/contactosUsuario";
+import "../../../components/ui/Button/Button.css";
+import "../../../components/ui/Modal/Modal.css";
 import "./PerfilVendedorPage.css";
 
 import type { Tag } from "../../../types/tag";
 import type { Comment } from "../../../types/comment";
-
-const MOCK_SELLER = {
-  id_usuario: 123,
-  name: "Michael Perez",
-  description:
-    "Soy un estudiante de cuarto año de Ingeniería electrónica, me gusta mucho explicar sobre temas de matemática y electrónica.",
-  imageUrl: undefined as string | undefined,
-  rating: 2,
-  totalReviews: 15,
-  paymentMethod: "Transferencia",
-  contacts: [
-    { platform: "instagram" as const, url: "https://instagram.com" },
-    { platform: "whatsapp" as const, url: "https://wa.me/12345678" },
-  ],
-};
-
+import type { UserProfileData } from "../../../types/perfil";
 
 const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -49,8 +41,7 @@ const MOCK_COMMENTS: Comment[] = [
     authorName: "Carlos M.",
     timeAgo: "Hace 2 días",
     rating: 5,
-    comment:
-      "Muy buen profesor, explica con mucha paciencia. Me ayudó a entender temas complejos de Álgebra que no entendía en clase.",
+    comment: "Muy buen profesor, explica con mucha paciencia. Me ayudó a entender temas complejos de Álgebra que no entendía en clase.",
   },
   {
     id: "2",
@@ -62,7 +53,36 @@ const MOCK_COMMENTS: Comment[] = [
 ];
 
 export default function PerfilVendedorPage() {
+  const { id } = useParams<{ id: string }>();
+  const [user, setUser] = useState<UserProfileData | null>(null);
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchUser = async () => {
+      try {
+        const data = await apiClient.get<any>(`/api/user/${id}`);
+        const contacts = await obtenerContactosUsuario(Number(id));
+        setUser({
+          id_usuario: data.id_usuario,
+          name: data.nombre,
+          description: data.descripcion,
+          imageUrl: data.url_foto_perfil,
+          rating: Number(data.calificacion),
+          totalReviews: 0,
+          paymentMethod: data.metodo_pago,
+          contacts,
+          tags: TAGS_MATERIAS,
+        });
+      } catch (error) {
+        console.error("Error cargando vendedor:", error);
+      }
+    };
+
+    fetchUser();
+  }, [id]);
 
   const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
     const newComment: Comment = {
@@ -75,30 +95,47 @@ export default function PerfilVendedorPage() {
     setComments((prev) => [newComment, ...prev]);
   };
 
+  if (!user) return <p>Cargando perfil...</p>;
+
   return (
     <main className="perfil-vendedor">
 
       <UserProfileHeader
-        user={{
-          id_usuario:   MOCK_SELLER.id_usuario,
-          name:         MOCK_SELLER.name,
-          description:  MOCK_SELLER.description,
-          imageUrl:     MOCK_SELLER.imageUrl,
-          rating:       MOCK_SELLER.rating,
-          totalReviews: MOCK_SELLER.totalReviews,
-          contacts:     MOCK_SELLER.contacts,
-          paymentMethod: MOCK_SELLER.paymentMethod,
-          tags: TAGS_MATERIAS,
-        }}
+        user={user}
         onSave={async (updated) => {
-          console.log("Guardar perfil:", updated);
+          setUser((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  name: updated.name ?? prev.name,
+                  description: updated.description ?? prev.description,
+                  imageUrl: updated.imageUrl ?? prev.imageUrl,
+                  contacts: updated.contacts
+                    ? updated.contacts.map((c: any) => ({
+                        platform: c.tipo_contacto,
+                        url: c.valor,
+                      }))
+                    : prev.contacts,
+                }
+              : prev
+          );
         }}
       />
 
       <hr className="perfil-vendedor__divider" />
 
       <section className="perfil-vendedor__section">
-        <h2 className="perfil-vendedor__section-title">Catálogo</h2>
+        <div className="perfil-vendedor__section-header">
+          <h2 className="perfil-vendedor__section-title">Catálogo</h2>
+          <button
+            type="button"
+            className="button button--small"
+            onClick={() => setModalOpen(true)}
+          >
+            <SquarePlus size={14} />
+            Nueva publicación
+          </button>
+        </div>
         <div className="perfil-vendedor__carousel-wrap">
           <HorizontalCarousel>
             {MOCK_CATALOG.map((pub) => (
@@ -133,13 +170,24 @@ export default function PerfilVendedorPage() {
         <h2 className="perfil-vendedor__section-title">Comentarios y Reseñas</h2>
         <div className="perfil-vendedor__comments">
           <CommentSection
-            targetName={MOCK_SELLER.name}
+            targetName={user.name}
             comments={comments}
             onSubmit={handleCommentSubmit}
             onCancel={() => {}}
           />
         </div>
       </section>
+
+      {modalOpen && (
+        <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+          <div className="perfil-vendedor__form-modal" onClick={(e) => e.stopPropagation()}>
+            <CrearPublicacionForm
+              onSuccess={() => setModalOpen(false)}
+              onCancel={() => setModalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
 
     </main>
   );

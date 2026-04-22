@@ -496,3 +496,10 @@
     text-align: center;
   }
 }
+
+.crear-publicacion__server-error {
+  margin: 0.5rem 0;
+  font-size: 0.8125rem;
+  color: var(--swap-error-color, #e53e3e);
+  font-family: var(--swap-font-textos);
+}

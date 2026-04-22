@@ -1,77 +1,47 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { SquarePlus, ChevronDown, Check, X, CloudUpload } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
+import { useFormCrearPublicacion } from "../../../../hooks/useFormPublicacion";
+import { TAGS_MATERIAS } from "../../../../lib/tags";
+import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
 
-// ── Schema ────────────────────────────────────────────────────────────────────
-
-const schema = z.object({
-  titulo: z
-    .string()
-    .min(3, "El título debe tener al menos 3 caracteres.")
-    .max(100, "El título no puede superar 100 caracteres."),
-  descripcion: z
-    .string()
-    .min(10, "La descripción debe tener al menos 10 caracteres.")
-    .max(500, "La descripción no puede superar 500 caracteres."),
-  precio: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Ingresa un precio válido (ej. 25.00).")
-    .or(z.literal("")),
-  destacado: z.boolean().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
-
-// ── Categories ────────────────────────────────────────────────────────────────
-
-const CATEGORIAS = [
-  "Matemáticas",
-  "Física",
-  "Química",
-  "Programación",
-  "Diseño",
-  "Idiomas",
-  "Historia",
-  "Economía",
-  "Biología",
-  "Arte",
-];
-
-// ── Props ─────────────────────────────────────────────────────────────────────
+const TIPO_LABELS: Record<string, string> = {
+  material:  "Material",
+  tutoria:   "Tutoría",
+  negocio:   "Negocio",
+};
 
 interface CrearPublicacionFormProps {
-  onSubmit?: (data: FormData & { categorias: string[]; imagenes: File[] }) => Promise<void>;
+  onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPublicacionFormProps) {
+  const {
+    form,
+    onSubmit,
+    isSubmitting,
+    serverError,
+    isSuccess,
+    imagePreviews,
+    addImages,
+    removeImage,
+    tiposPublicacion,
+    resetForm,
+  } = useFormCrearPublicacion();
 
-export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublicacionFormProps) {
-  const [categorias, setCategorias] = useState<string[]>([]);
+  const { register, formState: { errors }, setValue, watch } = form;
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [categoriasError, setCategoriasError] = useState<string | null>(null);
-  const [imagenes, setImagenes] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
   const [dragOver, setDragOver] = useState(false);
-
   const dropdownRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: { titulo: "", descripcion: "", precio: "", destacado: false },
-  });
+  const selectedCategorias: number[] = watch("categorias") ?? [];
 
-  // Close dropdown on outside click
+  // Cierra el dropdown al clickear fuera
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -82,63 +52,25 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Revoke object URLs on unmount to avoid memory leaks
+  // Notifica al padre cuando la creación fue exitosa
   useEffect(() => {
-    return () => previews.forEach((url) => URL.revokeObjectURL(url));
-  }, [previews]);
+    if (isSuccess) onSuccess?.();
+  }, [isSuccess]);
 
-  // ── Category handlers ──────────────────────────────────────────────────────
-
-  const toggleCategoria = (cat: string) => {
-    setCategorias((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
-    );
-    setCategoriasError(null);
+  const toggleCategoria = (id: number) => {
+    const next = selectedCategorias.includes(id)
+      ? selectedCategorias.filter((c) => c !== id)
+      : [...selectedCategorias, id];
+    setValue("categorias", next, { shouldValidate: true, shouldDirty: true });
   };
-
-  const removeCategoria = (cat: string) => {
-    setCategorias((prev) => prev.filter((c) => c !== cat));
-  };
-
-  // ── Image handlers ─────────────────────────────────────────────────────────
-
-  const addFiles = (files: FileList | null) => {
-    if (!files) return;
-    const valid = Array.from(files).filter(
-      (f) => f.size <= 5 * 1024 * 1024 && ["image/png", "image/jpeg"].includes(f.type)
-    );
-    setImagenes((prev) => [...prev, ...valid]);
-    setPreviews((prev) => [...prev, ...valid.map((f) => URL.createObjectURL(f))]);
-  };
-
-  const removeImage = (index: number) => {
-    URL.revokeObjectURL(previews[index]);
-    setImagenes((prev) => prev.filter((_, i) => i !== index));
-    setPreviews((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // ── Submit ─────────────────────────────────────────────────────────────────
-
-  const handleFormSubmit = async (data: FormData) => {
-    if (categorias.length === 0) {
-      setCategoriasError("Selecciona al menos una categoría.");
-      return;
-    }
-    if (onSubmit) {
-      await onSubmit({ ...data, categorias, imagenes });
-    }
-  };
-
-  // ── Render ─────────────────────────────────────────────────────────────────
 
   const triggerLabel =
-    categorias.length === 0
+    selectedCategorias.length === 0
       ? "Seleccionar categoría"
-      : `${categorias.length} categoría${categorias.length > 1 ? "s" : ""} seleccionada${categorias.length > 1 ? "s" : ""}`;
+      : `${selectedCategorias.length} categoría${selectedCategorias.length > 1 ? "s" : ""} seleccionada${selectedCategorias.length > 1 ? "s" : ""}`;
 
   return (
     <div className="crear-publicacion">
-      {/* Header */}
       <div className="crear-publicacion__header">
         <div className="crear-publicacion__header-icon">
           <SquarePlus size={18} strokeWidth={1.8} />
@@ -146,7 +78,7 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
         <h2 className="crear-publicacion__title">Crear Publicación</h2>
       </div>
 
-      <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+      <form onSubmit={onSubmit} noValidate>
         <div className="crear-publicacion__fields">
 
           {/* Título */}
@@ -154,26 +86,22 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
             <label className="crear-publicacion__label">Nombre del Producto</label>
             <input
               type="text"
-              placeholder="ej. Bolsa de tela de algodón sostenible"
+              placeholder="ej. Tutoría de Cálculo Diferencial"
               {...register("titulo")}
               className={`crear-publicacion__input${errors.titulo ? " crear-publicacion__input--error" : ""}`}
             />
-            {errors.titulo && (
-              <span className="crear-publicacion__error">{errors.titulo.message}</span>
-            )}
+            {errors.titulo && <span className="crear-publicacion__error">{errors.titulo.message}</span>}
           </div>
 
           {/* Descripción */}
           <div className="crear-publicacion__field">
             <label className="crear-publicacion__label">Descripción</label>
             <textarea
-              placeholder="Describe las características y beneficios clave de tu producto..."
+              placeholder="Describe las características y beneficios clave..."
               {...register("descripcion")}
               className={`crear-publicacion__textarea${errors.descripcion ? " crear-publicacion__textarea--error" : ""}`}
             />
-            {errors.descripcion && (
-              <span className="crear-publicacion__error">{errors.descripcion.message}</span>
-            )}
+            {errors.descripcion && <span className="crear-publicacion__error">{errors.descripcion.message}</span>}
           </div>
 
           {/* Precio */}
@@ -189,12 +117,25 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
                 className={`crear-publicacion__input crear-publicacion__input--price${errors.precio ? " crear-publicacion__input--error" : ""}`}
               />
             </div>
-            {errors.precio && (
-              <span className="crear-publicacion__error">{errors.precio.message}</span>
-            )}
+            {errors.precio && <span className="crear-publicacion__error">{errors.precio.message}</span>}
           </div>
 
-          {/* Categorías — multi-select dropdown */}
+          {/* Tipo de publicación */}
+          <div className="crear-publicacion__field">
+            <label className="crear-publicacion__label">Tipo de publicación</label>
+            <select
+              {...register("tipo_publicacion")}
+              className={`crear-publicacion__input${errors.tipo_publicacion ? " crear-publicacion__input--error" : ""}`}
+            >
+              <option value="">Seleccionar tipo</option>
+              {tiposPublicacion.map((tipo) => (
+                <option key={tipo} value={tipo}>{TIPO_LABELS[tipo]}</option>
+              ))}
+            </select>
+            {errors.tipo_publicacion && <span className="crear-publicacion__error">{errors.tipo_publicacion.message}</span>}
+          </div>
+
+          {/* Categorías */}
           <div className="crear-publicacion__field">
             <label className="crear-publicacion__label">Categoría</label>
             <div className="crear-publicacion__categories-dropdown" ref={dropdownRef}>
@@ -203,9 +144,9 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
                 onClick={() => setDropdownOpen((prev) => !prev)}
                 className={[
                   "crear-publicacion__categories-trigger",
-                  categorias.length > 0 ? "crear-publicacion__categories-trigger--has-value" : "",
+                  selectedCategorias.length > 0 ? "crear-publicacion__categories-trigger--has-value" : "",
                   dropdownOpen ? "crear-publicacion__categories-trigger--open" : "",
-                  categoriasError ? "crear-publicacion__categories-trigger--error" : "",
+                  errors.categorias ? "crear-publicacion__categories-trigger--error" : "",
                 ].join(" ")}
               >
                 <span>{triggerLabel}</span>
@@ -217,19 +158,19 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
 
               {dropdownOpen && (
                 <div className="crear-publicacion__categories-menu">
-                  {CATEGORIAS.map((cat) => {
-                    const selected = categorias.includes(cat);
+                  {TAGS_MATERIAS.map((tag) => {
+                    const selected = selectedCategorias.includes(tag.id);
                     return (
                       <button
-                        key={cat}
+                        key={tag.id}
                         type="button"
-                        onClick={() => toggleCategoria(cat)}
+                        onClick={() => toggleCategoria(tag.id)}
                         className={`crear-publicacion__categories-option${selected ? " crear-publicacion__categories-option--selected" : ""}`}
                       >
                         <span className={`crear-publicacion__categories-checkbox${selected ? " crear-publicacion__categories-checkbox--checked" : ""}`}>
                           {selected && <Check size={11} strokeWidth={3} color="white" />}
                         </span>
-                        {cat}
+                        {tag.name}
                       </button>
                     );
                   })}
@@ -237,49 +178,46 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
               )}
             </div>
 
-            {/* Selected tags */}
-            {categorias.length > 0 && (
+            {selectedCategorias.length > 0 && (
               <div className="crear-publicacion__categories-tags">
-                {categorias.map((cat) => (
-                  <span key={cat} className="crear-publicacion__categories-tag">
-                    {cat}
-                    <button
-                      type="button"
-                      onClick={() => removeCategoria(cat)}
-                      className="crear-publicacion__categories-tag-remove"
-                      aria-label={`Eliminar ${cat}`}
-                    >
-                      <X size={11} strokeWidth={2.5} />
-                    </button>
-                  </span>
-                ))}
+                {selectedCategorias.map((id) => {
+                  const tag = TAGS_MATERIAS.find((t) => t.id === id);
+                  return tag ? (
+                    <span key={id} className="crear-publicacion__categories-tag">
+                      {tag.name}
+                      <button
+                        type="button"
+                        onClick={() => toggleCategoria(id)}
+                        className="crear-publicacion__categories-tag-remove"
+                        aria-label={`Eliminar ${tag.name}`}
+                      >
+                        <X size={11} strokeWidth={2.5} />
+                      </button>
+                    </span>
+                  ) : null;
+                })}
               </div>
             )}
 
-            {categoriasError && (
-              <span className="crear-publicacion__error">{categoriasError}</span>
+            {errors.categorias && (
+              <span className="crear-publicacion__error">{errors.categorias.message}</span>
             )}
           </div>
 
-          {/* Destacado toggle */}
+          {/* Destacado */}
           <div className="crear-publicacion__field">
             <div className="crear-publicacion__toggle-row">
               <label className="crear-publicacion__toggle">
-                <input
-                  type="checkbox"
-                  {...register("destacado")}
-                  className="crear-publicacion__toggle-input"
-                />
+                <input type="checkbox" {...register("destacado")} className="crear-publicacion__toggle-input" />
                 <span className="crear-publicacion__toggle-track" />
               </label>
               <span className="crear-publicacion__toggle-label">Publicación Destacada</span>
             </div>
           </div>
 
-          {/* Fotos */}
+          {/* Imagen */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Fotos del Producto</label>
-
+            <label className="crear-publicacion__label">Foto del Producto</label>
             <div
               className={`crear-publicacion__upload-zone${dragOver ? " crear-publicacion__upload-zone--dragover" : ""}`}
               onClick={() => fileInputRef.current?.click()}
@@ -288,29 +226,24 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
               onDrop={(e) => {
                 e.preventDefault();
                 setDragOver(false);
-                addFiles(e.dataTransfer.files);
+                addImages(e.dataTransfer.files);
               }}
             >
               <CloudUpload size={40} strokeWidth={1.5} className="crear-publicacion__upload-icon" />
-              <p className="crear-publicacion__upload-text">
-                Haz clic o arrastra imágenes para subir
-              </p>
-              <p className="crear-publicacion__upload-hint">
-                Soporta PNG, JPG (máx. 5MB por archivo)
-              </p>
+              <p className="crear-publicacion__upload-text">Haz clic o arrastra una imagen para subir</p>
+              <p className="crear-publicacion__upload-hint">PNG, JPG o WEBP (máx. 5MB)</p>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg"
-                multiple
+                accept="image/png,image/jpeg,image/webp"
                 className="crear-publicacion__upload-input"
-                onChange={(e) => addFiles(e.target.files)}
+                onChange={(e) => { if (e.target.files) addImages(e.target.files); }}
               />
             </div>
 
-            {previews.length > 0 && (
+            {imagePreviews.length > 0 && (
               <div className="crear-publicacion__previews">
-                {previews.map((src, i) => (
+                {imagePreviews.map((src, i) => (
                   <div key={i} className="crear-publicacion__preview-item">
                     <img src={src} alt={`preview-${i}`} className="crear-publicacion__preview-img" />
                     <button
@@ -329,21 +262,18 @@ export default function CrearPublicacionForm({ onSubmit, onCancel }: CrearPublic
 
         </div>
 
-        {/* Footer */}
+        {serverError && <p className="crear-publicacion__server-error">{serverError}</p>}
+
         <div className="crear-publicacion__footer">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={() => { resetForm(); onCancel?.(); }}
             className="crear-publicacion__btn-cancel"
           >
             Cancelar
           </button>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="crear-publicacion__btn-submit"
-          >
-            {isSubmitting ? "Publicando..." : "Crear Publicación"}
+          <button type="submit" disabled={isSubmitting} className="button button--medium">
+            {isSubmitting ? "Publicando..." : "Crear Publicación"} <ChevronRight size={16} />
           </button>
         </div>
       </form>
