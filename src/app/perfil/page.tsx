@@ -274,9 +274,7 @@ export default function PerfilPage() {
           >
             <CrearPublicacionForm
               onCancel={() => setCrearPublicacionOpen(false)}
-              onSubmit={async () => {
-                setCrearPublicacionOpen(false);
-              }}
+              onSuccess={() => setCrearPublicacionOpen(false)}
             />
           </div>
         </div>

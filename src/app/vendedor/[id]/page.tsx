@@ -8,7 +8,7 @@ import PostCard from "../../../components/posts/PostCard/PostCard";
 import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
-import CrearPublicacionForm from "../../../components/posts/PostCard/CrearPublicacionForm/CrearPublicacionForm";
+import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import imagePath from "../../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../../lib/tags";
 import { apiClient } from "../../../lib/apiClient";
