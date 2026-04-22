@@ -5,7 +5,7 @@
   border-radius: 1rem;
   padding: 2rem;
   width: 100%;
-  max-width: 560px;
+  max-width: 35rem;
   box-sizing: border-box;
 }
 
@@ -172,7 +172,7 @@
 
 .crear-publicacion__categories-menu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 0.25rem);
   left: 0;
   right: 0;
   background-color: var(--swap-primary-background);
@@ -479,7 +479,7 @@
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .crear-publicacion {
     padding: 1.25rem;
     border-radius: 0;

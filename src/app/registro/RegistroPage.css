@@ -49,7 +49,7 @@
 }
 
 /* Desktop: side by side */
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .registro-page__wrapper {
     flex-direction: row;
     align-items: center;

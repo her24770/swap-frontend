@@ -22,13 +22,13 @@
 
 .product-image__badge {
     position: absolute;
-    bottom: 8px;
-    right: 8px;
+    bottom: 0.5rem;
+    right: 0.5rem;
     background-color: rgba(0, 0, 0, 0.6);
     color: var(--swap-secondary-text-color);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 12px;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
     font-weight: bold;
 }
 

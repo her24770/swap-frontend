@@ -1,83 +1,115 @@
 "use client";
-import PostCard from "../components/posts/PostCard/PostCard";
-import { useState, useEffect } from "react";
-import { apiClient, type ApiError } from "../lib/apiClient";
-import imagePath from "../../public/images/uvg.jpg";
-import {TIPO_TAG_MAP} from "../lib/tags";
 
-import type { Publicacion, PublicacionesResponse } from "../types/publicacion";
+import { useState } from "react";
+import PostCard from "../components/posts/PostCard/PostCard";
+import { usePublicaciones } from "../hooks/fetch/usePublicaciones";
+import imagePath from "../../public/images/uvg.jpg";
+import SearchBar from "../components/ui/SearchBar/SearchBar";
+import "./descubre.css";
+
+const ITEMS_PER_PAGE = 12;
 
 export default function HomePage() {
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data, loading, error } = usePublicaciones({
+    tipo: "negocio",
+    limit: ITEMS_PER_PAGE,
+    page: currentPage,
+  });
 
-  const fetchPublicaciones = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await apiClient.get<PublicacionesResponse>("/api/publicacion/");
-      setPublicaciones(response.data);
-    } catch (error) {
-      const apiError = error as ApiError;
-      console.error(apiError.message);
-      setError(apiError.message || "No fue posible obtener las publicaciones");
-    } finally {
-      setLoading(false);
-    }
+  const filtered = data.filter((p) =>
+    p.titulo.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1); 
   };
 
-  useEffect(() => {
-    fetchPublicaciones();
-  }, []);
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
 
   return (
-    <main style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h1>Publicaciones destacadas</h1>
-      <p>Explora las publicaciones de la comunidad</p>
+    <main className="descubre-page">
+      <div className="descubre-page__header">
+        <h1 className="descubre-page__title">DESCUBRE</h1>
+        <SearchBar value={searchQuery} onChange={handleSearch} />
+      </div>
 
-      {loading && <p>Cargando Publicaciones...</p>}
-      {error && <p>{error}</p>}
-
-      {!loading && !error && publicaciones.length === 0 && (
-        <p>No hay publicaciones disponibles.</p>
+      {loading && (
+        <div className="descubre-page__state">
+          <p className="descubre-page__state-text">Cargando negocios...</p>
+        </div>
       )}
 
-      {publicaciones.map((publicacion) => {
-        const tag = TIPO_TAG_MAP[publicacion.tipo_publicacion];
-        return (
-          <PostCard
-            key={publicacion.id_publicacion}
-            tags={tag ? [tag] : []}
-            title={publicacion.titulo}
-            price={parseFloat(publicacion.precio)}
-            description={publicacion.descripcion}
-            images={[imagePath.src]}
-          />
-        );
-      })}
+      {error && (
+        <div className="descubre-page__state">
+          <p className="descubre-page__state-text descubre-page__state-text--error">
+            {error}
+          </p>
+        </div>
+      )}
 
-      <PostCard
-        tags={[
-          { id: 10, name: "EjemploTag", colorKey: "assembler" },
-          { id: 11, name: "Mate",       colorKey: "matematicas" },
-        ]}
-        title="Ejemplo de PostCard"
-        price={100}
-        description="Descripción de ejemplo"
-        images={[]}
-      />
-      <PostCard
-        tags={[
-          { id: 12, name: "Tercero", colorKey: "fisica" },
-          { id: 13, name: "Cuarto",  colorKey: "electronica" },
-        ]}
-        title="Tercer PostCard"
-        price={300}
-        description="Tercera descripción de ejemplo"
-        images={[]}
-      />
-      <hr />
+      {!loading && !error && filtered.length === 0 && (
+        <div className="descubre-page__empty">
+          <div className="descubre-page__empty-icon"></div>
+          <h2 className="descubre-page__empty-title">No hay negocios disponibles</h2>
+          <p className="descubre-page__empty-description">
+            {searchQuery
+              ? `No se encontraron resultados para "${searchQuery}"`
+              : "Aún no hay negocios estudiantiles publicados."}
+          </p>
+        </div>
+      )}
+
+      {!loading && !error && filtered.length > 0 && (
+        <>
+          <div className="descubre-page__grid">
+            {filtered.map((publicacion) => (
+              <PostCard
+                key={publicacion.id_publicacion}
+                tags={[{ id: 1, name: "Negocio",  colorKey: "diseno" }]}
+                title={publicacion.titulo}
+                price={parseFloat(publicacion.precio)}
+                description={publicacion.descripcion}
+                images={[imagePath.src]}
+              />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="descubre-page__pagination">
+              <button
+                className="descubre-page__pagination-btn"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                ‹
+              </button>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`descubre-page__pagination-btn ${
+                    page === currentPage ? "descubre-page__pagination-btn--active" : ""
+                  }`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                className="descubre-page__pagination-btn"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                ›
+              </button>
+            </div>
+          )}
+        </>
+      )}
     </main>
   );
 }
