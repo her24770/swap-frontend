@@ -12,6 +12,20 @@
 .sidebar--open {
   width: 11rem;
 }
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 46px;
+    left: 0;
+    height: calc(100vh - 46px);
+    width: 0;
+    z-index: 100;
+  }
+
+  .sidebar--open {
+    width: 11rem;
+  }
+}
 
 .sidebar__nav {
   display: flex;

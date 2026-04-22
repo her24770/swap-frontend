@@ -52,7 +52,7 @@ export default function ActualizarPerfilModal({
   const [contacts, setContacts] = useState<Contacto[]>(
     initialContacts && initialContacts.length > 0
       ? initialContacts
-      : getEmptyContacts
+      : getEmptyContacts()
     );
   const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -71,7 +71,7 @@ export default function ActualizarPerfilModal({
       setFoto(null);
       setPreviewUrl(null);
     }
-  }, [isOpen]); 
+  }, [isOpen]);
   
   if (!isOpen) return null;
 
