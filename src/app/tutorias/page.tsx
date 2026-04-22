@@ -3,7 +3,6 @@
 import { useState } from "react";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
-import imagePath from "../../../public/images/uvg.jpg";
 import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import "./tutorias.css";
 
@@ -71,7 +70,7 @@ export default function TutoriasPage() {
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}
-                images={[imagePath.src]}
+                images={publicacion.imagenes.map((img) => img.url_imagen)}
               />
             ))}
           </div>

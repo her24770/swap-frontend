@@ -1,3 +1,9 @@
+export interface ImagenPublicacion {
+  id_imagen: number;
+  url_imagen: string;
+  id_publicacion: number;
+}
+
 export interface Publicacion {
   id_publicacion: number;
   titulo: string;
@@ -8,7 +14,7 @@ export interface Publicacion {
   me_gusta: number;
   fecha_publicacion: string;
   id_usuario: number;
-  imagenes: unknown[];
+  imagenes: ImagenPublicacion[];
   etiquetas: unknown[];
 }
 
