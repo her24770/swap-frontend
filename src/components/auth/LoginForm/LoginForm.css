@@ -136,3 +136,8 @@
 .login-form__register-link:hover {
   text-decoration: underline;
 }
+
+.login-form__input--password::-ms-reveal,
+.login-form__input--password::-ms-clear {
+  display: none;
+}

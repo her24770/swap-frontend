@@ -77,3 +77,8 @@
   font-size: 0.75rem;
   color: var(--swap-danger-color);
 }
+
+.registro-form__input--password::-ms-reveal,
+.registro-form__input--password::-ms-clear {
+  display: none;
+}
