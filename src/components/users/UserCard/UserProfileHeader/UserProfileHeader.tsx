@@ -29,6 +29,7 @@ export default function UserProfileHeader({
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
 
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
@@ -59,6 +60,7 @@ export default function UserProfileHeader({
       let urlFoto: string | undefined;
       if (data.foto) {
         urlFoto = await imagenService.uploadFotoPerfil(user.id_usuario, data.foto);
+        setDisplayImageUrl(`${urlFoto}?t=${Date.now()}`);
       }
 
       await apiClient.patch(`/api/user/${user.id_usuario}`, {
@@ -92,7 +94,7 @@ export default function UserProfileHeader({
       <div className="user-profile-header">
 
         <div className="user-profile-header__avatar-col">
-          <ProfilePicture imageUrl={user.imageUrl} userName={user.name} size="lg" />
+          <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
           <UserRating score={user.rating} totalReviews={user.totalReviews} />
         </div>
 

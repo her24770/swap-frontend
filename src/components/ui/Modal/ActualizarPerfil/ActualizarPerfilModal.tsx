@@ -94,9 +94,8 @@ export default function ActualizarPerfilModal({
     );
   };
 
-  const handleSubmit = () => {
-    onSubmit({ nombre, apellido, descripcion, contacts, foto: foto ?? undefined });
-    onClose?.();
+  const handleSubmit = async () => {
+    await onSubmit({ nombre, apellido, descripcion, contacts, foto: foto ?? undefined });
   };
 
 //Se resetea el forms cuando se cancela
