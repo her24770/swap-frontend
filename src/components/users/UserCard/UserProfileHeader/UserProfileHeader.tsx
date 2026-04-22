@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Pencil, CreditCard } from "lucide-react";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
@@ -8,6 +8,10 @@ import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
+import {
+  contactosToUpsertBody,
+  reemplazarContactosUsuario,
+} from "../../../../lib/contactosUsuario";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
 import type { Tag } from "../../../../types/tag";
 import "./UserProfileHeader.css";
@@ -28,6 +32,16 @@ export default function UserProfileHeader({
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
 
+  const initialModalContacts = useMemo(
+    () =>
+      user.contacts.map((c, i) => ({
+        id: i + 1,
+        type: c.platform,
+        value: c.url,
+      })),
+    [user.contacts]
+  );
+
   const handleSave = async (data: Parameters<typeof ActualizarPerfilModal>[0]["onSubmit"] extends (d: infer D) => any ? D : never) => {
     try {
       setIsSaving(true);
@@ -35,18 +49,22 @@ export default function UserProfileHeader({
 
       const nombreCompleto = `${data.nombre} ${data.apellido}`.trim();
       const contactosValidos = data.contacts
-        .filter((c) => c.type !== "")
+        .filter((c) => c.type !== "" && c.value.trim() !== "")
         .map((c) => ({
           tipo_contacto: c.type,
-          valor: c.value,
+          valor: c.value.trim(),
         }));
 
       await apiClient.patch(`/api/user/${user.id_usuario}`, {
         nombre: nombreCompleto,
         descripcion: data.descripcion,
-        contacts: contactosValidos,
         ...(data.foto ? {} : {}),
       });
+
+      await reemplazarContactosUsuario(
+        user.id_usuario,
+        contactosToUpsertBody(data.contacts)
+      );
 
       onSave?.({
         name: nombreCompleto,
@@ -125,11 +143,7 @@ export default function UserProfileHeader({
           initialNombre={nombre}
           initialApellido={apellido}
           initialDescripcion={user.description}
-          initialContacts={user.contacts.map((c, i) => ({
-            id: i + 1,
-            type: c.platform,
-            value: c.url,
-          }))}
+          initialContacts={initialModalContacts}
           onSubmit={handleSave}
           onCancel={() => setModalOpen(false)}
           isSaving={isSaving}

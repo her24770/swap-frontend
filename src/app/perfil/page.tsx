@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { apiClient } from "../../lib/apiClient";
+import { obtenerContactosUsuario } from "../../lib/contactosUsuario";
+import { useAuthStore } from "../../store/authStore";
 import UserProfileHeader from "../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import PostRes from "../../components/posts/PostResumida/PostRes";
@@ -10,9 +12,9 @@ import HorizontalCarousel from "../../components/ui/HorizontalCarousel/Horizonta
 import imagePath from "../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../lib/tags";
 import "./PerfilConsumidorPage.css";
-
 import type { Tag } from "../../types/tag";
 import type { Comment } from "../../types/comment";
+import type { UserProfileData } from "../../types/perfil";
 
 const MOCK_USER = {
   id_usuario: 1,
@@ -67,7 +69,8 @@ const MOCK_COMMENTS: Comment[] = [
 
 export default function PerfilConsumidorPage() {
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
-  const [user, setUser] = useState<typeof MOCK_USER | null>(null);
+  const [user, setUser] = useState<UserProfileData | null>(null);
+  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
 
   const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
     const newComment: Comment = {
@@ -81,16 +84,12 @@ export default function PerfilConsumidorPage() {
   };
 
   useEffect(() => {
+    const idForFetch = idUsuario ?? 1;
+
     const fetchUser = async () => {
       try {
-        const data = await apiClient.get<any>("/api/user/1");
-        const contactosData = await apiClient.get<any>(`/api/user/contactos/1/`);
-        const mapTipos: Record<number, any> = {
-          1: "telefono",
-          2: "whatsapp",
-          3: "instagram",
-          4: "correo_personal",
-        };
+        const data = await apiClient.get<any>(`/api/user/${idForFetch}`);
+        const contacts = await obtenerContactosUsuario(idForFetch);
         const userMapped = {
           id_usuario: data.id_usuario,
           name: data.nombre,
@@ -98,10 +97,7 @@ export default function PerfilConsumidorPage() {
           imageUrl: data.url_foto_perfil,
           rating: Number(data.calificacion),
           totalReviews: 0,
-          contacts: contactosData.map((c: any) => ({
-            platform: mapTipos[c.tipo_contacto],
-            url: c.valor,
-          })),
+          contacts,
         };
         setUser(userMapped);
       } catch (error) {
@@ -109,7 +105,7 @@ export default function PerfilConsumidorPage() {
       }
     };
     fetchUser();
-  }, []);
+  }, [idUsuario]);
 
   if (!user) return <p>Cargando perfil...</p>;
 
@@ -180,7 +176,7 @@ export default function PerfilConsumidorPage() {
         <h2 className="perfil-consumidor__section-title">Comentarios y Reseñas</h2>
         <div className="perfil-consumidor__comments">
           <CommentSection
-            targetName={MOCK_USER.name}
+            targetName={user.name}
             comments={comments}
             onSubmit={handleCommentSubmit}
             onCancel={() => {}}
