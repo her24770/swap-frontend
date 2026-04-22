@@ -126,12 +126,14 @@
 /* ── Saved carousel wrapper ──────────────────────────────────────────────── */
 
 .perfil-consumidor__carousel-wrap {
-  padding: 0.5rem 0.25rem;
+  padding: 0.5rem 0;
+  margin: 0 -1.5rem;          /* compensa el padding de la página */
+  padding-left: 1.5rem; 
   overflow: visible;
 }
 
 .perfil-consumidor__purchase-item {
-  flex: 0 0 min(20rem, calc(100vw - 4rem));
+  flex: 0 0 min(17rem, calc(100vw - 4rem));
   width: min(20rem, calc(100vw - 4rem));
   scroll-snap-align: start;
 }
