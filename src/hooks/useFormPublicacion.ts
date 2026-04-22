@@ -99,7 +99,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
       titulo: "",
       descripcion: "",
       precio: "",
-      tipo_publicacion: "",
+      tipo_publicacion: "material",
       categorias: [],
       imagenes: [],
       destacado: false,
