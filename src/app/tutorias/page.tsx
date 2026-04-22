@@ -51,7 +51,7 @@ export default function TutoriasPage() {
 
       {!loading && !error && filtered.length === 0 && (
         <div className="tutorias-page__empty">
-          <div className="tutorias-page__empty-icon">🏪</div>
+          <div className="tutorias-page__empty-icon"></div>
           <h2 className="tutorias-page__empty-title">No hay tutorías disponibles</h2>
           <p className="tutorias-page__empty-description">
             {searchQuery
@@ -67,7 +67,7 @@ export default function TutoriasPage() {
             {filtered.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[{ id: 1, name: "Negocio", type: "categoria" }]}
+                tags={[{ id: 1, name: "Tutoría",  colorKey: "diseno" }]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}
