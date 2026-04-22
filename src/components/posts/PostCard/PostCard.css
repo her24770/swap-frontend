@@ -24,7 +24,39 @@
 }
 
 .post-card__media {
-  padding: 0 1rem; /* Para que la imagen no toque los bordes laterales */
+  padding: 0 1rem;
+}
+
+.post-card__image-wrapper {
+  position: relative;
+}
+
+.post-card__upload-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius-md, 8px);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.post-card__image-wrapper:hover .post-card__upload-overlay {
+  opacity: 1;
+}
+
+.post-card__upload-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+.post-card__upload-error {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--swap-error-color, #e53e3e);
 }
 
 .post-card__content {

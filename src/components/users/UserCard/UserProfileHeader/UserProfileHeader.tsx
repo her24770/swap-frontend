@@ -8,6 +8,7 @@ import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
+import { imagenService } from "../../../../services/imagenService";
 import {
   contactosToUpsertBody,
   reemplazarContactosUsuario,
@@ -55,10 +56,15 @@ export default function UserProfileHeader({
           valor: c.value.trim(),
         }));
 
+      let urlFoto: string | undefined;
+      if (data.foto) {
+        urlFoto = await imagenService.uploadFotoPerfil(user.id_usuario, data.foto);
+      }
+
       await apiClient.patch(`/api/user/${user.id_usuario}`, {
         nombre: nombreCompleto,
         descripcion: data.descripcion,
-        ...(data.foto ? {} : {}),
+        ...(urlFoto ? { url_foto_perfil: urlFoto } : {}),
       });
 
       await reemplazarContactosUsuario(
@@ -70,6 +76,7 @@ export default function UserProfileHeader({
         name: nombreCompleto,
         description: data.descripcion,
         contacts: contactosValidos,
+        ...(urlFoto ? { imageUrl: urlFoto } : {}),
       });
 
       setModalOpen(false);

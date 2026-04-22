@@ -124,6 +124,7 @@ export default function PerfilConsumidorPage() {
                   ...prev,
                   name: updated.name ?? prev.name,
                   description: updated.description ?? prev.description,
+                  imageUrl: updated.imageUrl ?? prev.imageUrl,
                   contacts: updated.contacts
                     ? updated.contacts.map((c: any) => ({
                         platform: c.tipo_contacto,
