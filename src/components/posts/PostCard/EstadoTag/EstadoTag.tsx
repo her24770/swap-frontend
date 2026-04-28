@@ -11,7 +11,7 @@ interface EstadoTagProps {
 }
 
 const ESTADOS = [
-  { id: "activo", label: "Activo", color: "green" },
+  { id: "disponible", label: "Disponible", color: "green" },
   { id: "reservado", label: "Reservado", color: "gray" },
   { id: "vendido", label: "Vendido", color: "blue" },
 ];
