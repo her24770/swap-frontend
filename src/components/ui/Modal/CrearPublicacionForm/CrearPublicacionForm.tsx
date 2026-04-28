@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
-import { useFormCrearPublicacion } from "../../../../hooks/useFormPublicacion";
+import { useFormCrearPublicacion, useFormEditarPublicacion } from "../../../../hooks/useFormPublicacion";
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
+import { CrearPublicacionFormData } from "../../../../schemas/zodSchemas";
+import { UseFormReturn } from "react-hook-form";
 
 const TIPO_LABELS: Record<string, string> = {
   material:  "Material",
@@ -13,12 +15,38 @@ const TIPO_LABELS: Record<string, string> = {
   negocio:   "Negocio",
 };
 
-interface CrearPublicacionFormProps {
+interface BasePublicacionFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPublicacionFormProps) {
+interface CrearPublicacionFormProps extends BasePublicacionFormProps {
+  mode: "crear";
+}
+
+interface EditarPublicacionFormProps extends BasePublicacionFormProps {
+  mode: "editar";
+  publicacionId: number;
+  defaultValues?: Partial<CrearPublicacionFormData>;
+  estadoActual?: "disponible" | "vendido" | "reservado";
+}
+
+type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormProps;
+
+export default function CrearPublicacionForm(props: PublicacionFormProps) {
+  const { onSuccess, onCancel} =props;
+  const isEditing = props.mode === "editar";
+  const createHook = useFormCrearPublicacion();
+  const editHook = useFormEditarPublicacion(
+    isEditing ? props.publicacionId : 0,
+    isEditing ? props.defaultValues : undefined
+  );
+
+  const {
+    tiposPublicacion,
+    resetForm
+  } = createHook;
+
   const {
     form,
     onSubmit,
@@ -27,12 +55,10 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
     isSuccess,
     imagePreviews,
     addImages,
-    removeImage,
-    tiposPublicacion,
-    resetForm,
-  } = useFormCrearPublicacion();
+    removeImage
+  } = isEditing ? editHook : createHook;
 
-  const { register, formState: { errors }, setValue, watch } = form;
+  const { register, formState: { errors }, setValue, watch } = form as UseFormReturn<CrearPublicacionFormData>;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -55,7 +81,7 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
   // Notifica al padre cuando la creación fue exitosa
   useEffect(() => {
     if (isSuccess) onSuccess?.();
-  }, [isSuccess]);
+  }, [isSuccess, onSuccess]);
 
   const toggleCategoria = (id: number) => {
     const next = selectedCategorias.includes(id)
@@ -70,16 +96,28 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
       : `${selectedCategorias.length} categoría${selectedCategorias.length > 1 ? "s" : ""} seleccionada${selectedCategorias.length > 1 ? "s" : ""}`;
 
   return (
+
     <div className="crear-publicacion">
       <div className="crear-publicacion__header">
         <div className="crear-publicacion__header-icon">
           <SquarePlus size={18} strokeWidth={1.8} />
         </div>
-        <h2 className="crear-publicacion__title">Crear Publicación</h2>
+        <h2 className="crear-publicacion__title">{isEditing ? "Editar Publicación" : "Crear Publicación"}</h2>
       </div>
 
       <form onSubmit={onSubmit} noValidate>
         <div className="crear-publicacion__fields">
+
+          {isEditing && (
+            <div className="crear-publicacion__field">
+              <label className="crear-publicacion__label">Estado</label>
+              <select {...register("estado")} className="crear-publicacion__select">
+                <option value="disponible">Disponible</option>
+                <option value="vendido">Vendido</option>
+                <option value="reservado">Reservado</option>
+              </select>
+            </div>
+          )}
 
           {/* Título */}
           <div className="crear-publicacion__field">
@@ -267,13 +305,17 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
         <div className="crear-publicacion__footer">
           <button
             type="button"
-            onClick={() => { resetForm(); onCancel?.(); }}
+            onClick={() => { if (!isEditing) resetForm(); props.onCancel?.(); }}
             className="crear-publicacion__btn-cancel"
           >
             Cancelar
           </button>
           <button type="submit" disabled={isSubmitting} className="button button--medium">
-            {isSubmitting ? "Publicando..." : "Crear Publicación"} <ChevronRight size={16} />
+            {isSubmitting 
+              ? (isEditing ? "Guardando..." : "Publicando...")
+              : (isEditing ? "Guardar Cambios" : "Crear Publicación")
+            } 
+            <ChevronRight size={16} />
           </button>
         </div>
       </form>
