@@ -6,8 +6,10 @@ import { useFormCrearPublicacion, useFormEditarPublicacion } from "../../../../h
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
-import { CrearPublicacionFormData } from "../../../../schemas/zodSchemas";
+import { CrearPublicacionFormData, EditarPublicacionFormData } from "../../../../schemas/zodSchemas";
 import { UseFormReturn } from "react-hook-form";
+
+type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
 
 const TIPO_LABELS: Record<string, string> = {
   material:  "Material",
@@ -58,7 +60,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
     removeImage
   } = isEditing ? editHook : createHook;
 
-  const { register, formState: { errors }, setValue, watch } = form as UseFormReturn<CrearPublicacionFormData>;
+  const { register, formState: { errors }, setValue, watch } = form as UseFormReturn<FormFields>;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dragOver, setDragOver] = useState(false);

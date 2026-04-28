@@ -203,6 +203,7 @@ export function useFormEditarPublicacion(id: number,
       categorias: defaults?.categorias ?? [],
       imagenesNuevas: [],
       destacado: defaults?.destacado ?? false,
+      estado: defaults?.estado ?? undefined,
     },
     mode: "onTouched",
   });
@@ -270,7 +271,7 @@ export function useFormEditarPublicacion(id: number,
       if (data.categorias !== undefined && data.categorias.length > 0)
         payload.etiquetas = data.categorias;
       if (data.destacado !== undefined) payload.destacado = data.destacado;
- 
+      if (data.estado !== undefined) payload.estado = data.estado;
       await apiClient.put(`/api/publicacion/${id}`, payload);
  
       setIsSuccess(true);

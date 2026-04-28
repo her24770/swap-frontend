@@ -150,7 +150,13 @@ export const schemaEditarPublicacion = z.object({
     .optional()
     .default([]),
 
-  destacado: z.boolean().optional(),
+  destacado: z
+    .boolean()
+    .optional(),
+  
+  estado: z
+    .enum (["disponible", "vendido", "eliminado"])
+    .optional(),
   })
   .refine((data) => Object.keys(data).some((k) => data[k as keyof typeof data] !== undefined), {
     message: "Debes modificar al menos un campo.",
