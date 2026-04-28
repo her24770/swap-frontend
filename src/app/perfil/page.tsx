@@ -281,6 +281,7 @@ export default function PerfilPage() {
             aria-label="Crear publicación"
           >
             <CrearPublicacionForm
+              mode="crear"
               onCancel={() => setCrearPublicacionOpen(false)}
               onSuccess={() => setCrearPublicacionOpen(false)}
             />

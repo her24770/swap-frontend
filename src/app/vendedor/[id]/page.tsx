@@ -185,6 +185,7 @@ export default function PerfilVendedorPage() {
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
           <div className="perfil-vendedor__form-modal" onClick={(e) => e.stopPropagation()}>
             <CrearPublicacionForm
+              mode="crear"
               onSuccess={() => setModalOpen(false)}
               onCancel={() => setModalOpen(false)}
             />
