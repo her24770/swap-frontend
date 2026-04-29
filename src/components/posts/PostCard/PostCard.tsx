@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Camera, ChevronRight, Loader2 } from "lucide-react";
+import { Camera, ChevronRight, Loader2, Edit2 } from "lucide-react";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
+import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
@@ -17,6 +18,10 @@ interface PostCardProps {
   tags: Tag[];
   onTagClick?: (tag: Tag) => void;
   publicacionId?: number;
+  estado?: string | number;
+  canEdit?: boolean;
+  onEditClick?: () => void;
+  onEstadoChange?: (nuevoEstado: string) => void;
 }
 
 export default function PostCard({
@@ -27,6 +32,10 @@ export default function PostCard({
   tags,
   onTagClick,
   publicacionId,
+  estado,
+  canEdit = false,
+  onEditClick,
+  onEstadoChange,
 }: PostCardProps) {
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
@@ -76,6 +85,15 @@ export default function PostCard({
       <div className="post-card__media">
         <div className="post-card__image-wrapper">
           <PostImage images={displayImages} alt={title} />
+          {estado !== undefined && (
+            <div className="post-card__estado-tag-container">
+              <EstadoTag
+                estado={estado}
+                canEdit={canEdit}
+                onEstadoChange={onEstadoChange}
+              />
+            </div>
+          )}
           {publicacionId !== undefined && (
             <>
               <div
@@ -120,6 +138,15 @@ export default function PostCard({
           >
             Detalles <ChevronRight size={14} />
           </button>
+          {canEdit && onEditClick && (
+            <button
+              type="button"
+              className="button button--small"
+              onClick={onEditClick}
+            >
+              <Edit2 size={14} /> Editar
+            </button>
+          )}
         </footer>
       </div>
     </article>

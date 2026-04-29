@@ -27,6 +27,7 @@ const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   price: 15,
   description: "Media porción de pastel de chocolate hecho en casa.",
   tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }] as Tag[],
+  estado: i % 3 === 0 ? "vendido" : "activo",
 }));
 
 const MOCK_AD = {
@@ -146,6 +147,8 @@ export default function PerfilVendedorPage() {
                   price={pub.price}
                   description={pub.description}
                   images={[imagePath.src]}
+                  estado={pub.estado}
+                  canEdit={false}
                 />
               </div>
             ))}
@@ -182,6 +185,7 @@ export default function PerfilVendedorPage() {
         <div className="modal-overlay" onClick={() => setModalOpen(false)}>
           <div className="perfil-vendedor__form-modal" onClick={(e) => e.stopPropagation()}>
             <CrearPublicacionForm
+              mode="crear"
               onSuccess={() => setModalOpen(false)}
               onCancel={() => setModalOpen(false)}
             />

@@ -72,6 +72,8 @@ export default function HomePage() {
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}
                 images={publicacion.imagenes.map((img) => img.url_imagen)}
+                estado={publicacion.estado}
+                canEdit={false}
               />
             ))}
           </div>

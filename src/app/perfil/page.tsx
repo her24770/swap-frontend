@@ -31,6 +31,7 @@ const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
     { id: 1, name: "Assembler", colorKey: "assembler" },
     { id: 3, name: "Electrónica", colorKey: "electronica" },
   ] as Tag[],
+  estado: "activo",
 }));
 
 const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
@@ -45,6 +46,7 @@ const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   price: 15,
   description: "Media porción de pastel de chocolate hecho en casa.",
   tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }] as Tag[],
+  estado: i % 3 === 0 ? "vendido" : "activo",
 }));
 
 const MOCK_AD = {
@@ -180,6 +182,8 @@ export default function PerfilPage() {
                     price={pub.price}
                     description={pub.description}
                     images={[imagePath.src]}
+                    estado={pub.estado}
+                    canEdit={false}
                   />
                 </div>
               ))}
@@ -228,6 +232,10 @@ export default function PerfilPage() {
                     price={pub.price}
                     description={pub.description}
                     images={[imagePath.src]}
+                    estado={pub.estado}
+                    canEdit={true}
+                    onEditClick={() => console.log(`Editar: ${pub.title}`)}
+                    onEstadoChange={(nuevoEstado) => console.log(`Cambiar estado a: ${nuevoEstado}`)}
                   />
                 </div>
               ))}
@@ -273,6 +281,7 @@ export default function PerfilPage() {
             aria-label="Crear publicación"
           >
             <CrearPublicacionForm
+              mode="crear"
               onCancel={() => setCrearPublicacionOpen(false)}
               onSuccess={() => setCrearPublicacionOpen(false)}
             />

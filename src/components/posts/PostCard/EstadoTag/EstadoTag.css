@@ -1,0 +1,129 @@
+.estado-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  border: none;
+  cursor: default;
+  transition: opacity 0.2s ease;
+}
+
+/* Colores de estados */
+.estado-tag--green {
+  background-color: rgba(34, 197, 94, 0.85);
+  color: white;
+}
+
+.estado-tag--gray {
+  background-color: rgba(107, 114, 128, 0.85);
+  color: white;
+}
+
+.estado-tag--blue {
+  background-color: rgba(59, 130, 246, 0.85);
+  color: white;
+}
+
+.estado-tag--orange {
+  background-color: rgba(249, 115, 22, 0.85);
+  color: white;
+}
+
+/* Modo interactivo (editable) */
+.estado-tag--interactive {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  &:hover {
+    opacity: 0.95;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.estado-tag__chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+/* Dropdown */
+.estado-tag-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.estado-tag__dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 150px;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.estado-tag__option {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  &--active {
+    background-color: #e0e7ff;
+    font-weight: 600;
+  }
+}
+
+.estado-tag__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.estado-tag__dot--green {
+  background-color: #22c55e;
+}
+
+.estado-tag__dot--gray {
+  background-color: #6b7280;
+}
+
+.estado-tag__dot--blue {
+  background-color: #3b82f6;
+}
+
+.estado-tag__dot--orange {
+  background-color: #f97316;
+}
