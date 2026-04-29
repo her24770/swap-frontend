@@ -75,6 +75,8 @@ const MOCK_COMMENTS: Comment[] = [
 export default function PerfilPage() {
   const [mode, setMode] = useState<PerfilMode>("consumidor");
   const [crearPublicacionOpen, setCrearPublicacionOpen] = useState(false);
+  const [editPublicacionOpen, setEditPublicacionOpen] = useState(false);
+  const [publicacionEditando, setPublicacionEditando] = useState<(typeof MOCK_CATALOG)[0] | null>(null);
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
   const [user, setUser] = useState<UserProfileData | null>(null);
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
@@ -234,7 +236,10 @@ export default function PerfilPage() {
                     images={[imagePath.src]}
                     estado={pub.estado}
                     canEdit={true}
-                    onEditClick={() => console.log(`Editar: ${pub.title}`)}
+                    onEditClick={() => {
+                      setPublicacionEditando(pub);
+                      setEditPublicacionOpen(true);
+                    }}
                     onEstadoChange={(nuevoEstado) => console.log(`Cambiar estado a: ${nuevoEstado}`)}
                   />
                 </div>
@@ -284,6 +289,44 @@ export default function PerfilPage() {
               mode="crear"
               onCancel={() => setCrearPublicacionOpen(false)}
               onSuccess={() => setCrearPublicacionOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {editPublicacionOpen && publicacionEditando && (
+        <div
+          className="modal-overlay"
+          role="presentation"
+          onClick={() => setEditPublicacionOpen(false)}
+        >
+          <div
+            className="perfil-page__crear-pub-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Editar publicación"
+          >
+            <CrearPublicacionForm
+              mode="editar"
+              publicacionId={publicacionEditando.id}
+              defaultValues={{
+                titulo: publicacionEditando.title,
+                descripcion: publicacionEditando.description,
+                precio: String(publicacionEditando.price),
+                tipo_publicacion: "material",
+                categorias: publicacionEditando.tags.map((t) => t.id),
+                destacado: false,
+              }}
+              estadoActual={publicacionEditando.estado as "disponible" | "vendido" | "reservado"}
+              onCancel={() => {
+                setEditPublicacionOpen(false);
+                setPublicacionEditando(null);
+              }}
+              onSuccess={() => {
+                setEditPublicacionOpen(false);
+                setPublicacionEditando(null);
+              }}
             />
           </div>
         </div>
