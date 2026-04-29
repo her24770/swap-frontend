@@ -215,7 +215,7 @@ export default function PerfilPage() {
         <>
           <section className="perfil-page__section">
             <div className="perfil-page__catalog-bar">
-              <h2 className="perfil-page__catalog-bar-title">Tu Catálogo</h2>
+              <h2 className="perfil-page__carousel-wrap">Tu Catálogo</h2>
               <button
                 type="button"
                 className="perfil-page__new-publication-btn"
@@ -251,7 +251,7 @@ export default function PerfilPage() {
 
           <section className="perfil-page__section">
             <div className="perfil-page__catalog-bar">
-              <h2 className="perfil-page__catalog-bar-title">Anuncios</h2>
+              <h2 className="perfil-page__carousel-wrap">Anuncios</h2>
               <button
                 type="button"
                 className="perfil-page__new-publication-btn"
