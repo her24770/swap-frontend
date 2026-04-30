@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useAuthStore } from "../../../store/authStore";
+import { useToast } from "../../../hooks/useToast";
 import type { AuthResponse } from "../../../types/usuario";
 import "../../ui/Button/Button.css"
 import "./LoginForm.css";
@@ -19,7 +20,7 @@ interface LoginFormData {
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-
+  const toast = useToast();
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
 
@@ -37,11 +38,12 @@ export default function LoginForm() {
         password: data.password,
       });
       login(response.usuario, response.token, response.rol);
+      toast.success("¡Bienvenido de nuevo!");
       router.push("/");
       router.refresh();
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(apiError.message || "No fue posible iniciar sesión");
+      toast.error(apiError.message || "No fue posible iniciar sesión");
     }
   };
 
