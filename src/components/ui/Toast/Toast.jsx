@@ -5,7 +5,7 @@ import { CheckCircle2, XCircle, Info, AlertTriangle, X } from "lucide-react";
 import { useUIStore } from "../../../store/uiStore";
 import "./Toast.css";
 
-const DURATION = 4000; // ms por defecto
+const DURATION = 4000;
 
 const ICONS = {
   success: <CheckCircle2 size={16} strokeWidth={2.5} />,
