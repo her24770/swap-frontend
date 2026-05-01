@@ -1,10 +1,12 @@
 import { create } from "zustand";
+export type ToastTipo = "success" | "error" | "info" | "warning";
 
-// Estructura de una notificación temporal en pantalla
 export interface Notificacion {
   id: string;
   mensaje: string;
-  tipo: "exito" | "error" | "info";
+  tipo: ToastTipo;
+  titulo?: string;
+  duracion?: number;
 }
 
 // Estado y acciones para estados globales de carga y notificaciones
@@ -12,7 +14,7 @@ interface UIState {
   cargando: boolean;
   notificaciones: Notificacion[];
   setCargando: (valor: boolean) => void;
-  agregarNotificacion: (notificacion: Notificacion) => void;
+  agregarNotificacion: (n: Omit<Notificacion, "id">) => void;
   eliminarNotificacion: (id: string) => void;
 }
 
@@ -23,9 +25,12 @@ export const useUIStore = create<UIState>()((set) => ({
 
   setCargando: (valor) => set({ cargando: valor }),
 
-  agregarNotificacion: (notificacion) =>
+  agregarNotificacion: (n) =>
     set((state) => ({
-      notificaciones: [...state.notificaciones, notificacion],
+      notificaciones: [
+        ...state.notificaciones,
+        { ...n, id: `toast-${Date.now()}-${Math.random()}` },
+      ],
     })),
 
   eliminarNotificacion: (id) =>

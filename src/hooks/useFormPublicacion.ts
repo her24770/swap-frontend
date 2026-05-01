@@ -4,6 +4,9 @@ import { useForm, UseFormReturn  } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
+import { apiClient, type ApiError} from "../lib/apiClient";
+import { imagenService } from "../services/imagenService";
+import { useUIStore } from "../store/uiStore";
 import {
   schemaCrearPublicacion,
   schemaEditarPublicacion,
@@ -12,8 +15,8 @@ import {
   type TipoPublicacion,
   TIPOS_PUBLICACION,
 } from "../schemas/zodSchemas";
-import { apiClient, type ApiError} from "../lib/apiClient";
-import { imagenService } from "../services/imagenService";
+const { agregarNotificacion } = useUIStore.getState();
+
 
  
 // ─── Helpers internos ─────────────────────────────────────────────────────────
@@ -143,9 +146,10 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       form.reset();
+      agregarNotificacion({ tipo: "success", mensaje: "Tu publicación fue creada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(apiError.message || "No fue posible crear la publicación. Intenta de nuevo.");
+      agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible crear la publicación." });
     }
   });
  
@@ -277,11 +281,10 @@ export function useFormEditarPublicacion(id: number,
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
+      agregarNotificacion({ tipo: "success", mensaje: "Publicación actualizada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(
-        apiError.message || "No fue posible actualizar la publicación. Intenta de nuevo."
-      );
+      agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible actualizar la publicación." });
     }
   });
  
