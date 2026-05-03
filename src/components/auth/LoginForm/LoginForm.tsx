@@ -9,6 +9,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useAuthStore } from "../../../store/authStore";
 import type { AuthResponse } from "../../../types/usuario";
 import "../../ui/Button/Button.css"
+import {LogoCompleto} from "../../ui/Icono/Logo";
 import "./LoginForm.css";
 
 interface LoginFormData {
@@ -47,7 +48,7 @@ export default function LoginForm() {
 
   return (
     <div className="login-form">
-      <span className="login-form__brand">SWAP</span>
+      <LogoCompleto className="login-form__brand"/>
 
       <h1 className="login-form__title">Iniciar Sesión</h1>
       <p className="login-form__subtitle">

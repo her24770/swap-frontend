@@ -3,8 +3,11 @@ import "./globals.css"
 import { jockey, palanquin, lato} from "../styles/fonts";
 
 export const metadata = {
-  title: 'Mi App en Docker',
+  title: 'SWAP',
   description: 'Generado por Next.js',
+  icons: {
+    icon: "/favicon.svg",
+  },
 }
 
 export default function RootLayout({
