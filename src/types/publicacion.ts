@@ -33,3 +33,10 @@ export interface PublicacionFilters {
   order?: 'asc' | 'desc';
   all?: boolean;
 }
+
+export interface VendedorResumen {
+  id_usuario: number;
+  nombre: string;
+  calificacion: number;
+  url_foto_perfil?: string;
+}
