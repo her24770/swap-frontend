@@ -21,17 +21,6 @@ const { agregarNotificacion } = useUIStore.getState();
  
 // ─── Helpers internos ─────────────────────────────────────────────────────────
  
-/**
- * Convierte el string del tipo ("material"  "tutoria"  "negocio")
- * en el id_tipo_perfil que espera el backend consultando primero
- * el mapa local.
- */
-const TIPO_ID_MAP: Record<TipoPublicacion, number> = {
-  material: 1,
-  tutoria: 2,
-  negocio: 3,
-};
- 
 /** Genera URLs de objeto para preview y las devuelve junto con sus URLs. */
 function crearPreviews(files: File[]): string[] {
   return files.map((f) => URL.createObjectURL(f));
@@ -138,7 +127,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
-        tipo_publicacion: TIPO_ID_MAP[data.tipo_publicacion],
+        tipo_publicacion: data.tipo_publicacion,
         imagen,
       });
 
@@ -271,7 +260,7 @@ export function useFormEditarPublicacion(id: number,
       if (data.precio !== undefined && data.precio !== "")
         payload.precio = parseFloat(data.precio);
       if (data.tipo_publicacion !== undefined)
-        payload.tipo_publicacion = TIPO_ID_MAP[data.tipo_publicacion];
+        payload.tipo_publicacion = data.tipo_publicacion;
       if (data.categorias !== undefined && data.categorias.length > 0)
         payload.etiquetas = data.categorias;
       if (data.destacado !== undefined) payload.destacado = data.destacado;

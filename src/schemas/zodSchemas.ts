@@ -86,12 +86,9 @@ export const schemaCrearPublicacion = z.object({
   precio: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido.")
+    .refine((v) => !v || parseFloat(v) <= 999.99, "El precio no puede superar Q999.99.")
     .optional()
     .or(z.literal("")),
-
-  // tipo_publicacion: z
-  //   .string()
-  //   .min(1, "Selecciona un tipo de publicación."),
 
   tipo_publicacion: z.enum(TIPOS_PUBLICACION, {
     required_error: "Selecciona el tipo de publicación.",
@@ -132,6 +129,7 @@ export const schemaEditarPublicacion = z.object({
   precio: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido.")
+    .refine((v) => !v || parseFloat(v) <= 999.99, "El precio no puede superar Q999.99.")
     .optional()
     .or(z.literal("")),
 
