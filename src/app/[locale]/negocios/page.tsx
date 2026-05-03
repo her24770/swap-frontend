@@ -1,12 +1,12 @@
 "use client";
-import PostCard from "../../components/posts/PostCard/PostCard";
-import SearchBar from "../../components/ui/SearchBar/SearchBar";
+import PostCard from "../../../components/posts/PostCard/PostCard";
+import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
-import { apiClient, type ApiError } from "../../lib/apiClient";
-import { TAG_NEGOCIO} from "../../lib/tags";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { TAG_NEGOCIO} from "../../../lib/tags";
 import "./NegociosPage.css";
 
-import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
+import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 
 const ITEMS_PER_PAGE = 12;
 

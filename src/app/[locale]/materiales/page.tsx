@@ -1,14 +1,14 @@
 "use client";
-import PostCard from "../../components/posts/PostCard/PostCard";
-import SearchBar from "../../components/ui/SearchBar/SearchBar";
+import PostCard from "../../../components/posts/PostCard/PostCard";
+import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect, use } from "react";
-import { apiClient, type ApiError } from "../../lib/apiClient";
-import { TAG_MATERIAL} from "../../lib/tags";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { TAG_MATERIAL} from "../../../lib/tags";
 import "./MaterialesPage.css";
-import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
-import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
-import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
-import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
+import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
+import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
+import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
+import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
 const ITEMS_PER_PAGE = 12;
 

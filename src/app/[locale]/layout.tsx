@@ -1,7 +1,7 @@
-import Layout from "../components/layout/Layout/layout"
-import ToastContainer from "../components/ui/Toast/Toast"
+import Layout from "../../components/layout/Layout/layout"
+import ToastContainer from "../../components/ui/Toast/Toast"
 import "./globals.css"
-import { jockey, palanquin, lato} from "../styles/fonts";
+import { jockey, palanquin, lato} from "../../styles/fonts";
 
 export const metadata = {
   title: 'SWAP',

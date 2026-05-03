@@ -3,23 +3,23 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { SquarePlus } from "lucide-react";
-import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
-import PostCard from "../../../components/posts/PostCard/PostCard";
-import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
-import AdBanner from "../../../components/ui/AdBanner/AdBanner";
-import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
-import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
+import UserProfileHeader from "../../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
+import PostCard from "../../../../components/posts/PostCard/PostCard";
+import CommentSection from "../../../../components/users/UserCard/Comments/CommentSection";
+import AdBanner from "../../../../components/ui/AdBanner/AdBanner";
+import HorizontalCarousel from "../../../../components/ui/HorizontalCarousel/HorizontalCarousel";
+import CrearPublicacionForm from "../../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import imagePath from "../../../../public/images/uvg.jpg";
-import { TAGS_MATERIAS } from "../../../lib/tags";
-import { apiClient } from "../../../lib/apiClient";
-import { obtenerContactosUsuario } from "../../../lib/contactosUsuario";
+import { TAGS_MATERIAS } from "../../../../lib/tags";
+import { apiClient } from "../../../../lib/apiClient";
+import { obtenerContactosUsuario } from "../../../../lib/contactosUsuario";
 import "../../../components/ui/Button/Button.css";
 import "../../../components/ui/Modal/Modal.css";
 import "./PerfilVendedorPage.css";
 
-import type { Tag } from "../../../types/tag";
-import type { Comment } from "../../../types/comment";
-import type { UserProfileData } from "../../../types/perfil";
+import type { Tag } from "../../../../types/tag";
+import type { Comment } from "../../../../types/comment";
+import type { UserProfileData } from "../../../../types/perfil";
 
 const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,

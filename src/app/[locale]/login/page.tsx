@@ -1,4 +1,4 @@
-import LoginForm from "../../components/auth/LoginForm/LoginForm";
+import LoginForm from "../../../components/auth/LoginForm/LoginForm";
 import "./LoginPage.css";
 import bgImage from "../../../public/images/uvg.jpg";
 
