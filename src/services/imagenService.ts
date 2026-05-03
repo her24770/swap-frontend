@@ -1,11 +1,4 @@
-import { useAuthStore } from "../store/authStore";
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-
-function authHeader(): HeadersInit {
-  const token = useAuthStore.getState().token;
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
 
 export interface CrearPublicacionPayload {
   titulo: string;
@@ -26,12 +19,12 @@ export const imagenService = {
     formData.append("titulo", payload.titulo);
     formData.append("descripcion", payload.descripcion);
     formData.append("precio", payload.precio ? payload.precio : "0");
-    formData.append("tipo_publicacion", String(payload.tipo_publicacion));
+    formData.append("tipo_publicacion", payload.tipo_publicacion);
     if (payload.imagen) formData.append("imagen", payload.imagen);
 
     const res = await fetch(`${BASE_URL}/api/publicacion/`, {
       method: "POST",
-      headers: authHeader(),
+      credentials: "include",
       body: formData,
     });
 
@@ -50,13 +43,13 @@ export const imagenService = {
 
     const res = await fetch(`${BASE_URL}/api/imagen/perfil/${usuarioId}`, {
       method: "PUT",
-      headers: authHeader(),
+      credentials: "include",
       body: formData,
     });
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? `Error ${res.status} al subir foto de perfil`);
+      throw new Error(body.message ?? body.error ?? `Error ${res.status} al subir foto de perfil`);
     }
 
     const data = await res.json();
@@ -69,13 +62,13 @@ export const imagenService = {
 
     const res = await fetch(`${BASE_URL}/api/imagen/publicacion/${publicacionId}`, {
       method: "PUT",
-      headers: authHeader(),
+      credentials: "include",
       body: formData,
     });
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? `Error ${res.status} al subir imagen`);
+      throw new Error(body.message ?? body.error ?? `Error ${res.status} al subir imagen`);
     }
 
     const data = await res.json();

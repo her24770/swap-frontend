@@ -51,7 +51,7 @@ export default function RegistroForm() {
         setServerError("El correo no es válido");
         return;
       }
-      const respuesta = await apiClient.post<{ token: string; usuario: Usuario; rol: Rol }>(
+      const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>(
         "/api/auth/register",
         {
           nombre: `${data.nombre} ${data.apellido}`.trim(),
@@ -62,7 +62,7 @@ export default function RegistroForm() {
           descripcion: data.descripcion || "Sin descripción",
         }
       );
-      login(respuesta.usuario, respuesta.token, respuesta.rol);
+      login(respuesta.usuario, respuesta.rol);
       toast.success("¡Registro exitoso! Bienvenido a SWAP.");
       router.push("/");
     } catch (error) {

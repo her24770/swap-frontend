@@ -18,11 +18,11 @@ export function useFormLogin() {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const respuesta = await apiClient.post<{ token: string; usuario: any; rol: any }>(
+    const respuesta = await apiClient.post<{ usuario: any; rol: any }>(
       "/api/auth/login",
       data
     );
-    login(respuesta.usuario, respuesta.token, respuesta.rol);
+    login(respuesta.usuario, respuesta.rol);
   });
 
   return { form, onSubmit };

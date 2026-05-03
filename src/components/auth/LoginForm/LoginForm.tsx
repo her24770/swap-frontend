@@ -37,7 +37,7 @@ export default function LoginForm() {
         email_institucional: data.email,
         password: data.password,
       });
-      login(response.usuario, response.token, response.rol);
+      login(response.usuario, response.rol);
       toast.success("¡Bienvenido de nuevo!");
       router.push("/");
       router.refresh();
