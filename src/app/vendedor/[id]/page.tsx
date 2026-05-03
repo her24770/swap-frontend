@@ -127,7 +127,7 @@ export default function PerfilVendedorPage() {
 
       <section className="perfil-vendedor__section">
         <div className="perfil-vendedor__section-header">
-          <h2 className="perfil-vendedor__section-title">Catálogo</h2>
+          <h2 className="perfil-page__carousel-wrap">Catálogo</h2>
           <button
             type="button"
             className="button button--small"
@@ -159,7 +159,7 @@ export default function PerfilVendedorPage() {
       <hr className="perfil-vendedor__divider" />
 
       <section className="perfil-vendedor__section">
-        <h2 className="perfil-vendedor__section-title">Anuncios</h2>
+        <h2 className="perfil-page__carousel-wrap">Anuncios</h2>
         <AdBanner
           imageUrl={MOCK_AD.imageUrl}
           title={MOCK_AD.title}

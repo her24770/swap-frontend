@@ -11,7 +11,7 @@ export interface CrearPublicacionPayload {
   titulo: string;
   descripcion: string;
   precio?: string;
-  tipo_publicacion: number;
+  tipo_publicacion: string;
   imagen?: File;
 }
 
@@ -37,7 +37,7 @@ export const imagenService = {
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? `Error ${res.status} al crear publicación`);
+      throw new Error(body.message ?? body.error ?? `Error ${res.status} al crear publicación`);
     }
 
     const json = await res.json();
