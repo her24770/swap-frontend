@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight } from "lucide-react";
-import { useToast } from "../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "../../../hooks/useToast";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
@@ -20,8 +20,8 @@ export const extractCarnetFromEmail = (email: string): number | null => {
 
 export default function RegistroForm() {
   const router = useRouter();
-  const login = useAuthStore((s) => s.login);
   const toast = useToast();
+  const login = useAuthStore((s) => s.login);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -51,20 +51,16 @@ export default function RegistroForm() {
         setServerError("El correo no es válido");
         return;
       }
-      const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>(
-        "/api/auth/register",
-        {
-          nombre: `${data.nombre} ${data.apellido}`.trim(),
-          carnet,
-          email_institucional: data.email_institucional,
-          password: data.password,
-          url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
-          descripcion: data.descripcion || "Sin descripción",
-        }
-      );
+      const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>("/api/auth/register", {
+        nombre: `${data.nombre} ${data.apellido}`.trim(),
+        carnet,
+        email_institucional: data.email_institucional,
+        password: data.password,
+        url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
+        descripcion: data.descripcion || "Sin descripción",
+      });
       login(respuesta.usuario, respuesta.rol);
-      toast.success("¡Registro exitoso! Bienvenido a SWAP.");
-      router.push("/");
+      router.push("/?registered=true");
     } catch (error) {
       const apiError = error as ApiError;
       toast.error(apiError.message || "No fue posible registrarse");
