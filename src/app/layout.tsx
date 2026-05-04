@@ -4,8 +4,11 @@ import "./globals.css"
 import { jockey, palanquin, lato} from "../styles/fonts";
 
 export const metadata = {
-  title: 'Swap',
+  title: 'SWAP',
   description: 'Sitio de intercambio enttre estudiantes de la UVG',
+  icons: {
+    icon: "/favicon.svg",
+  },
 }
 
 export default function RootLayout(
