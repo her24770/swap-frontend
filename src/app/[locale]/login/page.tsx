@@ -1,6 +1,6 @@
 import LoginForm from "../../../components/auth/LoginForm/LoginForm";
 import "./LoginPage.css";
-import bgImage from "../../../public/images/uvg.jpg";
+import bgImage from "../../../../public/images/uvg.jpg"; 
 
 export default function Page() {
   const bgStyle = {

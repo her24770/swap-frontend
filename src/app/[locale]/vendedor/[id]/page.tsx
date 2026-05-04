@@ -10,12 +10,12 @@ import CommentSection from "../../../../components/users/UserCard/Comments/Comme
 import AdBanner from "../../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
-import imagePath from "../../../../public/images/uvg.jpg";
+import imagePath from "../../../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import { apiClient } from "../../../../lib/apiClient";
 import { obtenerContactosUsuario } from "../../../../lib/contactosUsuario";
-import "../../../components/ui/Button/Button.css";
-import "../../../components/ui/Modal/Modal.css";
+import "../../../../components/ui/Button/Button.css";
+import "../../../../components/ui/Modal/Modal.css";
 import "./PerfilVendedorPage.css";
 
 import type { Tag } from "../../../../types/tag";

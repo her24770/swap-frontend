@@ -11,13 +11,13 @@ import PostRes from "../../../components/posts/PostResumida/PostRes";
 import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
-import imagePath from "../../../public/images/uvg.jpg";
+import imagePath from "../../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../../lib/tags";
 import type { Tag } from "../../../types/tag";
 import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
 import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
-import "../../components/ui/Modal/Modal.css";
+import "../../../components/ui/Modal/Modal.css";
 import { SquarePlus } from "lucide-react";
 import "./PerfilConsumidorPage.css";
 
