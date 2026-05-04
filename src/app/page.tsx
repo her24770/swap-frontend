@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import PostCard from "../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../hooks/fetch/usePublicaciones";
@@ -10,9 +10,7 @@ import "./descubre.css";
 
 const ITEMS_PER_PAGE = 12;
 
-export default function HomePage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
+function RegisteredToast() {
   const searchParams = useSearchParams();
   const toast = useToast();
 
@@ -21,6 +19,13 @@ export default function HomePage() {
       toast.success("¡Registro exitoso! Bienvenido a SWAP.");
     }
   }, []);
+
+  return null;
+}
+
+export default function HomePage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const { data, loading, error } = usePublicaciones({
     tipo: "negocio",
     limit: ITEMS_PER_PAGE,
@@ -40,6 +45,9 @@ export default function HomePage() {
 
   return (
     <main className="descubre-page">
+      <Suspense fallback={null}>
+        <RegisteredToast />
+      </Suspense>
       <div className="descubre-page__header">
         <h1 className="descubre-page__title">DESCUBRE</h1>
         <SearchBar value={searchQuery} onChange={handleSearch} />
