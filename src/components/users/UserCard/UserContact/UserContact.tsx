@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { Contact } from "../../../../types/comment";
 import './UserContact.css';
 
@@ -8,6 +9,8 @@ interface UserContactProps {
 }
 
 export default function UserContact({ contacts }: UserContactProps) {
+    const t = useTranslations("common.aria");
+
     return (
         <div className="user-contact-group">
         {contacts.map((contact, index) => (
@@ -17,7 +20,7 @@ export default function UserContact({ contacts }: UserContactProps) {
             target="_blank"
             rel="noopener noreferrer"
             className="user-contact"
-            aria-label={`Visitar perfil de ${contact.platform}`}
+            aria-label={t("visitProfile", { platform: contact.platform })}
             >
             <img 
                 src={`/icons/${contact.platform}.svg`} 

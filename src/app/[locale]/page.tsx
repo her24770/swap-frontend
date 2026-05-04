@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from 'next-intl';
 import PostCard from "../../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
 import { useToast } from "../../hooks/useToast";
@@ -24,6 +25,10 @@ function RegisteredToast() {
 }
 
 export default function HomePage() {
+  const t = useTranslations('home');
+  const tEmpty = useTranslations('common.empty');
+  const tTags = useTranslations('common.tags');
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const { data, loading, error } = usePublicaciones({
@@ -49,13 +54,13 @@ export default function HomePage() {
         <RegisteredToast />
       </Suspense>
       <div className="descubre-page__header">
-        <h1 className="descubre-page__title">DESCUBRE</h1>
+        <h1 className="descubre-page__title">{t('title')}</h1>
         <SearchBar value={searchQuery} onChange={handleSearch} />
       </div>
 
       {loading && (
         <div className="descubre-page__state">
-          <p className="descubre-page__state-text">Cargando negocios...</p>
+          <p className="descubre-page__state-text">{t('loading')}</p>
         </div>
       )}
 
@@ -70,11 +75,11 @@ export default function HomePage() {
       {!loading && !error && filtered.length === 0 && (
         <div className="descubre-page__empty">
           <div className="descubre-page__empty-icon"></div>
-          <h2 className="descubre-page__empty-title">No hay negocios disponibles</h2>
+          <h2 className="descubre-page__empty-title">{t('empty.title')}</h2>
           <p className="descubre-page__empty-description">
             {searchQuery
-              ? `No se encontraron resultados para "${searchQuery}"`
-              : "Aún no hay negocios estudiantiles publicados."}
+              ? tEmpty('noResultsFor', { query: searchQuery })
+              : t('empty.description')}
           </p>
         </div>
       )}
@@ -85,7 +90,7 @@ export default function HomePage() {
             {filtered.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[{ id: 1, name: "Negocio",  colorKey: "diseno" }]}
+                tags={[{ id: 1, name: tTags('negocio'), colorKey: "diseno" }]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}

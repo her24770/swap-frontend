@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
+import { stripLocalePrefix } from '../../../i18n/pathname';
 import "./layout.css";
 
 interface LayoutProps {
@@ -13,8 +14,9 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  
-  const isAuthRoute = AUTH_ROUTES.includes(pathname);
+  const pathnameWithoutLocale = stripLocalePrefix(pathname);
+
+  const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
 
   return (
     <div className="layout">

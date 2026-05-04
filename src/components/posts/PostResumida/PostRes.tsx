@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Camera, ChevronRight, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { imagenService } from "../../../services/imagenService";
 import "../../ui/Button/Button.css";
 import "./PostRes.css";
@@ -15,6 +16,8 @@ interface PostResProps {
 }
 
 export default function PostRes({ title, price, images, publicacionId }: PostResProps) {
+  const t = useTranslations("posts");
+
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -30,11 +33,11 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
 
     const allowed = ["image/jpeg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      setUploadError("Solo se permiten JPG, PNG o WEBP");
+      setUploadError(t("uploadErrors.invalidType"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Máximo 5 MB");
+      setUploadError(t("uploadErrors.tooLarge"));
       return;
     }
 
@@ -45,7 +48,7 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
       const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
       setDisplayImages([url, ...displayImages.slice(1)]);
     } catch (err: any) {
-      setUploadError(err.message || "Error al subir la imagen");
+      setUploadError(err.message || t("uploadErrors.generic"));
     } finally {
       setIsUploading(false);
       e.target.value = "";
@@ -63,7 +66,7 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
                 className="post-res-card__upload-overlay"
                 onClick={() => !isUploading && fileInputRef.current?.click()}
                 role="button"
-                aria-label="Subir imagen"
+                aria-label={t("aria.uploadImage")}
               >
                 {isUploading
                   ? <Loader2 size={20} className="post-res-card__upload-spinner" />
@@ -98,7 +101,7 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
             className="button button--small"
             onClick={handleDetailsClick}
           >
-            Detalles <ChevronRight size={14} />
+            {t("actions.details")} <ChevronRight size={14} />
           </button>
         </div>
       </div>

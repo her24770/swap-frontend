@@ -1,25 +1,44 @@
-import Layout from "../../components/layout/Layout/layout"
-import ToastContainer from "../../components/ui/Toast/Toast"
-import "./globals.css"
-import { jockey, palanquin, lato} from "../../styles/fonts";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
 
-export const metadata = {
-  title: 'SWAP',
-  description: 'Sitio de intercambio enttre estudiantes de la UVG',
-  icons: {
-    icon: "/favicon.svg",
-  },
+import Layout from '../../components/layout/Layout/layout';
+import ToastContainer from '../../components/ui/Toast/Toast';
+import { jockey, palanquin, lato } from '../../styles/fonts';
+import './globals.css';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: string };
+}) {
+  const t = await getTranslations({ locale: params.locale, namespace: 'layout.meta' });
+
+  return {
+    title: t('title'),
+    description: t('description'),
+  };
 }
 
-export default function RootLayout(
-  {children,}: 
-  {children: React.ReactNode}) {
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { locale: string };
+}) {
+  const messages = await getMessages();
+
   return (
-    <html lang="es" className={`${jockey.variable} ${palanquin.variable} ${lato.variable}`}>
+    <html
+      lang={params.locale}
+      className={`${jockey.variable} ${palanquin.variable} ${lato.variable}`}
+    >
       <body>
-        <Layout>{children}</Layout>
-        <ToastContainer />
+        <NextIntlClientProvider messages={messages}>
+          <Layout>{children}</Layout>
+          <ToastContainer />
+        </NextIntlClientProvider>
       </body>
     </html>
-  )
+  );
 }

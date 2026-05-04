@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "./EstadoTag.css";
 
 interface EstadoTagProps {
@@ -11,9 +12,9 @@ interface EstadoTagProps {
 }
 
 const ESTADOS = [
-  { id: "disponible", label: "Disponible", color: "green" },
-  { id: "reservado", label: "Reservado", color: "gray" },
-  { id: "vendido", label: "Vendido", color: "blue" },
+  { id: "disponible", labelKey: "fields.statusAvailable", color: "green" },
+  { id: "reservado", labelKey: "fields.statusReserved", color: "gray" },
+  { id: "vendido", labelKey: "fields.statusSold", color: "blue" },
 ];
 
 const getEstadoConfig = (estado: string | number) => {
@@ -26,8 +27,11 @@ export default function EstadoTag({
   canEdit = false,
   onEstadoChange,
 }: EstadoTagProps) {
+  const t = useTranslations("publicacionForm");
+
   const [isOpen, setIsOpen] = useState(false);
   const config = getEstadoConfig(estado);
+  const label = t(config.labelKey);
 
   const handleEstadoChange = (nuevoEstado: string) => {
     onEstadoChange?.(nuevoEstado);
@@ -38,9 +42,9 @@ export default function EstadoTag({
     return (
       <span
         className={`estado-tag estado-tag--${config.color}`}
-        title={config.label}
+        title={label}
       >
-        {config.label}
+        {label}
       </span>
     );
   }
@@ -54,7 +58,7 @@ export default function EstadoTag({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        {config.label}
+        {label}
         <ChevronDown size={14} className="estado-tag__chevron" />
       </button>
 
@@ -71,7 +75,7 @@ export default function EstadoTag({
               role="option"
             >
               <span className={`estado-tag__dot estado-tag__dot--${opt.color}`} />
-              {opt.label}
+              {t(opt.labelKey)}
             </button>
           ))}
         </div>

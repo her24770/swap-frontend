@@ -1,9 +1,10 @@
 "use client";
+import { useTranslations } from 'next-intl';
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect, use } from "react";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
-import { TAG_MATERIAL} from "../../../lib/tags";
+import { TAG_MATERIAL } from "../../../lib/tags";
 import "./MaterialesPage.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
@@ -13,6 +14,10 @@ import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/
 const ITEMS_PER_PAGE = 12;
 
 export default function MaterialesPage() {
+  const t = useTranslations('materiales');
+  const tEmpty = useTranslations('common.empty');
+  const tTags = useTranslations('common.tags');
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
@@ -28,7 +33,7 @@ export default function MaterialesPage() {
     } catch (error) {
       const apiError = error as ApiError;
       console.error(apiError.message);
-      setError(apiError.message || "No fue posible obtener los materiales");
+      setError(apiError.message || t('errorFallback'));
     } finally {
       setLoading(false);
     }
@@ -67,13 +72,13 @@ export default function MaterialesPage() {
   return (
     <main className="materiales-page">
       <div className="materiales-page__header">
-        <h1 className="materiales-page__title">MATERIALES</h1>
+        <h1 className="materiales-page__title">{t('title')}</h1>
         <SearchBar value={searchQuery} onChange={handleSearch} />
       </div>
 
       {loading && (
         <div className="materiales-page__state">
-          <p className="materiales-page__state-text">Cargando materiales...</p>
+          <p className="materiales-page__state-text">{t('loading')}</p>
         </div>
       )}
 
@@ -86,11 +91,11 @@ export default function MaterialesPage() {
       {!loading && !error && filtered.length === 0 && (
         <div className="materiales-page__empty">
           <div className="materiales-page__empty-icon">📚</div>
-          <h2 className="materiales-page__empty-title">No hay materiales disponibles</h2>
+          <h2 className="materiales-page__empty-title">{t('empty.title')}</h2>
           <p className="materiales-page__empty-description">
             {searchQuery
-              ? `No se encontraron resultados para "${searchQuery}"`
-              : "Aún no se han publicado materiales académicos. ¡Sé el primero en compartir!"}
+              ? tEmpty('noResultsFor', { query: searchQuery })
+              : t('empty.description')}
           </p>
         </div>
       )}
@@ -101,7 +106,7 @@ export default function MaterialesPage() {
             {paginated.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[TAG_MATERIAL]}
+                tags={[{ ...TAG_MATERIAL, name: tTags('material') }]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}

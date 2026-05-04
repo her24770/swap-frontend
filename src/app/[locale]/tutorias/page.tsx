@@ -1,14 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from 'next-intl';
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import SearchBar from "../../../components/ui/SearchBar/SearchBar";
+import { TAG_TUTORIA } from "../../../lib/tags";
 import "./tutorias.css";
 
 const ITEMS_PER_PAGE = 12;
 
 export default function TutoriasPage() {
+  const t = useTranslations('tutorias');
+  const tEmpty = useTranslations('common.empty');
+  const tTags = useTranslations('common.tags');
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const { data, loading, error } = usePublicaciones({
@@ -30,13 +36,13 @@ export default function TutoriasPage() {
   return (
     <main className="tutorias-page">
       <div className="tutorias-page__header">
-        <h1 className="tutorias-page__title">TUTORÍAS</h1>
+        <h1 className="tutorias-page__title">{t('title')}</h1>
         <SearchBar value={searchQuery} onChange={handleSearch} />
       </div>
 
       {loading && (
         <div className="tutorias-page__state">
-          <p className="tutorias-page__state-text">Cargando tutorías...</p>
+          <p className="tutorias-page__state-text">{t('loading')}</p>
         </div>
       )}
 
@@ -51,11 +57,11 @@ export default function TutoriasPage() {
       {!loading && !error && filtered.length === 0 && (
         <div className="tutorias-page__empty">
           <div className="tutorias-page__empty-icon"></div>
-          <h2 className="tutorias-page__empty-title">No hay tutorías disponibles</h2>
+          <h2 className="tutorias-page__empty-title">{t('empty.title')}</h2>
           <p className="tutorias-page__empty-description">
             {searchQuery
-              ? `No se encontraron resultados para "${searchQuery}"`
-              : "Aún no hay tutorías estudiantiles publicadas."}
+              ? tEmpty('noResultsFor', { query: searchQuery })
+              : t('empty.description')}
           </p>
         </div>
       )}
@@ -66,7 +72,7 @@ export default function TutoriasPage() {
             {filtered.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[{ id: 1, name: "Tutoría",  colorKey: "diseno" }]}
+                tags={[{ ...TAG_TUTORIA, name: tTags('tutoria') }]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}

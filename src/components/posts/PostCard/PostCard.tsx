@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Camera, ChevronRight, Loader2, Edit2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
@@ -39,6 +40,8 @@ export default function PostCard({
   onEstadoChange,
   onDetallesClick,
 }: PostCardProps) {
+  const t = useTranslations("posts");
+
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -56,11 +59,11 @@ export default function PostCard({
 
     const allowed = ["image/jpeg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      setUploadError("Solo se permiten imágenes JPG, PNG o WEBP");
+      setUploadError(t("uploadErrors.invalidType"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      setUploadError("La imagen no puede superar los 5 MB");
+      setUploadError(t("uploadErrors.tooLarge"));
       return;
     }
 
@@ -71,7 +74,7 @@ export default function PostCard({
       const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
       setDisplayImages([url, ...displayImages.slice(1)]);
     } catch (err: any) {
-      setUploadError(err.message || "Error al subir la imagen");
+      setUploadError(err.message || t("uploadErrors.generic"));
     } finally {
       setIsUploading(false);
       e.target.value = "";
@@ -104,7 +107,7 @@ export default function PostCard({
                 className="post-card__upload-overlay"
                 onClick={() => !isUploading && fileInputRef.current?.click()}
                 role="button"
-                aria-label="Subir imagen"
+                aria-label={t("aria.uploadImage")}
               >
                 {isUploading
                   ? <Loader2 size={28} className="post-card__upload-spinner" />
@@ -140,7 +143,7 @@ export default function PostCard({
             className="button button--small"
             onClick={handleDetailsClick}
           >
-            Detalles <ChevronRight size={14} />
+            {t("actions.details")} <ChevronRight size={14} />
           </button>
           {canEdit && onEditClick && (
             <button
@@ -148,7 +151,7 @@ export default function PostCard({
               className="button button--small"
               onClick={onEditClick}
             >
-              <Edit2 size={14} /> Editar
+              <Edit2 size={14} /> {t("actions.edit")}
             </button>
           )}
         </footer>

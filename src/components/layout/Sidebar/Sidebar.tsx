@@ -2,30 +2,34 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, BookOpen, Package, Briefcase } from "lucide-react";
+import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
+import { stripLocalePrefix } from '../../../i18n/pathname';
 import "./Sidebar.css";
-
-const NAV_ITEMS = [
-  { icon: Compass,   label: "Descubre",   href: "/"              },
-  { icon: BookOpen,  label: "Tutorías",   href: "/tutorias"   },
-  { icon: Package,   label: "Materiales", href: "/materiales" },
-  { icon: Briefcase, label: "Negocios",   href: "/negocios"   },
-] as const;
 
 interface SidebarProps {
   isOpen: boolean;
 }
 
 export default function Sidebar({ isOpen }: SidebarProps) {
+  const t = useTranslations('layout.sidebar');
   const pathname = usePathname();
+  const pathnameWithoutLocale = stripLocalePrefix(pathname);
 
-  if (AUTH_ROUTES.includes(pathname)) return null;
+  if (AUTH_ROUTES.includes(pathnameWithoutLocale)) return null;
+
+  const navItems = [
+    { icon: Compass, label: t('descubre'), href: '/' },
+    { icon: BookOpen, label: t('tutorias'), href: '/tutorias' },
+    { icon: Package, label: t('materiales'), href: '/materiales' },
+    { icon: Briefcase, label: t('negocios'), href: '/negocios' },
+  ] as const;
 
   return (
     <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <nav className="sidebar__nav">
-        {NAV_ITEMS.map(({ icon: Icon, label, href }) => {
-          const isActive = pathname.startsWith(href);
+        {navItems.map(({ icon: Icon, label, href }) => {
+          const isActive = href === '/' ? pathnameWithoutLocale === '/' : pathnameWithoutLocale.startsWith(href);
           return (
             <Link
               key={href}

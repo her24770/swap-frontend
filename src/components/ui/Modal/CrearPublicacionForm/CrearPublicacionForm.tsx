@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useFormCrearPublicacion, useFormEditarPublicacion } from "../../../../hooks/useFormPublicacion";
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import "../../../ui/Button/Button.css";
@@ -10,12 +11,6 @@ import { CrearPublicacionFormData, EditarPublicacionFormData } from "../../../..
 import { UseFormReturn } from "react-hook-form";
 
 type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
-
-const TIPO_LABELS: Record<string, string> = {
-  material:  "Material",
-  tutoria:   "Tutoría",
-  negocio:   "Negocio",
-};
 
 interface BasePublicacionFormProps {
   onSuccess?: () => void;
@@ -36,6 +31,9 @@ interface EditarPublicacionFormProps extends BasePublicacionFormProps {
 type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormProps;
 
 export default function CrearPublicacionForm(props: PublicacionFormProps) {
+  const t = useTranslations("publicacionForm");
+  const tTags = useTranslations("common.tags");
+
   const { onSuccess, onCancel} =props;
   const isEditing = props.mode === "editar";
   const createHook = useFormCrearPublicacion();
@@ -94,8 +92,10 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
   const triggerLabel =
     selectedCategorias.length === 0
-      ? "Seleccionar categoría"
-      : `${selectedCategorias.length} categoría${selectedCategorias.length > 1 ? "s" : ""} seleccionada${selectedCategorias.length > 1 ? "s" : ""}`;
+      ? t("fields.categoryTriggerEmpty")
+      : selectedCategorias.length === 1
+        ? t("fields.categoryTriggerOne")
+        : t("fields.categoryTriggerMany", { count: selectedCategorias.length });
 
   return (
 
@@ -104,7 +104,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
         <div className="crear-publicacion__header-icon">
           <SquarePlus size={18} strokeWidth={1.8} />
         </div>
-        <h2 className="crear-publicacion__title">{isEditing ? "Editar Publicación" : "Crear Publicación"}</h2>
+        <h2 className="crear-publicacion__title">{isEditing ? t("titleEdit") : t("titleCreate")}</h2>
       </div>
 
       <form onSubmit={onSubmit} noValidate>
@@ -112,21 +112,21 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
           {isEditing && (
             <div className="crear-publicacion__field">
-              <label className="crear-publicacion__label">Estado</label>
+              <label className="crear-publicacion__label">{t("fields.status")}</label>
               <select {...register("estado")} className="crear-publicacion__select">
-                <option value="disponible">Disponible</option>
-                <option value="vendido">Vendido</option>
-                <option value="reservado">Reservado</option>
+                <option value="disponible">{t("fields.statusAvailable")}</option>
+                <option value="vendido">{t("fields.statusSold")}</option>
+                <option value="reservado">{t("fields.statusReserved")}</option>
               </select>
             </div>
           )}
 
           {/* Título */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Nombre del Producto</label>
+            <label className="crear-publicacion__label">{t("fields.productName")}</label>
             <input
               type="text"
-              placeholder="ej. Tutoría de Cálculo Diferencial"
+              placeholder={t("fields.productNamePlaceholder")}
               {...register("titulo")}
               className={`crear-publicacion__input${errors.titulo ? " crear-publicacion__input--error" : ""}`}
             />
@@ -135,9 +135,9 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
           {/* Descripción */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Descripción</label>
+            <label className="crear-publicacion__label">{t("fields.description")}</label>
             <textarea
-              placeholder="Describe las características y beneficios clave..."
+              placeholder={t("fields.descriptionPlaceholder")}
               {...register("descripcion")}
               className={`crear-publicacion__textarea${errors.descripcion ? " crear-publicacion__textarea--error" : ""}`}
             />
@@ -146,7 +146,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
           {/* Precio */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Precio</label>
+            <label className="crear-publicacion__label">{t("fields.price")}</label>
             <div className="crear-publicacion__price-wrapper">
               <span className="crear-publicacion__price-prefix">Q</span>
               <input
@@ -162,14 +162,16 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
           {/* Tipo de publicación */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Tipo de publicación</label>
+            <label className="crear-publicacion__label">{t("fields.type")}</label>
             <select
               {...register("tipo_publicacion")}
               className={`crear-publicacion__input${errors.tipo_publicacion ? " crear-publicacion__input--error" : ""}`}
             >
-              <option value="">Seleccionar tipo</option>
+              <option value="">{t("fields.typePlaceholder")}</option>
               {tiposPublicacion.map((tipo) => (
-                <option key={tipo} value={tipo}>{TIPO_LABELS[tipo]}</option>
+                <option key={tipo} value={tipo}>
+                  {tipo === "material" ? tTags("material") : tipo === "tutoria" ? tTags("tutoria") : tTags("negocio")}
+                </option>
               ))}
             </select>
             {errors.tipo_publicacion && <span className="crear-publicacion__error">{errors.tipo_publicacion.message}</span>}
@@ -177,7 +179,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
           {/* Categorías */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Categoría</label>
+            <label className="crear-publicacion__label">{t("fields.category")}</label>
             <div className="crear-publicacion__categories-dropdown" ref={dropdownRef}>
               <button
                 type="button"
@@ -229,7 +231,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                         type="button"
                         onClick={() => toggleCategoria(id)}
                         className="crear-publicacion__categories-tag-remove"
-                        aria-label={`Eliminar ${tag.name}`}
+                        aria-label={t("fields.removeTagAria", { tag: tag.name })}
                       >
                         <X size={11} strokeWidth={2.5} />
                       </button>
@@ -251,13 +253,13 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                 <input type="checkbox" {...register("destacado")} className="crear-publicacion__toggle-input" />
                 <span className="crear-publicacion__toggle-track" />
               </label>
-              <span className="crear-publicacion__toggle-label">Publicación Destacada</span>
+              <span className="crear-publicacion__toggle-label">{t("fields.featured")}</span>
             </div>
           </div>
 
           {/* Imagen */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Foto del Producto</label>
+            <label className="crear-publicacion__label">{t("fields.photo")}</label>
             <div
               className={`crear-publicacion__upload-zone${dragOver ? " crear-publicacion__upload-zone--dragover" : ""}`}
               onClick={() => fileInputRef.current?.click()}
@@ -270,8 +272,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
               }}
             >
               <CloudUpload size={40} strokeWidth={1.5} className="crear-publicacion__upload-icon" />
-              <p className="crear-publicacion__upload-text">Haz clic o arrastra una imagen para subir</p>
-              <p className="crear-publicacion__upload-hint">PNG, JPG o WEBP (máx. 5MB)</p>
+              <p className="crear-publicacion__upload-text">{t("fields.uploadText")}</p>
+              <p className="crear-publicacion__upload-hint">{t("fields.uploadHint")}</p>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -290,7 +292,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                       type="button"
                       onClick={() => removeImage(i)}
                       className="crear-publicacion__preview-remove"
-                      aria-label="Eliminar imagen"
+                      aria-label={t("fields.removeImageAria")}
                     >
                       <X size={10} strokeWidth={3} />
                     </button>
@@ -310,12 +312,12 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
             onClick={() => { if (!isEditing) resetForm(); props.onCancel?.(); }}
             className="crear-publicacion__btn-cancel"
           >
-            Cancelar
+            {t("actions.cancel")}
           </button>
           <button type="submit" disabled={isSubmitting} className="button button--medium">
             {isSubmitting 
-              ? (isEditing ? "Guardando..." : "Publicando...")
-              : (isEditing ? "Guardar Cambios" : "Crear Publicación")
+              ? (isEditing ? t("actions.saving") : t("actions.publishing"))
+              : (isEditing ? t("actions.saveChanges") : t("actions.create"))
             } 
             <ChevronRight size={16} />
           </button>

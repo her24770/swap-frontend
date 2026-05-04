@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Pencil, CreditCard } from "lucide-react";
+import { useTranslations } from "next-intl";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
@@ -28,6 +29,8 @@ export default function UserProfileHeader({
   user,
   onSave,
 }: UserProfileHeaderProps) {
+  const t = useTranslations('profileHeader');
+
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -85,9 +88,9 @@ export default function UserProfileHeader({
       });
 
       setModalOpen(false);
-      toast.success("Perfil actualizado exitosamente");
+      toast.success(t('toast.updateSuccess'));
     } catch (err: any) {
-      toast.error(err.message || "No fue posible actualizar el perfil");
+      toast.error(err.message || t('toast.updateErrorFallback'));
     } finally {
       setIsSaving(false);
     }
@@ -109,10 +112,10 @@ export default function UserProfileHeader({
               type="button"
               className="user-profile-header__edit-btn"
               onClick={() => setModalOpen(true)}
-              aria-label="Editar perfil"
+              aria-label={t('aria.editProfile')}
             >
               <Pencil size={12} />
-              Editar perfil
+              {t('actions.editProfile')}
             </button>
           </div>
 
@@ -122,7 +125,7 @@ export default function UserProfileHeader({
             <div className="user-profile-header__payment">
               <CreditCard size={16} className="user-profile-header__payment-icon" />
               <span>
-                <strong>Metodo de pago:</strong> {user.paymentMethod}
+                <strong>{t('labels.paymentMethod')}</strong> {user.paymentMethod}
               </span>
             </div>
           )}
@@ -142,7 +145,7 @@ export default function UserProfileHeader({
             </div>
           )}
           <div className="user-profile-header__contact-block">
-            <p className="user-profile-header__contact-label">Contacto</p>
+            <p className="user-profile-header__contact-label">{t('labels.contact')}</p>
             <UserContact contacts={user.contacts} />
           </div>
         </div>

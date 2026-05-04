@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight } from "lucide-react";
+import { useTranslations } from 'next-intl';
+import { useToast } from "../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../../../hooks/useToast";
@@ -19,6 +21,8 @@ export const extractCarnetFromEmail = (email: string): number | null => {
 };
 
 export default function RegistroForm() {
+  const t = useTranslations('registro.form');
+
   const router = useRouter();
   const toast = useToast();
   const login = useAuthStore((s) => s.login);
@@ -48,7 +52,7 @@ export default function RegistroForm() {
       setServerError(null);
       const carnet = extractCarnetFromEmail(data.email_institucional);
       if (!carnet) {
-        setServerError("El correo no es válido");
+        setServerError(t('emailInvalid'));
         return;
       }
       const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>("/api/auth/register", {
@@ -63,7 +67,7 @@ export default function RegistroForm() {
       router.push("/?registered=true");
     } catch (error) {
       const apiError = error as ApiError;
-      toast.error(apiError.message || "No fue posible registrarse");
+      toast.error(apiError.message || t('toast.errorFallback'));
     }
   };
 
@@ -73,10 +77,10 @@ export default function RegistroForm() {
       {/* Nombre y Apellido */}
       <div className="registro-form__row">
         <div className="registro-form__field">
-          <label className="registro-form__label">Nombre</label>
+          <label className="registro-form__label">{t('firstNameLabel')}</label>
           <input
             type="text"
-            placeholder="Michael"
+            placeholder={t('firstNamePlaceholder')}
             {...register("nombre")}
             className={`registro-form__input${errors.nombre ? " registro-form__input--error" : ""}`}
           />
@@ -86,10 +90,10 @@ export default function RegistroForm() {
         </div>
 
         <div className="registro-form__field">
-          <label className="registro-form__label">Apellido</label>
+          <label className="registro-form__label">{t('lastNameLabel')}</label>
           <input
             type="text"
-            placeholder="Pérez"
+            placeholder={t('lastNamePlaceholder')}
             {...register("apellido")}
             className={`registro-form__input${errors.apellido ? " registro-form__input--error" : ""}`}
           />
@@ -101,10 +105,10 @@ export default function RegistroForm() {
 
       {/* Email del usuario */}
       <div className="registro-form__field">
-        <label className="registro-form__label">Correo electrónico</label>
+        <label className="registro-form__label">{t('emailLabel')}</label>
         <input
           type="email"
-          placeholder="per0000@uvg.edu.gt"
+          placeholder={t('emailPlaceholder')}
           {...register("email_institucional")}
           className={`registro-form__input${errors.email_institucional ? " registro-form__input--error" : ""}`}
         />
@@ -115,11 +119,11 @@ export default function RegistroForm() {
 
       {/* Contraseña */}
       <div className="registro-form__field">
-        <label className="registro-form__label">Crea una contraseña</label>
+        <label className="registro-form__label">{t('passwordLabel')}</label>
         <div className="registro-form__input-wrapper">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Al menos 8 caracteres"
+            placeholder={t('passwordPlaceholder')}
             {...register("password")}
             className={`registro-form__input registro-form__input--password${errors.password ? " registro-form__input--error" : ""}`}
           />
@@ -138,11 +142,11 @@ export default function RegistroForm() {
 
       {/* Confirmar contraseña */}
       <div className="registro-form__field">
-        <label className="registro-form__label">Confirmar contraseña</label>
+        <label className="registro-form__label">{t('confirmPasswordLabel')}</label>
         <div className="registro-form__input-wrapper">
           <input
             type={showConfirm ? "text" : "password"}
-            placeholder="Al menos 8 caracteres"
+            placeholder={t('confirmPasswordPlaceholder')}
             {...register("confirmar_password")}
             className={`registro-form__input registro-form__input--password${errors.confirmar_password ? " registro-form__input--error" : ""}`}
           />
@@ -169,7 +173,7 @@ export default function RegistroForm() {
         disabled={isSubmitting}
         className="button button--large button--full-width"
       >
-        {isSubmitting ? "Registrando..." : "Continuar"}
+        {isSubmitting ? t('submitting') : t('submit')}
         {!isSubmitting && <ChevronRight size={16} />}
       </button>
 

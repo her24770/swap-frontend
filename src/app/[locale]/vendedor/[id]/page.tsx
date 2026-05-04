@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { SquarePlus } from "lucide-react";
 import UserProfileHeader from "../../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../../../components/posts/PostCard/PostCard";
@@ -54,6 +55,9 @@ const MOCK_COMMENTS: Comment[] = [
 ];
 
 export default function PerfilVendedorPage() {
+  const t = useTranslations("vendedor");
+  const tCommon = useTranslations("common");
+
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
@@ -88,15 +92,15 @@ export default function PerfilVendedorPage() {
   const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
     const newComment: Comment = {
       id: Date.now().toString(),
-      authorName: anonymous ? "Anónimo" : "Tú",
-      timeAgo: "Ahora mismo",
+      authorName: anonymous ? tCommon("people.anonymous") : tCommon("people.you"),
+      timeAgo: tCommon("time.justNow"),
       rating,
       comment,
     };
     setComments((prev) => [newComment, ...prev]);
   };
 
-  if (!user) return <p>Cargando perfil...</p>;
+  if (!user) return <p>{t("loading")}</p>;
 
   return (
     <main className="perfil-vendedor">
@@ -127,14 +131,14 @@ export default function PerfilVendedorPage() {
 
       <section className="perfil-vendedor__section">
         <div className="perfil-vendedor__section-header">
-          <h2 className="perfil-page__carousel-wrap">Catálogo</h2>
+          <h2 className="perfil-page__carousel-wrap">{t("sections.catalog")}</h2>
           <button
             type="button"
             className="button button--small"
             onClick={() => setModalOpen(true)}
           >
             <SquarePlus size={14} />
-            Nueva publicación
+            {t("actions.newPublication")}
           </button>
         </div>
         <div className="perfil-vendedor__carousel-wrap">
@@ -159,7 +163,7 @@ export default function PerfilVendedorPage() {
       <hr className="perfil-vendedor__divider" />
 
       <section className="perfil-vendedor__section">
-        <h2 className="perfil-page__carousel-wrap">Anuncios</h2>
+        <h2 className="perfil-page__carousel-wrap">{t("sections.ads")}</h2>
         <AdBanner
           imageUrl={MOCK_AD.imageUrl}
           title={MOCK_AD.title}
@@ -170,7 +174,7 @@ export default function PerfilVendedorPage() {
       <hr className="perfil-vendedor__divider" />
 
       <section className="perfil-vendedor__section">
-        <h2 className="perfil-vendedor__section-title">Comentarios y Reseñas</h2>
+        <h2 className="perfil-vendedor__section-title">{t("sections.comments")}</h2>
         <div className="perfil-vendedor__comments">
           <CommentSection
             targetName={user.name}
