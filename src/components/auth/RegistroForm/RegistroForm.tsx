@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight } from "lucide-react";
-import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { useToast } from "../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import "../../ui/Button/Button.css"
@@ -20,6 +21,7 @@ export const extractCarnetFromEmail = (email: string): number | null => {
 export default function RegistroForm() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
+  const toast = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -61,10 +63,11 @@ export default function RegistroForm() {
         }
       );
       login(respuesta.usuario, respuesta.token, respuesta.rol);
+      toast.success("¡Registro exitoso! Bienvenido a SWAP.");
       router.push("/");
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(apiError.message || "No fue posible registrarse");
+      toast.error(apiError.message || "No fue posible registrarse");
     }
   };
 

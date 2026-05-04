@@ -9,10 +9,8 @@
 
 .login-form__brand {
   color: var(--swap-primary-color);
-  font-family: var(--swap-font-titulos);
-  font-weight: 700;
-  font-size: 1.0rem;
-  letter-spacing: 0.05em;
+  height: 1.00rem;
+  width: auto;
 }
 
 .login-form__title {

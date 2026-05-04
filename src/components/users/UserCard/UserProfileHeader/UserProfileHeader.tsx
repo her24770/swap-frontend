@@ -9,12 +9,14 @@ import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/Actualizar
 import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
+import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
+import type { Tag } from "../../../../types/tag";
+import { useToast } from "../../../../hooks/useToast";
 import {
   contactosToUpsertBody,
   reemplazarContactosUsuario,
 } from "../../../../lib/contactosUsuario";
-import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
-import type { Tag } from "../../../../types/tag";
+
 import "./UserProfileHeader.css";
 
 interface UserProfileHeaderProps {
@@ -30,9 +32,10 @@ export default function UserProfileHeader({
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
-
+  const toast = useToast();
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
+  
 
   const initialModalContacts = useMemo(
     () =>
@@ -82,8 +85,9 @@ export default function UserProfileHeader({
       });
 
       setModalOpen(false);
+      toast.success("Perfil actualizado exitosamente");
     } catch (err: any) {
-      setSaveError(err.message || "No fue posible actualizar el perfil");
+      toast.error(err.message || "No fue posible actualizar el perfil");
     } finally {
       setIsSaving(false);
     }

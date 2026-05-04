@@ -1,12 +1,14 @@
 "use client";
 import PostCard from "../../components/posts/PostCard/PostCard";
 import SearchBar from "../../components/ui/SearchBar/SearchBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { apiClient, type ApiError } from "../../lib/apiClient";
 import { TAG_MATERIAL} from "../../lib/tags";
 import "./MaterialesPage.css";
-
+import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
 import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
+import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
+import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -52,6 +54,16 @@ export default function MaterialesPage() {
     setCurrentPage(1);
   };
 
+  const{
+    selectedPublicacion,
+    selectedVendedor,
+    loadingVendedor,
+    isSaved,
+    setIsSaved,
+    handleDetallesClick,
+    handleClose,
+  } = useDetallePublicacion();
+
   return (
     <main className="materiales-page">
       <div className="materiales-page__header">
@@ -96,6 +108,7 @@ export default function MaterialesPage() {
                 images={publicacion.imagenes.map((img) => img.url_imagen)}
                 estado={publicacion.estado}
                 canEdit={false}
+                onDetallesClick={() => handleDetallesClick(publicacion)}
               />
             ))}
           </div>
@@ -130,6 +143,25 @@ export default function MaterialesPage() {
             </div>
           )}
         </>
+      )}
+      {selectedPublicacion && (
+        <DetallePublicacion
+          isOpen={true}
+          onClose={handleClose}
+          type="venta"
+          title={selectedPublicacion.titulo}
+          price={parseFloat(selectedPublicacion.precio)}
+          description={selectedPublicacion.descripcion}
+          imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
+          likes={selectedPublicacion.me_gusta}
+          sellerName={loadingVendedor ? "Cargando..." : (selectedVendedor?.nombre ?? "Usuario de SWAP")}
+          sellerRating={selectedVendedor?.calificacion ?? 0}
+          sellerImageUrl={selectedVendedor?.url_foto_perfil}
+          isSaved={isSaved}
+          onToggleSave={() => setIsSaved((prev) => !prev)}
+          onVerCertificados={() => console.log("ver certificados")}
+          onSolicitarTutoria={() => console.log("solicitar tutoría")}
+        />
       )}
     </main>
   );

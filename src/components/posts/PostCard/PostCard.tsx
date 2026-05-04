@@ -22,6 +22,7 @@ interface PostCardProps {
   canEdit?: boolean;
   onEditClick?: () => void;
   onEstadoChange?: (nuevoEstado: string) => void;
+  onDetallesClick?: () => void;
 }
 
 export default function PostCard({
@@ -36,6 +37,7 @@ export default function PostCard({
   canEdit = false,
   onEditClick,
   onEstadoChange,
+  onDetallesClick,
 }: PostCardProps) {
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
@@ -43,7 +45,9 @@ export default function PostCard({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDetailsClick = () => {
-    console.log(`Ver detalles de: ${title}`);
+    if (onDetallesClick) {
+      onDetallesClick();
+    }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

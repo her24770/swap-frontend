@@ -32,13 +32,10 @@
 }
 
 .navbar__logo {
-  color: #ffffff;
-  font-family: var(--swap-font-titulos), sans-serif;
-  font-weight: 400;
-  font-size: 1.875rem;
-  letter-spacing: 0.05em;
+  color: white;
+  height: 2.10rem;
+  width: auto;
 }
-
 .navbar__profile {
   position: relative;
 }

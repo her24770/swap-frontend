@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { useAuth } from "../../../hooks/useAuth";
+import {LogoCompleto} from "../../ui/Icono/Logo";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -43,7 +44,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
             <Menu size={20} strokeWidth={2} />
           </button>
         )}
-        <span className="navbar__logo">SWAP</span>
+        <LogoCompleto className="navbar__logo"/>
       </div>
 
       {/* Perfil/USER SOLO si NO es auth route */}

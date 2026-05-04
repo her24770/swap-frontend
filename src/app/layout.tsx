@@ -1,21 +1,24 @@
 import Layout from "../components/layout/Layout/layout"
+import ToastContainer from "../components/ui/Toast/Toast"
 import "./globals.css"
 import { jockey, palanquin, lato} from "../styles/fonts";
 
 export const metadata = {
-  title: 'Mi App en Docker',
-  description: 'Generado por Next.js',
+  title: 'SWAP',
+  description: 'Sitio de intercambio enttre estudiantes de la UVG',
+  icons: {
+    icon: "/favicon.svg",
+  },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout(
+  {children,}: 
+  {children: React.ReactNode}) {
   return (
     <html lang="es" className={`${jockey.variable} ${palanquin.variable} ${lato.variable}`}>
       <body>
         <Layout>{children}</Layout>
+        <ToastContainer />
       </body>
     </html>
   )

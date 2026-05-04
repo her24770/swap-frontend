@@ -4,6 +4,9 @@ import { useForm, UseFormReturn  } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
+import { apiClient, type ApiError} from "../lib/apiClient";
+import { imagenService } from "../services/imagenService";
+import { useUIStore } from "../store/uiStore";
 import {
   schemaCrearPublicacion,
   schemaEditarPublicacion,
@@ -12,22 +15,11 @@ import {
   type TipoPublicacion,
   TIPOS_PUBLICACION,
 } from "../schemas/zodSchemas";
-import { apiClient, type ApiError} from "../lib/apiClient";
-import { imagenService } from "../services/imagenService";
+const { agregarNotificacion } = useUIStore.getState();
+
 
  
 // ─── Helpers internos ─────────────────────────────────────────────────────────
- 
-/**
- * Convierte el string del tipo ("material"  "tutoria"  "negocio")
- * en el id_tipo_perfil que espera el backend consultando primero
- * el mapa local.
- */
-const TIPO_ID_MAP: Record<TipoPublicacion, number> = {
-  material: 1,
-  tutoria: 2,
-  negocio: 3,
-};
  
 /** Genera URLs de objeto para preview y las devuelve junto con sus URLs. */
 function crearPreviews(files: File[]): string[] {
@@ -135,7 +127,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
-        tipo_publicacion: TIPO_ID_MAP[data.tipo_publicacion],
+        tipo_publicacion: data.tipo_publicacion,
         imagen,
       });
 
@@ -143,9 +135,10 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       form.reset();
+      agregarNotificacion({ tipo: "success", mensaje: "Tu publicación fue creada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(apiError.message || "No fue posible crear la publicación. Intenta de nuevo.");
+      agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible crear la publicación." });
     }
   });
  
@@ -267,7 +260,7 @@ export function useFormEditarPublicacion(id: number,
       if (data.precio !== undefined && data.precio !== "")
         payload.precio = parseFloat(data.precio);
       if (data.tipo_publicacion !== undefined)
-        payload.tipo_publicacion = TIPO_ID_MAP[data.tipo_publicacion];
+        payload.tipo_publicacion = data.tipo_publicacion;
       if (data.categorias !== undefined && data.categorias.length > 0)
         payload.etiquetas = data.categorias;
       if (data.destacado !== undefined) payload.destacado = data.destacado;
@@ -277,11 +270,10 @@ export function useFormEditarPublicacion(id: number,
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
+      agregarNotificacion({ tipo: "success", mensaje: "Publicación actualizada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(
-        apiError.message || "No fue posible actualizar la publicación. Intenta de nuevo."
-      );
+      agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible actualizar la publicación." });
     }
   });
  
