@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import PostCard from "../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../hooks/fetch/usePublicaciones";
+import { useToast } from "../hooks/useToast";
 import SearchBar from "../components/ui/SearchBar/SearchBar";
 import "./descubre.css";
 
@@ -11,6 +13,14 @@ const ITEMS_PER_PAGE = 12;
 export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const toast = useToast();
+
+  useEffect(() => {
+    if (searchParams.get("registered") === "true") {
+      toast.success("¡Registro exitoso! Bienvenido a SWAP.");
+    }
+  }, []);
   const { data, loading, error } = usePublicaciones({
     tipo: "negocio",
     limit: ITEMS_PER_PAGE,

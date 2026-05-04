@@ -32,7 +32,7 @@ export function useFormRegistro() {
     }
 
     const carnet = Number(match[1]);
-    const respuesta = await apiClient.post<{ token: string; usuario: any; rol: any }>(
+    const respuesta = await apiClient.post<{ usuario: any; rol: any }>(
       "/api/auth/register",
       {
         nombre: `${data.nombre} ${data.apellido}`.trim(),
@@ -43,7 +43,7 @@ export function useFormRegistro() {
         descripcion: data.descripcion || "Sin descripción",
       }
     );
-    login(respuesta.usuario, respuesta.token, respuesta.rol);
+    login(respuesta.usuario, respuesta.rol);
   });
 
   return { form, onSubmit };
