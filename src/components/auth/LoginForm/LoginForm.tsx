@@ -41,7 +41,6 @@ export default function LoginForm() {
       login(response.usuario, response.rol);
       toast.success("¡Bienvenido de nuevo!");
       router.push("/");
-      router.refresh();
     } catch (error) {
       const apiError = error as ApiError;
       toast.error(apiError.message || "No fue posible iniciar sesión");
