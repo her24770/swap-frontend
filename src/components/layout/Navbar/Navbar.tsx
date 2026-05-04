@@ -69,16 +69,6 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
                 <UserCircle2 size={16} className="navbar__dropdown-icon" />
                 Ver perfil
               </Link>
-              {usuario?.id_usuario && (
-                <Link
-                  href={`/vendedor/${usuario.id_usuario}`}
-                  onClick={() => setProfileOpen(false)}
-                  className="navbar__dropdown-item"
-                >
-                  <Store size={16} className="navbar__dropdown-icon" />
-                  Mi tienda
-                </Link>
-              )}
               <div className="navbar__dropdown-divider" />
               <button
                 type="button"
