@@ -7,7 +7,6 @@ import { useTranslations } from 'next-intl';
 import { useToast } from "../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "../../../hooks/useToast";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
