@@ -8,9 +8,10 @@ import "./SubirImagen.css";
 interface SubirImagenProps {
   onFileChange: (file: File) => void;
   previewUrl: string | null;
+  currentProfileImage?: string | null;
 }
 
-export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenProps) {
+export default function SubirImagen({ onFileChange, previewUrl, currentProfileImage }: SubirImagenProps) {
   const t = useTranslations("updateProfileModal.imageUpload");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +61,12 @@ export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenPro
           <img
             src={previewUrl}
             alt={t("previewAlt")}
+            className="profile-image-upload__img"
+          />
+        ) : currentProfileImage ? (
+          <img
+            src={currentProfileImage}
+            alt={t("currentImageAlt")}
             className="profile-image-upload__img"
           />
         ) : (

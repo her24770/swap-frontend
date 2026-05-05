@@ -133,6 +133,7 @@ export default function ActualizarPerfilModal({
           <SubirImagen
             onFileChange={handleFileChange}
             previewUrl={previewUrl}
+            currentProfileImage={initialFoto}
           />
         </div>
 
