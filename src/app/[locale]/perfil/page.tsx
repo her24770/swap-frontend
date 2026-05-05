@@ -289,12 +289,16 @@ export default function PerfilPage() {
             aria-modal="true"
             aria-label={t("modal.createPublicationAria")}
           >
-            <CrearPublicacionForm
-              mode="crear"
-              onCancel={() => setCrearPublicacionOpen(false)}
-              onSuccess={() => setCrearPublicacionOpen(false)}
-            />
+            <div className="perfil-page__crear-pub-modal-content">
+
+              <CrearPublicacionForm
+                mode="crear"
+                onCancel={() => setCrearPublicacionOpen(false)}
+                onSuccess={() => setCrearPublicacionOpen(false)}
+              />
+            </div>
           </div>
+            
         </div>
       )}
 
