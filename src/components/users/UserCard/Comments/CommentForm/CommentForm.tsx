@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronRight, Star } from "lucide-react";
+import { useTranslations } from 'next-intl';
 import "../../../../ui/Button/Button.css";
 import "./CommentForm.css";
 
@@ -12,6 +13,9 @@ interface CommentFormProps {
 }
 
 export default function CommentForm({ targetName, onSubmit, onCancel }: CommentFormProps) {
+  const t = useTranslations('comments.form');
+  const tActions = useTranslations('common.actions');
+
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -37,7 +41,7 @@ export default function CommentForm({ targetName, onSubmit, onCancel }: CommentF
             onMouseEnter={() => setHoverRating(i + 1)}
             onMouseLeave={() => setHoverRating(0)}
             onClick={() => setRating(i + 1)}
-            aria-label={`${i + 1} estrellas`}
+            aria-label={t('starsAria', { count: i + 1 })}
           >
             <Star size={24} fill={(hoverRating || rating) > i ? "currentColor" : "none"}/>
           </button>
@@ -47,7 +51,7 @@ export default function CommentForm({ targetName, onSubmit, onCancel }: CommentF
       {/* Escribir comentario */}
       <textarea
         className="comment-form__textarea"
-        placeholder={`Deja un comentario a ${targetName}`}
+        placeholder={t('placeholder', { name: targetName })}
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         rows={5}
@@ -62,7 +66,7 @@ export default function CommentForm({ targetName, onSubmit, onCancel }: CommentF
             onChange={(e) => setAnonymous(e.target.checked)}
             className="comment-form__checkbox"
           />
-          Enviar como anónimo
+          {t('sendAnonymous')}
         </label>
         <div className="comment-form__actions">
           <button
@@ -70,7 +74,7 @@ export default function CommentForm({ targetName, onSubmit, onCancel }: CommentF
             className="button button--medium button--danger"
             onClick={onCancel}
           >
-            Cancelar
+            {tActions('cancel')}
           </button>
           <button
             type="button"
@@ -78,7 +82,7 @@ export default function CommentForm({ targetName, onSubmit, onCancel }: CommentF
             onClick={handleSubmit}
             disabled={!comment.trim()}
           >
-            Enviar <ChevronRight size={16} />
+            {tActions('send')} <ChevronRight size={16} />
           </button>
         </div>
       </div>

@@ -1,16 +1,21 @@
 "use client";
-import PostCard from "../../components/posts/PostCard/PostCard";
-import SearchBar from "../../components/ui/SearchBar/SearchBar";
+import { useTranslations } from 'next-intl';
+import PostCard from "../../../components/posts/PostCard/PostCard";
+import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useState, useEffect } from "react";
-import { apiClient, type ApiError } from "../../lib/apiClient";
-import { TAG_NEGOCIO} from "../../lib/tags";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { TAG_NEGOCIO } from "../../../lib/tags";
 import "./NegociosPage.css";
 
-import type { Publicacion, PublicacionesResponse } from "../../types/publicacion";
+import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 
 const ITEMS_PER_PAGE = 12;
 
 export default function NegociosPage() {
+  const t = useTranslations('negocios');
+  const tEmpty = useTranslations('common.empty');
+  const tTags = useTranslations('common.tags');
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
@@ -26,7 +31,7 @@ export default function NegociosPage() {
     } catch (error) {
       const apiError = error as ApiError;
       console.error(apiError.message);
-      setError(apiError.message || "No fue posible obtener los negocios");
+      setError(apiError.message || t('errorFallback'));
     } finally {
       setLoading(false);
     }
@@ -55,13 +60,13 @@ export default function NegociosPage() {
   return (
     <main className="negocios-page">
       <div className="negocios-page__header">
-        <h1 className="negocios-page__title">NEGOCIOS</h1>
+        <h1 className="negocios-page__title">{t('title')}</h1>
         <SearchBar value={searchQuery} onChange={handleSearch} />
       </div>
 
       {loading && (
         <div className="negocios-page__state">
-          <p className="negocios-page__state-text">Cargando negocios...</p>
+          <p className="negocios-page__state-text">{t('loading')}</p>
         </div>
       )}
 
@@ -74,11 +79,11 @@ export default function NegociosPage() {
       {!loading && !error && filtered.length === 0 && (
         <div className="negocios-page__empty">
           <div className="negocios-page__empty-icon">🏪</div>
-          <h2 className="negocios-page__empty-title">No hay negocios disponibles</h2>
+          <h2 className="negocios-page__empty-title">{t('empty.title')}</h2>
           <p className="negocios-page__empty-description">
             {searchQuery
-              ? `No se encontraron resultados para "${searchQuery}"`
-              : "Aún no hay negocios estudiantiles publicados. ¡Sé el primero en publicar el tuyo!"}
+              ? tEmpty('noResultsFor', { query: searchQuery })
+              : t('empty.description')}
           </p>
         </div>
       )}
@@ -89,7 +94,7 @@ export default function NegociosPage() {
             {paginated.map((publicacion) => (
               <PostCard
                 key={publicacion.id_publicacion}
-                tags={[TAG_NEGOCIO]}
+                tags={[{ ...TAG_NEGOCIO, name: tTags('negocio') }]}
                 title={publicacion.titulo}
                 price={parseFloat(publicacion.precio)}
                 description={publicacion.descripcion}

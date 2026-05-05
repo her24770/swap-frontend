@@ -1,0 +1,285 @@
+{
+	"layout": {
+		"meta": {
+			"title": "Swap",
+			"description": "Exchange site for UVG students"
+		},
+		"navbar": {
+			"ariaToggleMenu": "Toggle menu",
+			"ariaUserProfile": "User profile",
+			"logo": "SWAP",
+			"viewProfile": "View profile",
+			"myStore": "My store",
+			"logout": "Sign out"
+		},
+		"sidebar": {
+			"descubre": "Discover",
+			"tutorias": "Tutoring",
+			"materiales": "Materials",
+			"negocios": "Businesses"
+		}
+	},
+	"common": {
+		"brand": "SWAP",
+		"search": {
+			"placeholder": "Search..."
+		},
+		"empty": {
+			"noResultsFor": "No results found for \"{query}\""
+		},
+		"tags": {
+			"material": "Material",
+			"tutoria": "Tutoring",
+			"negocio": "Business"
+		},
+		"actions": {
+			"cancel": "Cancel",
+			"continue": "Continue",
+			"send": "Send",
+			"save": "Save",
+			"saveChanges": "Save changes",
+			"createPublication": "Create post",
+			"editPublication": "Edit post",
+			"publishing": "Publishing...",
+			"saving": "Saving..."
+		},
+		"people": {
+			"anonymous": "Anonymous",
+			"you": "You"
+		},
+		"time": {
+			"justNow": "Just now"
+		},
+		"aria": {
+			"visitProfile": "Visit {platform} profile"
+		}
+	},
+	"home": {
+		"title": "DISCOVER",
+		"loading": "Loading businesses...",
+		"empty": {
+			"title": "No businesses available",
+			"description": "There are no student businesses posted yet."
+		}
+	},
+	"negocios": {
+		"title": "BUSINESSES",
+		"loading": "Loading businesses...",
+		"errorFallback": "Couldn't fetch businesses",
+		"empty": {
+			"title": "No businesses available",
+			"description": "There are no student businesses posted yet. Be the first to publish yours!"
+		}
+	},
+	"materiales": {
+		"title": "MATERIALS",
+		"loading": "Loading materials...",
+		"errorFallback": "Couldn't fetch materials",
+		"empty": {
+			"title": "No materials available",
+			"description": "No academic materials have been posted yet. Be the first to share!"
+		}
+	},
+	"tutorias": {
+		"title": "TUTORING",
+		"loading": "Loading tutoring sessions...",
+		"empty": {
+			"title": "No tutoring sessions available",
+			"description": "There are no student tutoring sessions posted yet."
+		}
+	},
+	"descubre": {
+		"title": "Discover",
+		"placeholderTitle": "Discover",
+		"placeholderDescription": "Post discovery page — Coming soon"
+	},
+	"login": {
+		"title": "Sign in",
+		"subtitle": "New here? Enter your credentials to sign in.",
+		"emailLabel": "Email",
+		"emailPlaceholder": "example@uvg.edu.gt",
+		"passwordLabel": "Password",
+		"forgotPassword": "Forgot my password",
+		"togglePasswordAria": "Show or hide password",
+		"submit": "Continue",
+		"submitting": "Signing in...",
+		"footer": {
+			"noAccount": "Don't have an account?",
+			"register": "Sign up here"
+		},
+		"toast": {
+			"welcomeBack": "Welcome back!",
+			"loginErrorFallback": "Couldn't sign in"
+		},
+		"validation": {
+			"emailRequired": "Email is required",
+			"emailInvalid": "Invalid email",
+			"passwordRequired": "Password is required",
+			"passwordMin": "Minimum 6 characters"
+		}
+	},
+	"registro": {
+		"page": {
+			"title": "Create an account on SWAP",
+			"description1": "Sign up with your Universidad del Valle de Guatemala email.",
+			"description2": "Discover products and services offered by students within the University."
+		},
+		"form": {
+			"firstNameLabel": "First name",
+			"lastNameLabel": "Last name",
+			"emailLabel": "Email",
+			"passwordLabel": "Create a password",
+			"confirmPasswordLabel": "Confirm password",
+			"firstNamePlaceholder": "Michael",
+			"lastNamePlaceholder": "Perez",
+			"emailPlaceholder": "per0000@uvg.edu.gt",
+			"passwordPlaceholder": "At least 8 characters",
+			"confirmPasswordPlaceholder": "At least 8 characters",
+			"emailInvalid": "Email is not valid",
+			"submitting": "Signing up...",
+			"submit": "Continue",
+			"toast": {
+				"success": "Registration successful! Welcome to SWAP.",
+				"errorFallback": "Couldn't sign up"
+			}
+		}
+	},
+	"perfil": {
+		"loading": "Loading profile...",
+		"mode": {
+			"consumer": "Buyer",
+			"seller": "Seller"
+		},
+		"sections": {
+			"saved": "Saved",
+			"purchases": "Purchases",
+			"catalog": "Your catalog",
+			"ads": "Ads",
+			"comments": "Comments & reviews"
+		},
+		"actions": {
+			"newPublication": "New post",
+			"changeAd": "Change ad"
+		},
+		"modal": {
+			"createPublicationAria": "Create post",
+			"editPublicationAria": "Edit post"
+		}
+	},
+	"vendedor": {
+		"loading": "Loading profile...",
+		"sections": {
+			"catalog": "Catalog",
+			"ads": "Ads",
+			"comments": "Comments & reviews"
+		},
+		"actions": {
+			"newPublication": "New post"
+		}
+	},
+	"posts": {
+		"actions": {
+			"details": "Details",
+			"edit": "Edit"
+		},
+		"aria": {
+			"uploadImage": "Upload image"
+		},
+		"uploadErrors": {
+			"invalidType": "Only JPG, PNG, or WEBP images are allowed",
+			"tooLarge": "The image cannot be larger than 5 MB",
+			"generic": "Error uploading image"
+		}
+	},
+	"comments": {
+		"empty": "No comments yet.",
+		"form": {
+			"starsAria": "{count} stars",
+			"placeholder": "Leave a comment for {name}",
+			"sendAnonymous": "Send anonymously"
+		}
+	},
+	"profileHeader": {
+		"toast": {
+			"updateSuccess": "Profile updated successfully",
+			"updateErrorFallback": "Couldn't update profile"
+		},
+		"actions": {
+			"editProfile": "Edit profile"
+		},
+		"aria": {
+			"editProfile": "Edit profile"
+		},
+		"labels": {
+			"paymentMethod": "Payment method:",
+			"contact": "Contact"
+		}
+	},
+	"updateProfileModal": {
+		"title": "Update profile",
+		"photoLabel": "Profile photo",
+		"actions": {
+			"cancel": "Cancel",
+			"update": "Update",
+			"saving": "Saving..."
+		},
+		"form": {
+			"firstName": "First name",
+			"lastName": "Last name",
+			"description": "Description",
+			"descriptionPlaceholder": "Add a description"
+		},
+		"contacts": {
+			"label": "Contacts",
+			"addAria": "Add contact",
+			"removeAria": "Remove contact",
+			"typePlaceholder": "Select type",
+			"valuePlaceholder": "contact",
+			"types": {
+				"phone": "Phone",
+				"whatsapp": "WhatsApp",
+				"instagram": "Instagram",
+				"email": "Email"
+			}
+		},
+		"imageUpload": {
+			"text": "Click or drag images to upload",
+			"hint": "PNG or JPG",
+			"previewAlt": "Preview"
+		}
+	},
+	"publicacionForm": {
+		"titleCreate": "Create post",
+		"titleEdit": "Edit post",
+		"fields": {
+			"status": "Status",
+			"statusAvailable": "Available",
+			"statusSold": "Sold",
+			"statusReserved": "Reserved",
+			"productName": "Product name",
+			"productNamePlaceholder": "e.g. Calculus tutoring",
+			"description": "Description",
+			"descriptionPlaceholder": "Describe key features and benefits...",
+			"price": "Price",
+			"type": "Post type",
+			"typePlaceholder": "Select type",
+			"category": "Category",
+			"categoryTriggerEmpty": "Select category",
+			"categoryTriggerOne": "1 category selected",
+			"categoryTriggerMany": "{count} categories selected",
+			"featured": "Featured post",
+			"photo": "Product photo",
+			"uploadText": "Click or drag an image to upload",
+			"uploadHint": "PNG, JPG or WEBP (max 5MB)",
+			"removeImageAria": "Remove image",
+			"removeTagAria": "Remove {tag}"
+		},
+		"actions": {
+			"cancel": "Cancel",
+			"create": "Create post",
+			"publishing": "Publishing...",
+			"saveChanges": "Save changes",
+			"saving": "Saving..."
+		}
+	}
+}

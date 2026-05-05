@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import PerfilForm from "./PerfilForm/PerfilForm";
 import ListaContactos, { type Contacto } from "./ListaContactos/ListaContactos";
 import "../../Button/Button.css";
@@ -46,6 +47,8 @@ export default function ActualizarPerfilModal({
   onCancel,
   isSaving = false,
 }: ActualizarPerfilModalProps) {
+  const t = useTranslations("updateProfileModal");
+
   const [nombre, setNombre] = useState(initialNombre);
   const [apellido, setApellido] = useState(initialApellido);
   const [descripcion, setDescripcion] = useState(initialDescripcion);
@@ -107,7 +110,7 @@ export default function ActualizarPerfilModal({
   return (
     <div className="modal-overlay" onClick={handleCancel}>
       <div className="update-profile-modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="update-profile-modal__title">Actualizar perfil</h2>
+        <h2 className="update-profile-modal__title">{t("title")}</h2>
 
         <PerfilForm
           nombre={nombre}
@@ -126,7 +129,7 @@ export default function ActualizarPerfilModal({
         />
 
         <div className="update-profile-modal__foto">
-          <label className="update-profile-modal__label">Foto de Perfil</label>
+          <label className="update-profile-modal__label">{t("photoLabel")}</label>
           <SubirImagen
             onFileChange={handleFileChange}
             previewUrl={previewUrl}
@@ -139,7 +142,7 @@ export default function ActualizarPerfilModal({
             className="update-profile-modal__btn-cancel"
             onClick={handleCancel}
           >
-            Cancelar
+            {t("actions.cancel")}
           </button>
           <button
             type="button"
@@ -147,7 +150,7 @@ export default function ActualizarPerfilModal({
             onClick={handleSubmit}
             disabled = {isSaving}
           >
-            {isSaving ? "Guardando..." : "Actualizar"} <ChevronRight size={16} />
+            {isSaving ? t("actions.saving") : t("actions.update")} <ChevronRight size={16} />
           </button>
         </div>
       </div>

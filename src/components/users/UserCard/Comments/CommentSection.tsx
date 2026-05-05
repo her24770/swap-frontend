@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
 import CommentCard from "./CommentCard/CommentCard";
 import CommentForm from "./CommentForm/CommentForm";
 import type { Comment } from "../../../../types/comment";
@@ -13,6 +14,8 @@ interface CommentSectionProps {
 }
 
 export default function CommentSection({ targetName, comments, onSubmit, onCancel }: CommentSectionProps) {
+  const t = useTranslations('comments');
+
   return (
     <div className="comment-section">
       {/* Formulario izquierda */}
@@ -37,7 +40,7 @@ export default function CommentSection({ targetName, comments, onSubmit, onCance
             />
           ))}
           {comments.length === 0 && (
-            <p className="comment-section__empty">Aún no hay comentarios.</p>
+            <p className="comment-section__empty">{t('empty')}</p>
           )}
         </div>
       </div>

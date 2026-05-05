@@ -1,28 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
+import createIntlMiddleware from "next-intl/middleware";
+import { checkAuth } from "./proxy/authProxy";
 
-// Rutas que no requieren autenticación
-const rutasPublicas = ["/login", "/registro"];
+
+const intlMiddleware = createIntlMiddleware({
+  locales: ["es", "en", "fr"], 
+  defaultLocale: "es",
+});
+
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const token = request.cookies.get("swap-token")?.value;
-
-  const esRutaPublica = rutasPublicas.some((ruta) => pathname.startsWith(ruta));
-
-  // Si no hay token y la ruta es protegida → redirige a login
-  if (!token && !esRutaPublica) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  
+  const authRedirect = checkAuth(request);
+  if (authRedirect) {
+    return authRedirect;
   }
 
-  // Si hay token y está intentando ir a login → redirige al home
-  if (token && esRutaPublica) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  return NextResponse.next();
+  return intlMiddleware(request);
 }
 
-// Define en qué rutas aplica el middleware
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
+
+
+
+
+  
+

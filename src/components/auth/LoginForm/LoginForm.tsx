@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
@@ -19,6 +20,10 @@ interface LoginFormData {
 }
 
 export default function LoginForm() {
+  const t = useTranslations('login');
+  const tValidation = useTranslations('login.validation');
+  const tCommon = useTranslations('common');
+
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const toast = useToast();
@@ -39,11 +44,11 @@ export default function LoginForm() {
         password: data.password,
       });
       login(response.usuario, response.rol);
-      toast.success("¡Bienvenido de nuevo!");
+      toast.success(t('toast.welcomeBack'));
       router.push("/");
     } catch (error) {
       const apiError = error as ApiError;
-      toast.error(apiError.message || "No fue posible iniciar sesión");
+      toast.error(apiError.message || t('toast.loginErrorFallback'));
     }
   };
 
@@ -51,23 +56,23 @@ export default function LoginForm() {
     <div className="login-form">
       <LogoCompleto className="login-form__brand"/>
 
-      <h1 className="login-form__title">Iniciar Sesión</h1>
+      <h1 className="login-form__title">{t('title')}</h1>
       <p className="login-form__subtitle">
-        ¿Eres nuevo? Ingresa tus credenciales para ingresar.
+        {t('subtitle')}
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="login-form__fields">
         {/* Email */}
         <div className="login-form__field">
-          <label className="login-form__label">Correo electrónico</label>
+          <label className="login-form__label">{t('emailLabel')}</label>
           <input
             type="email"
-            placeholder="ejemplo@uvg.edu.gt"
+            placeholder={t('emailPlaceholder')}
             {...register("email", {
-              required: "El correo es requerido",
+              required: tValidation('emailRequired'),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Correo no válido",
+                message: tValidation('emailInvalid'),
               },
             })}
             className={`login-form__input${errors.email ? " login-form__input--error" : ""}`}
@@ -80,17 +85,17 @@ export default function LoginForm() {
         {/* Password */}
         <div className="login-form__field">
           <div className="login-form__password-header">
-            <label className="login-form__label">Contraseña</label>
+            <label className="login-form__label">{t('passwordLabel')}</label>
             <Link href="/forgot-password" className="login-form__forgot">
-              Olvidé mi contraseña
+              {t('forgotPassword')}
             </Link>
           </div>
           <div className="login-form__input-wrapper">
             <input
               type={showPassword ? "text" : "password"}
               {...register("password", {
-                required: "La contraseña es requerida",
-                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                required: tValidation('passwordRequired'),
+                minLength: { value: 6, message: tValidation('passwordMin') },
               })}
               className={`login-form__input login-form__input--password${errors.password ? " login-form__input--error" : ""}`}
             />
@@ -98,7 +103,7 @@ export default function LoginForm() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="login-form__toggle-password"
-              aria-label="Toggle password visibility"
+              aria-label={t('togglePasswordAria')}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -117,14 +122,14 @@ export default function LoginForm() {
           disabled={isSubmitting}
           className="button button--large button--full-width"
         >
-          {isSubmitting ? "Ingresando..." : "Continuar"}
+          {isSubmitting ? t('submitting') : t('submit')}
         </button>
       </form>
 
       <p className="login-form__footer">
-        No tienes una cuenta?{" "}
+        {t('footer.noAccount')}{" "}
         <Link href="/registro" className="login-form__register-link">
-          Regístrate aquí
+          {t('footer.register')}
         </Link>
       </p>
     </div>

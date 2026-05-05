@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { CloudUpload, UserCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "./SubirImagen.css";
 
 interface SubirImagenProps {
@@ -10,6 +11,8 @@ interface SubirImagenProps {
 }
 
 export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenProps) {
+  const t = useTranslations("updateProfileModal.imageUpload");
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -38,10 +41,10 @@ export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenPro
         {/*Drop zone para subir la imagen de perfil */}
         <CloudUpload size={32} className="profile-image-upload__icon" />
         <p className="profile-image-upload__text">
-          Haz clic o arrastra imágenes para subir
+          {t("text")}
         </p>
         <span className="profile-image-upload__hint">
-          PNG o JPG
+          {t("hint")}
         </span>
         <input
           ref={fileInputRef}
@@ -56,7 +59,7 @@ export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenPro
         {previewUrl ? (
           <img
             src={previewUrl}
-            alt="Preview"
+            alt={t("previewAlt")}
             className="profile-image-upload__img"
           />
         ) : (

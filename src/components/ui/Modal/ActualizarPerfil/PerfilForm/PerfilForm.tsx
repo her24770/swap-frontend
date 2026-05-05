@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import "./PerfilForm.css";
 
 interface PerfilFormProps {  
@@ -19,11 +20,13 @@ export default function PerfilForm({
   onApellidoChange,
   onDescripcionChange,
 }: PerfilFormProps) {
+  const t = useTranslations("updateProfileModal.form");
+
   return (
     <div className="perfil-form">
       <div className="perfil-form__row">
         <div className="perfil-form__field">
-          <label className="perfil-form__label">Nombre</label>
+          <label className="perfil-form__label">{t("firstName")}</label>
           <input
             type="text"
             className="perfil-form__input"
@@ -33,7 +36,7 @@ export default function PerfilForm({
           />
         </div>
         <div className="perfil-form__field">
-          <label className="perfil-form__label">Apellido</label>
+          <label className="perfil-form__label">{t("lastName")}</label>
           <input
             type="text"
             className="perfil-form__input"
@@ -45,10 +48,10 @@ export default function PerfilForm({
       </div>
 
       <div className="perfil-form__field">
-        <label className="perfil-form__label">Descripcion</label>
+        <label className="perfil-form__label">{t("description")}</label>
         <textarea
           className="perfil-form__textarea"
-          placeholder="Agrega una descripcion"
+          placeholder={t("descriptionPlaceholder")}
           value={descripcion}
           onChange={(e) => onDescripcionChange(e.target.value)}
         />

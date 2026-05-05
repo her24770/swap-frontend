@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from 'next-intl';
 import "./SearchBar.css";
 
 interface SearchBarProps {
@@ -10,14 +11,17 @@ interface SearchBarProps {
 export default function SearchBar({
   value,
   onChange,
-  placeholder = "Search anything...",
+  placeholder,
 }: SearchBarProps) {
+  const t = useTranslations('common.search');
+  const resolvedPlaceholder = placeholder ?? t('placeholder');
+
   return (
     <div className="search-bar">
       <input
         type="text"
         className="search-bar__input"
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

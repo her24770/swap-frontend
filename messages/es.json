@@ -1,0 +1,285 @@
+{
+	"layout": {
+		"meta": {
+			"title": "Swap",
+			"description": "Sitio de intercambio entre estudiantes de la UVG"
+		},
+		"navbar": {
+			"ariaToggleMenu": "Abrir menú",
+			"ariaUserProfile": "Perfil de usuario",
+			"logo": "SWAP",
+			"viewProfile": "Ver perfil",
+			"myStore": "Mi tienda",
+			"logout": "Cerrar sesión"
+		},
+		"sidebar": {
+			"descubre": "Descubre",
+			"tutorias": "Tutorías",
+			"materiales": "Materiales",
+			"negocios": "Negocios"
+		}
+	},
+	"common": {
+		"brand": "SWAP",
+		"search": {
+			"placeholder": "Buscar..."
+		},
+		"empty": {
+			"noResultsFor": "No se encontraron resultados para \"{query}\""
+		},
+		"tags": {
+			"material": "Material",
+			"tutoria": "Tutoría",
+			"negocio": "Negocio"
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"continue": "Continuar",
+			"send": "Enviar",
+			"save": "Guardar",
+			"saveChanges": "Guardar cambios",
+			"createPublication": "Crear publicación",
+			"editPublication": "Editar publicación",
+			"publishing": "Publicando...",
+			"saving": "Guardando..."
+		},
+		"people": {
+			"anonymous": "Anónimo",
+			"you": "Tú"
+		},
+		"time": {
+			"justNow": "Ahora mismo"
+		},
+		"aria": {
+			"visitProfile": "Visitar perfil de {platform}"
+		}
+	},
+	"home": {
+		"title": "DESCUBRE",
+		"loading": "Cargando negocios...",
+		"empty": {
+			"title": "No hay negocios disponibles",
+			"description": "Aún no hay negocios estudiantiles publicados."
+		}
+	},
+	"negocios": {
+		"title": "NEGOCIOS",
+		"loading": "Cargando negocios...",
+		"errorFallback": "No fue posible obtener los negocios",
+		"empty": {
+			"title": "No hay negocios disponibles",
+			"description": "Aún no hay negocios estudiantiles publicados. ¡Sé el primero en publicar el tuyo!"
+		}
+	},
+	"materiales": {
+		"title": "MATERIALES",
+		"loading": "Cargando materiales...",
+		"errorFallback": "No fue posible obtener los materiales",
+		"empty": {
+			"title": "No hay materiales disponibles",
+			"description": "Aún no se han publicado materiales académicos. ¡Sé el primero en compartir!"
+		}
+	},
+	"tutorias": {
+		"title": "TUTORÍAS",
+		"loading": "Cargando tutorías...",
+		"empty": {
+			"title": "No hay tutorías disponibles",
+			"description": "Aún no hay tutorías estudiantiles publicadas."
+		}
+	},
+	"descubre": {
+		"title": "Descubre",
+		"placeholderTitle": "Descubre",
+		"placeholderDescription": "Página de descubrimiento de publicaciones - Por desarrollar"
+	},
+	"login": {
+		"title": "Iniciar Sesión",
+		"subtitle": "¿Eres nuevo? Ingresa tus credenciales para ingresar.",
+		"emailLabel": "Correo electrónico",
+		"emailPlaceholder": "ejemplo@uvg.edu.gt",
+		"passwordLabel": "Contraseña",
+		"forgotPassword": "Olvidé mi contraseña",
+		"togglePasswordAria": "Mostrar u ocultar contraseña",
+		"submit": "Continuar",
+		"submitting": "Ingresando...",
+		"footer": {
+			"noAccount": "No tienes una cuenta?",
+			"register": "Regístrate aquí"
+		},
+		"toast": {
+			"welcomeBack": "¡Bienvenido de nuevo!",
+			"loginErrorFallback": "No fue posible iniciar sesión"
+		},
+		"validation": {
+			"emailRequired": "El correo es requerido",
+			"emailInvalid": "Correo no válido",
+			"passwordRequired": "La contraseña es requerida",
+			"passwordMin": "Mínimo 6 caracteres"
+		}
+	},
+	"registro": {
+		"page": {
+			"title": "Crea una cuenta en SWAP",
+			"description1": "Regístrate con tu correo de la Universidad del Valle de Guatemala.",
+			"description2": "Entérate de todos los productos y servicios que brindan los estudiantes dentro de la Universidad."
+		},
+		"form": {
+			"firstNameLabel": "Nombre",
+			"lastNameLabel": "Apellido",
+			"emailLabel": "Correo electrónico",
+			"passwordLabel": "Crea una contraseña",
+			"confirmPasswordLabel": "Confirmar contraseña",
+			"firstNamePlaceholder": "Michael",
+			"lastNamePlaceholder": "Pérez",
+			"emailPlaceholder": "per0000@uvg.edu.gt",
+			"passwordPlaceholder": "Al menos 8 caracteres",
+			"confirmPasswordPlaceholder": "Al menos 8 caracteres",
+			"emailInvalid": "El correo no es válido",
+			"submitting": "Registrando...",
+			"submit": "Continuar",
+			"toast": {
+				"success": "¡Registro exitoso! Bienvenido a SWAP.",
+				"errorFallback": "No fue posible registrarse"
+			}
+		}
+	},
+	"perfil": {
+		"loading": "Cargando perfil...",
+		"mode": {
+			"consumer": "Consumidor",
+			"seller": "Vendedor"
+		},
+		"sections": {
+			"saved": "Tus Guardados",
+			"purchases": "Tus Compras",
+			"catalog": "Tu Catálogo",
+			"ads": "Anuncios",
+			"comments": "Comentarios y Reseñas"
+		},
+		"actions": {
+			"newPublication": "Nueva publicación",
+			"changeAd": "Cambiar anuncio"
+		},
+		"modal": {
+			"createPublicationAria": "Crear publicación",
+			"editPublicationAria": "Editar publicación"
+		}
+	},
+	"vendedor": {
+		"loading": "Cargando perfil...",
+		"sections": {
+			"catalog": "Catálogo",
+			"ads": "Anuncios",
+			"comments": "Comentarios y Reseñas"
+		},
+		"actions": {
+			"newPublication": "Nueva publicación"
+		}
+	},
+	"posts": {
+		"actions": {
+			"details": "Detalles",
+			"edit": "Editar"
+		},
+		"aria": {
+			"uploadImage": "Subir imagen"
+		},
+		"uploadErrors": {
+			"invalidType": "Solo se permiten imágenes JPG, PNG o WEBP",
+			"tooLarge": "La imagen no puede superar los 5 MB",
+			"generic": "Error al subir la imagen"
+		}
+	},
+	"comments": {
+		"empty": "Aún no hay comentarios.",
+		"form": {
+			"starsAria": "{count} estrellas",
+			"placeholder": "Deja un comentario a {name}",
+			"sendAnonymous": "Enviar como anónimo"
+		}
+	},
+	"profileHeader": {
+		"toast": {
+			"updateSuccess": "Perfil actualizado exitosamente",
+			"updateErrorFallback": "No fue posible actualizar el perfil"
+		},
+		"actions": {
+			"editProfile": "Editar perfil"
+		},
+		"aria": {
+			"editProfile": "Editar perfil"
+		},
+		"labels": {
+			"paymentMethod": "Método de pago:",
+			"contact": "Contacto"
+		}
+	},
+	"updateProfileModal": {
+		"title": "Actualizar perfil",
+		"photoLabel": "Foto de perfil",
+		"actions": {
+			"cancel": "Cancelar",
+			"update": "Actualizar",
+			"saving": "Guardando..."
+		},
+		"form": {
+			"firstName": "Nombre",
+			"lastName": "Apellido",
+			"description": "Descripción",
+			"descriptionPlaceholder": "Agrega una descripción"
+		},
+		"contacts": {
+			"label": "Contactos",
+			"addAria": "Agregar contacto",
+			"removeAria": "Eliminar contacto",
+			"typePlaceholder": "Seleccionar tipo",
+			"valuePlaceholder": "contacto",
+			"types": {
+				"phone": "Teléfono",
+				"whatsapp": "WhatsApp",
+				"instagram": "Instagram",
+				"email": "Correo"
+			}
+		},
+		"imageUpload": {
+			"text": "Haz clic o arrastra imágenes para subir",
+			"hint": "PNG o JPG",
+			"previewAlt": "Vista previa"
+		}
+	},
+	"publicacionForm": {
+		"titleCreate": "Crear Publicación",
+		"titleEdit": "Editar Publicación",
+		"fields": {
+			"status": "Estado",
+			"statusAvailable": "Disponible",
+			"statusSold": "Vendido",
+			"statusReserved": "Reservado",
+			"productName": "Nombre del Producto",
+			"productNamePlaceholder": "ej. Tutoría de Cálculo Diferencial",
+			"description": "Descripción",
+			"descriptionPlaceholder": "Describe las características y beneficios clave...",
+			"price": "Precio",
+			"type": "Tipo de publicación",
+			"typePlaceholder": "Seleccionar tipo",
+			"category": "Categoría",
+			"categoryTriggerEmpty": "Seleccionar categoría",
+			"categoryTriggerOne": "1 categoría seleccionada",
+			"categoryTriggerMany": "{count} categorías seleccionadas",
+			"featured": "Publicación Destacada",
+			"photo": "Foto del Producto",
+			"uploadText": "Haz clic o arrastra una imagen para subir",
+			"uploadHint": "PNG, JPG o WEBP (máx. 5MB)",
+			"removeImageAria": "Eliminar imagen",
+			"removeTagAria": "Eliminar {tag}"
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"create": "Crear Publicación",
+			"publishing": "Publicando...",
+			"saveChanges": "Guardar Cambios",
+			"saving": "Guardando..."
+		}
+	}
+}

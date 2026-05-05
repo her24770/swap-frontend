@@ -1,22 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { apiClient } from "../../lib/apiClient";
-import { obtenerContactosUsuario } from "../../lib/contactosUsuario";
-import { useAuthStore } from "../../store/authStore";
-import UserProfileHeader from "../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
-import PostCard from "../../components/posts/PostCard/PostCard";
-import PostRes from "../../components/posts/PostResumida/PostRes";
-import CommentSection from "../../components/users/UserCard/Comments/CommentSection";
-import AdBanner from "../../components/ui/AdBanner/AdBanner";
-import HorizontalCarousel from "../../components/ui/HorizontalCarousel/HorizontalCarousel";
-import imagePath from "../../../public/images/uvg.jpg";
-import { TAGS_MATERIAS } from "../../lib/tags";
-import type { Tag } from "../../types/tag";
-import type { Comment } from "../../types/comment";
-import type { UserProfileData } from "../../types/perfil";
-import CrearPublicacionForm from "../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
-import "../../components/ui/Modal/Modal.css";
+import { useTranslations } from "next-intl";
+import { apiClient } from "../../../lib/apiClient";
+import { obtenerContactosUsuario } from "../../../lib/contactosUsuario";
+import { useAuthStore } from "../../../store/authStore";
+import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
+import PostCard from "../../../components/posts/PostCard/PostCard";
+import PostRes from "../../../components/posts/PostResumida/PostRes";
+import CommentSection from "../../../components/users/UserCard/Comments/CommentSection";
+import AdBanner from "../../../components/ui/AdBanner/AdBanner";
+import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
+import imagePath from "../../../../public/images/uvg.jpg";
+import { TAGS_MATERIAS } from "../../../lib/tags";
+import type { Tag } from "../../../types/tag";
+import type { Comment } from "../../../types/comment";
+import type { UserProfileData } from "../../../types/perfil";
+import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
+import "../../../components/ui/Modal/Modal.css";
 import { SquarePlus } from "lucide-react";
 import "./PerfilConsumidorPage.css";
 
@@ -73,6 +74,9 @@ const MOCK_COMMENTS: Comment[] = [
 ];
 
 export default function PerfilPage() {
+  const t = useTranslations("perfil");
+  const tCommon = useTranslations("common");
+
   const [mode, setMode] = useState<PerfilMode>("consumidor");
   const [crearPublicacionOpen, setCrearPublicacionOpen] = useState(false);
   const [editPublicacionOpen, setEditPublicacionOpen] = useState(false);
@@ -114,8 +118,8 @@ export default function PerfilPage() {
     setComments((prev) => [
       {
         id: Date.now().toString(),
-        authorName: anonymous ? "Anónimo" : "Tú",
-        timeAgo: "Ahora mismo",
+        authorName: anonymous ? tCommon("people.anonymous") : tCommon("people.you"),
+        timeAgo: tCommon("time.justNow"),
         rating,
         comment,
       },
@@ -123,7 +127,7 @@ export default function PerfilPage() {
     ]);
   };
 
-  if (!user) return <p className="perfil-page__loading">Cargando perfil...</p>;
+  if (!user) return <p className="perfil-page__loading">{t("loading")}</p>;
 
   return (
     <main className="perfil-page">
@@ -156,14 +160,14 @@ export default function PerfilPage() {
           className={`perfil-page__mode-btn${mode === "consumidor" ? " perfil-page__mode-btn--active" : ""}`}
           onClick={() => setMode("consumidor")}
         >
-          Consumidor
+          {t("mode.consumer")}
         </button>
         <button
           type="button"
           className={`perfil-page__mode-btn${mode === "vendedor" ? " perfil-page__mode-btn--active" : ""}`}
           onClick={() => setMode("vendedor")}
         >
-          Vendedor
+          {t("mode.seller")}
         </button>
       </div>
 
@@ -174,7 +178,7 @@ export default function PerfilPage() {
 
         <>
           <section className="perfil-page__section">
-            <h2 className="perfil-page__carousel-wrap">Tus Guardados</h2>
+            <h2 className="perfil-page__carousel-wrap">{t("sections.saved")}</h2>
             <HorizontalCarousel>
               {MOCK_SAVED.map((pub) => (
                 <div key={pub.id} className="h-carousel__item">
@@ -195,7 +199,7 @@ export default function PerfilPage() {
           <hr className="perfil-page__divider" />
 
           <section className="perfil-page__section">
-            <h2 className="perfil-page__carousel-wrap">Tus Compras</h2>
+            <h2 className="perfil-page__carousel-wrap">{t("sections.purchases")}</h2>
             <HorizontalCarousel>
               {MOCK_PURCHASES.map((pub) => (
                 <div key={pub.id} className="perfil-page__purchase-item">
@@ -215,14 +219,14 @@ export default function PerfilPage() {
         <>
           <section className="perfil-page__section">
             <div className="perfil-page__catalog-bar">
-              <h2 className="perfil-page__carousel-wrap">Tu Catálogo</h2>
+              <h2 className="perfil-page__carousel-wrap">{t("sections.catalog")}</h2>
               <button
                 type="button"
                 className="perfil-page__new-publication-btn"
                 onClick={() => setCrearPublicacionOpen(true)}
               >
                 <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-                Nueva publicación
+                {t("actions.newPublication")}
               </button>
             </div>
             <HorizontalCarousel>
@@ -251,12 +255,12 @@ export default function PerfilPage() {
 
           <section className="perfil-page__section">
             <div className="perfil-page__catalog-bar">
-              <h2 className="perfil-page__carousel-wrap">Anuncios</h2>
+              <h2 className="perfil-page__carousel-wrap">{t("sections.ads")}</h2>
               <button
                 type="button"
                 className="perfil-page__new-publication-btn"
               >
-                Cambiar anuncio
+                {t("actions.changeAd")}
               </button>
             </div>
             <AdBanner
@@ -283,7 +287,7 @@ export default function PerfilPage() {
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Crear publicación"
+            aria-label={t("modal.createPublicationAria")}
           >
             <CrearPublicacionForm
               mode="crear"
@@ -305,7 +309,7 @@ export default function PerfilPage() {
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Editar publicación"
+            aria-label={t("modal.editPublicationAria")}
           >
             <CrearPublicacionForm
               mode="editar"
@@ -333,7 +337,7 @@ export default function PerfilPage() {
       )}
 
       <section className="perfil-page__section">
-        <h2 className="perfil-page__section-title">Comentarios y Reseñas</h2>
+        <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
         <CommentSection
           targetName={user.name}
           comments={comments}

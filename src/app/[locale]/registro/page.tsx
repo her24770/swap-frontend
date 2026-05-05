@@ -1,19 +1,22 @@
-import RegistroForm from "../../components/auth/RegistroForm/RegistroForm";
+import RegistroForm from "../../../components/auth/RegistroForm/RegistroForm";
+import { useTranslations } from 'next-intl';
 import "./RegistroPage.css";
 
 export default function Page() {
+  const t = useTranslations('registro.page');
+
   return (
     <div className="registro-page">
       <div className="registro-page__content">
         <div className="registro-page__wrapper">
 
           <div className="registro-page__text">
-            <h1 className="registro-page__title">Crea una cuenta en SWAP</h1>
+            <h1 className="registro-page__title">{t('title')}</h1>
             <p className="registro-page__description">
-              Regístrate con tu correo de la Universidad del Valle de Guatemala.
+              {t('description1')}
             </p>
             <p className="registro-page__description">
-              Entérate de todos los productos y servicios que brindan los estudiantes dentro de la Universidad.
+              {t('description2')}
             </p>
           </div>
 
