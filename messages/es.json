@@ -133,6 +133,8 @@
 			"firstNamePlaceholder": "Michael",
 			"lastNamePlaceholder": "Pérez",
 			"emailPlaceholder": "per0000@uvg.edu.gt",
+			"tagsLabel": "Tus intereses",
+			"tagsPlaceholder": "Selecciona al menos 1 categoría",
 			"passwordPlaceholder": "Al menos 8 caracteres",
 			"confirmPasswordPlaceholder": "Al menos 8 caracteres",
 			"emailInvalid": "El correo no es válido",

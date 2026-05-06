@@ -82,3 +82,130 @@
 .registro-form__input--password::-ms-clear {
   display: none;
 }
+
+/* Tags dropdown  */
+
+.registro-form__tags-dropdown {
+  position: relative;
+}
+
+.registro-form__tags-trigger {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  background-color: var(--swap-primary-background);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.registro-form__tags-trigger--has-value {
+  color: var(--swap-primary-text-color);
+}
+
+.registro-form__tags-trigger--open {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 115, 41, 0.12);
+}
+
+.registro-form__tags-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  background-color: var(--swap-primary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); 
+  max-height: 260px;
+  overflow: visible;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.registro-form__tags-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  cursor: pointer;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-primary-text-color);
+  transition: background-color 0.12s ease;
+  width: 100%;
+  background: none;
+  border: none;
+}
+
+.registro-form__tags-option:hover {
+  background-color: var(--swap-tertiary-background);
+}
+
+.registro-form__tags-option--selected {
+  color: var(--swap-primary-color);
+  font-weight: 600;
+  background-color: rgba(0, 115, 41, 0.04);
+}
+
+/*  Tags List */
+.registro-form__tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.625rem;
+}
+
+.registro-form__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  background-color: var(--swap-tertiary-background);
+  border: 1px solid var(--swap-primary-color);
+  border-radius: 9999px;
+  font-family: var(--swap-font-textos);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--swap-primary-color);
+}
+
+.registro-form__tag-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--swap-primary-color);
+  opacity: 0.6;
+  transition: opacity 0.12s ease;
+}
+
+.registro-form__tag-remove:hover {
+  opacity: 1;
+}
+
+.registro-form__tags-checkbox {
+  width: 1rem;
+  height: 1rem;
+  border: 1.5px solid var(--swap-primary-border-color);
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.registro-form__tags-checkbox--checked {
+  background-color: var(--swap-primary-color);
+  border-color: var(--swap-primary-color);
+}
