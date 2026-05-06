@@ -152,11 +152,17 @@
 /* ── Modal crear publicación ─────────────────────────────────────────────── */
 
 .perfil-page__crear-pub-modal {
+  width: 100%;
+  max-width: 50rem;
   max-height: min(90vh, 48rem);
-  overflow-y: auto;
+  overflow: hidden;
   margin: 1rem;
   border-radius: 1rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.2);
+}
+.perfil-page__crear-pub-modal-content {
+  max-height: inherit;
+  overflow-y: auto;
 }
 
 /* ── Purchase item ───────────────────────────────────────────────────────── */

@@ -3,23 +3,35 @@
 import { useRef, useState } from "react";
 import { CloudUpload, UserCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import ImageCropper from "./ImageCropper";
 import "./SubirImagen.css";
 
 interface SubirImagenProps {
   onFileChange: (file: File) => void;
   previewUrl: string | null;
+  currentProfileImage?: string | null;
 }
 
-export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenProps) {
+export default function SubirImagen({ onFileChange, previewUrl, currentProfileImage }: SubirImagenProps) {
   const t = useTranslations("updateProfileModal.imageUpload");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
     if (file.size > 5 * 1024 * 1024) return;
-    onFileChange(file);
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImageToCrop(reader.result as string);
+      // We reset the input so the user can select the same file again if they cancel
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -27,6 +39,11 @@ export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenPro
     setIsDragging(false);
     const file = e.dataTransfer.files[0];
     if (file) handleFile(file);
+  };
+
+  const handleCropComplete = (croppedFile: File) => {
+    setImageToCrop(null);
+    onFileChange(croppedFile);
   };
 
   return (
@@ -62,6 +79,12 @@ export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenPro
             alt={t("previewAlt")}
             className="profile-image-upload__img"
           />
+        ) : currentProfileImage ? (
+          <img
+            src={currentProfileImage}
+            alt={t("currentImageAlt")}
+            className="profile-image-upload__img"
+          />
         ) : (
           <UserCircle2
             size={96}
@@ -70,6 +93,14 @@ export default function SubirImagen({ onFileChange, previewUrl }: SubirImagenPro
           />
         )}
       </div>
+
+      {imageToCrop && (
+        <ImageCropper
+          imageSrc={imageToCrop}
+          onCropComplete={handleCropComplete}
+          onCancel={() => setImageToCrop(null)}
+        />
+      )}
     </div>
   );
 }

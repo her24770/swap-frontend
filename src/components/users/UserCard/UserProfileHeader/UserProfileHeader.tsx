@@ -160,6 +160,7 @@ export default function UserProfileHeader({
           initialApellido={apellido}
           initialDescripcion={user.description}
           initialContacts={initialModalContacts}
+          initialFoto={displayImageUrl ?? null}
           onSubmit={handleSave}
           onCancel={() => setModalOpen(false)}
           isSaving={isSaving}
