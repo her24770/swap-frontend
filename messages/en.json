@@ -150,7 +150,8 @@
 		"loading": "Loading profile...",
 		"mode": {
 			"consumer": "Buyer",
-			"seller": "Seller"
+			"seller": "Seller",
+			"tutor": "Tutor"
 		},
 		"sections": {
 			"saved": "Saved",

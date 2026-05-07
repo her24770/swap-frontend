@@ -150,7 +150,8 @@
 		"loading": "Cargando perfil...",
 		"mode": {
 			"consumer": "Consumidor",
-			"seller": "Vendedor"
+			"seller": "Vendedor",
+			"tutor": "Tutor"
 		},
 		"sections": {
 			"saved": "Tus Guardados",

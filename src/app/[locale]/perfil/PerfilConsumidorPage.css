@@ -191,3 +191,11 @@
   font-family: var(--swap-font-textos);
   color: var(--swap-tertiary-text-color);
 }
+
+.perfil-page__coming-soon {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  text-align: center;
+  padding: 3rem 0;
+}
