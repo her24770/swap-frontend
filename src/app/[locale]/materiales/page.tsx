@@ -61,8 +61,7 @@ export default function MaterialesPage() {
 
   const{
     selectedPublicacion,
-    selectedVendedor,
-    loadingVendedor,
+    loadingDetalle,
     isSaved,
     setIsSaved,
     handleDetallesClick,
@@ -159,9 +158,9 @@ export default function MaterialesPage() {
           description={selectedPublicacion.descripcion}
           imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
           likes={selectedPublicacion.me_gusta}
-          sellerName={loadingVendedor ? "Cargando..." : (selectedVendedor?.nombre ?? "Usuario de SWAP")}
-          sellerRating={selectedVendedor?.calificacion ?? 0}
-          sellerImageUrl={selectedVendedor?.url_foto_perfil}
+          sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
+          sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+          sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
           isSaved={isSaved}
           onToggleSave={() => setIsSaved((prev) => !prev)}
           onVerCertificados={() => console.log("ver certificados")}

@@ -34,9 +34,43 @@ export interface PublicacionFilters {
   all?: boolean;
 }
 
-export interface VendedorResumen {
-  id_usuario: number;
-  nombre: string;
-  calificacion: number;
-  url_foto_perfil?: string;
+export interface PublicacionDetalle {
+  id_publicacion: number;
+  titulo: string;
+  descripcion: string;
+  precio: string;
+  me_gusta: number;
+  fecha_publicacion: string;
+
+  usuario: {
+    id_usuario: number;
+    nombre: string;
+    url_foto_perfil: string;
+    calificacion: number;
+    email_institucional: string;
+  };
+  
+  estadoRel: {
+    id_estado: number;
+    estado: string;
+  };
+
+  tipoPerfil: {
+    id_tipo_perfil: number;
+    tipo_perfil: string;
+  };
+
+  imagenes: ImagenPublicacion[];
+
+  etiquetas: {
+    etiqueta: {
+      id_etiqueta: number;
+      nombre: string;
+    };
+  }[];
+}
+
+export interface PublicacionDetalleResponse {
+  message: string;
+  data: PublicacionDetalle;
 }

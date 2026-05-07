@@ -1,6 +1,6 @@
 // src/services/publicacionService.ts
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters } from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse} from "../types/publicacion";
 
 export const publicacionService = {
 
@@ -22,5 +22,11 @@ export const publicacionService = {
     
     
     return response.data;
-  }
+  },
+
+  async getById(id: number): Promise<PublicacionDetalle> {
+    const response = await apiClient.get<PublicacionDetalleResponse>(`/api/publicacion/${id}`);
+    return response.data;
+}
+
 };
