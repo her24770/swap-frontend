@@ -9,6 +9,16 @@ interface UserContactProps {
     contacts: Contact[];
 }
 
+// función para verificar que un url valido para abrir en una nueva pestaña
+function isValidUrl(url: string) {
+    try {
+        new URL(url);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}   
+
 export default function UserContact({ contacts }: UserContactProps) {
     const t = useTranslations("common.aria");
 
@@ -17,8 +27,8 @@ export default function UserContact({ contacts }: UserContactProps) {
         {contacts.map((contact, index) => (
             <a
             key={index}
-            href={contact.url}
-            target="_blank"
+            href={isValidUrl(contact.url) ? contact.url : "#"}
+            target={isValidUrl(contact.url) ? "_blank" : "_self"}
             rel="noopener noreferrer"
             className="user-contact"
             aria-label={t("visitProfile", { platform: contact.platform })}
