@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { apiClient } from "../../../lib/apiClient";
 import { obtenerContactosUsuario } from "../../../lib/contactosUsuario";
 import { useAuthStore } from "../../../store/authStore";
+import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import UserProfileHeader from "../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import PostRes from "../../../components/posts/PostResumida/PostRes";
