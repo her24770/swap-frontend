@@ -12,7 +12,7 @@ interface HorarioSemanalProps {
   slots?: EspaciosHorario[];
 }
 
-const DIAS = ["Lunes", "Martes", "Miérc.", "Jueves", "Viernes", "Sábado", "Domingo"];
+const DIAS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 const HORAS = [7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20];
 
 function getEstado(slots: EspaciosHorario[], dia: string, hora: number): EstadoHorario {
