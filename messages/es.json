@@ -150,12 +150,14 @@
 		"loading": "Cargando perfil...",
 		"mode": {
 			"consumer": "Consumidor",
-			"seller": "Vendedor"
+			"seller": "Vendedor",
+			"tutor": "Tutor"
 		},
 		"sections": {
 			"saved": "Tus Guardados",
 			"purchases": "Tus Compras",
 			"catalog": "Tu Catálogo",
+			"schedule": "Tu Horario",
 			"ads": "Anuncios",
 			"comments": "Comentarios y Reseñas"
 		},

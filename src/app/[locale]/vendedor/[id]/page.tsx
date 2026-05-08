@@ -7,7 +7,7 @@ import { SquarePlus } from "lucide-react";
 import UserProfileHeader from "../../../../components/users/UserCard/UserProfileHeader/UserProfileHeader";
 import PostCard from "../../../../components/posts/PostCard/PostCard";
 import CommentSection from "../../../../components/users/UserCard/Comments/CommentSection";
-import AdBanner from "../../../../components/ui/AdBanner/AdBanner";
+import AdBanner from "../../../../components/perfiles/Vendedor/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import imagePath from "../../../../../public/images/uvg.jpg";
