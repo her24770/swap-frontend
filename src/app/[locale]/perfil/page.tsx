@@ -315,27 +315,29 @@ export default function PerfilPage() {
             aria-modal="true"
             aria-label={t("modal.editPublicationAria")}
           >
-            <CrearPublicacionForm
-              mode="editar"
-              publicacionId={publicacionEditando.id}
-              defaultValues={{
-                titulo: publicacionEditando.title,
-                descripcion: publicacionEditando.description,
-                precio: String(publicacionEditando.price),
-                tipo_publicacion: "material",
-                categorias: publicacionEditando.tags.map((t) => t.id),
-                destacado: false,
-              }}
-              estadoActual={publicacionEditando.estado as "disponible" | "vendido" | "reservado"}
-              onCancel={() => {
-                setEditPublicacionOpen(false);
-                setPublicacionEditando(null);
-              }}
-              onSuccess={() => {
-                setEditPublicacionOpen(false);
-                setPublicacionEditando(null);
-              }}
-            />
+            <div className="perfil-page__crear-pub-modal-content">
+              <CrearPublicacionForm
+                mode="editar"
+                publicacionId={publicacionEditando.id}
+                defaultValues={{
+                  titulo: publicacionEditando.title,
+                  descripcion: publicacionEditando.description,
+                  precio: String(publicacionEditando.price),
+                  tipo_publicacion: "material",
+                  categorias: publicacionEditando.tags.map((t) => t.id),
+                  destacado: false,
+                }}
+                estadoActual={publicacionEditando.estado as "disponible" | "vendido" | "reservado"}
+                onCancel={() => {
+                  setEditPublicacionOpen(false);
+                  setPublicacionEditando(null);
+                }}
+                onSuccess={() => {
+                  setEditPublicacionOpen(false);
+                  setPublicacionEditando(null);
+                }}
+              />
+            </div>
           </div>
         </div>
       )}

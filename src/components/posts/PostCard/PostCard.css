@@ -19,8 +19,10 @@
 
 .post-card__header {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 8px;
-  padding: 16px;
+  padding: 16px 16px 12px;
 }
 
 .post-card__media {
@@ -32,10 +34,25 @@
 }
 
 .post-card__estado-tag-container {
-  position: absolute;
-  top: 8px;
-  right: 8px;
   z-index: 10;
+}
+
+.post-card__edit-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-primary-text-color, #000);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  border-radius: var(--radius-sm, 4px);
+}
+
+.post-card__edit-button:hover {
+  transform: scale(1.1);
+  color: var(--swap-primary-color, #10b981);
 }
 
 .post-card__upload-overlay {
