@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Camera, ChevronRight, Loader2, Edit2 } from "lucide-react";
+import { Camera, ChevronRight, Loader2, SquarePen } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
@@ -84,23 +84,32 @@ export default function PostCard({
   return (
     <article className="post-card">
       <header className="post-card__header">
-        {tags.map((tag) => (
-          <TagBadge key={tag.id} tag={tag} size="sm" onClick={onTagClick} />
-        ))}
+        {estado !== undefined && (
+          <div className="post-card__estado-tag-container">
+            <EstadoTag
+              estado={estado}
+              canEdit={canEdit}
+              onEstadoChange={onEstadoChange}
+            />
+          </div>
+        )}
+
+        {canEdit && onEditClick && (
+          <button
+            type="button"
+            className="post-card__edit-button"
+            onClick={onEditClick}
+            aria-label={t("actions.edit")}
+            title={t("actions.edit")}
+          >
+            <SquarePen size={24} strokeWidth={2} />
+          </button>
+        )}
       </header>
 
       <div className="post-card__media">
         <div className="post-card__image-wrapper">
           <PostImage images={displayImages} alt={title} />
-          {estado !== undefined && (
-            <div className="post-card__estado-tag-container">
-              <EstadoTag
-                estado={estado}
-                canEdit={canEdit}
-                onEstadoChange={onEstadoChange}
-              />
-            </div>
-          )}
           {publicacionId !== undefined && (
             <>
               <div
@@ -145,15 +154,6 @@ export default function PostCard({
           >
             {t("actions.details")} <ChevronRight size={14} />
           </button>
-          {canEdit && onEditClick && (
-            <button
-              type="button"
-              className="button button--small"
-              onClick={onEditClick}
-            >
-              <Edit2 size={14} /> {t("actions.edit")}
-            </button>
-          )}
         </footer>
       </div>
     </article>

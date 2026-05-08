@@ -1,5 +1,5 @@
 .estado-tag {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 10px;
