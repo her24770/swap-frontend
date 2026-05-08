@@ -23,7 +23,6 @@ export interface PublicacionesResponse {
   data: Publicacion[];
 }
 
-
 // Filtros para obtener publicaciones del api.
 export interface PublicacionFilters {
   tipo?: 'negocio' | 'material' | 'tutoria';
