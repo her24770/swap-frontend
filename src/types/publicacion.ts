@@ -1,3 +1,4 @@
+import { Tag } from './tag';
 export interface ImagenPublicacion {
   id_imagen: number;
   url_imagen: string;
@@ -15,7 +16,7 @@ export interface Publicacion {
   fecha_publicacion: string;
   id_usuario: number;
   imagenes: ImagenPublicacion[];
-  etiquetas: unknown[];
+  etiquetas: Tag[];
 }
 
 export interface PublicacionesResponse {
