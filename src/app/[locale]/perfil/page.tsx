@@ -13,7 +13,7 @@ import CommentSection from "../../../components/users/UserCard/Comments/CommentS
 import AdBanner from "../../../components/ui/AdBanner/AdBanner";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import imagePath from "../../../../public/images/uvg.jpg";
-import { TAGS_MATERIAS } from "../../../lib/tags";
+import { TAG_MATERIAL, TAG_TUTORIA, TAG_NEGOCIO, TAGS_MATERIAS } from "../../../lib/tags";
 import type { Tag } from "../../../types/tag";
 import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
@@ -24,6 +24,7 @@ import "./PerfilConsumidorPage.css";
 
 type PerfilMode = "consumidor" | "vendedor";
 
+// Guardados sigue siendo mock hasta que exista endpoint de favoritos
 const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
   title: "Assembler",
@@ -34,21 +35,6 @@ const MOCK_SAVED = Array.from({ length: 6 }, (_, i) => ({
     { id: 3, name: "Electrónica", colorKey: "electronica" },
   ] as Tag[],
   estado: "activo",
-}));
-
-const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
-  id: i + 1,
-  title: "Assembler",
-  price: 100,
-}));
-
-const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
-  id: i + 1,
-  title: "Porción pastel",
-  price: 15,
-  description: "Media porción de pastel de chocolate hecho en casa.",
-  tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }] as Tag[],
-  estado: i % 3 === 0 ? "vendido" : "activo",
 }));
 
 const MOCK_AD = {
@@ -74,6 +60,23 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ];
 
+// Mapeo tipo_publicacion (número del backend) → Tag del frontend
+const TIPO_TAG: Record<number, Tag> = {
+  1: TAG_MATERIAL,
+  2: TAG_TUTORIA,
+  3: TAG_NEGOCIO,
+};
+
+// Tipo para la publicación que se está editando
+interface PublicacionEditando {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  estado: string;
+  tipo_publicacion: number;
+}
+
 export default function PerfilPage() {
   const t = useTranslations("perfil");
   const tCommon = useTranslations("common");
@@ -81,11 +84,40 @@ export default function PerfilPage() {
   const [mode, setMode] = useState<PerfilMode>("consumidor");
   const [crearPublicacionOpen, setCrearPublicacionOpen] = useState(false);
   const [editPublicacionOpen, setEditPublicacionOpen] = useState(false);
-  const [publicacionEditando, setPublicacionEditando] = useState<(typeof MOCK_CATALOG)[0] | null>(null);
+  const [publicacionEditando, setPublicacionEditando] = useState<PublicacionEditando | null>(null);
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
   const [user, setUser] = useState<UserProfileData | null>(null);
+
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
 
+  // ── Fetch publicaciones del usuario por tipo ──────────────────────────────
+  const {
+    data: materiales,
+    loading: loadingMateriales,
+    refetch: refetchMateriales,
+  } = usePublicaciones(
+    idUsuario ? { idUsuario, tipo: "material", all: true } : {}
+  );
+
+  const {
+    data: tutorias,
+    loading: loadingTutorias,
+    refetch: refetchTutorias,
+  } = usePublicaciones(
+    idUsuario ? { idUsuario, tipo: "tutoria", all: true } : {}
+  );
+
+  const {
+    data: negocios,
+    loading: loadingNegocios,
+    refetch: refetchNegocios,
+  } = usePublicaciones(
+    idUsuario ? { idUsuario, tipo: "negocio", all: true } : {}
+  );
+
+  const loadingCatalogo = loadingMateriales || loadingTutorias || loadingNegocios;
+
+  // ── Fetch datos del perfil ────────────────────────────────────────────────
   useEffect(() => {
     if (!idUsuario) {
       setUser(null);
@@ -126,6 +158,16 @@ export default function PerfilPage() {
       },
       ...prev,
     ]);
+  };
+
+  // Después de crear o editar, refrescamos los tres tipos
+  const handlePublicacionSuccess = () => {
+    setCrearPublicacionOpen(false);
+    setEditPublicacionOpen(false);
+    setPublicacionEditando(null);
+    refetchMateriales();
+    refetchTutorias();
+    refetchNegocios();
   };
 
   if (!user) return <p className="perfil-page__loading">{t("loading")}</p>;
@@ -178,6 +220,7 @@ export default function PerfilPage() {
       {mode === "consumidor" ? (
 
         <>
+          {/* Guardados — mock hasta que exista endpoint */}
           <section className="perfil-page__section">
             <h2 className="perfil-page__carousel-wrap">{t("sections.saved")}</h2>
             <HorizontalCarousel>
@@ -199,28 +242,39 @@ export default function PerfilPage() {
 
           <hr className="perfil-page__divider" />
 
+          {/* Compras — muestra todas las publicaciones del usuario */}
           <section className="perfil-page__section">
             <h2 className="perfil-page__carousel-wrap">{t("sections.purchases")}</h2>
-            <HorizontalCarousel>
-              {MOCK_PURCHASES.map((pub) => (
-                <div key={pub.id} className="perfil-page__purchase-item">
-                  <PostRes
-                    title={pub.title}
-                    price={pub.price}
-                    images={[imagePath.src]}
-                  />
-                </div>
-              ))}
-            </HorizontalCarousel>
+            {loadingCatalogo ? (
+              <p className="perfil-page__loading">{t("loading")}</p>
+            ) : (
+              <HorizontalCarousel>
+                {[...materiales, ...tutorias, ...negocios]
+                  .slice(0, 8)
+                  .map((pub) => (
+                    <div key={pub.id_publicacion} className="perfil-page__purchase-item">
+                      <PostRes
+                        title={pub.titulo}
+                        price={parseFloat(pub.precio)}
+                        images={pub.imagenes.map((img) => img.url_imagen)}
+                        publicacionId={pub.id_publicacion}
+                      />
+                    </div>
+                  ))}
+              </HorizontalCarousel>
+            )}
           </section>
         </>
 
       ) : (
 
         <>
+          {/* ── Catálogo: Materiales ── */}
           <section className="perfil-page__section">
             <div className="perfil-page__catalog-bar">
-              <h2 className="perfil-page__carousel-wrap">{t("sections.catalog")}</h2>
+              <h2 className="perfil-page__catalog-bar-title">
+                {tCommon("tags.material")}
+              </h2>
               <button
                 type="button"
                 className="perfil-page__new-publication-btn"
@@ -230,37 +284,144 @@ export default function PerfilPage() {
                 {t("actions.newPublication")}
               </button>
             </div>
-            <HorizontalCarousel>
-              {MOCK_CATALOG.map((pub) => (
-                <div key={pub.id} className="h-carousel__item">
-                  <PostCard
-                    tags={pub.tags}
-                    title={pub.title}
-                    price={pub.price}
-                    description={pub.description}
-                    images={[imagePath.src]}
-                    estado={pub.estado}
-                    canEdit={true}
-                    onEditClick={() => {
-                      setPublicacionEditando(pub);
-                      setEditPublicacionOpen(true);
-                    }}
-                    onEstadoChange={(nuevoEstado) => console.log(`Cambiar estado a: ${nuevoEstado}`)}
-                  />
-                </div>
-              ))}
-            </HorizontalCarousel>
+
+            {loadingMateriales ? (
+              <p className="perfil-page__loading">{t("loading")}</p>
+            ) : materiales.length === 0 ? (
+              <p className="perfil-page__loading">No tienes materiales publicados aún.</p>
+            ) : (
+              <HorizontalCarousel>
+                {materiales.map((pub) => (
+                  <div key={pub.id_publicacion} className="h-carousel__item">
+                    <PostCard
+                      tags={[TIPO_TAG[pub.tipo_publicacion] ?? TAG_MATERIAL]}
+                      title={pub.titulo}
+                      price={parseFloat(pub.precio)}
+                      description={pub.descripcion}
+                      images={pub.imagenes.map((img) => img.url_imagen)}
+                      estado={String(pub.estado)}
+                      publicacionId={pub.id_publicacion}
+                      canEdit={true}
+                      onEditClick={() => {
+                        setPublicacionEditando({
+                          id: pub.id_publicacion,
+                          title: pub.titulo,
+                          description: pub.descripcion,
+                          price: parseFloat(pub.precio),
+                          estado: String(pub.estado),
+                          tipo_publicacion: pub.tipo_publicacion,
+                        });
+                        setEditPublicacionOpen(true);
+                      }}
+                      onEstadoChange={(nuevoEstado) =>
+                        console.log(`Estado pub ${pub.id_publicacion}: ${nuevoEstado}`)
+                      }
+                    />
+                  </div>
+                ))}
+              </HorizontalCarousel>
+            )}
           </section>
 
           <hr className="perfil-page__divider" />
 
+          {/* ── Catálogo: Tutorías ── */}
+          <section className="perfil-page__section">
+            <h2 className="perfil-page__catalog-bar-title">
+              {tCommon("tags.tutoria")}
+            </h2>
+
+            {loadingTutorias ? (
+              <p className="perfil-page__loading">{t("loading")}</p>
+            ) : tutorias.length === 0 ? (
+              <p className="perfil-page__loading">No tienes tutorías publicadas aún.</p>
+            ) : (
+              <HorizontalCarousel>
+                {tutorias.map((pub) => (
+                  <div key={pub.id_publicacion} className="h-carousel__item">
+                    <PostCard
+                      tags={[TIPO_TAG[pub.tipo_publicacion] ?? TAG_TUTORIA]}
+                      title={pub.titulo}
+                      price={parseFloat(pub.precio)}
+                      description={pub.descripcion}
+                      images={pub.imagenes.map((img) => img.url_imagen)}
+                      estado={String(pub.estado)}
+                      publicacionId={pub.id_publicacion}
+                      canEdit={true}
+                      onEditClick={() => {
+                        setPublicacionEditando({
+                          id: pub.id_publicacion,
+                          title: pub.titulo,
+                          description: pub.descripcion,
+                          price: parseFloat(pub.precio),
+                          estado: String(pub.estado),
+                          tipo_publicacion: pub.tipo_publicacion,
+                        });
+                        setEditPublicacionOpen(true);
+                      }}
+                      onEstadoChange={(nuevoEstado) =>
+                        console.log(`Estado pub ${pub.id_publicacion}: ${nuevoEstado}`)
+                      }
+                    />
+                  </div>
+                ))}
+              </HorizontalCarousel>
+            )}
+          </section>
+
+          <hr className="perfil-page__divider" />
+
+          {/* ── Catálogo: Negocios ── */}
+          <section className="perfil-page__section">
+            <h2 className="perfil-page__catalog-bar-title">
+              {tCommon("tags.negocio")}
+            </h2>
+
+            {loadingNegocios ? (
+              <p className="perfil-page__loading">{t("loading")}</p>
+            ) : negocios.length === 0 ? (
+              <p className="perfil-page__loading">No tienes negocios publicados aún.</p>
+            ) : (
+              <HorizontalCarousel>
+                {negocios.map((pub) => (
+                  <div key={pub.id_publicacion} className="h-carousel__item">
+                    <PostCard
+                      tags={[TIPO_TAG[pub.tipo_publicacion] ?? TAG_NEGOCIO]}
+                      title={pub.titulo}
+                      price={parseFloat(pub.precio)}
+                      description={pub.descripcion}
+                      images={pub.imagenes.map((img) => img.url_imagen)}
+                      estado={String(pub.estado)}
+                      publicacionId={pub.id_publicacion}
+                      canEdit={true}
+                      onEditClick={() => {
+                        setPublicacionEditando({
+                          id: pub.id_publicacion,
+                          title: pub.titulo,
+                          description: pub.descripcion,
+                          price: parseFloat(pub.precio),
+                          estado: String(pub.estado),
+                          tipo_publicacion: pub.tipo_publicacion,
+                        });
+                        setEditPublicacionOpen(true);
+                      }}
+                      onEstadoChange={(nuevoEstado) =>
+                        console.log(`Estado pub ${pub.id_publicacion}: ${nuevoEstado}`)
+                      }
+                    />
+                  </div>
+                ))}
+              </HorizontalCarousel>
+            )}
+          </section>
+
+          <hr className="perfil-page__divider" />
+
+          {/* ── Anuncios ── */}
           <section className="perfil-page__section">
             <div className="perfil-page__catalog-bar">
-              <h2 className="perfil-page__carousel-wrap">{t("sections.ads")}</h2>
-              <button
-                type="button"
-                className="perfil-page__new-publication-btn"
-              >
+              <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
+              <button type="button" className="perfil-page__new-publication-btn">
                 {t("actions.changeAd")}
               </button>
             </div>
@@ -276,7 +437,7 @@ export default function PerfilPage() {
 
       <hr className="perfil-page__divider" />
 
-      {/* ── Comentarios — siempre visibles ── */}
+      {/* ── Modales ── */}
       {crearPublicacionOpen && (
         <div
           className="modal-overlay"
@@ -293,7 +454,7 @@ export default function PerfilPage() {
             <CrearPublicacionForm
               mode="crear"
               onCancel={() => setCrearPublicacionOpen(false)}
-              onSuccess={() => setCrearPublicacionOpen(false)}
+              onSuccess={handlePublicacionSuccess}
             />
           </div>
         </div>
@@ -319,24 +480,33 @@ export default function PerfilPage() {
                 titulo: publicacionEditando.title,
                 descripcion: publicacionEditando.description,
                 precio: String(publicacionEditando.price),
-                tipo_publicacion: "material",
-                categorias: publicacionEditando.tags.map((t) => t.id),
+                tipo_publicacion:
+                  publicacionEditando.tipo_publicacion === 1
+                    ? "material"
+                    : publicacionEditando.tipo_publicacion === 2
+                    ? "tutoria"
+                    : "negocio",
+                categorias: [],
                 destacado: false,
               }}
-              estadoActual={publicacionEditando.estado as "disponible" | "vendido" | "reservado"}
+              estadoActual={
+                publicacionEditando.estado === "disponible" ||
+                publicacionEditando.estado === "vendido" ||
+                publicacionEditando.estado === "reservado"
+                  ? publicacionEditando.estado
+                  : "disponible"
+              }
               onCancel={() => {
                 setEditPublicacionOpen(false);
                 setPublicacionEditando(null);
               }}
-              onSuccess={() => {
-                setEditPublicacionOpen(false);
-                setPublicacionEditando(null);
-              }}
+              onSuccess={handlePublicacionSuccess}
             />
           </div>
         </div>
       )}
 
+      {/* ── Comentarios ── */}
       <section className="perfil-page__section">
         <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
         <CommentSection
