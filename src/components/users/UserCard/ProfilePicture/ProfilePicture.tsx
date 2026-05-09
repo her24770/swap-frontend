@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import './ProfilePicture.css';
 
 interface ProfilePictureProps {
@@ -16,11 +17,13 @@ export default function ProfilePicture({ imageUrl, userName, size = 'md' }: Prof
     return (
         <div className={baseClass}>
         {imageUrl ? (
-            <img 
-            src={imageUrl} 
-            alt={`Foto de perfil de ${userName}`} 
+            <Image
+            src={imageUrl}
+            alt={`Foto de perfil de ${userName}`}
+            fill
             className="profile-picture__image"
-            loading="lazy"
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            unoptimized
             />
         ) : (
             <div className="profile-picture__placeholder">

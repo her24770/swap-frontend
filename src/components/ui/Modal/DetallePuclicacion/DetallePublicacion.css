@@ -52,6 +52,7 @@
 }
 
 .post-modal__seller-avatar {
+  position: relative;
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
@@ -136,10 +137,11 @@
 }
 
 .post-modal__image {
+  position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
   border-radius: 0.75rem;
+  overflow: hidden;
   border: 1px solid var(--swap-primary-border-color);
 }
 

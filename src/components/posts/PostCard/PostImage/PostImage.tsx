@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ImageOff } from "lucide-react";
 import "./PostImage.css";
 
@@ -17,12 +18,14 @@ export default function PostImage({ images, alt, compact = false }: PostImagePro
   return (
     <div className={`product-image${compact ? " product-image--compact" : ""}`}>
       {mainImage ? (
-        <img
+        <Image
           src={mainImage}
           alt={alt}
+          fill
           className="product-image__content"
-          loading="lazy"
+          style={{ objectFit: 'cover' }}
           onError={() => setImgError(true)}
+          unoptimized
         />
       ) : (
         <div className="product-image__fallback">

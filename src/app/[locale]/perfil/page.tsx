@@ -12,8 +12,18 @@ import VistaVendedor from "../../../components/perfiles/Vendedor/vistaVendedor";
 import VistaTutor from "../../../components/perfiles/Tutor/vistaTutor";
 import { TAGS_MATERIAS } from "../../../lib/tags";
 import "./PerfilConsumidorPage.css";
+import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
+
+type PublicacionEditando = {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  tags: { id: number }[];
+  estado: string;
+};
 
 type PerfilMode = "consumidor" | "vendedor" | "tutor";
 
@@ -41,6 +51,9 @@ export default function PerfilPage() {
   const [mode, setMode] = useState<PerfilMode>("consumidor");
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
   const [user, setUser] = useState<UserProfileData | null>(null);
+  const [crearPublicacionOpen, setCrearPublicacionOpen] = useState(false);
+  const [editPublicacionOpen, setEditPublicacionOpen] = useState(false);
+  const [publicacionEditando, setPublicacionEditando] = useState<PublicacionEditando | null>(null);
     const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
 
   useEffect(() => {

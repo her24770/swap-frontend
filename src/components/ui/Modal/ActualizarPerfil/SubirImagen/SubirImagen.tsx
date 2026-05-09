@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { CloudUpload, UserCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ImageCropper from "./ImageCropper";
@@ -80,11 +81,15 @@ export default function SubirImagen({ onFileChange, previewUrl, currentProfileIm
             className="profile-image-upload__img"
           />
         ) : currentProfileImage ? (
-          <img
-            src={currentProfileImage}
-            alt={t("currentImageAlt")}
-            className="profile-image-upload__img"
-          />
+          <div style={{ position: 'relative', width: '7rem', height: '7rem', borderRadius: '50%', overflow: 'hidden', border: '1px solid var(--swap-primary-border-color)' }}>
+            <Image
+              src={currentProfileImage}
+              alt={t("currentImageAlt")}
+              fill
+              style={{ objectFit: 'cover' }}
+              unoptimized
+            />
+          </div>
         ) : (
           <UserCircle2
             size={96}

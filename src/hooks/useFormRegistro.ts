@@ -39,7 +39,7 @@ export function useFormRegistro() {
         carnet,
         email_institucional: data.email_institucional,
         password: data.password,
-        url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
+        url_foto_perfil: data.url_foto_perfil || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || "",
         descripcion: data.descripcion || "Sin descripción",
       }
     );

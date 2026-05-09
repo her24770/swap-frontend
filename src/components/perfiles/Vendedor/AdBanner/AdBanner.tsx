@@ -1,3 +1,4 @@
+import Image from "next/image";
 import "./AdBanner.css";
 
 export interface AdBannerData {
@@ -23,7 +24,7 @@ export default function AdBanner({ imageUrl, title, subtitle }: AdBannerProps) {
   return (
     <div className={`ad-banner${imageUrl ? " ad-banner--image" : ""}`}>
       {imageUrl && (
-        <img src={imageUrl} alt="Anuncio del vendedor" className="ad-banner__img" />
+        <Image src={imageUrl} alt="Anuncio del vendedor" fill className="ad-banner__img" style={{ objectFit: 'cover' }} unoptimized />
       )}
       <div className="ad-banner__overlay">
         <span className="ad-banner__badge">Anuncio</span>

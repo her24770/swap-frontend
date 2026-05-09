@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { Contact } from "../../../../types/comment";
 import './UserContact.css';
@@ -22,10 +23,13 @@ export default function UserContact({ contacts }: UserContactProps) {
             className="user-contact"
             aria-label={t("visitProfile", { platform: contact.platform })}
             >
-            <img 
-                src={`/icons/${contact.platform}.svg`} 
+            <Image
+                src={`/icons/${contact.platform}.svg`}
                 alt={contact.platform}
+                width={20}
+                height={20}
                 className="user-contact__icon"
+                unoptimized
             />
             </a>
         ))}

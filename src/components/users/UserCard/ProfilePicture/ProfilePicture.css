@@ -1,10 +1,11 @@
 
 .profile-picture {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%; 
-    overflow: hidden; 
+    border-radius: 50%;
+    overflow: hidden;
     border: 0.1875rem solid var(--swap-primary-border-color);
     background-color: var(--swap-secondary-background);
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { X, Bookmark, ChevronRight } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
 import "../../Button/Button.css";
@@ -75,7 +76,7 @@ export default function DetallePublicacion({
         <div className="post-modal__seller">
           <div className="post-modal__seller-avatar">
             {sellerImageUrl ? (
-              <img src={sellerImageUrl} alt={sellerName} className="post-modal__seller-img" />
+              <Image src={sellerImageUrl} alt={sellerName} fill className="post-modal__seller-img" style={{ objectFit: 'cover' }} unoptimized />
             ) : (
               <UserCircle2 size={40} strokeWidth={1} className="post-modal__seller-placeholder" />
             )}
@@ -98,7 +99,9 @@ export default function DetallePublicacion({
         <div className="post-modal__body">
 
           <div className="post-modal__image-col">
-            <img src={imageUrl} alt={title} className="post-modal__image" />
+            <div className="post-modal__image">
+              <Image src={imageUrl} alt={title} fill style={{ objectFit: 'cover' }} unoptimized />
+            </div>
 
             {tags.length > 0 && (
               <div className="post-modal__tags">
