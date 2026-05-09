@@ -140,7 +140,73 @@ export default function PerfilPage() {
 
       <hr className="perfil-page__divider" />
 
-      {/* Comentarios*/}
+      {/* ── Comentarios — siempre visibles ── */}
+      {crearPublicacionOpen && (
+        <div
+          className="modal-overlay"
+          role="presentation"
+          onClick={() => setCrearPublicacionOpen(false)}
+        >
+          <div
+            className="perfil-page__crear-pub-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("modal.createPublicationAria")}
+          >
+            <div className="perfil-page__crear-pub-modal-content">
+
+              <CrearPublicacionForm
+                mode="crear"
+                onCancel={() => setCrearPublicacionOpen(false)}
+                onSuccess={() => setCrearPublicacionOpen(false)}
+              />
+            </div>
+          </div>
+            
+        </div>
+      )}
+
+      {editPublicacionOpen && publicacionEditando && (
+        <div
+          className="modal-overlay"
+          role="presentation"
+          onClick={() => setEditPublicacionOpen(false)}
+        >
+          <div
+            className="perfil-page__crear-pub-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("modal.editPublicationAria")}
+          >
+            <div className="perfil-page__crear-pub-modal-content">
+              <CrearPublicacionForm
+                mode="editar"
+                publicacionId={publicacionEditando.id}
+                defaultValues={{
+                  titulo: publicacionEditando.title,
+                  descripcion: publicacionEditando.description,
+                  precio: String(publicacionEditando.price),
+                  tipo_publicacion: "material",
+                  categorias: publicacionEditando.tags.map((t) => t.id),
+                  destacado: false,
+                }}
+                estadoActual={publicacionEditando.estado as "disponible" | "vendido" | "reservado"}
+                onCancel={() => {
+                  setEditPublicacionOpen(false);
+                  setPublicacionEditando(null);
+                }}
+                onSuccess={() => {
+                  setEditPublicacionOpen(false);
+                  setPublicacionEditando(null);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <section className="perfil-page__section">
         <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
         <CommentSection
