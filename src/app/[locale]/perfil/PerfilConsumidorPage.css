@@ -26,22 +26,33 @@
 
 .perfil-page__mode-toggle {
   display: flex;
-  width: fit-content;
+  width: 100%; 
+  max-width: 450px;
   border: 1px solid var(--swap-primary-border-color);
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
 .perfil-page__mode-btn {
-  padding: 0.5rem 1.5rem;
+  flex: 1; 
+  width: auto;
+  padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-family: var(--swap-font-textos);
   font-weight: 500;
   background: transparent;
-  border: none;
   cursor: pointer;
   color: var(--swap-tertiary-text-color);
   transition: background-color 0.15s ease, color 0.15s ease;
+  border: none;
+  border-right: 1px solid var(--swap-primary-border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.perfil-page__mode-btn:last-child {
+  border-right: none;
 }
 
 .perfil-page__mode-btn:hover {
@@ -54,8 +65,8 @@
   color: var(--swap-secondary-text-color);
 }
 
-.perfil-page__mode-btn--active:hover {
-  background-color: var(--swap-primary-color);
+.perfil-page__mode-btn--active:not(:last-child) {
+  border-right: 1px solid var(--swap-primary-border-color);
 }
 
 /* ── Section ─────────────────────────────────────────────────────────────── */
