@@ -151,7 +151,9 @@
 		"loading": "Chargement du profil...",
 		"mode": {
 			"consumer": "Acheteur",
-			"seller": "Vendeur"
+			"seller": "Vendeur",
+			"tutor": "Tuteur"
+
 		},
 		"sections": {
 			"saved": "Enregistrés",
