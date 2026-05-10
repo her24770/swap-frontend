@@ -51,6 +51,8 @@
 .login-form__input {
   border: 1px solid var(--swap-primary-border-color);
   border-radius: 0.375rem;
+  background-color: var(--swap-secondary-background);
+  color: var(--swap-primary-text-color);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   outline: none;

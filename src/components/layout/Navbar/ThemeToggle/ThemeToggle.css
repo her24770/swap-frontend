@@ -1,0 +1,78 @@
+.theme-toggle {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle__track {
+  position: relative;
+  width: 3rem;
+  height: 1.625rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle--dark .theme-toggle__track {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Thumb — el círculo que se desliza */
+.theme-toggle__thumb {
+  position: absolute;
+  left: 0.1875rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f59e0b;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background-color 0.3s ease,
+              color 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle--dark .theme-toggle__thumb {
+  transform: translateX(1.375rem);
+  background-color: #1e293b;
+  color: #e2e8f0;
+}
+
+/* Iconos de fondo en el track */
+.theme-toggle__icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle__icon--sun {
+  left: 0.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0;
+}
+
+.theme-toggle__icon--moon {
+  right: 0.25rem;
+  color: rgba(255, 255, 255, 0.6);
+  opacity: 1;
+}
+
+.theme-toggle--dark .theme-toggle__icon--sun {
+  opacity: 1;
+}
+
+.theme-toggle--dark .theme-toggle__icon--moon {
+  opacity: 0;
+}
