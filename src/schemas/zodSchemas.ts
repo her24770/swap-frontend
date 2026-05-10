@@ -134,11 +134,14 @@ export const schemaEditarPublicacion = z.object({
     .or(z.literal("")),
 
   tipo_publicacion: z
-    .enum(TIPOS_PUBLICACION, { invalid_type_error: "Tipo de publicación inválido." })
-    .optional(),
+    .enum(TIPOS_PUBLICACION, {
+        invalid_type_error: "Tipo de publicación inválido.",
+      })
+      .optional(),
 
   categorias: z
-    .array(z.coerce.number().int().positive())
+    .array(z.coerce.number().int().positive("ID de categoría inválido."))
+    .min(1, "Selecciona al menos una categoría.")
     .max(10, "No puedes seleccionar más de 10 categorías.")
     .optional(),
 
@@ -152,9 +155,13 @@ export const schemaEditarPublicacion = z.object({
     .boolean()
     .optional(),
   
-  estado: z
-    .enum (["disponible", "vendido", "eliminado"])
-    .optional(),
+  // Solo los estados que el usuario puede seleccionar desde el formulario.
+    // "eliminado" queda excluido intencionalmente.
+    estado: z
+      .enum(["disponible", "vendido", "reservado"], {
+        invalid_type_error: "El estado debe ser disponible, vendido o reservado.",
+      })
+      .optional(),
   })
   .refine((data) => Object.keys(data).some((k) => data[k as keyof typeof data] !== undefined), {
     message: "Debes modificar al menos un campo.",
