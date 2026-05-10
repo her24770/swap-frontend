@@ -109,48 +109,53 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">Publicaciones recientes</h2>
                         <RenderError error={errors.recents} />
                         {loading.recents ? <p>Cargando recientes...</p> : (
-                            <HorizontalCarousel>
-                                {recentsPublicaciones.map(p => (
-                                    <PostCard
-                                        key={p.id_publicacion}
-                                        tags={mapTags(p)}
-                                        title={p.titulo}
-                                        price={parseFloat(p.precio)}
-                                        description={p.descripcion}
-                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                        estado={p.estado}
-                                        canEdit={false}
-                                        onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
-                                    />
-                                ))}
-                            </HorizontalCarousel>
+                            <div className="publicaciones-list__carousel-wrap">
+                                <HorizontalCarousel>
+                                    {recentsPublicaciones.map(p => (
+                                        <div key={p.id_publicacion} className="h-carousel__item">
+                                            <PostCard
+                                                tags={mapTags(p)}
+                                                title={p.titulo}
+                                                price={parseFloat(p.precio)}
+                                                description={p.descripcion}
+                                                images={p.imagenes.map((img) => img.url_imagen)}
+                                                estado={p.estado}
+                                                canEdit={false}
+                                                onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
+                                            />
+                                        </div>
+                                    ))}
+                                </HorizontalCarousel>
+                            </div>
                         )}
                     </section>
 
                     {/* SECCIÓN RECOMENDADOS */}
                     <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">Recomendadas para ti</h2>
+                        <h2 className="publicaciones-list__section-title">Publicaciones Recomendadas</h2>
                         <RenderError error={errors.recommended} />
                         {loading.recommended ? <p>Buscando sugerencias...</p> : (
-                            <HorizontalCarousel>
-                                {recommendedPublicaciones.map(p => (
-                                    <PostCard
-                                        key={p.id_publicacion}
-                                        tags={mapTags(p)}
-                                        title={p.titulo}
-                                        price={parseFloat(p.precio)}
-                                        description={p.descripcion}
-                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                        estado={p.estado}
-                                        canEdit={false}
-                                        onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
-                                    />
-                                ))}
-                            </HorizontalCarousel>
+                            <div className="publicaciones-list__carousel-wrap">
+                                <HorizontalCarousel>
+                                    {recommendedPublicaciones.map(p => (
+                                        <div key={p.id_publicacion} className="h-carousel__item">
+                                            <PostCard
+                                                tags={mapTags(p)}
+                                                title={p.titulo}
+                                                price={parseFloat(p.precio)}
+                                                description={p.descripcion}
+                                                images={p.imagenes.map((img) => img.url_imagen)}
+                                                estado={p.estado}
+                                                canEdit={false}
+                                                onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
+                                            />
+                                        </div>
+                                    ))}
+                                </HorizontalCarousel>
+                            </div>
                         )}
                     </section>
 
-                    {/* SECCIÓN "MÁS" (PAGINADA) */}
                     <section className="publicaciones-list__section">
                         <h2 className="publicaciones-list__section-title">Explora más</h2>
                         <RenderError error={errors.more} />
@@ -172,7 +177,6 @@ export default function PublicacionesList({
                     </section>
                 </div>
             ) : (
-                /* VISTA DE BÚSQUEDA */
                 <section className="publicaciones-list__search-results">
                     <h2 className="publicaciones-list__section-title">Resultados ({filtered.length})</h2>
                     <div className="publicaciones-list__grid">

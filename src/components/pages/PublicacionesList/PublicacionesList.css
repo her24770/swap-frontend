@@ -1,18 +1,44 @@
-/* PublicacionesList.css
-   Styles adapted from page-specific CSS (descubre/negocios/materiales/tutorias)
-   Provides header, grid, states, empty and pagination styles for the reusable list.
-*/
+/* 1. CONFIGURACIÓN GLOBAL DE VARIABLES */
+:root {
+  /* Móvil: 1 publicación por fila */
+  --grid-cols: 1; 
+  --card-gap: 1rem;
+}
 
+@media (min-width: 30rem) {
+  :root {
+    /* Tablets pequeñas / Móviles grandes: 2 publicaciones */
+    --grid-cols: 2;
+  }
+}
+
+@media (min-width: 48rem) {
+  :root { 
+    /* Tablets / Desktop pequeño: 3 publicaciones */
+    --grid-cols: 3; 
+    --card-gap: 1.25rem; 
+  }
+}
+
+@media (min-width: 64rem) {
+  :root { 
+    /* Desktop grande: 4 publicaciones */
+    --grid-cols: 4; 
+  }
+}
+
+/* 2. CONTENEDOR PRINCIPAL */
 .publicaciones-list {
-  padding: 2rem;
   min-height: 100%;
   background-color: var(--swap-primary-background);
+  padding: 1rem;
 }
 
-@media (max-width: 30rem) {
-  .publicaciones-list { padding: 1rem; }
+@media (min-width: 48rem) {
+  .publicaciones-list { padding: 2rem; }
 }
 
+/* 3. HEADER Y TÍTULOS */
 .publicaciones-list__header {
   display: flex;
   flex-direction: column;
@@ -41,34 +67,44 @@
   .publicaciones-list__title { font-size: 2rem; }
 }
 
+/* 4. GRID */
 .publicaciones-list__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
-  gap: 1rem;
+  /* Usa siempre el número de columnas definido en las variables */
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  gap: var(--card-gap);
 }
 
-.publicaciones-list__sections {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
+/* 5. CAROUSEL */
 .publicaciones-list__section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  position: relative;
+  overflow: visible !important;
 }
 
-.publicaciones-list__search-results {
+.publicaciones-list__carousel-wrap {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  gap: var(--card-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overflow: visible;
+  scrollbar-width: none; 
 }
 
+.publicaciones-list__carousel-wrap::-webkit-scrollbar { display: none; }
+
+.h-carousel__item {
+  scroll-snap-align: start; 
+  flex: 0 0 auto; 
+  /* Esta fórmula asegura que el item del carousel mida lo mismo que una celda del grid */
+  width: calc((100% - (var(--card-gap) * (var(--grid-cols) - 1))) / var(--grid-cols));
+}
+
+/* 6. TEXTOS DE SECCIÓN */
 .publicaciones-list__section-header {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  margin-bottom: 1.25rem;
 }
 
 .publicaciones-list__section-title {
@@ -86,24 +122,7 @@
   margin: 0;
 }
 
-@media (min-width: 30rem) {
-  .publicaciones-list__grid {
-    grid-template-columns: repeat(auto-fill, minmax(11.25rem, 1fr));
-    gap: 1.125rem;
-  }
-}
-
-@media (min-width: 48rem) {
-  .publicaciones-list__grid {
-    grid-template-columns: repeat(auto-fill, minmax(13.75rem, 1fr));
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 64rem) {
-  .publicaciones-list__grid { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
-}
-
+/* 7. ESTADOS (VACÍO, ERROR, CARGA) */
 .publicaciones-list__state {
   display: flex;
   justify-content: center;
@@ -114,51 +133,19 @@
   .publicaciones-list__state { padding: 4rem 0; }
 }
 
-.publicaciones-list__state-text {
-  font-family: var(--swap-font-textos);
-  font-size: 0.9375rem;
-  color: var(--swap-tertiary-text-color);
-  margin: 0;
-}
-
-.publicaciones-list__state-text--error { color: var(--swap-danger-color); }
-
 .publicaciones-list__empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 3rem 1rem;
   text-align: center;
+  padding: 3rem 1rem;
   gap: 1rem;
 }
 
-@media (min-width: 48rem) {
-  .publicaciones-list__empty { padding: 5rem 1rem; }
-}
-
-.publicaciones-list__empty-icon { font-size: 2.5rem; line-height: 1; }
+.publicaciones-list__empty-icon { font-size: 2.5rem; }
 @media (min-width: 48rem) { .publicaciones-list__empty-icon { font-size: 3.5rem; } }
 
-.publicaciones-list__empty-title {
-  font-family: var(--swap-font-subtitulos);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--swap-primary-text-color);
-  margin: 0;
-}
-
-@media (min-width: 48rem) { .publicaciones-list__empty-title { font-size: 1.25rem; } }
-
-.publicaciones-list__empty-description {
-  font-family: var(--swap-font-textos);
-  font-size: 0.875rem;
-  color: var(--swap-tertiary-text-color);
-  margin: 0;
-  max-width: 30rem;
-  line-height: 1.6;
-}
-
+/* 8. PAGINACIÓN */
 .publicaciones-list__pagination {
   display: flex;
   justify-content: center;
@@ -166,11 +153,6 @@
   flex-wrap: wrap;
   gap: 0.25rem;
   margin-top: 1.5rem;
-  padding-bottom: 1rem;
-}
-
-@media (min-width: 48rem) {
-  .publicaciones-list__pagination { gap: 0.375rem; margin-top: 2.5rem; }
 }
 
 .publicaciones-list__pagination-btn {
@@ -184,19 +166,8 @@
   border-radius: 0.375rem;
   background-color: var(--swap-primary-background);
   color: var(--swap-primary-text-color);
-  font-family: var(--swap-font-textos);
-  font-size: 0.75rem;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-@media (min-width: 48rem) {
-  .publicaciones-list__pagination-btn { min-width: 2rem; height: 2rem; padding: 0 0.5rem; font-size: 0.875rem; }
-}
-
-.publicaciones-list__pagination-btn:hover:not(:disabled) {
-  border-color: var(--swap-primary-color);
-  color: var(--swap-primary-color);
+  transition: all 0.15s ease;
 }
 
 .publicaciones-list__pagination-btn--active {
