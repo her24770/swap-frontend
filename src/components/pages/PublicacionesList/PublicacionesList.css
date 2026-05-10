@@ -1,18 +1,17 @@
 /* 1. CONFIGURACIÓN GLOBAL DE VARIABLES */
 :root {
-  /* Móvil: 1 publicación por fila */
   --grid-cols: 1; 
   --card-gap: 1rem;
 }
 
-@media (min-width: 30rem) {
+@media (min-width: 40rem) {
   :root {
     /* Tablets pequeñas / Móviles grandes: 2 publicaciones */
     --grid-cols: 2;
   }
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 64rem) {
   :root { 
     /* Tablets / Desktop pequeño: 3 publicaciones */
     --grid-cols: 3; 
@@ -20,10 +19,21 @@
   }
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 90rem) {
   :root { 
-    /* Desktop grande: 4 publicaciones */
     --grid-cols: 4; 
+  }
+}
+
+@media (min-width: 130rem) {
+  :root { 
+    --grid-cols: 5; 
+  }
+}
+
+@media (min-width: 170rem) {
+  :root { 
+    --grid-cols: 12; 
   }
 }
 
