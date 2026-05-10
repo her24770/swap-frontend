@@ -31,10 +31,10 @@ interface ActualizarPerfilModalProps {
 
 type ConfirmAction = "submit" | "discard" | null;
 
-let contactIdCounter = 1;
+const genContactId = (): number => Date.now() + Math.floor(Math.random() * 1000000);
 
 const getEmptyContacts = (): Contacto[] => [
-  { id: contactIdCounter++, type: "", value: "" },
+  { id: genContactId(), type: "", value: "" },
 ];
 
 export default function ActualizarPerfilModal({
@@ -54,11 +54,21 @@ export default function ActualizarPerfilModal({
   const [nombre, setNombre] = useState(initialNombre);
   const [apellido, setApellido] = useState(initialApellido);
   const [descripcion, setDescripcion] = useState(initialDescripcion);
-  const [contacts, setContacts] = useState<Contacto[]>(
-    initialContacts && initialContacts.length > 0
-      ? initialContacts
-      : getEmptyContacts()
-    );
+  const [contacts, setContacts] = useState<Contacto[]>(() => {
+    if (initialContacts && initialContacts.length > 0) {
+      const seen = new Set<number>();
+      return initialContacts.map((c) => {
+        if (!c?.id || seen.has(c.id)) {
+          const id = genContactId();
+          seen.add(id);
+          return { ...c, id };
+        }
+        seen.add(c.id);
+        return c;
+      });
+    }
+    return getEmptyContacts();
+  });
   const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
@@ -86,11 +96,22 @@ export default function ActualizarPerfilModal({
       setNombre(initialNombre);
       setApellido(initialApellido);
       setDescripcion(initialDescripcion);
-      setContacts(
-        initialContacts && initialContacts.length > 0
-          ? initialContacts
-          : getEmptyContacts()
-      );
+      if (initialContacts && initialContacts.length > 0) {
+        const seen = new Set<number>();
+        setContacts(
+          initialContacts.map((c) => {
+            if (!c?.id || seen.has(c.id)) {
+              const id = genContactId();
+              seen.add(id);
+              return { ...c, id };
+            }
+            seen.add(c.id);
+            return c;
+          })
+        );
+      } else {
+        setContacts(getEmptyContacts());
+      }
       setFoto(null);
       setPreviewUrl(null);
       setConfirmAction(null);
@@ -116,7 +137,7 @@ export default function ActualizarPerfilModal({
   };
 
   const addContact = () => {
-    setContacts((prev) => [...prev, { id: contactIdCounter++, type: "", value: "" }]);
+    setContacts((prev) => [...prev, { id: genContactId(), type: "", value: "" }]);
   };
 
   const removeContact = (id: number) => {
