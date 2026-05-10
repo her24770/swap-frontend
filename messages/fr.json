@@ -225,6 +225,21 @@
 			"update": "Mettre à jour",
 			"saving": "Enregistrement..."
 		},
+		"confirm": {
+			"submit": {
+				"title": "Confirmer les modifications",
+				"message": "Voulez-vous vraiment mettre à jour votre profil avec ces modifications ?"
+			},
+			"discard": {
+				"title": "Quitter sans enregistrer",
+				"message": "Vous avez des modifications non enregistrées. Voulez-vous quitter quand même ?"
+			},
+			"actions": {
+				"back": "Retour",
+				"confirmSave": "Oui, mettre à jour",
+				"confirmDiscard": "Oui, quitter"
+			}
+		},
 		"form": {
 			"firstName": "Prénom",
 			"lastName": "Nom",

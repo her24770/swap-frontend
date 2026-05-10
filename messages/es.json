@@ -227,6 +227,21 @@
 			"update": "Actualizar",
 			"saving": "Guardando..."
 		},
+		"confirm": {
+			"submit": {
+				"title": "Confirmar cambios",
+				"message": "\u00bfSeguro que deseas actualizar tu perfil con estos cambios?"
+			},
+			"discard": {
+				"title": "Salir sin guardar",
+				"message": "Tienes cambios sin guardar. \u00bfDeseas salir de todos modos?"
+			},
+			"actions": {
+				"back": "Volver",
+				"confirmSave": "S\u00ed, actualizar",
+				"confirmDiscard": "S\u00ed, salir"
+			}
+		},
 		"form": {
 			"firstName": "Nombre",
 			"lastName": "Apellido",

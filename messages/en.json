@@ -227,6 +227,21 @@
 			"update": "Update",
 			"saving": "Saving..."
 		},
+		"confirm": {
+			"submit": {
+				"title": "Confirm changes",
+				"message": "Are you sure you want to update your profile with these changes?"
+			},
+			"discard": {
+				"title": "Leave without saving",
+				"message": "You have unsaved changes. Do you want to leave anyway?"
+			},
+			"actions": {
+				"back": "Go back",
+				"confirmSave": "Yes, update",
+				"confirmDiscard": "Yes, leave"
+			}
+		},
 		"form": {
 			"firstName": "First name",
 			"lastName": "Last name",
