@@ -42,6 +42,20 @@ export default function NegociosPage() {
 
   const handleSearch = (value: string) => {};
 
+  const loadingStates = {
+      more: moreLoading,
+      recents: recentsLoading,
+      recommended: recommendedLoading,
+      global: moreLoading || recentsLoading || recommendedLoading
+    };
+
+    const errors = {
+      more: moreError,
+      recents: recentsError,
+      recommended: recommendedError
+    };
+
+
   return (
     <main className="negocios-page">
       <PublicacionesList

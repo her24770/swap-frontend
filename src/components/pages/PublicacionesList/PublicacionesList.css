@@ -47,6 +47,45 @@
   gap: 1rem;
 }
 
+.publicaciones-list__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.publicaciones-list__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.publicaciones-list__search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.publicaciones-list__section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.publicaciones-list__section-title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.publicaciones-list__section-description {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  margin: 0;
+}
+
 @media (min-width: 30rem) {
   .publicaciones-list__grid {
     grid-template-columns: repeat(auto-fill, minmax(11.25rem, 1fr));

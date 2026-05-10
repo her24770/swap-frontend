@@ -35,6 +35,19 @@ export default function HomePage() {
 
   });
 
+  const loadingStates = {
+    more: moreLoading,
+    recents: recentsLoading,
+    recommended: recommendedLoading,
+    global: moreLoading || recentsLoading || recommendedLoading
+  };
+
+  const errors = {
+    more: moreError,
+    recents: recentsError,
+    recommended: recommendedError
+  };
+
   return (
     <main className="descubre-page">
       <Suspense fallback={null}>

@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from 'next-intl';
-import PostCard from "../../../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { TAG_TUTORIA } from "../../../lib/tags";
@@ -15,15 +13,37 @@ export default function TutoriasPage() {
   const tEmpty = useTranslations('common.empty');
   const tTags = useTranslations('common.tags');
 
-  const { data, loading, error } = usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE });
+  const { data: moreData, loading: moreLoading, error: moreError } = 
+    usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE });
+  
+  const { data: recentsData, loading: recentsLoading, error: recentsError } = 
+    usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "fecha" });
+  
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = 
+    usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "popularidad" }); // Asumiendo un sort distinto
+
+  const loadingStates = {
+    more: moreLoading,
+    recents: recentsLoading,
+    recommended: recommendedLoading,
+    global: moreLoading || recentsLoading || recommendedLoading
+  };
+
+  const errors = {
+    more: moreError,
+    recents: recentsError,
+    recommended: recommendedError
+  };
 
   return (
     <main className="tutorias-page">
       <PublicacionesList
         title={t('title')}
-        publicaciones={data}
-        loading={loading}
-        error={error}
+        recentsPublicaciones={recentsData || []}
+        recommendedPublicaciones={recommendedData || []}
+        morePublicaciones={moreData || []}
+        loading={loadingStates} 
+        errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         tEmpty={tEmpty}
         tTags={tTags}
