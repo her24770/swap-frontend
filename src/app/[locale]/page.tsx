@@ -31,9 +31,9 @@ export default function HomePage() {
   const tTags = useTranslations('common.tags');
 
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, loading, error } = usePublicaciones({
-
-  });
+  const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ limit: ITEMS_PER_PAGE });
+  const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ limit: ITEMS_PER_PAGE});
 
   const loadingStates = {
     more: moreLoading,
@@ -55,9 +55,11 @@ export default function HomePage() {
       </Suspense>
       <PublicacionesList
         title={t('title')}
-        publicaciones={data}
-        loading={loading}
-        error={error}
+        recentsPublicaciones={recentsData || []}
+        recommendedPublicaciones={recommendedData || []}
+        morePublicaciones={moreData || []}
+        loading={loadingStates}
+        errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         tEmpty={tEmpty}
         tTags={tTags}
