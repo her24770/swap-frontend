@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Menu, UserCircle2, LogOut, Store } from "lucide-react";
+import { Menu, UserCircle2, LogOut, Sun, Moon} from "lucide-react";
 import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,6 +8,7 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
+import { useTheme } from "../../../context/Themecontext"
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -15,6 +16,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ onMenuToggle }: NavbarProps) {
+  const { theme, toggle: toggleTheme } = useTheme()
   const t = useTranslations('layout.navbar');
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -51,42 +53,51 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
         )}
         <LogoCompleto className="navbar__logo"/>
       </div>
+      <div className="navbar__left">
+        <button
+          className="navbar-toggle"
+          onClick={toggleTheme}
+          title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
+        >
+          {theme === 'light' ? <Moon size={28} strokeWidth={1.5} /> : <Sun size={28} strokeWidth={1.5} />}
+        </button>
 
-      {/* Perfil/USER SOLO si NO es auth route */}
-      {!isAuthRoute && (
-        <div ref={dropdownRef} className="navbar__profile">
-          <button
-            aria-label={t('ariaUserProfile')}
-            type="button"
-            onClick={() => setProfileOpen((prev) => !prev)}
-            className="navbar__profile-btn"
-          >
-            <UserCircle2 size={28} strokeWidth={1.5} />
-          </button>
+        {/* Perfil/USER SOLO si NO es auth route */}
+        {!isAuthRoute && (
+          <div ref={dropdownRef} className="navbar__profile">
+            <button
+              aria-label={t('ariaUserProfile')}
+              type="button"
+              onClick={() => setProfileOpen((prev) => !prev)}
+              className="navbar__profile-btn"
+            >
+              <UserCircle2 size={28} strokeWidth={1.5} />
+            </button>
 
-          {profileOpen && (
-            <div className="navbar__dropdown">
-              <Link
-                href="/perfil"
-                onClick={() => setProfileOpen(false)}
-                className="navbar__dropdown-item"
-              >
-                <UserCircle2 size={16} className="navbar__dropdown-icon" />
-                {t('viewProfile')}
-              </Link>
-              <div className="navbar__dropdown-divider" />
-              <button
-                type="button"
-                onClick={logout}
-                className="navbar__dropdown-item navbar__dropdown-item--danger"
-              >
-                <LogOut size={16} />
-                {t('logout')}
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+            {profileOpen && (
+              <div className="navbar__dropdown">
+                <Link
+                  href="/perfil"
+                  onClick={() => setProfileOpen(false)}
+                  className="navbar__dropdown-item"
+                >
+                  <UserCircle2 size={16} className="navbar__dropdown-icon" />
+                  {t('viewProfile')}
+                </Link>
+                <div className="navbar__dropdown-divider" />
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="navbar__dropdown-item navbar__dropdown-item--danger"
+                >
+                  <LogOut size={16} />
+                  {t('logout')}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </header>
   );
 }

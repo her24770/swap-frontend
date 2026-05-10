@@ -105,3 +105,18 @@
 .navbar__dropdown-divider {
   border-top: 1px solid #f3f4f6;
 }
+
+.navbar-toggle {
+  background: var(--swap-secondary-color);
+  border: 1px solid var(--swap-tertiary-text-color);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  line-height: 1;
+}
+
+.navbar-toggle:hover {
+  background: var(--swap-tertiary-text-color);
+}
