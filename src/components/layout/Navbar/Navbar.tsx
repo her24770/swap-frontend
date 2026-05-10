@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Menu, UserCircle2, LogOut, Sun, Moon} from "lucide-react";
+import { Menu, UserCircle2, LogOut} from "lucide-react";
 import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +9,7 @@ import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
 import { useTheme } from "../../../context/Themecontext"
+import ThemeToggle from "./ThemeToggle/ThemeToggle";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -54,13 +55,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
         <LogoCompleto className="navbar__logo"/>
       </div>
       <div className="navbar__left">
-        <button
-          className="navbar-toggle"
-          onClick={toggleTheme}
-          title={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
-        >
-          {theme === 'light' ? <Moon size={28} strokeWidth={1.5} /> : <Sun size={28} strokeWidth={1.5} />}
-        </button>
+        <ThemeToggle theme= {theme} onToggle={toggleTheme} />
 
         {/* Perfil/USER SOLO si NO es auth route */}
         {!isAuthRoute && (

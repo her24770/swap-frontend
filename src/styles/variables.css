@@ -1,26 +1,3 @@
-:root{
-    /*Background Colors*/
-    --swap-primary-background: #FFFFFF;
-    --swap-secondary-background: #F8FAFC;
-    --swap-tertiary-background: #E2ECE8;
-
-    /*Components Colors*/
-    --swap-primary-color: #007329;
-    --swap-secondary-color: #F8FAFC;
-
-    /*Text Colors*/
-    --swap-primary-text-color: #000000;
-    --swap-secondary-text-color: #FFFFFF;
-    --swap-tertiary-text-color: #64748B; 
-    
-    /*Border Colors*/
-    --swap-primary-border-color: #9FAAC0;
-
-      /* Danger */
-    --swap-danger-color: #dc2626;
-    --swap-danger-background: #fef2f2;
-}
-
 :root,
 [data-theme="light"] {
    /*Background Colors*/
@@ -47,23 +24,23 @@
 
 [data-theme="dark"] {
     /*Background Colors*/
-  --swap-primary-background: #3b3737;
-  --swap-secondary-background: #222e3b;
-  --swap-tertiary-background: #23332d;
+  --swap-primary-background: #0F172A;
+  --swap-secondary-background: #1E293B;
+  --swap-tertiary-background: #334155;
 
   /*Components Colors*/
-  --swap-primary-color: #007329;
-  --swap-secondary-color: #4a6178;
+  --swap-primary-color: #118a3f;
+  --swap-secondary-color: #1E293B;
 
   /*Text Colors*/
-  --swap-primary-text-color: #ffffff;
-  --swap-secondary-text-color: #2e2626;
-  --swap-tertiary-text-color: #64748B; 
+  --swap-primary-text-color: #F8FAFC;
+  --swap-secondary-text-color: #ebebeb;
+  --swap-tertiary-text-color: #94A3B8; 
     
   /*Border Colors*/
-  --swap-primary-border-color: #9FAAC0;
+  --swap-primary-border-color: #334155;
 
     /* Danger */
-  --swap-danger-color: #dc2626;
-  --swap-danger-background: #fef2f2;
+  --swap-danger-color: #EF4444;
+  --swap-danger-background: #450A0A;
 }
