@@ -25,7 +25,9 @@
 			"placeholder": "Search..."
 		},
 		"empty": {
-			"noResultsFor": "No results found for \"{query}\""
+			"noResultsFor": "No results found for \"{query}\"",
+			"description": "No posts"
+
 		},
 		"tags": {
 			"material": "Material",
@@ -264,9 +266,13 @@
 		"imageUpload": {
 			"text": "Click or drag images to upload",
 			"hint": "PNG or JPG",
-			"previewAlt": "Preview"
+			"previewAlt": "Preview",
+			"currentImageAlt": "Current image"
 		}
 	},
+
+	"error_loading_section": "Couldn't load this section",
+	"loading": "Loading publications...",
 	"publicacionForm": {
 		"titleCreate": "Create post",
 		"titleEdit": "Edit post",

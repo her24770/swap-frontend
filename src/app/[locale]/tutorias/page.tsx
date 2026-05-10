@@ -20,7 +20,7 @@ export default function TutoriasPage() {
     usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "fecha" });
   
   const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = 
-    usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE }); 
+    usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "me_gusta" }); 
 
   const loadingStates = {
     more: moreLoading,

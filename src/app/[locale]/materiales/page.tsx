@@ -16,7 +16,7 @@ export default function MaterialesPage() {
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "fecha" });
-  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE });
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "me_gusta" });
 
   const loadingStates = {
     more: moreLoading,

@@ -25,7 +25,8 @@
 			"placeholder": "Rechercher..."
 		},
 		"empty": {
-			"noResultsFor": "Aucun résultat pour \"{query}\""
+			"noResultsFor": "Aucun résultat pour \"{query}\"",
+			"description": "Aucune publication"
 		},
 		"tags": {
 			"material": "Matériel",
@@ -262,9 +263,13 @@
 		"imageUpload": {
 			"text": "Cliquez ou glissez des images pour téléverser",
 			"hint": "PNG ou JPG",
-			"previewAlt": "Aperçu"
+			"previewAlt": "Aperçu",
+			"currentImageAlt": "Image actuelle"
 		}
 	},
+
+	"error_loading_section": "Impossible de charger cette section",
+	"loading": "Chargement des publications...",
 	"publicacionForm": {
 		"titleCreate": "Créer une publication",
 		"titleEdit": "Modifier la publication",
