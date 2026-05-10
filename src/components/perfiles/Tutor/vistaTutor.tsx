@@ -136,21 +136,23 @@ export default function VistaTutor() {
             aria-modal="true"
             aria-label={t("modal.editPublicationAria")}
           >
-            <CrearPublicacionForm
-              mode="editar"
-              publicacionId={postEditando.id}
-              defaultValues={{
-                titulo:           postEditando.title,
-                descripcion:      postEditando.description,
-                precio:           String(postEditando.price),
-                tipo_publicacion: "material",
-                categorias:       postEditando.tags.map((t) => t.id),
-                destacado:        false,
-              }}
-              estadoActual={postEditando.estado as "disponible" | "vendido" | "reservado"}
-              onCancel={() => { setEditOpen(false); setPostEditando(null); }}
-              onSuccess={() => { setEditOpen(false); setPostEditando(null); }}
-            />
+            <div className="perfil-page__crear-pub-modal-content">
+              <CrearPublicacionForm
+                mode="editar"
+                publicacionId={postEditando.id}
+                defaultValues={{
+                  titulo:           postEditando.title,
+                  descripcion:      postEditando.description,
+                  precio:           String(postEditando.price),
+                  tipo_publicacion: "material",
+                  categorias:       postEditando.tags.map((t) => t.id),
+                  destacado:        false,
+                }}
+                estadoActual={postEditando.estado as "disponible" | "vendido" | "reservado"}
+                onCancel={() => { setEditOpen(false); setPostEditando(null); }}
+                onSuccess={() => { setEditOpen(false); setPostEditando(null); }}
+              />
+            </div>
           </div>
         </div>
       )}

@@ -181,28 +181,30 @@ export default function VistaVendedor() {
             aria-modal="true"
             aria-label={t("modal.editPublicationAria")}
           >
-            <CrearPublicacionForm
-              mode="editar"
-              publicacionId={postEditando.id}
-              defaultValues={{
-                titulo: postEditando.title,
-                descripcion: postEditando.description,
-                precio: String(postEditando.price),
-                tipo_publicacion: "negocio",
-                categorias: postEditando.tags.map((tag) => tag.id),
-                destacado: false,
-              }}
-              estadoActual={postEditando.estado as "disponible" | "vendido" | "reservado"}
-              onCancel={() => {
-                setEditOpen(false);
-                setPostEditando(null);
-              }}
-              onSuccess={() => {
-                setEditOpen(false);
-                setPostEditando(null);
-                fetchPublicaciones();
-              }}
-            />
+            <div className="perfil-page__crear-pub-modal-content">
+              <CrearPublicacionForm
+                mode="editar"
+                publicacionId={postEditando.id}
+                defaultValues={{
+                  titulo: postEditando.title,
+                  descripcion: postEditando.description,
+                  precio: String(postEditando.price),
+                  tipo_publicacion: "negocio",
+                  categorias: postEditando.tags.map((tag) => tag.id),
+                  destacado: false,
+                }}
+                estadoActual={postEditando.estado as "disponible" | "vendido" | "reservado"}
+                onCancel={() => {
+                  setEditOpen(false);
+                  setPostEditando(null);
+                }}
+                onSuccess={() => {
+                  setEditOpen(false);
+                  setPostEditando(null);
+                  fetchPublicaciones();
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
