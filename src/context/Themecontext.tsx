@@ -19,12 +19,23 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>('light')
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
+    const savedTheme = localStorage.getItem('theme') as Theme | null;
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches){
+      setTheme('dark');
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const toggle = () => {
     setTheme(t => (t === 'light' ? 'dark' : 'light'))
-  }
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, toggle }}>
