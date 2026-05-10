@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import PerfilForm from "./PerfilForm/PerfilForm";
@@ -29,10 +29,12 @@ interface ActualizarPerfilModalProps {
   isSaving?: boolean;
 }
 
-let contactIdCounter = 1;
+type ConfirmAction = "submit" | "discard" | null;
+
+const genContactId = (): number => Date.now() + Math.floor(Math.random() * 1000000);
 
 const getEmptyContacts = (): Contacto[] => [
-  { id: contactIdCounter++, type: "", value: "" },
+  { id: genContactId(), type: "", value: "" },
 ];
 
 export default function ActualizarPerfilModal({
@@ -52,13 +54,41 @@ export default function ActualizarPerfilModal({
   const [nombre, setNombre] = useState(initialNombre);
   const [apellido, setApellido] = useState(initialApellido);
   const [descripcion, setDescripcion] = useState(initialDescripcion);
-  const [contacts, setContacts] = useState<Contacto[]>(
-    initialContacts && initialContacts.length > 0
-      ? initialContacts
-      : getEmptyContacts()
-    );
+  const [contacts, setContacts] = useState<Contacto[]>(() => {
+    if (initialContacts && initialContacts.length > 0) {
+      const seen = new Set<number>();
+      return initialContacts.map((c) => {
+        if (!c?.id || seen.has(c.id)) {
+          const id = genContactId();
+          seen.add(id);
+          return { ...c, id };
+        }
+        seen.add(c.id);
+        return c;
+      });
+    }
+    return getEmptyContacts();
+  });
   const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
+
+  const normalizeContacts = (items: Contacto[]) =>
+    items
+      .map((c) => ({ type: c.type.trim(), value: c.value.trim() }))
+      .filter((c) => c.type !== "" || c.value !== "");
+
+  const hasUnsavedChanges = useMemo(() => {
+    const sameNombre = nombre.trim() === initialNombre.trim();
+    const sameApellido = apellido.trim() === initialApellido.trim();
+    const sameDescripcion = descripcion.trim() === initialDescripcion.trim();
+    const sameContacts =
+      JSON.stringify(normalizeContacts(contacts)) ===
+      JSON.stringify(normalizeContacts(initialContacts));
+    const changedPhoto = foto !== null;
+
+    return !(sameNombre && sameApellido && sameDescripcion && sameContacts && !changedPhoto);
+  }, [nombre, apellido, descripcion, contacts, foto, initialNombre, initialApellido, initialDescripcion, initialContacts]);
 
   //Resetea el forms cada vez que abre,con los datos iniciales
   useEffect(() => {
@@ -66,25 +96,48 @@ export default function ActualizarPerfilModal({
       setNombre(initialNombre);
       setApellido(initialApellido);
       setDescripcion(initialDescripcion);
-      setContacts(
-        initialContacts && initialContacts.length > 0
-          ? initialContacts
-          : getEmptyContacts()
-      );
+      if (initialContacts && initialContacts.length > 0) {
+        const seen = new Set<number>();
+        setContacts(
+          initialContacts.map((c) => {
+            if (!c?.id || seen.has(c.id)) {
+              const id = genContactId();
+              seen.add(id);
+              return { ...c, id };
+            }
+            seen.add(c.id);
+            return c;
+          })
+        );
+      } else {
+        setContacts(getEmptyContacts());
+      }
       setFoto(null);
       setPreviewUrl(null);
+      setConfirmAction(null);
     }
-  }, [isOpen]);
+  }, [isOpen, initialNombre, initialApellido, initialDescripcion, initialContacts]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
   
   if (!isOpen) return null;
 
   const handleFileChange = (file: File) => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setFoto(file);
     setPreviewUrl(URL.createObjectURL(file));
   };
 
   const addContact = () => {
-    setContacts((prev) => [...prev, { id: contactIdCounter++, type: "", value: "" }]);
+    setContacts((prev) => [...prev, { id: genContactId(), type: "", value: "" }]);
   };
 
   const removeContact = (id: number) => {
@@ -97,64 +150,126 @@ export default function ActualizarPerfilModal({
     );
   };
 
-  const handleSubmit = async () => {
+  const runSubmit = async () => {
     await onSubmit({ nombre, apellido, descripcion, contacts, foto: foto ?? undefined });
   };
 
+  const handleSubmit = () => {
+    if (isSaving) return;
+    setConfirmAction("submit");
+  };
+
 //Se resetea el forms cuando se cancela
-  const handleCancel = () => {
+  const closeModal = () => {
     onCancel();
     onClose?.();
   };
 
+  const handleCancel = () => {
+    if (isSaving) return;
+
+    if (hasUnsavedChanges) {
+      setConfirmAction("discard");
+      return;
+    }
+
+    closeModal();
+  };
+
+  const handleConfirmAction = async () => {
+    if (!confirmAction) return;
+
+    if (confirmAction === "submit") {
+      await runSubmit();
+      setConfirmAction(null);
+      return;
+    }
+
+    closeModal();
+    setConfirmAction(null);
+  };
+
   return (
-    <div className="modal-overlay" onClick={handleCancel}>
-      <div className="update-profile-modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="update-profile-modal__title">{t("title")}</h2>
+    <>
+      <div className="modal-overlay" onClick={confirmAction ? undefined : handleCancel}>
+        <div className="update-profile-modal" onClick={(e) => e.stopPropagation()}>
+          <h2 className="update-profile-modal__title">{t("title")}</h2>
 
-        <PerfilForm
-          nombre={nombre}
-          apellido={apellido}
-          descripcion={descripcion}
-          onNombreChange={setNombre}
-          onApellidoChange={setApellido}
-          onDescripcionChange={setDescripcion}
-        />
-
-        <ListaContactos
-          contacts={contacts}
-          onAdd={addContact}
-          onRemove={removeContact}
-          onChange={updateContact}
-        />
-
-        <div className="update-profile-modal__foto">
-          <label className="update-profile-modal__label">{t("photoLabel")}</label>
-          <SubirImagen
-            onFileChange={handleFileChange}
-            previewUrl={previewUrl}
-            currentProfileImage={initialFoto}
+          <PerfilForm
+            nombre={nombre}
+            apellido={apellido}
+            descripcion={descripcion}
+            onNombreChange={setNombre}
+            onApellidoChange={setApellido}
+            onDescripcionChange={setDescripcion}
           />
-        </div>
 
-        <div className="update-profile-modal__footer">
-          <button
-            type="button"
-            className="update-profile-modal__btn-cancel"
-            onClick={handleCancel}
-          >
-            {t("actions.cancel")}
-          </button>
-          <button
-            type="button"
-            className="button button--medium"
-            onClick={handleSubmit}
-            disabled = {isSaving}
-          >
-            {isSaving ? t("actions.saving") : t("actions.update")} <ChevronRight size={16} />
-          </button>
+          <ListaContactos
+            contacts={contacts}
+            onAdd={addContact}
+            onRemove={removeContact}
+            onChange={updateContact}
+          />
+
+          <div className="update-profile-modal__foto">
+            <label className="update-profile-modal__label">{t("photoLabel")}</label>
+            <SubirImagen
+              onFileChange={handleFileChange}
+              previewUrl={previewUrl}
+              currentProfileImage={initialFoto}
+            />
+          </div>
+
+          <div className="update-profile-modal__footer">
+            <button
+              type="button"
+              className="update-profile-modal__btn-cancel"
+              onClick={handleCancel}
+            >
+              {t("actions.cancel")}
+            </button>
+            <button
+              type="button"
+              className="button button--medium"
+              onClick={handleSubmit}
+              disabled={isSaving}
+            >
+              {isSaving ? t("actions.saving") : t("actions.update")} <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {confirmAction && (
+        <div className="modal-overlay modal-overlay--top" onClick={() => setConfirmAction(null)}>
+          <div className="update-profile-confirm" onClick={(e) => e.stopPropagation()}>
+            <h3 className="update-profile-confirm__title">{t(`confirm.${confirmAction}.title`)}</h3>
+            <p className="update-profile-confirm__message">{t(`confirm.${confirmAction}.message`)}</p>
+
+            <div className="update-profile-confirm__footer">
+              <button
+                type="button"
+                className="update-profile-modal__btn-cancel"
+                onClick={() => setConfirmAction(null)}
+              >
+                {t("confirm.actions.back")}
+              </button>
+              <button
+                type="button"
+                className="button button--medium"
+                onClick={handleConfirmAction}
+                disabled={confirmAction === "submit" && isSaving}
+              >
+                {confirmAction === "submit"
+                  ? isSaving
+                    ? t("actions.saving")
+                    : t("confirm.actions.confirmSave")
+                  : t("confirm.actions.confirmDiscard")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

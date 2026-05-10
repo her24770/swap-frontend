@@ -25,7 +25,8 @@
 			"placeholder": "Rechercher..."
 		},
 		"empty": {
-			"noResultsFor": "Aucun résultat pour \"{query}\""
+			"noResultsFor": "Aucun résultat pour \"{query}\"",
+			"description": "Aucune publication"
 		},
 		"tags": {
 			"material": "Matériel",
@@ -150,7 +151,9 @@
 		"loading": "Chargement du profil...",
 		"mode": {
 			"consumer": "Acheteur",
-			"seller": "Vendeur"
+			"seller": "Vendeur",
+			"tutor": "Tuteur"
+
 		},
 		"sections": {
 			"saved": "Enregistrés",
@@ -225,6 +228,21 @@
 			"update": "Mettre à jour",
 			"saving": "Enregistrement..."
 		},
+		"confirm": {
+			"submit": {
+				"title": "Confirmer les modifications",
+				"message": "Voulez-vous vraiment mettre à jour votre profil avec ces modifications ?"
+			},
+			"discard": {
+				"title": "Quitter sans enregistrer",
+				"message": "Vous avez des modifications non enregistrées. Voulez-vous quitter quand même ?"
+			},
+			"actions": {
+				"back": "Retour",
+				"confirmSave": "Oui, mettre à jour",
+				"confirmDiscard": "Oui, quitter"
+			}
+		},
 		"form": {
 			"firstName": "Prénom",
 			"lastName": "Nom",
@@ -247,9 +265,13 @@
 		"imageUpload": {
 			"text": "Cliquez ou glissez des images pour téléverser",
 			"hint": "PNG ou JPG",
-			"previewAlt": "Aperçu"
+			"previewAlt": "Aperçu",
+			"currentImageAlt": "Image actuelle"
 		}
 	},
+
+	"error_loading_section": "Impossible de charger cette section",
+	"loading": "Chargement des publications...",
 	"publicacionForm": {
 		"titleCreate": "Créer une publication",
 		"titleEdit": "Modifier la publication",

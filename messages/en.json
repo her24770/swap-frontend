@@ -25,7 +25,9 @@
 			"placeholder": "Search..."
 		},
 		"empty": {
-			"noResultsFor": "No results found for \"{query}\""
+			"noResultsFor": "No results found for \"{query}\"",
+			"description": "No posts"
+
 		},
 		"tags": {
 			"material": "Material",
@@ -227,6 +229,21 @@
 			"update": "Update",
 			"saving": "Saving..."
 		},
+		"confirm": {
+			"submit": {
+				"title": "Confirm changes",
+				"message": "Are you sure you want to update your profile with these changes?"
+			},
+			"discard": {
+				"title": "Leave without saving",
+				"message": "You have unsaved changes. Do you want to leave anyway?"
+			},
+			"actions": {
+				"back": "Go back",
+				"confirmSave": "Yes, update",
+				"confirmDiscard": "Yes, leave"
+			}
+		},
 		"form": {
 			"firstName": "First name",
 			"lastName": "Last name",
@@ -249,9 +266,13 @@
 		"imageUpload": {
 			"text": "Click or drag images to upload",
 			"hint": "PNG or JPG",
-			"previewAlt": "Preview"
+			"previewAlt": "Preview",
+			"currentImageAlt": "Current image"
 		}
 	},
+
+	"error_loading_section": "Couldn't load this section",
+	"loading": "Loading publications...",
 	"publicacionForm": {
 		"titleCreate": "Create post",
 		"titleEdit": "Edit post",

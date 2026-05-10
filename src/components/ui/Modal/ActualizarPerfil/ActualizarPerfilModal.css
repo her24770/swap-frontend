@@ -53,3 +53,41 @@
 .update-profile-modal__btn-cancel:hover {
   color: var(--swap-primary-text-color);
 }
+
+.modal-overlay--top {
+  z-index: 1100;
+}
+
+.update-profile-confirm {
+  background-color: var(--swap-primary-background);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  width: min(92vw, 25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 0.625rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.update-profile-confirm__title {
+  margin: 0;
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-titulos);
+  font-size: 1.1rem;
+}
+
+.update-profile-confirm__message {
+  margin: 0;
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.update-profile-confirm__footer {
+  margin-top: 0.25rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}

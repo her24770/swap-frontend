@@ -1,20 +1,30 @@
+/* Contenedor principal: permite que los elementos se envuelvan si hay muchos */
 .user-contact-group {
     display: flex;
-    gap: 0.75rem;
+    flex-wrap: wrap; 
+    gap: 1rem;
     align-items: center;
     padding: 0.5rem 0;
 }
 
+/* El envoltorio individual para cada contacto */
+.user-contact-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+/* ESTADO VÁLIDO: Tu estilo original del círculo */
 .user-contact {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: 50%; /* O var(--radius-md) si prefieres cuadrados redondeados */
+    border-radius: 50%;
     background-color: var(--swap-secondary-background);
     border: 0.0625rem solid var(--swap-primary-border-color);
     transition: all 0.2s ease-in-out;
+    text-decoration: none;
 }
 
 .user-contact:hover {
@@ -24,14 +34,50 @@
     background-color: var(--swap-primary-background);
 }
 
+/* ESTADO INVÁLIDO: Estilo para cuando no hay link */
+.user-contact-invalid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 0.375rem 0.75rem 0.375rem 0.375rem; 
+    background-color: var(--swap-secondary-background);
+    border: 0.0625rem solid var(--swap-primary-border-color);
+    border-radius: 2rem;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+
+}
+
+.user-contact-invalid:hover {
+    transform: translateY(-0.1875rem);
+    border-color: var(--swap-primary-color);
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.05);
+    background-color: var(--swap-primary-background);
+}
+
+/* Iconos */
 .user-contact__icon {
     width: 1.25rem;
     height: 1.25rem;
     object-fit: contain;
-    filter: grayscale(100%) opacity(0.7);
-    transition: filter 0.2s ease;
+    filter: grayscale(0%) opacity(0.7);
+    transition: filter 0.2s ease-in-out;
 }
 
-.user-contact:hover .user-contact__icon {
-    filter: grayscale(0%) opacity(1);
+/* Estilo para el texto (cuando la URL es inválida) */
+.user-contact__text {
+    font-size: 0.875rem;
+    color: var(--swap-text-secondary, #6b7280);
+    white-space: nowrap;
+    max-width: 200px; /* Evita que textos muy largos rompan el diseño */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+/* Clase de utilidad para la opacidad que usaste en el componente */
+.opacity-50 {
+    opacity: 0.5;
 }

@@ -25,7 +25,8 @@
 			"placeholder": "Buscar..."
 		},
 		"empty": {
-			"noResultsFor": "No se encontraron resultados para \"{query}\""
+			"noResultsFor": "No se encontraron resultados para \"{query}\"",
+			"description": "No hay publicaciones"
 		},
 		"tags": {
 			"material": "Material",
@@ -227,6 +228,21 @@
 			"update": "Actualizar",
 			"saving": "Guardando..."
 		},
+		"confirm": {
+			"submit": {
+				"title": "Confirmar cambios",
+				"message": "\u00bfSeguro que deseas actualizar tu perfil con estos cambios?"
+			},
+			"discard": {
+				"title": "Salir sin guardar",
+				"message": "Tienes cambios sin guardar. \u00bfDeseas salir de todos modos?"
+			},
+			"actions": {
+				"back": "Volver",
+				"confirmSave": "S\u00ed, actualizar",
+				"confirmDiscard": "S\u00ed, salir"
+			}
+		},
 		"form": {
 			"firstName": "Nombre",
 			"lastName": "Apellido",
@@ -249,9 +265,13 @@
 		"imageUpload": {
 			"text": "Haz clic o arrastra imágenes para subir",
 			"hint": "PNG o JPG",
-			"previewAlt": "Vista previa"
+			"previewAlt": "Vista previa",
+			"currentImageAlt": "Imagen actual"
 		}
 	},
+
+	"error_loading_section": "No fue posible cargar esta sección",
+	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
 		"titleCreate": "Crear Publicación",
 		"titleEdit": "Editar Publicación",
