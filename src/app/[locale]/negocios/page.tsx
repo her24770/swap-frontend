@@ -9,7 +9,6 @@ const ITEMS_PER_PAGE = 12;
 
 export default function NegociosPage() {
   const t = useTranslations('negocios');
-  const tEmpty = useTranslations('common.empty');
   const tTags = useTranslations('common.tags');
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "negocio", limit: ITEMS_PER_PAGE });
@@ -39,8 +38,6 @@ export default function NegociosPage() {
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
-        tEmpty={tEmpty}
-        tTags={tTags}
         tagsForAll={() => [{ ...TAG_NEGOCIO, name: tTags('negocio') }]}
       />
     </main>

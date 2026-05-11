@@ -10,7 +10,6 @@ const ITEMS_PER_PAGE = 12;
 
 export default function TutoriasPage() {
   const t = useTranslations('tutorias');
-  const tEmpty = useTranslations('common.empty');
   const tTags = useTranslations('common.tags');
 
   const { data: moreData, loading: moreLoading, error: moreError } = 
@@ -45,8 +44,6 @@ export default function TutoriasPage() {
         loading={loadingStates} 
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
-        tEmpty={tEmpty}
-        tTags={tTags}
         tagsForAll={() => [{ ...TAG_TUTORIA, name: tTags('tutoria') }]}
       />
     </main>

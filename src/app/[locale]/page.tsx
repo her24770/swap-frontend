@@ -27,7 +27,6 @@ function RegisteredToast() {
 
 export default function HomePage() {
   const t = useTranslations('home');
-  const tEmpty = useTranslations('common.empty');
   const tTags = useTranslations('common.tags');
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,8 +60,6 @@ export default function HomePage() {
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
-        tEmpty={tEmpty}
-        tTags={tTags}
         tagsForAll={() => [{ id: 1, name: tTags('negocio'), colorKey: "diseno" }]}
         currentPage={currentPage}
         onPageChange={(p) => setCurrentPage(p)}
