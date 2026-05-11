@@ -19,6 +19,13 @@
 			"negocios": "Negocios"
 		}
 	},
+
+	"locales": {
+		"en": "Inglés",
+		"es": "Español",
+		"fr": "Francés"
+	},
+
 	"common": {
 		"brand": "SWAP",
 		"search": {

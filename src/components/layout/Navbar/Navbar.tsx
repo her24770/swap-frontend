@@ -10,6 +10,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
 import { useTheme } from "../../../context/Themecontext"
 import ThemeToggle from "./ThemeToggle/ThemeToggle";
+import LocaleSwitcher from "./LocaleSwitcher/LocaleSwitcher";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -56,7 +57,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
       </div>
       <div className="navbar__left">
         <ThemeToggle theme= {theme} onToggle={toggleTheme} />
-
+        <LocaleSwitcher />
         {/* Perfil/USER SOLO si NO es auth route */}
         {!isAuthRoute && (
           <div ref={dropdownRef} className="navbar__profile">
