@@ -261,12 +261,8 @@ export function useFormEditarPublicacion(id: number,
         payload.precio = parseFloat(data.precio);
       if (data.tipo_publicacion !== undefined)
         payload.tipo_publicacion = data.tipo_publicacion;
-      if (data.categorias !== undefined)
-        payload.etiquetas = data.categorias;
-      if (data.destacado !== undefined) payload.destacado = data.destacado;
-      // "disponible" en el form corresponde a "activo" en la BD
-      if (data.estado !== undefined)
-        payload.estado = data.estado === "disponible" ? "activo" : data.estado;
+      payload.estado = 3;
+      payload.etiquetas = data.categorias?.length ? data.categorias : [1];
       await apiClient.put(`/api/publicacion/${id}`, payload);
  
       setIsSuccess(true);

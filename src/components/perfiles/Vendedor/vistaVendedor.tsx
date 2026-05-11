@@ -87,6 +87,17 @@ export default function VistaVendedor() {
     }
   }, [idUsuario]);
 
+  const handleEliminar = useCallback(async (id: number) => {
+    if (!confirm("¿Seguro que deseas eliminar esta publicación?")) return;
+    try {
+      await apiClient.delete(`/api/publicacion/${id}`);
+      fetchPublicaciones();
+    } catch (err) {
+      const apiError = err as ApiError;
+      alert(apiError.message || "No fue posible eliminar la publicación.");
+    }
+  }, [fetchPublicaciones]);
+
   useEffect(() => {
     fetchPublicaciones();
   }, [fetchPublicaciones]);
@@ -140,6 +151,7 @@ export default function VistaVendedor() {
                     setPostEditando(pub);
                     setEditOpen(true);
                   }}
+                  onDeleteClick={() => handleEliminar(pub.id)}
                   onEstadoChange={(nuevoEstado) =>
                     console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
                   }
@@ -198,6 +210,7 @@ export default function VistaVendedor() {
                     setPostEditando(pub);
                     setEditOpen(true);
                   }}
+                  onDeleteClick={() => handleEliminar(pub.id)}
                   onEstadoChange={(nuevoEstado) =>
                     console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
                   }

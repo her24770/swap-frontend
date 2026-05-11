@@ -141,8 +141,6 @@ export const schemaEditarPublicacion = z.object({
 
   categorias: z
     .array(z.coerce.number().int().positive("ID de categoría inválido."))
-    .min(1, "Selecciona al menos una categoría.")
-    .max(10, "No puedes seleccionar más de 10 categorías.")
     .optional(),
 
   imagenesNuevas: z

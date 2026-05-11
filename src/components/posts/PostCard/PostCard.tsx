@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Camera, ChevronRight, Loader2, SquarePen } from "lucide-react";
+import { Camera, ChevronRight, Loader2, SquarePen, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
@@ -22,6 +22,7 @@ interface PostCardProps {
   estado?: string | number;
   canEdit?: boolean;
   onEditClick?: () => void;
+  onDeleteClick?: () => void;
   onEstadoChange?: (nuevoEstado: string) => void;
   onDetallesClick?: () => void;
 }
@@ -37,6 +38,7 @@ export default function PostCard({
   estado,
   canEdit = false,
   onEditClick,
+  onDeleteClick,
   onEstadoChange,
   onDetallesClick,
 }: PostCardProps) {
@@ -103,6 +105,17 @@ export default function PostCard({
             title={t("actions.edit")}
           >
             <SquarePen size={24} strokeWidth={2} />
+          </button>
+        )}
+        {canEdit && onDeleteClick && (
+          <button
+            type="button"
+            className="post-card__delete-button"
+            onClick={onDeleteClick}
+            aria-label="Eliminar publicación"
+            title="Eliminar publicación"
+          >
+            <Trash2 size={24} strokeWidth={2} />
           </button>
         )}
       </header>

@@ -55,6 +55,24 @@
   color: var(--swap-primary-color, #10b981);
 }
 
+.post-card__delete-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-primary-text-color, #000);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  border-radius: var(--radius-sm, 4px);
+}
+
+.post-card__delete-button:hover {
+  transform: scale(1.1);
+  color: var(--swap-danger-color, #ef4444);
+}
+
 .post-card__upload-overlay {
   position: absolute;
   inset: 0;
