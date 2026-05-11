@@ -24,6 +24,7 @@ interface CatalogPost {
   estado: string;
   images: string[];
   tipo: string;
+  categorias: number[];
 }
 
 const MOCK_AD = {
@@ -56,26 +57,28 @@ export default function VistaVendedor() {
         apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${idUsuario}?tipo=negocio&all=true`)
       ]);
       
-      const mapPublicaciones = (data: Publicacion[]): CatalogPost[] => {
+      const mapPublicaciones = (data: Publicacion[], tipoPub: string): CatalogPost[] => {
         return data.map((pub) => {
-          const tipoId = Number(pub.tipo_publicacion);
+          const estadoNombre = pub.estadoRel?.estado ?? "activo";
+          const estadoForm = estadoNombre === "activo" ? "disponible" : estadoNombre;
 
           return {
             id: pub.id_publicacion,
             title: pub.titulo,
             price: typeof pub.precio === 'string' ? parseFloat(pub.precio) : pub.precio,
-            description: pub.descripcion, 
-            tags: tipoId === 1 
+            description: pub.descripcion,
+            tags: tipoPub === "material"
               ? [{ id: 3, name: "Material", colorKey: "diseno" }]
               : [{ id: 4, name: "Negocio", colorKey: "negocio" }],
-            estado: String(pub.estado),
+            estado: estadoForm,
             images: pub.imagenes?.map((img) => img.url_imagen) || [],
-            tipo: String(pub.tipo_publicacion) 
+            tipo: tipoPub,
+            categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
           };
         });
       };
-      setCatalogMaterial(mapPublicaciones(resMaterial.data));
-      setCatalogNegocio(mapPublicaciones(resNegocio.data));
+      setCatalogMaterial(mapPublicaciones(resMaterial.data, "material"));
+      setCatalogNegocio(mapPublicaciones(resNegocio.data, "negocio"));
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.message || "No fue posible obtener las publicaciones");
@@ -265,11 +268,11 @@ export default function VistaVendedor() {
                   titulo: postEditando.title,
                   descripcion: postEditando.description,
                   precio: String(postEditando.price),
-                  tipo_publicacion: (postEditando as any).tipo || "negocio",
-                  categorias: postEditando.tags.map((tag) => tag.id),
+                  tipo_publicacion: postEditando.tipo as "material" | "tutoria" | "negocio",
+                  categorias: postEditando.categorias,
                   destacado: false,
+                  estado: postEditando.estado as "disponible" | "vendido" | "reservado",
                 }}
-                estadoActual={postEditando.estado as "disponible" | "vendido" | "reservado"}
                 onCancel={() => {
                   setEditOpen(false);
                   setPostEditando(null);

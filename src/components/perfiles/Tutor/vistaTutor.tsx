@@ -148,11 +148,11 @@ export default function VistaTutor() {
                   titulo:           postEditando.title,
                   descripcion:      postEditando.description,
                   precio:           String(postEditando.price),
-                  tipo_publicacion: "material",
-                  categorias:       postEditando.tags.map((t) => t.id),
+                  tipo_publicacion: "tutoria",
+                  categorias:       postEditando.tags.map((tag) => tag.id),
                   destacado:        false,
+                  estado:           postEditando.estado as "disponible" | "vendido" | "reservado",
                 }}
-                estadoActual={postEditando.estado as "disponible" | "vendido" | "reservado"}
                 onCancel={() => { setEditOpen(false); setPostEditando(null); }}
                 onSuccess={() => { setEditOpen(false); setPostEditando(null); }}
               />

@@ -7,7 +7,7 @@ import { useFormCrearPublicacion, useFormEditarPublicacion } from "../../../../h
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
-import { CrearPublicacionFormData, EditarPublicacionFormData } from "../../../../schemas/zodSchemas";
+import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion } from "../../../../schemas/zodSchemas";
 import { UseFormReturn } from "react-hook-form";
 
 type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
@@ -24,8 +24,7 @@ interface CrearPublicacionFormProps extends BasePublicacionFormProps {
 interface EditarPublicacionFormProps extends BasePublicacionFormProps {
   mode: "editar";
   publicacionId: number;
-  defaultValues?: Partial<CrearPublicacionFormData>;
-  estadoActual?: "disponible" | "vendido" | "reservado";
+  defaultValues?: Partial<EditarPublicacionFormData>;
 }
 
 type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormProps;

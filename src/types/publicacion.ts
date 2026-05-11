@@ -1,8 +1,17 @@
-import { Tag } from './tag';
 export interface ImagenPublicacion {
   id_imagen: number;
   url_imagen: string;
   id_publicacion: number;
+}
+
+export interface PublicacionEtiquetaRel {
+  id_publicacion: number;
+  id_etiqueta: number;
+  etiqueta: {
+    id_etiqueta: number;
+    nombre: string;
+    descripcion?: string;
+  };
 }
 
 export interface Publicacion {
@@ -16,7 +25,11 @@ export interface Publicacion {
   fecha_publicacion: string;
   id_usuario: number;
   imagenes: ImagenPublicacion[];
-  etiquetas: Tag[];
+  etiquetas: PublicacionEtiquetaRel[];
+  estadoRel?: {
+    id_estado: number;
+    estado: string;
+  };
 }
 
 export interface PublicacionesResponse {
