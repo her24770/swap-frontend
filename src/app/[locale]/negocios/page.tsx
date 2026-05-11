@@ -4,6 +4,8 @@ import PublicacionesList from "../../../components/pages/PublicacionesList/Publi
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import { TAG_NEGOCIO } from "../../../lib/tags";
 import "./NegociosPage.css";
+import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
+import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -29,6 +31,16 @@ export default function NegociosPage() {
     recommended: recommendedError
   };
 
+  const{
+    selectedPublicacion,
+    loadingDetalle,
+    isSaved,
+    setIsSaved,
+    handleDetallesClick,
+    handleClose,
+  } = useDetallePublicacion();
+
+
   return (
     <main className="negocios-page">
       <PublicacionesList
@@ -42,7 +54,27 @@ export default function NegociosPage() {
         tEmpty={tEmpty}
         tTags={tTags}
         tagsForAll={() => [{ ...TAG_NEGOCIO, name: tTags('negocio') }]}
+        onDetallesClick={(p) => handleDetallesClick(p)}
       />
+      {selectedPublicacion && (
+              <DetallePublicacion
+                isOpen={true}
+                onClose={handleClose}
+                type="venta"
+                title={selectedPublicacion.titulo}
+                price={parseFloat(selectedPublicacion.precio)}
+                description={selectedPublicacion.descripcion}
+                imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
+                likes={selectedPublicacion.me_gusta}
+                sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
+                sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+                sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
+                isSaved={isSaved}
+                onToggleSave={() => setIsSaved((prev) => !prev)}
+                onVerCertificados={() => console.log("ver certificados")}
+                onSolicitarTutoria={() => console.log("solicitar tutoría")}
+              />
+            )}
     </main>
   );
 }

@@ -11,6 +11,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
+import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 
@@ -42,6 +43,8 @@ export default function VistaVendedor() {
   const [crearOpen, setCrearOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
+  const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) return;
@@ -137,6 +140,7 @@ export default function VistaVendedor() {
                   onEstadoChange={(nuevoEstado) =>
                     console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
                   }
+                  onDetallesClick={() => setSelectedPost(pub)}
                 />
               </div>
             ))}
@@ -194,6 +198,7 @@ export default function VistaVendedor() {
                   onEstadoChange={(nuevoEstado) =>
                     console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
                   }
+                  onDetallesClick={() => setSelectedPost(pub)}
                 />
               </div>
             ))}
@@ -278,6 +283,24 @@ export default function VistaVendedor() {
             </div>
           </div>
         </div>
+      )}
+
+      {selectedPost && (
+        <DetallePublicacion
+          isOpen={true}
+          onClose={() => setSelectedPost(null)}
+          type="venta"
+          title={selectedPost.title}
+          price={selectedPost.price}
+          description={selectedPost.description}
+          imageUrl={selectedPost.images[0] ?? ""}
+          likes={0}
+          sellerName="Usuario de SWAP"
+          sellerRating={0}
+          isSaved={isSaved}
+          onToggleSave={() => setIsSaved((prev) => !prev)}
+          onAcordarCompra={() => console.log("acordar compra")}
+        />
       )}
     </>
   );

@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import PostCard from "../../posts/PostCard/PostCard";
 import PostRes from "../../posts/PostResumida/PostRes";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
+import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import imagePath from "../../../../public/images/uvg.jpg";
 import type { Tag } from "../../../types/tag";
 
@@ -27,8 +29,12 @@ const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
   images: [imagePath.src],
 }));
 
+type MockPost = typeof MOCK_SAVED[0];
+
 export default function VistaConsumidor() {
   const t = useTranslations("perfil");
+  const [selectedPost, setSelectedPost] = useState<MockPost | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   return (
     <>
@@ -45,6 +51,7 @@ export default function VistaConsumidor() {
                 images={pub.images}
                 estado={pub.estado}
                 canEdit={false}
+                onDetallesClick={() => setSelectedPost(pub)}
               />
             </div>
           ))}
@@ -67,6 +74,24 @@ export default function VistaConsumidor() {
           ))}
         </HorizontalCarousel>
       </section>
+
+      {selectedPost && (
+        <DetallePublicacion
+          isOpen={true}
+          onClose={() => setSelectedPost(null)}
+          type="venta"
+          title={selectedPost.title}
+          price={selectedPost.price}
+          description={selectedPost.description}
+          imageUrl={selectedPost.images[0] ?? ""}
+          likes={0}
+          sellerName="Usuario de SWAP"
+          sellerRating={0}
+          isSaved={isSaved}
+          onToggleSave={() => setIsSaved((prev) => !prev)}
+          onAcordarCompra={() => console.log("acordar compra")}
+        />
+      )}
     </>
   );
 }
