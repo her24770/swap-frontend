@@ -11,6 +11,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
+import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 
@@ -22,6 +23,7 @@ interface CatalogPost {
   tags: Tag[];
   estado: string;
   images: string[];
+  tipo: string;
 }
 
 const MOCK_AD = {
@@ -34,31 +36,46 @@ export default function VistaVendedor() {
   const t = useTranslations("perfil");
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
 
-  const [catalog, setCatalog] = useState<CatalogPost[]>([]);
+  const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
+  const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [crearOpen, setCrearOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
+  const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) return;
     try {
       setLoading(true);
       setError(null);
-      const response = await apiClient.get<PublicacionesResponse>(
-        `/api/publicacion/user/${idUsuario}?tipo=negocio&all=true`
-      );
-      const mapped: CatalogPost[] = response.data.map((pub: Publicacion) => ({
-        id: pub.id_publicacion,
-        title: pub.titulo,
-        price: parseFloat(pub.precio),
-        description: pub.descripcion,
-        tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }],
-        estado: String(pub.estado),
-        images: pub.imagenes.map((img) => img.url_imagen),
-      }));
-      setCatalog(mapped);
+      const [resMaterial, resNegocio] = await Promise.all([
+        apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${idUsuario}?tipo=material&all=true`),
+        apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${idUsuario}?tipo=negocio&all=true`)
+      ]);
+      
+      const mapPublicaciones = (data: Publicacion[]): CatalogPost[] => {
+        return data.map((pub) => {
+          const tipoId = Number(pub.tipo_publicacion);
+
+          return {
+            id: pub.id_publicacion,
+            title: pub.titulo,
+            price: typeof pub.precio === 'string' ? parseFloat(pub.precio) : pub.precio,
+            description: pub.descripcion, 
+            tags: tipoId === 1 
+              ? [{ id: 3, name: "Material", colorKey: "diseno" }]
+              : [{ id: 4, name: "Negocio", colorKey: "negocio" }],
+            estado: String(pub.estado),
+            images: pub.imagenes?.map((img) => img.url_imagen) || [],
+            tipo: String(pub.tipo_publicacion) 
+          };
+        });
+      };
+      setCatalogMaterial(mapPublicaciones(resMaterial.data));
+      setCatalogNegocio(mapPublicaciones(resNegocio.data));
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.message || "No fue posible obtener las publicaciones");
@@ -73,10 +90,10 @@ export default function VistaVendedor() {
 
   return (
     <>
-      {/* Catálogo de productos con carrusel de cards */}
+      {/* Catálogo de Materiales con carrusel de cards */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
-          <h2 className="perfil-page__catalog-bar-title">{t("sections.catalog")}</h2>
+          <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogMaterial")}</h2>
           <button
             type="button"
             className="perfil-page__new-publication-btn"
@@ -97,15 +114,15 @@ export default function VistaVendedor() {
           </p>
         )}
 
-        {!loading && !error && catalog.length === 0 && (
+        {!loading && !error && catalogMaterial.length === 0 && (
           <p className="perfil-page__coming-soon">
             Aún no tienes publicaciones de negocio.
           </p>
         )}
 
-        {!loading && !error && catalog.length > 0 && (
+        {!loading && !error && catalogMaterial.length > 0 && (
           <HorizontalCarousel>
-            {catalog.map((pub) => (
+            {catalogMaterial.map((pub) => (
               <div key={pub.id} className="h-carousel__item">
                 <PostCard
                   publicacionId={pub.id}
@@ -123,6 +140,65 @@ export default function VistaVendedor() {
                   onEstadoChange={(nuevoEstado) =>
                     console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
                   }
+                  onDetallesClick={() => setSelectedPost(pub)}
+                />
+              </div>
+            ))}
+          </HorizontalCarousel>
+        )}
+      </section>
+
+      {/* Catálogo de productos con carrusel de cards */}
+      <section className="perfil-page__section">
+        <div className="perfil-page__catalog-bar">
+          <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogNegocio")}</h2>
+          <button
+            type="button"
+            className="perfil-page__new-publication-btn"
+            onClick={() => setCrearOpen(true)}
+          >
+            <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+            {t("actions.newPublication")}
+          </button>
+        </div>
+
+        {loading && (
+          <p className="perfil-page__coming-soon">Cargando publicaciones...</p>
+        )}
+
+        {error && (
+          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && catalogNegocio.length === 0 && (
+          <p className="perfil-page__coming-soon">
+            Aún no tienes publicaciones de negocio.
+          </p>
+        )}
+
+        {!loading && !error && catalogNegocio.length > 0 && (
+          <HorizontalCarousel>
+            {catalogNegocio.map((pub) => (
+              <div key={pub.id} className="h-carousel__item">
+                <PostCard
+                  publicacionId={pub.id}
+                  tags={pub.tags}
+                  title={pub.title}
+                  price={pub.price}
+                  description={pub.description}
+                  images={pub.images}
+                  estado={pub.estado}
+                  canEdit={true}
+                  onEditClick={() => {
+                    setPostEditando(pub);
+                    setEditOpen(true);
+                  }}
+                  onEstadoChange={(nuevoEstado) =>
+                    console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
+                  }
+                  onDetallesClick={() => setSelectedPost(pub)}
                 />
               </div>
             ))}
@@ -189,7 +265,7 @@ export default function VistaVendedor() {
                   titulo: postEditando.title,
                   descripcion: postEditando.description,
                   precio: String(postEditando.price),
-                  tipo_publicacion: "negocio",
+                  tipo_publicacion: (postEditando as any).tipo || "negocio",
                   categorias: postEditando.tags.map((tag) => tag.id),
                   destacado: false,
                 }}
@@ -207,6 +283,24 @@ export default function VistaVendedor() {
             </div>
           </div>
         </div>
+      )}
+
+      {selectedPost && (
+        <DetallePublicacion
+          isOpen={true}
+          onClose={() => setSelectedPost(null)}
+          type="venta"
+          title={selectedPost.title}
+          price={selectedPost.price}
+          description={selectedPost.description}
+          imageUrl={selectedPost.images[0] ?? ""}
+          likes={0}
+          sellerName="Usuario de SWAP"
+          sellerRating={0}
+          isSaved={isSaved}
+          onToggleSave={() => setIsSaved((prev) => !prev)}
+          onAcordarCompra={() => console.log("acordar compra")}
+        />
       )}
     </>
   );

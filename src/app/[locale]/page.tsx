@@ -3,11 +3,12 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from 'next-intl';
-import PostCard from "../../components/posts/PostCard/PostCard";
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../components/pages/PublicacionesList/PublicacionesList";
 import { useToast } from "../../hooks/useToast";
 import SearchBar from "../../components/ui/SearchBar/SearchBar";
+import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
+import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import "./descubre.css";
 
 const ITEMS_PER_PAGE = 12;
@@ -48,6 +49,15 @@ export default function HomePage() {
     recommended: recommendedError
   };
 
+  const{
+    selectedPublicacion,
+    loadingDetalle,
+    isSaved,
+    setIsSaved,
+    handleDetallesClick,
+    handleClose,
+  } = useDetallePublicacion();
+
   return (
     <main className="descubre-page">
       <Suspense fallback={null}>
@@ -66,7 +76,27 @@ export default function HomePage() {
         tagsForAll={() => [{ id: 1, name: tTags('negocio'), colorKey: "diseno" }]}
         currentPage={currentPage}
         onPageChange={(p) => setCurrentPage(p)}
+        onDetallesClick={(p) => handleDetallesClick(p)}
       />
+      {selectedPublicacion && (
+      <DetallePublicacion
+        isOpen={true}
+        onClose={handleClose}
+        type="venta"
+        title={selectedPublicacion.titulo}
+        price={parseFloat(selectedPublicacion.precio)}
+        description={selectedPublicacion.descripcion}
+        imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
+        likes={selectedPublicacion.me_gusta}
+        sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
+        sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+        sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
+        isSaved={isSaved}
+        onToggleSave={() => setIsSaved((prev) => !prev)}
+        onVerCertificados={() => console.log("ver certificados")}
+        onSolicitarTutoria={() => console.log("solicitar tutoría")}
+        />
+      )}
     </main>
   );
 }

@@ -9,6 +9,7 @@ import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPubli
 import HorarioSemanal, { EstadoHorario } from "./Horario/Horario";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
+import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Tag } from "../../../types/tag";
 
 interface CatalogPost {
@@ -63,6 +64,8 @@ export default function VistaTutor() {
   const [crearOpen, setCrearOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
+    const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
+      const [isSaved, setIsSaved] = useState(false);
 
   return (
     <>
@@ -97,6 +100,7 @@ export default function VistaTutor() {
                 onEstadoChange={(nuevoEstado) =>
                   console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
                 }
+                onDetallesClick={() => setSelectedPost(pub)}
               />
             </div>
           ))}
@@ -170,6 +174,24 @@ export default function VistaTutor() {
         </div>
         <HorarioSemanal slots={MOCK_SLOTS}></HorarioSemanal>
       </section>
+
+      {selectedPost && (
+        <DetallePublicacion
+          isOpen={true}
+          onClose={() => setSelectedPost(null)}
+          type="venta"
+          title={selectedPost.title}
+          price={selectedPost.price}
+          description={selectedPost.description}
+          imageUrl={selectedPost.images[0] ?? ""}
+          likes={0}
+          sellerName="Usuario de SWAP"
+          sellerRating={0}
+          isSaved={isSaved}
+          onToggleSave={() => setIsSaved((prev) => !prev)}
+          onAcordarCompra={() => console.log("acordar compra")}
+        />
+      )}
     </>
   );
 }

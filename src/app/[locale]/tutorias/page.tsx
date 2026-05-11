@@ -5,6 +5,8 @@ import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { TAG_TUTORIA } from "../../../lib/tags";
 import "./tutorias.css";
+import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
+import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -35,6 +37,15 @@ export default function TutoriasPage() {
     recommended: recommendedError
   };
 
+  const{
+      selectedPublicacion,
+      loadingDetalle,
+      isSaved,
+      setIsSaved,
+      handleDetallesClick,
+      handleClose,
+    } = useDetallePublicacion();
+
   return (
     <main className="tutorias-page">
       <PublicacionesList
@@ -48,7 +59,27 @@ export default function TutoriasPage() {
         tEmpty={tEmpty}
         tTags={tTags}
         tagsForAll={() => [{ ...TAG_TUTORIA, name: tTags('tutoria') }]}
+        onDetallesClick={(p) => handleDetallesClick(p)}
       />
+      {selectedPublicacion && (
+              <DetallePublicacion
+                isOpen={true}
+                onClose={handleClose}
+                type="tutoria"
+                title={selectedPublicacion.titulo}
+                price={parseFloat(selectedPublicacion.precio)}
+                description={selectedPublicacion.descripcion}
+                imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
+                likes={selectedPublicacion.me_gusta}
+                sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
+                sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+                sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
+                isSaved={isSaved}
+                onToggleSave={() => setIsSaved((prev) => !prev)}
+                onVerCertificados={() => console.log("ver certificados")}
+                onSolicitarTutoria={() => console.log("solicitar tutoría")}
+              />
+            )}
     </main>
   );
 }
