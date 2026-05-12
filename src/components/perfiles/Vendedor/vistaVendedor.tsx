@@ -162,7 +162,9 @@ export default function VistaVendedor() {
                   onEstadoChange={async (nuevoEstado) => {
                     try {
                       await apiClient.put(`/api/publicacion/${pub.id}`, { estado: nuevoEstado, etiquetas: [1] });
-                      fetchPublicaciones();
+                      setCatalogMaterial((prev) =>
+                        prev.map((p) => p.id === pub.id ? { ...p, estado: nuevoEstado } : p)
+                      );
                     } catch (err) {
                       const apiError = err as ApiError;
                       alert(apiError.message || "No fue posible cambiar el estado.");
