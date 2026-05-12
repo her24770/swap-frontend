@@ -4,13 +4,13 @@
 }
 
 .locale-switcher__select {
-    appearance: none; /* Quita la flecha por defecto de algunos navegadores */
+    appearance: none; 
     background-color: rgba(255, 255, 255, 0.2);
     border: 1.5px solid rgba(255, 255, 255, 0.35);
-    border-radius: 9999px; /* Mismo redondeado que el track del toggle */
+    border-radius: 9999px; 
     color: #ffffff;
     padding: 0.25rem 1rem;
-    font-size: 0.875rem;
+    font-size: 0.800rem;
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;

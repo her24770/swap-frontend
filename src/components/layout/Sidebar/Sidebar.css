@@ -12,6 +12,7 @@
 .sidebar--open {
   width: 11rem;
 }
+
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -21,7 +22,6 @@
     width: 0;
     z-index: 100;
   }
-
   .sidebar--open {
     width: 11rem;
   }
@@ -30,8 +30,10 @@
 .sidebar__nav {
   display: flex;
   flex-direction: column;
+  height: 100%; 
+  min-height: 100vh; 
   gap: 0.25rem;
-  padding: 0.75rem 0.5rem 0;
+  padding: 0.75rem 0.5rem;
 }
 
 .sidebar__link {
@@ -76,4 +78,21 @@
 .sidebar--open .sidebar__label {
   max-width: 8rem;
   opacity: 1;
+}
+
+.sidebar__bottom {
+  margin-top: auto; 
+  display: flex;
+  flex-direction: row; 
+  gap: 0.5rem;
+  padding: 4rem 0.5rem; 
+  opacity: 0;
+  visibility: hidden;
+  transition: max-width 0.5s ease, opacity 0.5s ease;
+
+}
+
+.sidebar--open .sidebar__bottom {
+  opacity: 1;
+  visibility: visible;
 }

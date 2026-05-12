@@ -21,9 +21,9 @@
 	},
 
 	"locales": {
-		"en": "Inglés",
-		"es": "Español",
-		"fr": "Francés"
+		"en": "EN",
+		"es": "ES",
+		"fr": "FR"
 	},
 
 	"common": {
