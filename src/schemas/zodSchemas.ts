@@ -94,7 +94,7 @@ export const schemaCrearPublicacion = z.object({
     required_error: "Selecciona el tipo de publicación.",
     invalid_type_error: "Tipo de publicación inválido.",
   }),
- 
+
   /**
    * IDs de las etiquetas/categorías seleccionadas.
    * El backend recibe números; el formulario envía strings desde <select>
@@ -103,13 +103,13 @@ export const schemaCrearPublicacion = z.object({
     .array(z.coerce.number().int().positive("ID de categoría inválido."))
     .min(1, "Selecciona al menos una categoría.")
     .max(10, "No puedes seleccionar más de 10 categorías."),
- 
+
   imagenes: z
     .array(schemaImagen)
     .max(5, "Puedes subir un máximo de 5 imágenes.")
     .optional()
     .default([]),
- 
+
   destacado: z.boolean().optional().default(false),
 });
 
@@ -135,9 +135,9 @@ export const schemaEditarPublicacion = z.object({
 
   tipo_publicacion: z
     .enum(TIPOS_PUBLICACION, {
-        invalid_type_error: "Tipo de publicación inválido.",
-      })
-      .optional(),
+      invalid_type_error: "Tipo de publicación inválido.",
+    })
+    .optional(),
 
   categorias: z
     .array(z.coerce.number().int().positive("ID de categoría inválido."))
@@ -152,15 +152,15 @@ export const schemaEditarPublicacion = z.object({
   destacado: z
     .boolean()
     .optional(),
-  
+
   // Solo los estados que el usuario puede seleccionar desde el formulario.
-    // "eliminado" queda excluido intencionalmente.
-    estado: z
-      .enum(["disponible", "vendido", "reservado"], {
-        invalid_type_error: "El estado debe ser disponible, vendido o reservado.",
-      })
-      .optional(),
-  })
+  // "eliminado" queda excluido intencionalmente.
+  estado: z
+    .enum(["disponible", "vendido", "reservado", "activo", "inactivo"], {
+      invalid_type_error: "El estado debe ser disponible, vendido o reservado.",
+    })
+    .optional(),
+})
   .refine((data) => Object.keys(data).some((k) => data[k as keyof typeof data] !== undefined), {
     message: "Debes modificar al menos un campo.",
   });
@@ -227,9 +227,9 @@ export type EditarPublicacionFormData = z.infer<typeof schemaEditarPublicacion>;
 export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
 export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
- 
+
 /** Tamaño máximo por imagen: 5 MB */
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
- 
+
 /** Tipos MIME aceptados */
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"] as const;
