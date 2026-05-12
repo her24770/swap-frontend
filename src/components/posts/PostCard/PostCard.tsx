@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Camera, ChevronRight, Loader2, SquarePen, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
@@ -10,6 +10,7 @@ import { imagenService } from "../../../services/imagenService";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
 import type { Tag } from "../../../types/tag";
+import type { EstadoOpcion } from "../../../hooks/useEstados";
 
 interface PostCardProps {
   title: string;
@@ -20,9 +21,11 @@ interface PostCardProps {
   onTagClick?: (tag: Tag) => void;
   publicacionId?: number;
   estado?: string | number;
+  estadosDisponibles?: EstadoOpcion[];
   canEdit?: boolean;
   onEditClick?: () => void;
   onDeleteClick?: () => void;
+  onImageUpdate?: (newUrl: string) => void;
   onEstadoChange?: (nuevoEstado: string) => void;
   onDetallesClick?: () => void;
 }
@@ -36,9 +39,11 @@ export default function PostCard({
   onTagClick,
   publicacionId,
   estado,
+  estadosDisponibles = [],
   canEdit = false,
   onEditClick,
   onDeleteClick,
+  onImageUpdate,
   onEstadoChange,
   onDetallesClick,
 }: PostCardProps) {
@@ -48,6 +53,10 @@ export default function PostCard({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setDisplayImages(images);
+  }, [images]);
 
   const handleDetailsClick = () => {
     if (onDetallesClick) {
@@ -74,7 +83,9 @@ export default function PostCard({
 
     try {
       const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
-      setDisplayImages([url, ...displayImages.slice(1)]);
+      const urlConBuster = `${url}?t=${Date.now()}`;
+      setDisplayImages([urlConBuster, ...displayImages.slice(1)]);
+      onImageUpdate?.(urlConBuster);
     } catch (err: any) {
       setUploadError(err.message || t("uploadErrors.generic"));
     } finally {
@@ -91,6 +102,7 @@ export default function PostCard({
             <EstadoTag
               estado={estado}
               canEdit={canEdit}
+              estadosDisponibles={estadosDisponibles}
               onEstadoChange={onEstadoChange}
             />
           </div>

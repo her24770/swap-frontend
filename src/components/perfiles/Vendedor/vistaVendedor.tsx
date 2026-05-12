@@ -8,6 +8,7 @@ import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
@@ -36,6 +37,7 @@ const MOCK_AD = {
 export default function VistaVendedor() {
   const t = useTranslations("perfil");
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const estadosMaterial = useEstados("material");
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
@@ -59,9 +61,6 @@ export default function VistaVendedor() {
       
       const mapPublicaciones = (data: Publicacion[], tipoPub: string): CatalogPost[] => {
         return data.map((pub) => {
-          const estadoNombre = pub.estadoRel?.estado ?? "activo";
-          const estadoForm = estadoNombre === "activo" ? "disponible" : estadoNombre;
-
           return {
             id: pub.id_publicacion,
             title: pub.titulo,
@@ -70,7 +69,7 @@ export default function VistaVendedor() {
             tags: tipoPub === "material"
               ? [{ id: 3, name: "Material", colorKey: "diseno" }]
               : [{ id: 4, name: "Negocio", colorKey: "negocio" }],
-            estado: estadoForm,
+            estado: pub.estadoRel?.estado ?? "activo",
             images: pub.imagenes?.map((img) => img.url_imagen) || [],
             tipo: tipoPub,
             categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
@@ -146,15 +145,29 @@ export default function VistaVendedor() {
                   description={pub.description}
                   images={pub.images}
                   estado={pub.estado}
+                  estadosDisponibles={estadosMaterial}
                   canEdit={true}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
                   }}
                   onDeleteClick={() => handleEliminar(pub.id)}
-                  onEstadoChange={(nuevoEstado) =>
-                    console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
-                  }
+                  onImageUpdate={(newUrl) => {
+                    setCatalogMaterial((prev) =>
+                      prev.map((p) =>
+                        p.id === pub.id ? { ...p, images: [newUrl, ...p.images.slice(1)] } : p
+                      )
+                    );
+                  }}
+                  onEstadoChange={async (nuevoEstado) => {
+                    try {
+                      await apiClient.put(`/api/publicacion/${pub.id}`, { estado: nuevoEstado, etiquetas: [1] });
+                      fetchPublicaciones();
+                    } catch (err) {
+                      const apiError = err as ApiError;
+                      alert(apiError.message || "No fue posible cambiar el estado.");
+                    }
+                  }}
                   onDetallesClick={() => setSelectedPost(pub)}
                 />
               </div>

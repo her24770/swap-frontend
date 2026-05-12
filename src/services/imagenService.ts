@@ -6,6 +6,7 @@ export interface CrearPublicacionPayload {
   precio?: string;
   tipo_publicacion: string;
   imagen?: File;
+  estado?: string;
 }
 
 export interface CrearPublicacionResult {
@@ -20,6 +21,7 @@ export const imagenService = {
     formData.append("descripcion", payload.descripcion);
     formData.append("precio", payload.precio ? payload.precio : "0");
     formData.append("tipo_publicacion", payload.tipo_publicacion);
+    formData.append("estado", payload.estado ?? "disponible");
     if (payload.imagen) formData.append("imagen", payload.imagen);
 
     const res = await fetch(`${BASE_URL}/api/publicacion/`, {
@@ -60,7 +62,7 @@ export const imagenService = {
     const formData = new FormData();
     formData.append("imagen", file);
 
-    const res = await fetch(`${BASE_URL}/api/imagen/publicacion/${publicacionId}`, {
+    const res = await fetch(`${BASE_URL}/api/publicacion/${publicacionId}/imagen`, {
       method: "PUT",
       credentials: "include",
       body: formData,
@@ -72,6 +74,6 @@ export const imagenService = {
     }
 
     const data = await res.json();
-    return data.url as string;
+    return data.data.url_imagen as string;
   },
 };

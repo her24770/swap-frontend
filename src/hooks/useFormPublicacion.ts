@@ -262,9 +262,14 @@ export function useFormEditarPublicacion(id: number,
       if (data.tipo_publicacion !== undefined)
         payload.tipo_publicacion = data.tipo_publicacion;
       payload.estado = 3;
+      if (data.estado !== undefined) payload.estado = data.estado;
       payload.etiquetas = data.categorias?.length ? data.categorias : [1];
       await apiClient.put(`/api/publicacion/${id}`, payload);
- 
+
+      if (data.imagenesNuevas && data.imagenesNuevas.length > 0) {
+        await imagenService.uploadFotoPublicacion(id, data.imagenesNuevas[0]);
+      }
+
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
