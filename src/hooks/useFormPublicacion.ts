@@ -1,10 +1,10 @@
 "use client";
- 
-import { useForm, UseFormReturn  } from "react-hook-form";
+
+import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
-import { apiClient, type ApiError} from "../lib/apiClient";
+import { apiClient, type ApiError } from "../lib/apiClient";
 import { imagenService } from "../services/imagenService";
 import { useUIStore } from "../store/uiStore";
 import {
@@ -18,14 +18,14 @@ import {
 const { agregarNotificacion } = useUIStore.getState();
 
 
- 
+
 // ─── Helpers internos ─────────────────────────────────────────────────────────
- 
+
 /** Genera URLs de objeto para preview y las devuelve junto con sus URLs. */
 function crearPreviews(files: File[]): string[] {
   return files.map((f) => URL.createObjectURL(f));
 }
- 
+
 /** Libera las URLs de objeto creadas para el preview de imágenes. */
 function revocarPreviews(urls: string[]): void {
   urls.forEach((url) => URL.revokeObjectURL(url));
@@ -48,7 +48,7 @@ export interface UseFormCrearPublicacionReturn {
 }
 
 
-export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
+export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -75,7 +75,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
- 
+
 
   // ── Manejo de imágenes ──────────────────────────────────────────────────────
 
@@ -83,29 +83,29 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     (files: FileList | File[]) => {
       const filesArray = Array.from(files);
       const current = form.getValues("imagenes") ?? [];
- 
+
       // Limita a 5 imágenes en total
       const available = 5 - current.length;
       if (available <= 0) return;
- 
+
       const toAdd = filesArray.slice(0, available);
       const updated = [...current, ...toAdd];
- 
+
       form.setValue("imagenes", updated, { shouldValidate: true, shouldDirty: true });
- 
+
       // Genera previews solo para las nuevas
       const newPreviews = crearPreviews(toAdd);
       setImagePreviews((prev) => [...prev, ...newPreviews]);
     },
     [form]
   );
- 
+
   const removeImage = useCallback(
     (index: number) => {
       const current = form.getValues("imagenes") ?? [];
       const updated = current.filter((_, i) => i !== index);
       form.setValue("imagenes", updated, { shouldValidate: true, shouldDirty: true });
- 
+
       setImagePreviews((prev) => {
         URL.revokeObjectURL(prev[index]);
         return prev.filter((_, i) => i !== index);
@@ -113,7 +113,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     },
     [form]
   );
- 
+
 
   // ── Envío al backend
 
@@ -141,7 +141,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
       agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible crear la publicación." });
     }
   });
- 
+
   const resetForm = useCallback(() => {
     revocarPreviews(imagePreviews);
     setImagePreviews([]);
@@ -149,7 +149,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     setIsSuccess(false);
     form.reset();
   }, [form, imagePreviews]);
- 
+
   return {
     form,
     onSubmit,
@@ -177,11 +177,11 @@ export interface UseFormEditarPublicacionReturn {
   addImages: (files: FileList | File[]) => void;
   removeImage: (index: number) => void;
 }
- 
+
 export function useFormEditarPublicacion(id: number,
   /** Valores iniciales cargados desde el servidor */
   defaults?: Partial<EditarPublicacionFormData>
-): UseFormEditarPublicacionReturn{
+): UseFormEditarPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -216,18 +216,18 @@ export function useFormEditarPublicacion(id: number,
       const current = form.getValues("imagenesNuevas") ?? [];
       const available = 5 - current.length;
       if (available <= 0) return;
- 
+
       const toAdd = filesArray.slice(0, available);
       form.setValue("imagenesNuevas", [...current, ...toAdd], {
         shouldValidate: true,
         shouldDirty: true,
       });
- 
+
       setImagePreviews((prev) => [...prev, ...crearPreviews(toAdd)]);
     },
     [form]
   );
- 
+
   const removeImage = useCallback(
     (index: number) => {
       const current = form.getValues("imagenesNuevas") ?? [];
@@ -236,7 +236,7 @@ export function useFormEditarPublicacion(id: number,
         current.filter((_, i) => i !== index),
         { shouldValidate: true, shouldDirty: true }
       );
- 
+
       setImagePreviews((prev) => {
         URL.revokeObjectURL(prev[index]);
         return prev.filter((_, i) => i !== index);
@@ -244,9 +244,9 @@ export function useFormEditarPublicacion(id: number,
     },
     [form]
   );
- 
+
   // ── Envío al backend ────────────────────────────────────────────────────────
- 
+
   const onSubmit = form.handleSubmit(async (data: EditarPublicacionFormData) => {
     setServerError(null);
     setIsSuccess(false);
@@ -254,7 +254,7 @@ export function useFormEditarPublicacion(id: number,
     try {
       // Solo incluye los campos que el usuario realmente modificó
       const payload: Record<string, unknown> = {};
- 
+
       if (data.titulo !== undefined) payload.titulo = data.titulo;
       if (data.descripcion !== undefined) payload.descripcion = data.descripcion;
       if (data.precio !== undefined && data.precio !== "")
@@ -279,7 +279,7 @@ export function useFormEditarPublicacion(id: number,
       agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible actualizar la publicación." });
     }
   });
- 
+
   return {
     form,
     onSubmit,
