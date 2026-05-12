@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useFormCrearPublicacion, useFormEditarPublicacion } from "../../../../hooks/useFormPublicacion";
-import { TAGS_MATERIAS } from "../../../../lib/tags";
+import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
+import { useEstados } from "../../../../hooks/useEstados";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
 import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion } from "../../../../schemas/zodSchemas";
@@ -40,6 +41,10 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
     isEditing ? props.publicacionId : 0,
     isEditing ? props.defaultValues : undefined
   );
+
+  const { etiquetas: etiquetasBD } = useTodasEtiquetas();
+  const tipoEditar = isEditing ? (props as { defaultValues?: { tipo_publicacion?: string } }).defaultValues?.tipo_publicacion ?? "material" : "material";
+  const estadosDisponibles = useEstados(tipoEditar);
 
   const {
     tiposPublicacion,
@@ -113,9 +118,9 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
             <div className="crear-publicacion__field">
               <label className="crear-publicacion__label">{t("fields.status")}</label>
               <select {...register("estado")} className="crear-publicacion__select">
-                <option value="disponible">{t("fields.statusAvailable")}</option>
-                <option value="vendido">{t("fields.statusSold")}</option>
-                <option value="reservado">{t("fields.statusReserved")}</option>
+                {estadosDisponibles.map((e) => (
+                  <option key={e.id_estado} value={e.estado}>{e.estado}</option>
+                ))}
               </select>
             </div>
           )}
@@ -199,19 +204,19 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
               {dropdownOpen && (
                 <div className="crear-publicacion__categories-menu">
-                  {TAGS_MATERIAS.map((tag) => {
-                    const selected = selectedCategorias.includes(tag.id);
+                  {etiquetasBD.map((etiqueta) => {
+                    const selected = selectedCategorias.includes(etiqueta.id_etiqueta);
                     return (
                       <button
-                        key={tag.id}
+                        key={etiqueta.id_etiqueta}
                         type="button"
-                        onClick={() => toggleCategoria(tag.id)}
+                        onClick={() => toggleCategoria(etiqueta.id_etiqueta)}
                         className={`crear-publicacion__categories-option${selected ? " crear-publicacion__categories-option--selected" : ""}`}
                       >
                         <span className={`crear-publicacion__categories-checkbox${selected ? " crear-publicacion__categories-checkbox--checked" : ""}`}>
                           {selected && <Check size={11} strokeWidth={3} color="white" />}
                         </span>
-                        {tag.name}
+                        {etiqueta.nombre}
                       </button>
                     );
                   })}
@@ -222,15 +227,15 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
             {selectedCategorias.length > 0 && (
               <div className="crear-publicacion__categories-tags">
                 {selectedCategorias.map((id) => {
-                  const tag = TAGS_MATERIAS.find((t) => t.id === id);
-                  return tag ? (
+                  const etiqueta = etiquetasBD.find((e) => e.id_etiqueta === id);
+                  return etiqueta ? (
                     <span key={id} className="crear-publicacion__categories-tag">
-                      {tag.name}
+                      {etiqueta.nombre}
                       <button
                         type="button"
                         onClick={() => toggleCategoria(id)}
                         className="crear-publicacion__categories-tag-remove"
-                        aria-label={t("fields.removeTagAria", { tag: tag.name })}
+                        aria-label={t("fields.removeTagAria", { tag: etiqueta.nombre })}
                       >
                         <X size={11} strokeWidth={2.5} />
                       </button>

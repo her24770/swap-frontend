@@ -9,6 +9,7 @@ import "../../Button/Button.css";
 import "./ActualizarPerfilModal.css";
 import "../Modal.css";
 import SubirImagen from "./SubirImagen/SubirImagen";
+import { useUIStore } from "../../../../store/uiStore";
 
 interface ActualizarPerfilModalProps {
   isOpen?: boolean;
@@ -29,8 +30,6 @@ interface ActualizarPerfilModalProps {
   isSaving?: boolean;
 }
 
-type ConfirmAction = "submit" | "discard" | null;
-
 const genContactId = (): number => Date.now() + Math.floor(Math.random() * 1000000);
 
 const getEmptyContacts = (): Contacto[] => [
@@ -50,6 +49,7 @@ export default function ActualizarPerfilModal({
   isSaving = false,
 }: ActualizarPerfilModalProps) {
   const t = useTranslations("updateProfileModal");
+  const { mostrarConfirm } = useUIStore();
 
   const [nombre, setNombre] = useState(initialNombre);
   const [apellido, setApellido] = useState(initialApellido);
@@ -71,7 +71,6 @@ export default function ActualizarPerfilModal({
   });
   const [foto, setFoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
 
   const normalizeContacts = (items: Contacto[]) =>
     items
@@ -114,7 +113,6 @@ export default function ActualizarPerfilModal({
       }
       setFoto(null);
       setPreviewUrl(null);
-      setConfirmAction(null);
     }
   }, [isOpen, initialNombre, initialApellido, initialDescripcion, initialContacts]);
 
@@ -156,7 +154,11 @@ export default function ActualizarPerfilModal({
 
   const handleSubmit = () => {
     if (isSaving) return;
-    setConfirmAction("submit");
+    mostrarConfirm({
+      titulo: t("confirm.submit.title"),
+      mensaje: t("confirm.submit.message"),
+      onConfirm: runSubmit,
+    });
   };
 
 //Se resetea el forms cuando se cancela
@@ -169,29 +171,20 @@ export default function ActualizarPerfilModal({
     if (isSaving) return;
 
     if (hasUnsavedChanges) {
-      setConfirmAction("discard");
+      mostrarConfirm({
+        titulo: t("confirm.discard.title"),
+        mensaje: t("confirm.discard.message"),
+        onConfirm: closeModal,
+      });
       return;
     }
 
     closeModal();
-  };
-
-  const handleConfirmAction = async () => {
-    if (!confirmAction) return;
-
-    if (confirmAction === "submit") {
-      await runSubmit();
-      setConfirmAction(null);
-      return;
-    }
-
-    closeModal();
-    setConfirmAction(null);
   };
 
   return (
     <>
-      <div className="modal-overlay" onClick={confirmAction ? undefined : handleCancel}>
+      <div className="modal-overlay" onClick={handleCancel}>
         <div className="update-profile-modal" onClick={(e) => e.stopPropagation()}>
           <h2 className="update-profile-modal__title">{t("title")}</h2>
 
@@ -240,36 +233,6 @@ export default function ActualizarPerfilModal({
         </div>
       </div>
 
-      {confirmAction && (
-        <div className="modal-overlay modal-overlay--top" onClick={() => setConfirmAction(null)}>
-          <div className="update-profile-confirm" onClick={(e) => e.stopPropagation()}>
-            <h3 className="update-profile-confirm__title">{t(`confirm.${confirmAction}.title`)}</h3>
-            <p className="update-profile-confirm__message">{t(`confirm.${confirmAction}.message`)}</p>
-
-            <div className="update-profile-confirm__footer">
-              <button
-                type="button"
-                className="update-profile-modal__btn-cancel"
-                onClick={() => setConfirmAction(null)}
-              >
-                {t("confirm.actions.back")}
-              </button>
-              <button
-                type="button"
-                className="button button--medium"
-                onClick={handleConfirmAction}
-                disabled={confirmAction === "submit" && isSaving}
-              >
-                {confirmAction === "submit"
-                  ? isSaving
-                    ? t("actions.saving")
-                    : t("confirm.actions.confirmSave")
-                  : t("confirm.actions.confirmDiscard")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

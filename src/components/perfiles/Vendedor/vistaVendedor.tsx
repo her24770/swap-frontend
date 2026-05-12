@@ -10,6 +10,7 @@ import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPubli
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
+import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";

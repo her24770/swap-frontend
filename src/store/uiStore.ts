@@ -9,19 +9,28 @@ export interface Notificacion {
   duracion?: number;
 }
 
-// Estado y acciones para estados globales de carga y notificaciones
+export interface ConfirmDialogState {
+  isOpen: boolean;
+  titulo: string;
+  mensaje: string;
+  onConfirm: () => void;
+}
+
 interface UIState {
   cargando: boolean;
   notificaciones: Notificacion[];
+  confirm: ConfirmDialogState;
   setCargando: (valor: boolean) => void;
   agregarNotificacion: (n: Omit<Notificacion, "id">) => void;
   eliminarNotificacion: (id: string) => void;
+  mostrarConfirm: (opts: { titulo: string; mensaje: string; onConfirm: () => void }) => void;
+  cerrarConfirm: () => void;
 }
 
-// Store sin persistencia — carga y notificaciones son estados temporales
 export const useUIStore = create<UIState>()((set) => ({
   cargando: false,
   notificaciones: [],
+  confirm: { isOpen: false, titulo: "", mensaje: "", onConfirm: () => {} },
 
   setCargando: (valor) => set({ cargando: valor }),
 
@@ -37,4 +46,10 @@ export const useUIStore = create<UIState>()((set) => ({
     set((state) => ({
       notificaciones: state.notificaciones.filter((n) => n.id !== id),
     })),
+
+  mostrarConfirm: ({ titulo, mensaje, onConfirm }) =>
+    set({ confirm: { isOpen: true, titulo, mensaje, onConfirm } }),
+
+  cerrarConfirm: () =>
+    set({ confirm: { isOpen: false, titulo: "", mensaje: "", onConfirm: () => {} } }),
 }));

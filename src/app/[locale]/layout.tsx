@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import Layout from '../../components/layout/Layout/layout';
 import ToastContainer from '../../components/ui/Toast/Toast';
+import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog';
 import { ThemeProvider } from '../../context/Themecontext'
 import { jockey, palanquin, lato } from '../../styles/fonts';
 import './globals.css';
@@ -41,6 +42,7 @@ export default async function RootLayout({
           <ThemeProvider>
             <Layout>{children}</Layout>
             <ToastContainer />
+            <ConfirmDialog />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

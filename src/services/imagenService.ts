@@ -21,7 +21,7 @@ export const imagenService = {
     formData.append("descripcion", payload.descripcion);
     formData.append("precio", payload.precio ? payload.precio : "0");
     formData.append("tipo_publicacion", payload.tipo_publicacion);
-    formData.append("estado", payload.estado ?? "disponible");
+    formData.append("estado", payload.estado ?? "activo");
     if (payload.imagen) formData.append("imagen", payload.imagen);
 
     const res = await fetch(`${BASE_URL}/api/publicacion/`, {

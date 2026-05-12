@@ -123,13 +123,19 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
 
     try {
       const imagen = data.imagenes?.[0];
-      await imagenService.crearPublicacion({
+      const resultado = await imagenService.crearPublicacion({
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
         tipo_publicacion: data.tipo_publicacion,
         imagen,
       });
+
+      if (data.categorias?.length) {
+        await apiClient.put(`/api/publicacion/${resultado.id_publicacion}`, {
+          etiquetas: data.categorias,
+        });
+      }
 
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
