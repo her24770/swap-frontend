@@ -8,8 +8,6 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
-import { useTheme } from "../../../context/Themecontext"
-import ThemeToggle from "./ThemeToggle/ThemeToggle";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -17,7 +15,6 @@ interface NavbarProps {
 }
 
 export default function Navbar({ onMenuToggle }: NavbarProps) {
-  const { theme, toggle: toggleTheme } = useTheme()
   const t = useTranslations('layout.navbar');
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -55,8 +52,6 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
         <LogoCompleto className="navbar__logo"/>
       </div>
       <div className="navbar__left">
-        <ThemeToggle theme= {theme} onToggle={toggleTheme} />
-
         {/* Perfil/USER SOLO si NO es auth route */}
         {!isAuthRoute && (
           <div ref={dropdownRef} className="navbar__profile">

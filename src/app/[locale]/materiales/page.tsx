@@ -11,7 +11,6 @@ const ITEMS_PER_PAGE = 12;
 
 export default function MaterialesPage() {
   const t = useTranslations('materiales');
-  const tEmpty = useTranslations('common.empty');
   const tTags = useTranslations('common.tags');
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE });
@@ -50,8 +49,6 @@ export default function MaterialesPage() {
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
-        tEmpty={tEmpty}
-        tTags={tTags}
         tagsForAll={() => [{ ...TAG_MATERIAL, name: tTags('material') }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
       />

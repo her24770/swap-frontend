@@ -17,21 +17,25 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>('light')
-
+  const [isInitialized, setIsInitialized] = useState(false);
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme | null;
-
+    
     if (savedTheme) {
       setTheme(savedTheme);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches){
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setTheme('dark');
     }
+    setIsInitialized(true);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+    if (isInitialized) {
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute('theme', theme);
+    }
+  }, [theme, isInitialized]);
 
   const toggle = () => {
     setTheme(t => (t === 'light' ? 'dark' : 'light'))

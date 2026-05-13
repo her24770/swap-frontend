@@ -16,8 +16,6 @@ type Props = {
     loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean };
     errors: { recents?: any; recommended?: any; more?: any };
     itemsPerPage?: number;
-    tEmpty: any;
-    tTags: any;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
     currentPage?: number;
@@ -32,14 +30,14 @@ export default function PublicacionesList({
     loading,
     errors,
     itemsPerPage = 12,
-    tEmpty,
-    tTags,
     tagsForAll,
     onDetallesClick,
     currentPage: controlledPage,
     onPageChange,
 }: Props) {
     const t = useTranslations();
+    const tEmpty = useTranslations('common.empty');
+    const tTags = useTranslations('common.tags');
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
 
