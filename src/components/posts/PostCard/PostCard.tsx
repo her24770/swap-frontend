@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
+import { useGuardados } from "../../../hooks/useGuardados";
 import { imagenService } from "../../../services/imagenService";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
@@ -53,6 +54,23 @@ export default function PostCard({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { isSaved, guardarPublicacion, eliminarGuardado } = useGuardados();
+
+  // Determina en tiempo real si esta publicación específica está guardada por el usuario
+  const yaEstaGuardado = publicacionId !== undefined ? isSaved(publicacionId) : false;
+
+  // Manejador encargado de alternar el estado de guardado en el Backend y Frontend
+  const handleSaveToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (publicacionId === undefined) return;
+
+    if (yaEstaGuardado) {
+      await eliminarGuardado(publicacionId);
+    } else {
+      await guardarPublicacion(publicacionId);
+    }
+  };
 
   useEffect(() => {
     setDisplayImages(images);
