@@ -13,30 +13,3 @@
   justify-content: center;
   z-index: 1000;
 }
-.modal {
-  /* estilos del modal */
-}
-
-.modal__content {
-  /* contenido del modal */
-}
-
-.modal__header {
-  /* encabezado del modal */
-}
-
-.modal__body {
-  /* cuerpo del modal */
-}
-
-.modal__footer {
-  /* pie del modal */
-}
-
-.modal--sm {
-  /* modal pequeño */
-}
-
-.modal--lg {
-  /* modal grande */
-}

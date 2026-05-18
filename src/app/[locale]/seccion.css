@@ -1,0 +1,13 @@
+/* CSS para Materiales, Negocio, Tutorias y Descubre*/
+
+.seccio-page {
+  padding: 2rem;
+  min-height: 100%;
+  background-color: var(--swap-primary-background);
+}
+
+@media (max-width: 30rem) {
+  .seccion-page {
+    padding: 1rem;
+  }
+}
