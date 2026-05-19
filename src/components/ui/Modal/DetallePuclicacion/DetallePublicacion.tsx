@@ -26,12 +26,14 @@ interface PostModalProps {
   // Vendedor
   sellerName: string;
   sellerRating: number;
+  sellerId?: number;
   sellerImageUrl?: string;
 
   // Acciones
   onAcordarCompra?: () => void;
   onSolicitarTutoria?: () => void;
   onVerCertificados?: () => void;
+  onSellerClick?: (sellerId: number) => void;
   onToggleSave?: () => void;
   isSaved?: boolean;
 }
@@ -48,10 +50,12 @@ export default function DetallePublicacion({
   likes = 0,
   sellerName,
   sellerRating,
+  sellerId,
   sellerImageUrl,
   onAcordarCompra,
   onSolicitarTutoria,
   onVerCertificados,
+  onSellerClick,
   onToggleSave,
   isSaved = false,
 }: PostModalProps) {
@@ -73,7 +77,15 @@ export default function DetallePublicacion({
         </button>
 
         {/* Vendedor  */}
-        <div className="post-modal__seller">
+        <button
+          type="button"
+          className={`post-modal__seller${onSellerClick && sellerId ? " post-modal__seller--clickable" : ""}`}
+          onClick={() => {
+            if (sellerId) onSellerClick?.(sellerId);
+          }}
+          disabled={!onSellerClick || !sellerId}
+          aria-label={`Ver perfil de ${sellerName}`}
+        >
           <div className="post-modal__seller-avatar">
             {sellerImageUrl ? (
               <Image src={sellerImageUrl} alt={sellerName} fill className="post-modal__seller-img" style={{ objectFit: 'cover' }} unoptimized />
@@ -94,7 +106,7 @@ export default function DetallePublicacion({
               ))}
             </div>
           </div>
-        </div>
+        </button>
 
         <div className="post-modal__body">
 

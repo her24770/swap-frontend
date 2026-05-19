@@ -54,9 +54,22 @@ const MOCK_SLOTS: EspaciosHorario[] = [
 ];
 
 
-export default function VistaTutor() {
+interface VistaTutorProps {
+  userId?: number;
+  userName?: string;
+  userRating?: number;
+  userImageUrl?: string;
+}
+
+export default function VistaTutor({
+  userId,
+  userName = "Usuario de SWAP",
+  userRating = 0,
+  userImageUrl,
+}: VistaTutorProps = {}) {
   const t = useTranslations("perfil");
-  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const authUserId = useAuthStore((s) => s.usuario?.id_usuario);
+  const idUsuario = userId ?? authUserId;
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
   const estadosTutoria = useEstados("tutoria");
 
@@ -288,8 +301,9 @@ export default function VistaTutor() {
           description={selectedPost.description}
           imageUrl={selectedPost.images[0] ?? ""}
           likes={0}
-          sellerName="Usuario de SWAP"
-          sellerRating={0}
+          sellerName={userName}
+          sellerRating={userRating}
+          sellerImageUrl={userImageUrl}
           isSaved={isSaved}
           onToggleSave={() => setIsSaved((prev) => !prev)}
           onAcordarCompra={() => console.log("acordar compra")}

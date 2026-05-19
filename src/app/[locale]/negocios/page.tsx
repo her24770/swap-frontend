@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
@@ -12,6 +13,7 @@ const ITEMS_PER_PAGE = 12;
 export default function NegociosPage() {
   const t = useTranslations('negocios');
   const tTags = useTranslations('common.tags');
+  const router = useRouter();
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "negocio", limit: ITEMS_PER_PAGE });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ tipo: "negocio", limit: ITEMS_PER_PAGE, sort: "fecha" });
@@ -65,8 +67,13 @@ export default function NegociosPage() {
                 likes={selectedPublicacion.me_gusta}
                 sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
                 sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+                sellerId={selectedPublicacion.usuario.id_usuario}
                 sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
                 isSaved={isSaved}
+                onSellerClick={(sellerId) => {
+                  handleClose();
+                  router.push(`/perfil/${sellerId}?modo=vendedor`);
+                }}
                 onToggleSave={() => setIsSaved((prev) => !prev)}
                 onVerCertificados={() => console.log("ver certificados")}
                 onSolicitarTutoria={() => console.log("solicitar tutoría")}

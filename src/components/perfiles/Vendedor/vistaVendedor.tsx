@@ -35,9 +35,22 @@ const MOCK_AD = {
   subtitle: "¡Oferta por tiempo limitado!",
 };
 
-export default function VistaVendedor() {
+interface VistaVendedorProps {
+  userId?: number;
+  userName?: string;
+  userRating?: number;
+  userImageUrl?: string;
+}
+
+export default function VistaVendedor({
+  userId,
+  userName = "Usuario de SWAP",
+  userRating = 0,
+  userImageUrl,
+}: VistaVendedorProps = {}) {
   const t = useTranslations("perfil");
-  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const authUserId = useAuthStore((s) => s.usuario?.id_usuario);
+  const idUsuario = userId ?? authUserId;
   const estadosMaterial = useEstados("material");
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
 
@@ -52,7 +65,12 @@ export default function VistaVendedor() {
   const [isSaved, setIsSaved] = useState(false);
 
   const fetchPublicaciones = useCallback(async () => {
-    if (!idUsuario) return;
+    if (!idUsuario) {
+      setCatalogMaterial([]);
+      setCatalogNegocio([]);
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       setError(null);
@@ -332,8 +350,9 @@ export default function VistaVendedor() {
           description={selectedPost.description}
           imageUrl={selectedPost.images[0] ?? ""}
           likes={0}
-          sellerName="Usuario de SWAP"
-          sellerRating={0}
+          sellerName={userName}
+          sellerRating={userRating}
+          sellerImageUrl={userImageUrl}
           isSaved={isSaved}
           onToggleSave={() => setIsSaved((prev) => !prev)}
           onAcordarCompra={() => console.log("acordar compra")}

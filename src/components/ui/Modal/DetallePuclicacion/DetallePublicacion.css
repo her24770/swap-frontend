@@ -49,6 +49,29 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  width: fit-content;
+  max-width: calc(100% - 2rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  border-radius: 0.5rem;
+}
+
+.post-modal__seller--clickable {
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.post-modal__seller--clickable:hover {
+  background-color: var(--swap-secondary-background);
+  opacity: 0.9;
+}
+
+.post-modal__seller:disabled {
+  cursor: default;
 }
 
 .post-modal__seller-avatar {

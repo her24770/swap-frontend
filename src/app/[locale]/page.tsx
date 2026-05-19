@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../components/pages/PublicacionesList/PublicacionesList";
@@ -29,6 +29,7 @@ function RegisteredToast() {
 export default function HomePage() {
   const t = useTranslations('home');
   const tTags = useTranslations('common.tags');
+  const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ limit: ITEMS_PER_PAGE });
@@ -87,8 +88,13 @@ export default function HomePage() {
         likes={selectedPublicacion.me_gusta}
         sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
         sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+        sellerId={selectedPublicacion.usuario.id_usuario}
         sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
         isSaved={isSaved}
+        onSellerClick={(sellerId) => {
+          handleClose();
+          router.push(`/perfil/${sellerId}?modo=vendedor`);
+        }}
         onToggleSave={() => setIsSaved((prev) => !prev)}
         onVerCertificados={() => console.log("ver certificados")}
         onSolicitarTutoria={() => console.log("solicitar tutoría")}
