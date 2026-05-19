@@ -13,6 +13,7 @@ import { imagenService } from "../../../../services/imagenService";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
 import type { Tag } from "../../../../types/tag";
 import { useToast } from "../../../../hooks/useToast";
+import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
 import {
   contactosToUpsertBody,
   reemplazarContactosUsuario,
@@ -36,6 +37,7 @@ export default function UserProfileHeader({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
   const toast = useToast();
+  const { canEditProfile } = usePerspectivaInterna();
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
   
@@ -108,15 +110,17 @@ export default function UserProfileHeader({
         <div className="user-profile-header__info-col">
           <div className="user-profile-header__name-row">
             <h1 className="user-profile-header__name">{nombre} {apellido}</h1>
-            <button
-              type="button"
-              className="user-profile-header__edit-btn"
-              onClick={() => setModalOpen(true)}
-              aria-label={t('aria.editProfile')}
-            >
-              <Pencil size={12} />
-              {t('actions.editProfile')}
-            </button>
+            {canEditProfile && (
+              <button
+                type="button"
+                className="user-profile-header__edit-btn"
+                onClick={() => setModalOpen(true)}
+                aria-label={t('aria.editProfile')}
+              >
+                <Pencil size={12} />
+                {t('actions.editProfile')}
+              </button>
+            )}
           </div>
 
           <p className="user-profile-header__description">{user.description}</p>
@@ -152,7 +156,7 @@ export default function UserProfileHeader({
 
       </div>
 
-      {modalOpen && (
+      {canEditProfile && modalOpen && (
         <ActualizarPerfilModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}

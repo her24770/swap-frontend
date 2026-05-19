@@ -10,7 +10,7 @@ import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPubli
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
-import { useUIStore } from "../../../store/uiStore";
+import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
@@ -39,6 +39,7 @@ export default function VistaVendedor() {
   const t = useTranslations("perfil");
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
   const estadosMaterial = useEstados("material");
+  const { canCreatePublication, canEditCards } = usePerspectivaInterna();
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
@@ -108,14 +109,16 @@ export default function VistaVendedor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogMaterial")}</h2>
-          <button
-            type="button"
-            className="perfil-page__new-publication-btn"
-            onClick={() => setCrearOpen(true)}
-          >
-            <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-            {t("actions.newPublication")}
-          </button>
+          {canCreatePublication && (
+            <button
+              type="button"
+              className="perfil-page__new-publication-btn"
+              onClick={() => setCrearOpen(true)}
+            >
+              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+              {t("actions.newPublication")}
+            </button>
+          )}
         </div>
 
         {loading && (
@@ -182,14 +185,16 @@ export default function VistaVendedor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogNegocio")}</h2>
-          <button
-            type="button"
-            className="perfil-page__new-publication-btn"
-            onClick={() => setCrearOpen(true)}
-          >
-            <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-            {t("actions.newPublication")}
-          </button>
+          {canCreatePublication && (
+            <button
+              type="button"
+              className="perfil-page__new-publication-btn"
+              onClick={() => setCrearOpen(true)}
+            >
+              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+              {t("actions.newPublication")}
+            </button>
+          )}
         </div>
 
         {loading && (
@@ -242,9 +247,11 @@ export default function VistaVendedor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
-          <button type="button" className="perfil-page__new-publication-btn">
-            {t("actions.changeAd")}
-          </button>
+          {canCreatePublication && (
+            <button type="button" className="perfil-page__new-publication-btn">
+              {t("actions.changeAd")}
+            </button>
+          )}
         </div>
         <AdBanner
           imageUrl={MOCK_AD.imageUrl}
@@ -254,7 +261,7 @@ export default function VistaVendedor() {
       </section>
 
       {/* Modal crear publicación */}
-      {crearOpen && (
+      {canCreatePublication && crearOpen && (
         <div className="modal-overlay" onClick={() => setCrearOpen(false)}>
           <div
             className="perfil-page__crear-pub-modal"
@@ -278,7 +285,7 @@ export default function VistaVendedor() {
       )}
 
       {/* Modal editar publicación */}
-      {editOpen && postEditando && (
+      {canEditCards && editOpen && postEditando && (
         <div className="modal-overlay" onClick={() => setEditOpen(false)}>
           <div
             className="perfil-page__crear-pub-modal"

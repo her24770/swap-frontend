@@ -7,6 +7,7 @@ import PostCard from "../../posts/PostCard/PostCard";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import HorarioSemanal, { EstadoHorario } from "./Horario/Horario";
+import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
@@ -60,12 +61,13 @@ const MOCK_SLOTS: EspaciosHorario[] = [
 
 export default function VistaTutor() {
   const t = useTranslations("perfil");
+  const { canCreatePublication, canEditCards } = usePerspectivaInterna();
 
   const [crearOpen, setCrearOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
-    const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
-      const [isSaved, setIsSaved] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   return (
     <>
@@ -73,14 +75,16 @@ export default function VistaTutor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalog")}</h2>
-          <button
-            type="button"
-            className="perfil-page__new-publication-btn"
-            onClick={() => setCrearOpen(true)}
-          >
-            <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-            {t("actions.newPublication")}
-          </button>
+          {canCreatePublication && (
+            <button
+              type="button"
+              className="perfil-page__new-publication-btn"
+              onClick={() => setCrearOpen(true)}
+            >
+              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+              {t("actions.newPublication")}
+            </button>
+          )}
         </div>
         <HorizontalCarousel>
           {MOCK_CATALOG.map((pub) => (
@@ -109,7 +113,7 @@ export default function VistaTutor() {
       <hr className="perfil-page__divider" />
 
       {/* modal de crear publicaiciones  */}
-      {crearOpen && (
+      {canCreatePublication && crearOpen && (
         <div className="modal-overlay" onClick={() => setCrearOpen(false)}>
           <div
             className="perfil-page__crear-pub-modal"
@@ -130,7 +134,7 @@ export default function VistaTutor() {
       )}
 
       {/* Modal editar publicacion */}
-      {editOpen && postEditando && (
+      {canEditCards && editOpen && postEditando && (
         <div className="modal-overlay" onClick={() => setEditOpen(false)}>
           <div
             className="perfil-page__crear-pub-modal"
@@ -160,16 +164,18 @@ export default function VistaTutor() {
         </div>
       )}
 
-    {/* Horario semanal */}
+      {/* Horario semanal */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.schedule")}</h2>
-          <button
-            type="button"
-            className="perfil-page__new-publication-btn"
-          >
-            Actualizar horario
-          </button>
+          {canCreatePublication && (
+            <button
+              type="button"
+              className="perfil-page__new-publication-btn"
+            >
+              Actualizar horario
+            </button>
+          )}
         </div>
         <HorarioSemanal slots={MOCK_SLOTS}></HorarioSemanal>
       </section>

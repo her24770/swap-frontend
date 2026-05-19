@@ -11,20 +11,13 @@ import VistaConsumidor from "../../../components/perfiles/Consumidor/vistaConsum
 import VistaVendedor from "../../../components/perfiles/Vendedor/vistaVendedor";
 import VistaTutor from "../../../components/perfiles/Tutor/vistaTutor";
 import { TAGS_MATERIAS } from "../../../lib/tags";
-import { CanEditProvider } from "../../../context/CanEditContext";
+import {
+  PerspectivaInternaProvider,
+  usePerspectivaInterna,
+} from "../../../context/PerspectivaInternaContext";
 import "./PerfilConsumidorPage.css";
-import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
-
-type PublicacionEditando = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  tags: { id: number }[];
-  estado: string;
-};
 
 type PerfilMode = "consumidor" | "vendedor" | "tutor";
 
@@ -52,10 +45,7 @@ export default function PerfilPage() {
   const [mode, setMode] = useState<PerfilMode>("consumidor");
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
   const [user, setUser] = useState<UserProfileData | null>(null);
-  const [crearPublicacionOpen, setCrearPublicacionOpen] = useState(false);
-  const [editPublicacionOpen, setEditPublicacionOpen] = useState(false);
-  const [publicacionEditando, setPublicacionEditando] = useState<PublicacionEditando | null>(null);
-    const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
 
   useEffect(() => {
     if (!idUsuario) {
@@ -97,6 +87,7 @@ export default function PerfilPage() {
 
   if (!user) return <p className="perfil-page__loading">{t("loading")}</p>;
 
+  const isOwnProfile = true;
   const MODES: { key: PerfilMode; label: string }[] = [
     { key: "consumidor", label: t("mode.consumer") },
     { key: "vendedor", label: t("mode.seller") },
@@ -105,67 +96,117 @@ export default function PerfilPage() {
 
   return (
     <main className="perfil-page">
-      {/* ── Header compartido ── */}
-      <UserProfileHeader
-        user={{ ...user, tags: TAGS_MATERIAS }}
-        onSave={async (updated) => {
-          setUser((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  name: updated.name ?? prev.name,
-                  description: updated.description ?? prev.description,
-                  imageUrl: updated.imageUrl ?? prev.imageUrl,
-                  contacts: updated.contacts
-                    ? updated.contacts.map((c: any) => ({
-                        platform: c.tipo_contacto,
-                        url: c.valor,
-                      }))
-                    : prev.contacts,
-                }
-              : prev
-          );
-        }}
-      />
+      <PerspectivaInternaProvider isOwnProfile={isOwnProfile} activeProfileMode={mode}>
+        {/* ── Header compartido ── */}
+        <UserProfileHeader
+          user={{ ...user, tags: TAGS_MATERIAS }}
+          onSave={async (updated) => {
+            setUser((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    name: updated.name ?? prev.name,
+                    description: updated.description ?? prev.description,
+                    imageUrl: updated.imageUrl ?? prev.imageUrl,
+                    contacts: updated.contacts
+                      ? updated.contacts.map((c: any) => ({
+                          platform: c.tipo_contacto,
+                          url: c.valor,
+                        }))
+                      : prev.contacts,
+                  }
+                : prev
+            );
+          }}
+        />
 
-      {/* Seleccion de modos (consumidor, vendedor, tutor) */}
-      <div className="perfil-page__mode-toggle">
-        {MODES.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className={`perfil-page__mode-btn${
-              mode === key ? " perfil-page__mode-btn--active" : ""
-            }`}
-            onClick={() => setMode(key)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+        <PerfilModeToggle
+          mode={mode}
+          modes={MODES}
+          onModeChange={setMode}
+        />
 
-      <hr className="perfil-page__divider" />
+        <hr className="perfil-page__divider" />
 
-      <CanEditProvider canEdit={mode === "vendedor" || mode === "tutor"}>
         {mode === "consumidor" && <VistaConsumidor />}
 
         {mode === "vendedor" && <VistaVendedor />}
 
         {mode === "tutor" && <VistaTutor />}
-      </CanEditProvider>
 
-      <hr className="perfil-page__divider" />
+        <hr className="perfil-page__divider" />
 
-      {/* Comentarios*/}
-      <section className="perfil-page__section">
-        <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
-        <CommentSection
+        <PerfilCommentsSection
+          title={t("sections.comments")}
           targetName={user.name}
           comments={comments}
           onSubmit={handleCommentSubmit}
-          onCancel={() => {}}
         />
-      </section>
+      </PerspectivaInternaProvider>
     </main>
+  );
+}
+
+interface PerfilModeToggleProps {
+  mode: PerfilMode;
+  modes: { key: PerfilMode; label: string }[];
+  onModeChange: (mode: PerfilMode) => void;
+}
+
+function PerfilModeToggle({
+  mode,
+  modes,
+  onModeChange,
+}: PerfilModeToggleProps) {
+  const { canViewConsumerSection } = usePerspectivaInterna();
+  const visibleModes = canViewConsumerSection
+    ? modes
+    : modes.filter(({ key }) => key !== "consumidor");
+
+  return (
+    <div className="perfil-page__mode-toggle">
+      {visibleModes.map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          className={`perfil-page__mode-btn${
+            mode === key ? " perfil-page__mode-btn--active" : ""
+          }`}
+          onClick={() => onModeChange(key)}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+interface PerfilCommentsSectionProps {
+  title: string;
+  targetName: string;
+  comments: Comment[];
+  onSubmit: (comment: string, rating: number, anonymous: boolean) => void;
+}
+
+function PerfilCommentsSection({
+  title,
+  targetName,
+  comments,
+  onSubmit,
+}: PerfilCommentsSectionProps) {
+  const { canViewCommentsSection } = usePerspectivaInterna();
+
+  if (!canViewCommentsSection) return null;
+
+  return (
+    <section className="perfil-page__section">
+      <h2 className="perfil-page__section-title">{title}</h2>
+      <CommentSection
+        targetName={targetName}
+        comments={comments}
+        onSubmit={onSubmit}
+        onCancel={() => {}}
+      />
+    </section>
   );
 }

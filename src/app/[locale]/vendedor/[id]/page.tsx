@@ -14,7 +14,10 @@ import imagePath from "../../../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import { apiClient } from "../../../../lib/apiClient";
 import { obtenerContactosUsuario } from "../../../../lib/contactosUsuario";
-import { CanEditProvider } from "../../../../context/CanEditContext";
+import {
+  PerspectivaInternaProvider,
+  usePerspectivaInterna,
+} from "../../../../context/PerspectivaInternaContext";
 import { useAuthStore } from "../../../../store/authStore";
 import "../../../../components/ui/Button/Button.css";
 import "../../../../components/ui/Modal/Modal.css";
@@ -109,7 +112,7 @@ export default function PerfilVendedorPage() {
 
   return (
     <main className="perfil-vendedor">
-      <CanEditProvider canEdit={isOwnProfile}>
+      <PerspectivaInternaProvider isOwnProfile={isOwnProfile} activeProfileMode="vendedor">
         <UserProfileHeader
           user={user}
           onSave={async (updated) => {
@@ -137,16 +140,10 @@ export default function PerfilVendedorPage() {
         <section className="perfil-vendedor__section">
           <div className="perfil-vendedor__section-header">
             <h2 className="perfil-page__carousel-wrap">{t("sections.catalog")}</h2>
-            {isOwnProfile && (
-              <button
-                type="button"
-                className="button button--small"
-                onClick={() => setModalOpen(true)}
-              >
-                <SquarePlus size={14} />
-                {t("actions.newPublication")}
-              </button>
-            )}
+            <NuevaPublicacionButton
+              label={t("actions.newPublication")}
+              onClick={() => setModalOpen(true)}
+            />
           </div>
           <div className="perfil-vendedor__carousel-wrap">
             <HorizontalCarousel>
@@ -177,19 +174,12 @@ export default function PerfilVendedorPage() {
           />
         </section>
 
-        <hr className="perfil-vendedor__divider" />
-
-        <section className="perfil-vendedor__section">
-          <h2 className="perfil-vendedor__section-title">{t("sections.comments")}</h2>
-          <div className="perfil-vendedor__comments">
-            <CommentSection
-              targetName={user.name}
-              comments={comments}
-              onSubmit={handleCommentSubmit}
-              onCancel={() => {}}
-            />
-          </div>
-        </section>
+        <PerfilVendedorCommentsSection
+          title={t("sections.comments")}
+          targetName={user.name}
+          comments={comments}
+          onSubmit={handleCommentSubmit}
+        />
 
         {isOwnProfile && modalOpen && (
           <div className="modal-overlay" onClick={() => setModalOpen(false)}>
@@ -202,7 +192,65 @@ export default function PerfilVendedorPage() {
             </div>
           </div>
         )}
-      </CanEditProvider>
+      </PerspectivaInternaProvider>
     </main>
+  );
+}
+
+interface NuevaPublicacionButtonProps {
+  label: string;
+  onClick: () => void;
+}
+
+function NuevaPublicacionButton({ label, onClick }: NuevaPublicacionButtonProps) {
+  const { canCreatePublication } = usePerspectivaInterna();
+
+  if (!canCreatePublication) return null;
+
+  return (
+    <button
+      type="button"
+      className="button button--small"
+      onClick={onClick}
+    >
+      <SquarePlus size={14} />
+      {label}
+    </button>
+  );
+}
+
+interface PerfilVendedorCommentsSectionProps {
+  title: string;
+  targetName: string;
+  comments: Comment[];
+  onSubmit: (comment: string, rating: number, anonymous: boolean) => void;
+}
+
+function PerfilVendedorCommentsSection({
+  title,
+  targetName,
+  comments,
+  onSubmit,
+}: PerfilVendedorCommentsSectionProps) {
+  const { canViewCommentsSection } = usePerspectivaInterna();
+
+  if (!canViewCommentsSection) return null;
+
+  return (
+    <>
+      <hr className="perfil-vendedor__divider" />
+
+      <section className="perfil-vendedor__section">
+        <h2 className="perfil-vendedor__section-title">{title}</h2>
+        <div className="perfil-vendedor__comments">
+          <CommentSection
+            targetName={targetName}
+            comments={comments}
+            onSubmit={onSubmit}
+            onCancel={() => {}}
+          />
+        </div>
+      </section>
+    </>
   );
 }
