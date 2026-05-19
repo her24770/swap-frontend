@@ -48,7 +48,13 @@ export default function LoginForm() {
       router.push("/");
     } catch (error) {
       const apiError = error as ApiError;
-      toast.error(apiError.message || t('toast.loginErrorFallback'));
+      const message =
+        apiError.status === 401
+          ? t('toast.invalidCredentials')
+          : apiError.message || t('toast.loginErrorFallback');
+
+      setServerError(message);
+      toast.error(message);
     }
   };
 
@@ -95,7 +101,6 @@ export default function LoginForm() {
               type={showPassword ? "text" : "password"}
               {...register("password", {
                 required: tValidation('passwordRequired'),
-                minLength: { value: 6, message: tValidation('passwordMin') },
               })}
               className={`login-form__input login-form__input--password${errors.password ? " login-form__input--error" : ""}`}
             />

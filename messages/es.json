@@ -19,13 +19,11 @@
 			"negocios": "Negocios"
 		}
 	},
-
 	"locales": {
 		"en": "EN",
 		"es": "ES",
 		"fr": "FR"
 	},
-
 	"common": {
 		"brand": "SWAP",
 		"search": {
@@ -117,6 +115,7 @@
 		},
 		"toast": {
 			"welcomeBack": "¡Bienvenido de nuevo!",
+			"invalidCredentials": "Credenciales incorrectas.",
 			"loginErrorFallback": "No fue posible iniciar sesión"
 		},
 		"validation": {
@@ -278,7 +277,6 @@
 			"currentImageAlt": "Imagen actual"
 		}
 	},
-
 	"error_loading_section": "No fue posible cargar esta sección",
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {

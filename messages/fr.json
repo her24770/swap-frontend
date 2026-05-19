@@ -19,13 +19,11 @@
 			"negocios": "Commerces"
 		}
 	},
-
 	"locales": {
 		"en": "EN",
 		"es": "ES",
 		"fr": "FR"
 	},
-
 	"common": {
 		"brand": "SWAP",
 		"search": {
@@ -117,6 +115,7 @@
 		},
 		"toast": {
 			"welcomeBack": "Bon retour !",
+			"invalidCredentials": "Identifiants incorrects.",
 			"loginErrorFallback": "Impossible de se connecter"
 		},
 		"validation": {
@@ -160,7 +159,6 @@
 			"consumer": "Acheteur",
 			"seller": "Vendeur",
 			"tutor": "Tuteur"
-
 		},
 		"sections": {
 			"saved": "Enregistrés",
@@ -276,7 +274,6 @@
 			"currentImageAlt": "Image actuelle"
 		}
 	},
-
 	"error_loading_section": "Impossible de charger cette section",
 	"loading": "Chargement des publications...",
 	"publicacionForm": {
