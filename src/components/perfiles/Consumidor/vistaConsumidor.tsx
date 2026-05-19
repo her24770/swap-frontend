@@ -50,7 +50,6 @@ export default function VistaConsumidor() {
                 description={pub.description}
                 images={pub.images}
                 estado={pub.estado}
-                canEdit={false}
                 onDetallesClick={() => setSelectedPost(pub)}
               />
             </div>

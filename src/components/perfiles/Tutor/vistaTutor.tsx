@@ -92,7 +92,6 @@ export default function VistaTutor() {
                 description={pub.description}
                 images={pub.images}
                 estado={pub.estado}
-                canEdit={true}
                 onEditClick={() => {
                   setPostEditando(pub);
                   setEditOpen(true);

@@ -7,6 +7,7 @@ import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
+import { useCanEdit } from "../../../context/CanEditContext";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
 import type { Tag } from "../../../types/tag";
@@ -22,7 +23,6 @@ interface PostCardProps {
   publicacionId?: number;
   estado?: string | number;
   estadosDisponibles?: EstadoOpcion[];
-  canEdit?: boolean;
   onEditClick?: () => void;
   onDeleteClick?: () => void;
   onImageUpdate?: (newUrl: string) => void;
@@ -40,7 +40,6 @@ export default function PostCard({
   publicacionId,
   estado,
   estadosDisponibles = [],
-  canEdit = false,
   onEditClick,
   onDeleteClick,
   onImageUpdate,
@@ -48,6 +47,7 @@ export default function PostCard({
   onDetallesClick,
 }: PostCardProps) {
   const t = useTranslations("posts");
+  const { canEdit } = useCanEdit();
 
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
@@ -101,7 +101,6 @@ export default function PostCard({
           <div className="post-card__estado-tag-container">
             <EstadoTag
               estado={estado}
-              canEdit={canEdit}
               estadosDisponibles={estadosDisponibles}
               onEstadoChange={onEstadoChange}
             />
@@ -135,7 +134,7 @@ export default function PostCard({
       <div className="post-card__media">
         <div className="post-card__image-wrapper">
           <PostImage images={displayImages} alt={title} />
-          {publicacionId !== undefined && (
+          {canEdit && publicacionId !== undefined && (
             <>
               <div
                 className="post-card__upload-overlay"

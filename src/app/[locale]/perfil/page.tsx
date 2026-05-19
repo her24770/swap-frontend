@@ -11,6 +11,7 @@ import VistaConsumidor from "../../../components/perfiles/Consumidor/vistaConsum
 import VistaVendedor from "../../../components/perfiles/Vendedor/vistaVendedor";
 import VistaTutor from "../../../components/perfiles/Tutor/vistaTutor";
 import { TAGS_MATERIAS } from "../../../lib/tags";
+import { CanEditProvider } from "../../../context/CanEditContext";
 import "./PerfilConsumidorPage.css";
 import CrearPublicacionForm from "../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import type { Comment } from "../../../types/comment";
@@ -145,11 +146,13 @@ export default function PerfilPage() {
 
       <hr className="perfil-page__divider" />
 
-      {mode === "consumidor" && <VistaConsumidor />}
+      <CanEditProvider canEdit={mode === "vendedor" || mode === "tutor"}>
+        {mode === "consumidor" && <VistaConsumidor />}
 
-      {mode === "vendedor" && <VistaVendedor />}
+        {mode === "vendedor" && <VistaVendedor />}
 
-      {mode === "tutor" && <VistaTutor />}
+        {mode === "tutor" && <VistaTutor />}
+      </CanEditProvider>
 
       <hr className="perfil-page__divider" />
 

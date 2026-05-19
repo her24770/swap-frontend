@@ -14,6 +14,8 @@ import imagePath from "../../../../../public/images/uvg.jpg";
 import { TAGS_MATERIAS } from "../../../../lib/tags";
 import { apiClient } from "../../../../lib/apiClient";
 import { obtenerContactosUsuario } from "../../../../lib/contactosUsuario";
+import { CanEditProvider } from "../../../../context/CanEditContext";
+import { useAuthStore } from "../../../../store/authStore";
 import "../../../../components/ui/Button/Button.css";
 import "../../../../components/ui/Modal/Modal.css";
 import "./PerfilVendedorPage.css";
@@ -59,6 +61,7 @@ export default function PerfilVendedorPage() {
   const tCommon = useTranslations("common");
 
   const { id } = useParams<{ id: string }>();
+  const currentUserId = useAuthStore((s) => s.usuario?.id_usuario);
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
   const [modalOpen, setModalOpen] = useState(false);
@@ -102,101 +105,104 @@ export default function PerfilVendedorPage() {
 
   if (!user) return <p>{t("loading")}</p>;
 
+  const isOwnProfile = Number(id) === currentUserId;
+
   return (
     <main className="perfil-vendedor">
-
-      <UserProfileHeader
-        user={user}
-        onSave={async (updated) => {
-          setUser((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  name: updated.name ?? prev.name,
-                  description: updated.description ?? prev.description,
-                  imageUrl: updated.imageUrl ?? prev.imageUrl,
-                  contacts: updated.contacts
-                    ? updated.contacts.map((c: any) => ({
-                        platform: c.tipo_contacto,
-                        url: c.valor,
-                      }))
-                    : prev.contacts,
-                }
-              : prev
-          );
-        }}
-      />
-
-      <hr className="perfil-vendedor__divider" />
-
-      <section className="perfil-vendedor__section">
-        <div className="perfil-vendedor__section-header">
-          <h2 className="perfil-page__carousel-wrap">{t("sections.catalog")}</h2>
-          <button
-            type="button"
-            className="button button--small"
-            onClick={() => setModalOpen(true)}
-          >
-            <SquarePlus size={14} />
-            {t("actions.newPublication")}
-          </button>
-        </div>
-        <div className="perfil-vendedor__carousel-wrap">
-          <HorizontalCarousel>
-            {MOCK_CATALOG.map((pub) => (
-              <div key={pub.id} className="h-carousel__item">
-                <PostCard
-                  tags={pub.tags}
-                  title={pub.title}
-                  price={pub.price}
-                  description={pub.description}
-                  images={[imagePath.src]}
-                  estado={pub.estado}
-                  canEdit={false}
-                />
-              </div>
-            ))}
-          </HorizontalCarousel>
-        </div>
-      </section>
-
-      <hr className="perfil-vendedor__divider" />
-
-      <section className="perfil-vendedor__section">
-        <h2 className="perfil-page__carousel-wrap">{t("sections.ads")}</h2>
-        <AdBanner
-          imageUrl={MOCK_AD.imageUrl}
-          title={MOCK_AD.title}
-          subtitle={MOCK_AD.subtitle}
+      <CanEditProvider canEdit={isOwnProfile}>
+        <UserProfileHeader
+          user={user}
+          onSave={async (updated) => {
+            setUser((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    name: updated.name ?? prev.name,
+                    description: updated.description ?? prev.description,
+                    imageUrl: updated.imageUrl ?? prev.imageUrl,
+                    contacts: updated.contacts
+                      ? updated.contacts.map((c: any) => ({
+                          platform: c.tipo_contacto,
+                          url: c.valor,
+                        }))
+                      : prev.contacts,
+                  }
+                : prev
+            );
+          }}
         />
-      </section>
 
-      <hr className="perfil-vendedor__divider" />
+        <hr className="perfil-vendedor__divider" />
 
-      <section className="perfil-vendedor__section">
-        <h2 className="perfil-vendedor__section-title">{t("sections.comments")}</h2>
-        <div className="perfil-vendedor__comments">
-          <CommentSection
-            targetName={user.name}
-            comments={comments}
-            onSubmit={handleCommentSubmit}
-            onCancel={() => {}}
+        <section className="perfil-vendedor__section">
+          <div className="perfil-vendedor__section-header">
+            <h2 className="perfil-page__carousel-wrap">{t("sections.catalog")}</h2>
+            {isOwnProfile && (
+              <button
+                type="button"
+                className="button button--small"
+                onClick={() => setModalOpen(true)}
+              >
+                <SquarePlus size={14} />
+                {t("actions.newPublication")}
+              </button>
+            )}
+          </div>
+          <div className="perfil-vendedor__carousel-wrap">
+            <HorizontalCarousel>
+              {MOCK_CATALOG.map((pub) => (
+                <div key={pub.id} className="h-carousel__item">
+                  <PostCard
+                    tags={pub.tags}
+                    title={pub.title}
+                    price={pub.price}
+                    description={pub.description}
+                    images={[imagePath.src]}
+                    estado={pub.estado}
+                  />
+                </div>
+              ))}
+            </HorizontalCarousel>
+          </div>
+        </section>
+
+        <hr className="perfil-vendedor__divider" />
+
+        <section className="perfil-vendedor__section">
+          <h2 className="perfil-page__carousel-wrap">{t("sections.ads")}</h2>
+          <AdBanner
+            imageUrl={MOCK_AD.imageUrl}
+            title={MOCK_AD.title}
+            subtitle={MOCK_AD.subtitle}
           />
-        </div>
-      </section>
+        </section>
 
-      {modalOpen && (
-        <div className="modal-overlay" onClick={() => setModalOpen(false)}>
-          <div className="perfil-vendedor__form-modal" onClick={(e) => e.stopPropagation()}>
-            <CrearPublicacionForm
-              mode="crear"
-              onSuccess={() => setModalOpen(false)}
-              onCancel={() => setModalOpen(false)}
+        <hr className="perfil-vendedor__divider" />
+
+        <section className="perfil-vendedor__section">
+          <h2 className="perfil-vendedor__section-title">{t("sections.comments")}</h2>
+          <div className="perfil-vendedor__comments">
+            <CommentSection
+              targetName={user.name}
+              comments={comments}
+              onSubmit={handleCommentSubmit}
+              onCancel={() => {}}
             />
           </div>
-        </div>
-      )}
+        </section>
 
+        {isOwnProfile && modalOpen && (
+          <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+            <div className="perfil-vendedor__form-modal" onClick={(e) => e.stopPropagation()}>
+              <CrearPublicacionForm
+                mode="crear"
+                onSuccess={() => setModalOpen(false)}
+                onCancel={() => setModalOpen(false)}
+              />
+            </div>
+          </div>
+        )}
+      </CanEditProvider>
     </main>
   );
 }

@@ -147,7 +147,6 @@ export default function VistaVendedor() {
                   images={pub.images}
                   estado={pub.estado}
                   estadosDisponibles={estadosMaterial}
-                  canEdit={true}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -221,7 +220,6 @@ export default function VistaVendedor() {
                   description={pub.description}
                   images={pub.images}
                   estado={pub.estado}
-                  canEdit={true}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
