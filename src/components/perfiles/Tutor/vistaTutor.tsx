@@ -12,6 +12,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { TAG_TUTORIA } from "../../../lib/tags";
 import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
+import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Modal/Modal.css";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
@@ -69,6 +70,7 @@ export default function VistaTutor({
 }: VistaTutorProps = {}) {
   const t = useTranslations("perfil");
   const authUserId = useAuthStore((s) => s.usuario?.id_usuario);
+  const { mostrarConfirm, agregarNotificacion } = useUIStore();
   const idUsuario = userId ?? authUserId;
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
   const estadosTutoria = useEstados("tutoria");
@@ -117,17 +119,28 @@ export default function VistaTutor({
     }
   }, [idUsuario]);
 
-  const handleEliminar = useCallback(async (id: number) => {
-    if (!confirm("¿Seguro que deseas eliminar esta publicación?")) return;
-
-    try {
-      await apiClient.delete(`/api/publicacion/${id}`);
-      fetchPublicaciones();
-    } catch (err) {
-      const apiError = err as ApiError;
-      alert(apiError.message || "No fue posible eliminar la publicación.");
-    }
-  }, [fetchPublicaciones]);
+  const handleEliminar = useCallback((id: number) => {
+    mostrarConfirm({
+      titulo: "Eliminar publicación",
+      mensaje: "¿Seguro que deseas eliminar esta publicación? Esta acción no se puede deshacer.",
+      onConfirm: async () => {
+        try {
+          await apiClient.delete(`/api/publicacion/${id}`);
+          agregarNotificacion({
+            tipo: "success",
+            mensaje: "Publicación eliminada exitosamente.",
+          });
+          fetchPublicaciones();
+        } catch (err) {
+          const apiError = err as ApiError;
+          agregarNotificacion({
+            tipo: "error",
+            mensaje: apiError.message || "No fue posible eliminar la publicación.",
+          });
+        }
+      },
+    });
+  }, [agregarNotificacion, fetchPublicaciones, mostrarConfirm]);
 
   useEffect(() => {
     fetchPublicaciones();
