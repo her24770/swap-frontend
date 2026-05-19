@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { SquarePlus } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
@@ -8,9 +8,13 @@ import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import HorarioSemanal, { EstadoHorario } from "./Horario/Horario";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { TAG_TUTORIA } from "../../../lib/tags";
+import { useEstados } from "../../../hooks/useEstados";
+import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
-import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
+import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
 
 interface CatalogPost {
@@ -21,6 +25,7 @@ interface CatalogPost {
   tags: Tag[];
   estado: string;
   images: string[];
+  categorias: number[];
 }
 
 interface EspaciosHorario {
@@ -28,16 +33,6 @@ interface EspaciosHorario {
   hora: number;
   estado: EstadoHorario;
 }
-
-const MOCK_CATALOG: CatalogPost[] = Array.from({ length: 6 }, (_, i) => ({
-  id: i + 1,
-  title: "Porción pastel",
-  price: 15,
-  description: "Media porción de pastel de chocolate hecho en casa.",
-  tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }],
-  estado: i % 3 === 0 ? "vendido" : "activo",
-  images: [imagePath.src],
-}));
 
 const MOCK_SLOTS: EspaciosHorario[] = [
   { dia: "Lunes",   hora: 10, estado: "ocupado" },
@@ -61,13 +56,69 @@ const MOCK_SLOTS: EspaciosHorario[] = [
 
 export default function VistaTutor() {
   const t = useTranslations("perfil");
+  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
+  const estadosTutoria = useEstados("tutoria");
 
+  const [catalogTutorias, setCatalogTutorias] = useState<CatalogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [crearOpen, setCrearOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
   const [isSaved, setIsSaved] = useState(false);
+
+  const fetchPublicaciones = useCallback(async () => {
+    if (!idUsuario) {
+      setCatalogTutorias([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const resTutorias = await apiClient.get<PublicacionesResponse>(
+        `/api/publicacion/user/${idUsuario}?tipo=tutoria&all=true`
+      );
+
+      const mapPublicaciones = (data: Publicacion[]): CatalogPost[] =>
+        data.map((pub) => ({
+          id: pub.id_publicacion,
+          title: pub.titulo,
+          price: typeof pub.precio === "string" ? parseFloat(pub.precio) : pub.precio,
+          description: pub.descripcion,
+          tags: [{ ...TAG_TUTORIA, name: "Tutoría" }],
+          estado: pub.estadoRel?.estado ?? "activo",
+          images: pub.imagenes?.map((img) => img.url_imagen) || [],
+          categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
+        }));
+
+      setCatalogTutorias(mapPublicaciones(resTutorias.data));
+    } catch (err) {
+      const apiError = err as ApiError;
+      setError(apiError.message || "No fue posible obtener las tutorías");
+    } finally {
+      setLoading(false);
+    }
+  }, [idUsuario]);
+
+  const handleEliminar = useCallback(async (id: number) => {
+    if (!confirm("¿Seguro que deseas eliminar esta publicación?")) return;
+
+    try {
+      await apiClient.delete(`/api/publicacion/${id}`);
+      fetchPublicaciones();
+    } catch (err) {
+      const apiError = err as ApiError;
+      alert(apiError.message || "No fue posible eliminar la publicación.");
+    }
+  }, [fetchPublicaciones]);
+
+  useEffect(() => {
+    fetchPublicaciones();
+  }, [fetchPublicaciones]);
 
   return (
     <>
@@ -86,28 +137,68 @@ export default function VistaTutor() {
             </button>
           )}
         </div>
-        <HorizontalCarousel>
-          {MOCK_CATALOG.map((pub) => (
-            <div key={pub.id} className="h-carousel__item">
-              <PostCard
-                tags={pub.tags}
-                title={pub.title}
-                price={pub.price}
-                description={pub.description}
-                images={pub.images}
-                estado={pub.estado}
-                onEditClick={() => {
-                  setPostEditando(pub);
-                  setEditOpen(true);
-                }}
-                onEstadoChange={(nuevoEstado) =>
-                  console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
-                }
-                onDetallesClick={() => setSelectedPost(pub)}
-              />
-            </div>
-          ))}
-        </HorizontalCarousel>
+
+        {loading && (
+          <p className="perfil-page__coming-soon">Cargando tutorías...</p>
+        )}
+
+        {error && (
+          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && catalogTutorias.length === 0 && (
+          <p className="perfil-page__coming-soon">
+            Aún no tienes tutorías publicadas.
+          </p>
+        )}
+
+        {!loading && !error && catalogTutorias.length > 0 && (
+          <HorizontalCarousel>
+            {catalogTutorias.map((pub) => (
+              <div key={pub.id} className="h-carousel__item">
+                <PostCard
+                  publicacionId={pub.id}
+                  tags={pub.tags}
+                  title={pub.title}
+                  price={pub.price}
+                  description={pub.description}
+                  images={pub.images}
+                  estado={pub.estado}
+                  estadosDisponibles={estadosTutoria}
+                  onEditClick={() => {
+                    setPostEditando(pub);
+                    setEditOpen(true);
+                  }}
+                  onDeleteClick={() => handleEliminar(pub.id)}
+                  onImageUpdate={(newUrl) => {
+                    setCatalogTutorias((prev) =>
+                      prev.map((p) =>
+                        p.id === pub.id ? { ...p, images: [newUrl, ...p.images.slice(1)] } : p
+                      )
+                    );
+                  }}
+                  onEstadoChange={async (nuevoEstado) => {
+                    try {
+                      await apiClient.put(`/api/publicacion/${pub.id}`, {
+                        estado: nuevoEstado,
+                        etiquetas: pub.categorias,
+                      });
+                      setCatalogTutorias((prev) =>
+                        prev.map((p) => p.id === pub.id ? { ...p, estado: nuevoEstado } : p)
+                      );
+                    } catch (err) {
+                      const apiError = err as ApiError;
+                      alert(apiError.message || "No fue posible cambiar el estado.");
+                    }
+                  }}
+                  onDetallesClick={() => setSelectedPost(pub)}
+                />
+              </div>
+            ))}
+          </HorizontalCarousel>
+        )}
       </section>
 
       <hr className="perfil-page__divider" />
@@ -126,7 +217,10 @@ export default function VistaTutor() {
               <CrearPublicacionForm
                 mode="crear"
                 onCancel={() => setCrearOpen(false)}
-                onSuccess={() => setCrearOpen(false)}
+                onSuccess={() => {
+                  setCrearOpen(false);
+                  fetchPublicaciones();
+                }}
               />
             </div>
           </div>
@@ -152,12 +246,16 @@ export default function VistaTutor() {
                   descripcion:      postEditando.description,
                   precio:           String(postEditando.price),
                   tipo_publicacion: "tutoria",
-                  categorias:       postEditando.tags.map((tag) => tag.id),
+                  categorias:       postEditando.categorias,
                   destacado:        false,
                   estado:           postEditando.estado as "disponible" | "vendido" | "reservado",
                 }}
                 onCancel={() => { setEditOpen(false); setPostEditando(null); }}
-                onSuccess={() => { setEditOpen(false); setPostEditando(null); }}
+                onSuccess={() => {
+                  setEditOpen(false);
+                  setPostEditando(null);
+                  fetchPublicaciones();
+                }}
               />
             </div>
           </div>
