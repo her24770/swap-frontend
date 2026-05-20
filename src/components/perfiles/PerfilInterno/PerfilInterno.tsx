@@ -77,7 +77,7 @@ export default function PerfilInterno() {
         }
 
         const response = await apiClient.get<ApiResult<PerfilPublicoApi> | PerfilPublicoApi>(
-          `/api/usuarios/${usuarioId}/perfil-publico`
+          `/api/user/${usuarioId}/perfil-publico`
         );
         const data = unwrapPerfilPublico(response);
         setUser({

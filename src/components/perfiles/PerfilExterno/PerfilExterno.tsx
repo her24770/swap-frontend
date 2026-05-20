@@ -55,7 +55,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
       try {
         setError(null);
         const response = await apiClient.get<ApiResult<PerfilPublicoApi> | PerfilPublicoApi>(
-          `/api/usuarios/${userId}/perfil-publico`
+          `/api/user/${userId}/perfil-publico`
         );
         const data = unwrapPerfilPublico(response);
         setUser({
