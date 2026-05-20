@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { useAuthStore } from "../../../store/authStore";
 import { useToast } from "../../../hooks/useToast";
 import type { AuthResponse } from "../../../types/usuario";
@@ -43,7 +44,8 @@ export default function LoginForm() {
         email_institucional: data.email,
         password: data.password,
       });
-      login(response.usuario, response.rol);
+      const sesion = unwrapAuthResponse(response);
+      login(sesion.usuario, sesion.rol);
       toast.success(t('toast.welcomeBack'));
       router.push("/");
     } catch (error) {

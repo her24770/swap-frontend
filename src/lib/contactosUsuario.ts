@@ -71,6 +71,10 @@ function readTipoContactoId(raw: Record<string, unknown>): number | null {
 export function mapApiContactosToContacts(
   data: unknown
 ): Contact[] {
+  if (data && typeof data === "object" && "data" in data) {
+    return mapApiContactosToContacts((data as { data?: unknown }).data);
+  }
+
   if (!Array.isArray(data)) return [];
   const contacts: Contact[] = [];
   for (const item of data) {

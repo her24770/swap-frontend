@@ -2,19 +2,21 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { SquarePlus } from "lucide-react";
+import { Pencil, Save, SquarePlus, X } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
-import HorarioSemanal, { EstadoHorario } from "./Horario/Horario";
+import HorarioSemanal from "./Horario/Horario";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { TAG_TUTORIA } from "../../../lib/tags";
 import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
+import { guardarHorarioUsuario, obtenerHorarioUsuario } from "../../../services/horarioService";
 import "../../ui/Modal/Modal.css";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
+import type { DiaHorario, EspacioHorario, EstadoHorario } from "../../../types/horario";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
 
@@ -28,32 +30,6 @@ interface CatalogPost {
   images: string[];
   categorias: number[];
 }
-
-interface EspaciosHorario {
-  dia: string;
-  hora: number;
-  estado: EstadoHorario;
-}
-
-const MOCK_SLOTS: EspaciosHorario[] = [
-  { dia: "Lunes",   hora: 10, estado: "ocupado" },
-  { dia: "Lunes",   hora: 14, estado: "disponible" },
-  { dia: "Lunes",   hora: 15, estado: "disponible" },
-  { dia: "Martes",  hora: 7,  estado: "disponible" },
-  { dia: "Martes",  hora: 8,  estado: "disponible" },
-  { dia: "Martes",  hora: 9,  estado: "disponible" },
-  { dia: "Miérc.",  hora: 10, estado: "disponible" },
-  { dia: "Miérc.",  hora: 17, estado: "ocupado" },
-  { dia: "Jueves",  hora: 12, estado: "ocupado" },
-  { dia: "Jueves",  hora: 14, estado: "ocupado" },
-  { dia: "Viernes", hora: 9,  estado: "ocupado" },
-  { dia: "Viernes", hora: 12, estado: "disponible" },
-  { dia: "Sábado",  hora: 9,  estado: "ocupado" },
-  { dia: "Sábado",  hora: 14, estado: "disponible" },
-  { dia: "Domingo", hora: 9,  estado: "ocupado" },
-  { dia: "Domingo", hora: 10, estado: "disponible" },
-];
-
 
 interface VistaTutorProps {
   userId?: number;
@@ -83,6 +59,13 @@ export default function VistaTutor({
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [horarioSlots, setHorarioSlots] = useState<EspacioHorario[]>([]);
+  const [horarioOriginal, setHorarioOriginal] = useState<EspacioHorario[]>([]);
+  const [horarioLoading, setHorarioLoading] = useState(true);
+  const [horarioError, setHorarioError] = useState<string | null>(null);
+  const [horarioEditando, setHorarioEditando] = useState(false);
+  const [horarioGuardando, setHorarioGuardando] = useState(false);
+  const [cambiosPendientes, setCambiosPendientes] = useState<Set<string>>(new Set());
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
@@ -119,6 +102,30 @@ export default function VistaTutor({
     }
   }, [idUsuario]);
 
+  const fetchHorario = useCallback(async () => {
+    if (!idUsuario) {
+      setHorarioSlots([]);
+      setHorarioOriginal([]);
+      setHorarioLoading(false);
+      return;
+    }
+
+    try {
+      setHorarioLoading(true);
+      setHorarioError(null);
+      const slots = await obtenerHorarioUsuario(idUsuario);
+      setHorarioSlots(slots);
+      setHorarioOriginal(slots);
+      setCambiosPendientes(new Set());
+      setHorarioEditando(false);
+    } catch (err) {
+      const apiError = err as ApiError;
+      setHorarioError(apiError.message || "No fue posible obtener el horario");
+    } finally {
+      setHorarioLoading(false);
+    }
+  }, [idUsuario]);
+
   const handleEliminar = useCallback((id: number) => {
     mostrarConfirm({
       titulo: "Eliminar publicación",
@@ -145,6 +152,81 @@ export default function VistaTutor({
   useEffect(() => {
     fetchPublicaciones();
   }, [fetchPublicaciones]);
+
+  useEffect(() => {
+    fetchHorario();
+  }, [fetchHorario]);
+
+  const handleToggleHorario = useCallback((dia: DiaHorario, hora: number) => {
+    const key = horarioSlotKey(dia, hora);
+
+    setHorarioSlots((prev) => {
+      const actual = obtenerEstadoSlot(prev, dia, hora);
+      if (actual === "ocupado") return prev;
+
+      const siguienteEstado: EstadoHorario =
+        actual === "disponible" ? "no_disponible" : "disponible";
+      const sinSlot = prev.filter((slot) => slotKeyFromSlot(slot) !== key);
+      const siguiente =
+        siguienteEstado === "disponible"
+          ? [...sinSlot, { dia, hora, estado: siguienteEstado }]
+          : sinSlot;
+
+      setCambiosPendientes((actuales) => {
+        const next = new Set(actuales);
+        const estadoOriginal = obtenerEstadoSlot(horarioOriginal, dia, hora);
+        if (estadoOriginal === siguienteEstado) {
+          next.delete(key);
+        } else {
+          next.add(key);
+        }
+        return next;
+      });
+
+      return siguiente;
+    });
+  }, [horarioOriginal]);
+
+  const handleCancelarHorario = useCallback(() => {
+    setHorarioSlots(horarioOriginal);
+    setCambiosPendientes(new Set());
+    setHorarioEditando(false);
+  }, [horarioOriginal]);
+
+  const guardarHorarioConfirmado = useCallback(async () => {
+    if (!idUsuario) return;
+
+    try {
+      setHorarioGuardando(true);
+      const slots = await guardarHorarioUsuario(idUsuario, horarioSlots);
+      setHorarioSlots(slots);
+      setHorarioOriginal(slots);
+      setCambiosPendientes(new Set());
+      setHorarioEditando(false);
+      agregarNotificacion({
+        tipo: "success",
+        mensaje: "Horario actualizado correctamente.",
+      });
+    } catch (err) {
+      const apiError = err as ApiError;
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: apiError.message || "No fue posible guardar el horario.",
+      });
+    } finally {
+      setHorarioGuardando(false);
+    }
+  }, [agregarNotificacion, horarioSlots, idUsuario]);
+
+  const handleGuardarHorario = useCallback(() => {
+    mostrarConfirm({
+      titulo: "Guardar cambios de horario",
+      mensaje: `Se guardarán ${cambiosPendientes.size} cambios en tu disponibilidad semanal. ¿Deseas continuar?`,
+      onConfirm: () => {
+        void guardarHorarioConfirmado();
+      },
+    });
+  }, [cambiosPendientes.size, guardarHorarioConfirmado, mostrarConfirm]);
 
   return (
     <>
@@ -292,16 +374,56 @@ export default function VistaTutor({
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.schedule")}</h2>
-          {canCreatePublication && (
+          {canCreatePublication && !horarioEditando && (
             <button
               type="button"
               className="perfil-page__new-publication-btn"
+              onClick={() => setHorarioEditando(true)}
             >
+              <Pencil size={18} strokeWidth={1.8} aria-hidden />
               Actualizar horario
             </button>
           )}
+          {canCreatePublication && horarioEditando && (
+            <div className="perfil-page__schedule-actions">
+              <button
+                type="button"
+                className="perfil-page__secondary-btn"
+                onClick={handleCancelarHorario}
+                disabled={horarioGuardando}
+              >
+                <X size={18} strokeWidth={1.8} aria-hidden />
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="perfil-page__new-publication-btn"
+                onClick={handleGuardarHorario}
+                disabled={horarioGuardando || cambiosPendientes.size === 0}
+              >
+                <Save size={18} strokeWidth={1.8} aria-hidden />
+                {horarioGuardando ? "Guardando..." : "Guardar cambios"}
+              </button>
+            </div>
+          )}
         </div>
-        <HorarioSemanal slots={MOCK_SLOTS}></HorarioSemanal>
+        {horarioLoading && (
+          <p className="perfil-page__coming-soon">Cargando horario...</p>
+        )}
+        {horarioError && (
+          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+            {horarioError}
+          </p>
+        )}
+        {!horarioLoading && !horarioError && (
+          <HorarioSemanal
+            slots={horarioSlots}
+            editable={horarioEditando}
+            disabled={horarioGuardando}
+            pendingKeys={cambiosPendientes}
+            onToggleSlot={handleToggleHorario}
+          />
+        )}
       </section>
 
       {selectedPost && (
@@ -324,4 +446,20 @@ export default function VistaTutor({
       )}
     </>
   );
+}
+
+function horarioSlotKey(dia: DiaHorario, hora: number): string {
+  return `${dia}-${hora}`;
+}
+
+function slotKeyFromSlot(slot: EspacioHorario): string {
+  return horarioSlotKey(slot.dia, slot.hora);
+}
+
+function obtenerEstadoSlot(
+  slots: EspacioHorario[],
+  dia: DiaHorario,
+  hora: number
+): EstadoHorario {
+  return slots.find((slot) => slot.dia === dia && slot.hora === hora)?.estado ?? "no_disponible";
 }
