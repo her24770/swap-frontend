@@ -15,6 +15,10 @@ export interface ApiError {
   message: string;
 }
 
+interface HandleResponseOptions {
+  skipUnauthorizedRedirect?: boolean;
+}
+
 type ForbiddenHandler = (message: string) => void;
 let onForbidden: ForbiddenHandler | null = null;
 
@@ -31,8 +35,28 @@ function buildHeaders(extra?: HeadersInit): Headers {
   });
 }
 
-async function handleResponse<T>(response: Response): Promise<T> {
+async function getErrorMessage(response: Response, fallback: string): Promise<string> {
+  try {
+    const body = await response.json();
+    return body.message ?? body.error ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+async function handleResponse<T>(
+  response: Response,
+  options: HandleResponseOptions = {}
+): Promise<T> {
   if (response.status === 401) {
+    if (options.skipUnauthorizedRedirect) {
+      const err: ApiError = {
+        status: 401,
+        message: await getErrorMessage(response, "Error 401"),
+      };
+      throw err;
+    }
+
     useAuthStore.getState().logout();
 
     if (typeof window !== "undefined") {
@@ -54,13 +78,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
   }
 
   if (!response.ok) {
-    let message = `Error ${response.status}`;
-    try {
-      const body = await response.json();
-      message = body.message ?? body.error ?? message;
-    } catch {
-      // respuesta sin cuerpo JSON
-    }
+    const message = await getErrorMessage(response, `Error ${response.status}`);
     const err: ApiError = { status: response.status, message };
     throw err;
   }
@@ -90,7 +108,9 @@ async function post<T>(path: string, body?: unknown, options?: RequestInit): Pro
     body: body !== undefined ? JSON.stringify(body) : undefined,
     ...options,
   });
-  return handleResponse<T>(response);
+  return handleResponse<T>(response, {
+    skipUnauthorizedRedirect: path === "/api/auth/login",
+  });
 }
 
 async function put<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {

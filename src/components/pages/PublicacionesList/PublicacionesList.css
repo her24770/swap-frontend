@@ -2,6 +2,8 @@
 :root {
   --grid-cols: 1; 
   --card-gap: 1rem;
+  --section-gap: 3rem;
+  --section-content-gap: 0.45rem;
 }
 
 @media (min-width: 40rem) {
@@ -16,6 +18,8 @@
     /* Tablets / Desktop pequeño: 3 publicaciones */
     --grid-cols: 3; 
     --card-gap: 1.25rem; 
+    --section-gap: 4rem;
+    --section-content-gap: 0.45rem;
   }
 }
 
@@ -78,6 +82,19 @@
 }
 
 /* 4. GRID */
+.publicaciones-list__sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+}
+
+.publicaciones-list__search-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-content-gap);
+  margin-top: var(--section-content-gap);
+}
+
 .publicaciones-list__grid {
   display: grid;
   /* Usa siempre el número de columnas definido en las variables */
@@ -89,6 +106,9 @@
 .publicaciones-list__section {
   position: relative;
   overflow: visible !important;
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-content-gap);
 }
 
 .publicaciones-list__carousel-wrap {
@@ -102,7 +122,7 @@
 
 .publicaciones-list__carousel-wrap::-webkit-scrollbar { display: none; }
 
-.h-carousel__item {
+.publicaciones-list .h-carousel__item {
   scroll-snap-align: start; 
   flex: 0 0 auto; 
   /* Esta fórmula asegura que el item del carousel mida lo mismo que una celda del grid */

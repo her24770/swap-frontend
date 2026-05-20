@@ -7,6 +7,8 @@ import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
+import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
+import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
 import type { Tag } from "../../../types/tag";
@@ -22,7 +24,6 @@ interface PostCardProps {
   publicacionId?: number;
   estado?: string | number;
   estadosDisponibles?: EstadoOpcion[];
-  canEdit?: boolean;
   onEditClick?: () => void;
   onDeleteClick?: () => void;
   onImageUpdate?: (newUrl: string) => void;
@@ -40,7 +41,6 @@ export default function PostCard({
   publicacionId,
   estado,
   estadosDisponibles = [],
-  canEdit = false,
   onEditClick,
   onDeleteClick,
   onImageUpdate,
@@ -48,6 +48,8 @@ export default function PostCard({
   onDetallesClick,
 }: PostCardProps) {
   const t = useTranslations("posts");
+  const { canEditCards } = usePerspectivaInterna();
+  const { mostrarConfirm, agregarNotificacion } = useUIStore();
 
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
@@ -64,19 +66,8 @@ export default function PostCard({
     }
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || publicacionId === undefined) return;
-
-    const allowed = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowed.includes(file.type)) {
-      setUploadError(t("uploadErrors.invalidType"));
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError(t("uploadErrors.tooLarge"));
-      return;
-    }
+  const uploadImage = async (file: File) => {
+    if (publicacionId === undefined) return;
 
     setIsUploading(true);
     setUploadError(null);
@@ -84,14 +75,48 @@ export default function PostCard({
     try {
       const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
       const urlConBuster = `${url}?t=${Date.now()}`;
-      setDisplayImages([urlConBuster, ...displayImages.slice(1)]);
+      setDisplayImages((prev) => [urlConBuster, ...prev.slice(1)]);
       onImageUpdate?.(urlConBuster);
-    } catch (err: any) {
-      setUploadError(err.message || t("uploadErrors.generic"));
+      agregarNotificacion({
+        tipo: "success",
+        mensaje: "La imagen de la publicación fue actualizada exitosamente.",
+      });
+    } catch (err) {
+      const error = err as Error;
+      const message = error.message || t("uploadErrors.generic");
+      setUploadError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
     } finally {
       setIsUploading(false);
-      e.target.value = "";
     }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || publicacionId === undefined) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      const message = t("uploadErrors.invalidType");
+      setUploadError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      const message = t("uploadErrors.tooLarge");
+      setUploadError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+      return;
+    }
+
+    mostrarConfirm({
+      titulo: "Actualizar imagen",
+      mensaje: "¿Deseas reemplazar la imagen de esta publicación?",
+      onConfirm: () => {
+        void uploadImage(file);
+      },
+    });
   };
 
   return (
@@ -101,14 +126,13 @@ export default function PostCard({
           <div className="post-card__estado-tag-container">
             <EstadoTag
               estado={estado}
-              canEdit={canEdit}
               estadosDisponibles={estadosDisponibles}
               onEstadoChange={onEstadoChange}
             />
           </div>
         )}
 
-        {canEdit && onEditClick && (
+        {canEditCards && onEditClick && (
           <button
             type="button"
             className="post-card__edit-button"
@@ -119,7 +143,7 @@ export default function PostCard({
             <SquarePen size={24} strokeWidth={2} />
           </button>
         )}
-        {canEdit && onDeleteClick && (
+        {canEditCards && onDeleteClick && (
           <button
             type="button"
             className="post-card__delete-button"
@@ -135,7 +159,7 @@ export default function PostCard({
       <div className="post-card__media">
         <div className="post-card__image-wrapper">
           <PostImage images={displayImages} alt={title} />
-          {publicacionId !== undefined && (
+          {canEditCards && publicacionId !== undefined && (
             <>
               <div
                 className="post-card__upload-overlay"

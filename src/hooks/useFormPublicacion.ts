@@ -17,6 +17,17 @@ import {
 } from "../schemas/zodSchemas";
 const { agregarNotificacion } = useUIStore.getState();
 
+const CONFIRMACIONES_PUBLICACION = {
+  crear: {
+    titulo: "Crear publicación",
+    mensaje: "¿Deseas crear esta publicación con la información ingresada?",
+  },
+  actualizar: {
+    titulo: "Actualizar publicación",
+    mensaje: "¿Deseas guardar los cambios de esta publicación?",
+  },
+};
+
 
 
 // ─── Helpers internos ─────────────────────────────────────────────────────────
@@ -51,6 +62,7 @@ export interface UseFormCrearPublicacionReturn {
 export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const form = useForm<CrearPublicacionFormData>({
@@ -117,9 +129,10 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
 
   // ── Envío al backend
 
-  const onSubmit = form.handleSubmit(async (data: CrearPublicacionFormData) => {
+  const crearPublicacion = useCallback(async (data: CrearPublicacionFormData) => {
     setServerError(null);
     setIsSuccess(false);
+    setIsSubmitting(true);
 
     try {
       const imagen = data.imagenes?.[0];
@@ -144,8 +157,22 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
       agregarNotificacion({ tipo: "success", mensaje: "Tu publicación fue creada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible crear la publicación." });
+      const message = apiError.message || "No fue posible crear la publicación.";
+      setServerError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+    } finally {
+      setIsSubmitting(false);
     }
+  }, [form, imagePreviews]);
+
+  const onSubmit = form.handleSubmit((data: CrearPublicacionFormData) => {
+    const { mostrarConfirm } = useUIStore.getState();
+    mostrarConfirm({
+      ...CONFIRMACIONES_PUBLICACION.crear,
+      onConfirm: () => {
+        void crearPublicacion(data);
+      },
+    });
   });
 
   const resetForm = useCallback(() => {
@@ -159,7 +186,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
   return {
     form,
     onSubmit,
-    isSubmitting: form.formState.isSubmitting,
+    isSubmitting: form.formState.isSubmitting || isSubmitting,
     serverError,
     isSuccess,
     imagePreviews,
@@ -190,6 +217,7 @@ export function useFormEditarPublicacion(id: number,
 ): UseFormEditarPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const form = useForm<EditarPublicacionFormData>({
@@ -253,9 +281,10 @@ export function useFormEditarPublicacion(id: number,
 
   // ── Envío al backend ────────────────────────────────────────────────────────
 
-  const onSubmit = form.handleSubmit(async (data: EditarPublicacionFormData) => {
+  const actualizarPublicacion = useCallback(async (data: EditarPublicacionFormData) => {
     setServerError(null);
     setIsSuccess(false);
+    setIsSubmitting(true);
 
     try {
       // Solo incluye los campos que el usuario realmente modificó
@@ -282,14 +311,28 @@ export function useFormEditarPublicacion(id: number,
       agregarNotificacion({ tipo: "success", mensaje: "Publicación actualizada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      agregarNotificacion({ tipo: "error", mensaje: apiError.message || "No fue posible actualizar la publicación." });
+      const message = apiError.message || "No fue posible actualizar la publicación.";
+      setServerError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+    } finally {
+      setIsSubmitting(false);
     }
+  }, [id, imagePreviews]);
+
+  const onSubmit = form.handleSubmit((data: EditarPublicacionFormData) => {
+    const { mostrarConfirm } = useUIStore.getState();
+    mostrarConfirm({
+      ...CONFIRMACIONES_PUBLICACION.actualizar,
+      onConfirm: () => {
+        void actualizarPublicacion(data);
+      },
+    });
   });
 
   return {
     form,
     onSubmit,
-    isSubmitting: form.formState.isSubmitting,
+    isSubmitting: form.formState.isSubmitting || isSubmitting,
     serverError,
     isSuccess,
     imagePreviews,

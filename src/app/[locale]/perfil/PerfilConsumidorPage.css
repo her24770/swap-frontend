@@ -88,6 +88,10 @@
   margin: 0;
 }
 
+.perfil-page .h-carousel__item {
+  width: clamp(15rem, calc(100vw - 7rem), 20rem);
+}
+
 /* ── Carousel wrapper ────────────────────────────────────────────────────── */
 
 .perfil-page__carousel-wrap {
@@ -179,8 +183,8 @@
 /* ── Purchase item ───────────────────────────────────────────────────────── */
 
 .perfil-page__purchase-item {
-  flex: 0 0 min(17rem, calc(100vw - 4rem));
-  width: min(20rem, calc(100vw - 4rem));
+  flex: 0 0 clamp(15rem, calc(100vw - 7rem), 20rem);
+  width: clamp(15rem, calc(100vw - 7rem), 20rem);
   scroll-snap-align: start;
 }
 

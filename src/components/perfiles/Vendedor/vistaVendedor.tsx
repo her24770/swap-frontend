@@ -11,6 +11,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
+import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
@@ -35,10 +36,25 @@ const MOCK_AD = {
   subtitle: "¡Oferta por tiempo limitado!",
 };
 
-export default function VistaVendedor() {
+interface VistaVendedorProps {
+  userId?: number;
+  userName?: string;
+  userRating?: number;
+  userImageUrl?: string;
+}
+
+export default function VistaVendedor({
+  userId,
+  userName = "Usuario de SWAP",
+  userRating = 0,
+  userImageUrl,
+}: VistaVendedorProps = {}) {
   const t = useTranslations("perfil");
-  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const authUserId = useAuthStore((s) => s.usuario?.id_usuario);
+  const { mostrarConfirm, agregarNotificacion } = useUIStore();
+  const idUsuario = userId ?? authUserId;
   const estadosMaterial = useEstados("material");
+  const { canCreatePublication, canEditCards } = usePerspectivaInterna();
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
@@ -51,7 +67,12 @@ export default function VistaVendedor() {
   const [isSaved, setIsSaved] = useState(false);
 
   const fetchPublicaciones = useCallback(async () => {
-    if (!idUsuario) return;
+    if (!idUsuario) {
+      setCatalogMaterial([]);
+      setCatalogNegocio([]);
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       setError(null);
@@ -87,16 +108,28 @@ export default function VistaVendedor() {
     }
   }, [idUsuario]);
 
-  const handleEliminar = useCallback(async (id: number) => {
-    if (!confirm("¿Seguro que deseas eliminar esta publicación?")) return;
-    try {
-      await apiClient.delete(`/api/publicacion/${id}`);
-      fetchPublicaciones();
-    } catch (err) {
-      const apiError = err as ApiError;
-      alert(apiError.message || "No fue posible eliminar la publicación.");
-    }
-  }, [fetchPublicaciones]);
+  const handleEliminar = useCallback((id: number) => {
+    mostrarConfirm({
+      titulo: "Eliminar publicación",
+      mensaje: "¿Seguro que deseas eliminar esta publicación? Esta acción no se puede deshacer.",
+      onConfirm: async () => {
+        try {
+          await apiClient.delete(`/api/publicacion/${id}`);
+          agregarNotificacion({
+            tipo: "success",
+            mensaje: "Publicación eliminada exitosamente.",
+          });
+          fetchPublicaciones();
+        } catch (err) {
+          const apiError = err as ApiError;
+          agregarNotificacion({
+            tipo: "error",
+            mensaje: apiError.message || "No fue posible eliminar la publicación.",
+          });
+        }
+      },
+    });
+  }, [agregarNotificacion, fetchPublicaciones, mostrarConfirm]);
 
   useEffect(() => {
     fetchPublicaciones();
@@ -108,14 +141,16 @@ export default function VistaVendedor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogMaterial")}</h2>
-          <button
-            type="button"
-            className="perfil-page__new-publication-btn"
-            onClick={() => setCrearOpen(true)}
-          >
-            <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-            {t("actions.newPublication")}
-          </button>
+          {canCreatePublication && (
+            <button
+              type="button"
+              className="perfil-page__new-publication-btn"
+              onClick={() => setCrearOpen(true)}
+            >
+              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+              {t("actions.newPublication")}
+            </button>
+          )}
         </div>
 
         {loading && (
@@ -147,7 +182,6 @@ export default function VistaVendedor() {
                   images={pub.images}
                   estado={pub.estado}
                   estadosDisponibles={estadosMaterial}
-                  canEdit={true}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -183,14 +217,16 @@ export default function VistaVendedor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogNegocio")}</h2>
-          <button
-            type="button"
-            className="perfil-page__new-publication-btn"
-            onClick={() => setCrearOpen(true)}
-          >
-            <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-            {t("actions.newPublication")}
-          </button>
+          {canCreatePublication && (
+            <button
+              type="button"
+              className="perfil-page__new-publication-btn"
+              onClick={() => setCrearOpen(true)}
+            >
+              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+              {t("actions.newPublication")}
+            </button>
+          )}
         </div>
 
         {loading && (
@@ -221,7 +257,6 @@ export default function VistaVendedor() {
                   description={pub.description}
                   images={pub.images}
                   estado={pub.estado}
-                  canEdit={true}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -244,9 +279,11 @@ export default function VistaVendedor() {
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
-          <button type="button" className="perfil-page__new-publication-btn">
-            {t("actions.changeAd")}
-          </button>
+          {canCreatePublication && (
+            <button type="button" className="perfil-page__new-publication-btn">
+              {t("actions.changeAd")}
+            </button>
+          )}
         </div>
         <AdBanner
           imageUrl={MOCK_AD.imageUrl}
@@ -256,7 +293,7 @@ export default function VistaVendedor() {
       </section>
 
       {/* Modal crear publicación */}
-      {crearOpen && (
+      {canCreatePublication && crearOpen && (
         <div className="modal-overlay" onClick={() => setCrearOpen(false)}>
           <div
             className="perfil-page__crear-pub-modal"
@@ -280,7 +317,7 @@ export default function VistaVendedor() {
       )}
 
       {/* Modal editar publicación */}
-      {editOpen && postEditando && (
+      {canEditCards && editOpen && postEditando && (
         <div className="modal-overlay" onClick={() => setEditOpen(false)}>
           <div
             className="perfil-page__crear-pub-modal"
@@ -327,8 +364,9 @@ export default function VistaVendedor() {
           description={selectedPost.description}
           imageUrl={selectedPost.images[0] ?? ""}
           likes={0}
-          sellerName="Usuario de SWAP"
-          sellerRating={0}
+          sellerName={userName}
+          sellerRating={userRating}
+          sellerImageUrl={userImageUrl}
           isSaved={isSaved}
           onToggleSave={() => setIsSaved((prev) => !prev)}
           onAcordarCompra={() => console.log("acordar compra")}

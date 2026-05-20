@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
@@ -13,6 +14,7 @@ const ITEMS_PER_PAGE = 12;
 export default function TutoriasPage() {
   const t = useTranslations('tutorias');
   const tTags = useTranslations('common.tags');
+  const router = useRouter();
 
   const { data: moreData, loading: moreLoading, error: moreError } = 
     usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE });
@@ -70,8 +72,13 @@ export default function TutoriasPage() {
                 likes={selectedPublicacion.me_gusta}
                 sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
                 sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
+                sellerId={selectedPublicacion.usuario.id_usuario}
                 sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
                 isSaved={isSaved}
+                onSellerClick={(sellerId) => {
+                  handleClose();
+                  router.push(`/perfil/${sellerId}?modo=tutor`);
+                }}
                 onToggleSave={() => setIsSaved((prev) => !prev)}
                 onVerCertificados={() => console.log("ver certificados")}
                 onSolicitarTutoria={() => console.log("solicitar tutoría")}

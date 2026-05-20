@@ -1,4 +1,5 @@
 "use client";
+import { forwardRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, BookOpen, Package, Briefcase } from "lucide-react";
@@ -16,7 +17,7 @@ interface SidebarProps {
   isOpen: boolean;
 }
 
-export default function Sidebar({ isOpen }: SidebarProps) {
+const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen }, ref) {
   const { theme, toggle: toggleTheme } = useTheme()
   
   const t = useTranslations('layout.sidebar');
@@ -33,7 +34,7 @@ export default function Sidebar({ isOpen }: SidebarProps) {
   ] as const;
 
   return (
-    <aside className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
+    <aside ref={ref} className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>
       <nav className="sidebar__nav">
         {/* Grupo superior de links */}
         <div className="sidebar__menu">
@@ -60,4 +61,6 @@ export default function Sidebar({ isOpen }: SidebarProps) {
       </nav>
     </aside>
   );
-}
+});
+
+export default Sidebar;

@@ -118,7 +118,6 @@ export default function PublicacionesList({
                                                 description={p.descripcion}
                                                 images={p.imagenes.map((img) => img.url_imagen)}
                                                 estado={p.estado}
-                                                canEdit={false}
                                                 onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
                                             />
                                         </div>
@@ -144,7 +143,6 @@ export default function PublicacionesList({
                                                 description={p.descripcion}
                                                 images={p.imagenes.map((img) => img.url_imagen)}
                                                 estado={p.estado}
-                                                canEdit={false}
                                                 onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
                                             />
                                         </div>
@@ -167,7 +165,6 @@ export default function PublicacionesList({
                                     description={p.descripcion}
                                     images={p.imagenes.map((img) => img.url_imagen)}
                                     estado={p.estado}
-                                    canEdit={false}
                                     onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
                                 />
                             ))}
@@ -187,7 +184,6 @@ export default function PublicacionesList({
                                 description={p.descripcion}
                                 images={p.imagenes.map((img) => img.url_imagen)}
                                 estado={p.estado}
-                                canEdit={false}
                                 onDetallesClick={() => onDetallesClick && onDetallesClick(p)}
                             />
                         ))}

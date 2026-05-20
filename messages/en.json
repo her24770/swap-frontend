@@ -19,13 +19,11 @@
 			"negocios": "Businesses"
 		}
 	},
-
 	"locales": {
 		"en": "EN",
 		"es": "ES",
 		"fr": "FR"
 	},
-	
 	"common": {
 		"brand": "SWAP",
 		"search": {
@@ -34,7 +32,6 @@
 		"empty": {
 			"noResultsFor": "No results found for \"{query}\"",
 			"description": "No posts"
-
 		},
 		"tags": {
 			"material": "Material",
@@ -118,6 +115,7 @@
 		},
 		"toast": {
 			"welcomeBack": "Welcome back!",
+			"invalidCredentials": "Incorrect credentials.",
 			"loginErrorFallback": "Couldn't sign in"
 		},
 		"validation": {
@@ -279,7 +277,6 @@
 			"currentImageAlt": "Current image"
 		}
 	},
-
 	"error_loading_section": "Couldn't load this section",
 	"loading": "Loading publications...",
 	"publicacionForm": {

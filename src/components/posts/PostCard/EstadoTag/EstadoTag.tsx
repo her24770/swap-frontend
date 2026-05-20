@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
 import "./EstadoTag.css";
 import type { EstadoOpcion } from "../../../../hooks/useEstados";
 
@@ -17,18 +18,17 @@ const getColor = (estado: string) => COLOR_MAP[estado.toLowerCase()] ?? "gray";
 
 interface EstadoTagProps {
   estado: string | number;
-  canEdit?: boolean;
   estadosDisponibles?: EstadoOpcion[];
   onEstadoChange?: (nuevoEstado: string) => void;
 }
 
 export default function EstadoTag({
   estado,
-  canEdit = false,
   estadosDisponibles = [],
   onEstadoChange,
 }: EstadoTagProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { canEditCards } = usePerspectivaInterna();
 
   const estadoStr = String(estado).toLowerCase();
   const color = getColor(estadoStr);
@@ -38,7 +38,7 @@ export default function EstadoTag({
     setIsOpen(false);
   };
 
-  if (!canEdit) {
+  if (!canEditCards || !onEstadoChange || estadosDisponibles.length === 0) {
     return (
       <span className={`estado-tag estado-tag--${color}`} title={estadoStr}>
         {estadoStr}

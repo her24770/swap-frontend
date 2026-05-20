@@ -3,7 +3,10 @@
 .h-carousel {
   position: relative;
   width: 100%;
-  overflow: visible; 
+  overflow: visible;
+  --h-carousel-arrow-size: 2rem;
+  --h-carousel-arrow-offset: 0.25rem;
+  --h-carousel-arrow-gutter: 2.5rem;
 }
 
 .h-carousel__track {
@@ -11,10 +14,11 @@
   gap: 1rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--h-carousel-arrow-gutter);
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 0.5rem;
-  padding-top: 0.5rem;
+  padding: 0.5rem var(--h-carousel-arrow-gutter);
   scrollbar-width: none;
+  box-sizing: border-box;
 }
 
 .h-carousel__track::-webkit-scrollbar {
@@ -23,7 +27,7 @@
 
 .h-carousel__item {
   flex: 0 0 auto;
-  width: clamp(10rem, 70vw, 13.75rem);
+  width: clamp(15rem, calc(100vw - 7rem), 20rem);
   scroll-snap-align: start;
   position: relative;
   transition: z-index 0.3s;
@@ -31,13 +35,13 @@
 }
 
 .h-carousel__btn {
-  display: none;
+  display: flex;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  width: 2rem;
-  height: 2rem;
+  width: var(--h-carousel-arrow-size);
+  height: var(--h-carousel-arrow-size);
   border-radius: 9999px;
   background-color: var(--swap-primary-background);
   border: 1px solid var(--swap-primary-border-color);
@@ -57,15 +61,16 @@
 }
 
 .h-carousel__btn--prev {
-  left: -1rem;
+  left: var(--h-carousel-arrow-offset);
 }
 
 .h-carousel__btn--next {
-  right: -1rem;
+  right: var(--h-carousel-arrow-offset);
 }
 
 @media (min-width: 640px) {
-  .h-carousel__btn {
-    display: flex;
+  .h-carousel {
+    --h-carousel-arrow-offset: -1rem;
+    --h-carousel-arrow-gutter: 0rem;
   }
 }

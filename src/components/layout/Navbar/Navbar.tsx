@@ -12,9 +12,10 @@ import "./Navbar.css";
 
 interface NavbarProps {
   onMenuToggle: () => void;
+  menuButtonRef?: React.RefObject<HTMLButtonElement | null>;
 }
 
-export default function Navbar({ onMenuToggle }: NavbarProps) {
+export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const t = useTranslations('layout.navbar');
 
   const [profileOpen, setProfileOpen] = useState(false);
@@ -41,6 +42,7 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
         {/* Botón de menú SOLO si NO es auth route */}
         {!isAuthRoute && (
           <button
+            ref={menuButtonRef}
             onClick={onMenuToggle}
             aria-label={t('ariaToggleMenu')}
             type="button"
@@ -49,7 +51,9 @@ export default function Navbar({ onMenuToggle }: NavbarProps) {
             <Menu size={20} strokeWidth={2} />
           </button>
         )}
-        <LogoCompleto className="navbar__logo"/>
+        <Link href="/" className="navbar__logo-link" aria-label="Ir a descubre">
+          <LogoCompleto className="navbar__logo"/>
+        </Link>
       </div>
       <div className="navbar__left">
         {/* Perfil/USER SOLO si NO es auth route */}
