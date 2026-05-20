@@ -49,10 +49,6 @@ export default function HorarioSemanal({
             Disponible
           </div>
           <div className="horario__legend-item">
-            <span className="horario__dot horario__dot--ocupado" />
-            Ocupado
-          </div>
-          <div className="horario__legend-item">
             <span className="horario__dot horario__dot--no-disponible" />
             No Disponible
           </div>
