@@ -8,7 +8,7 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import "./Sidebar.css";
 import LocaleSwitcher from "../Navbar/LocaleSwitcher/LocaleSwitcher";
-import ThemeToggle from "../Navbar/ThemeToggle/ThemeToggle";
+import ThemeToggle from "../../ui/Button/ThemeToggle/ThemeToggle";
 import { useTheme } from "../../../context/Themecontext"
 
 
