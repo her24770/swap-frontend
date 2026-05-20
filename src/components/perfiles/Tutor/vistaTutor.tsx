@@ -193,7 +193,7 @@ export default function VistaTutor({
     setHorarioEditando(false);
   }, [horarioOriginal]);
 
-  const handleGuardarHorario = useCallback(async () => {
+  const guardarHorarioConfirmado = useCallback(async () => {
     if (!idUsuario) return;
 
     try {
@@ -217,6 +217,16 @@ export default function VistaTutor({
       setHorarioGuardando(false);
     }
   }, [agregarNotificacion, horarioSlots, idUsuario]);
+
+  const handleGuardarHorario = useCallback(() => {
+    mostrarConfirm({
+      titulo: "Guardar cambios de horario",
+      mensaje: `Se guardarán ${cambiosPendientes.size} cambios en tu disponibilidad semanal. ¿Deseas continuar?`,
+      onConfirm: () => {
+        void guardarHorarioConfirmado();
+      },
+    });
+  }, [cambiosPendientes.size, guardarHorarioConfirmado, mostrarConfirm]);
 
   return (
     <>
