@@ -7,15 +7,26 @@ import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfil
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
 import { apiClient } from "../../../lib/apiClient";
-import { obtenerContactosUsuario } from "../../../lib/contactosUsuario";
+import { mapApiContactosToContacts } from "../../../lib/contactosUsuario";
 import { TAGS_MATERIAS } from "../../../lib/tags";
 import { PerspectivaInternaProvider } from "../../../context/PerspectivaInternaContext";
+import type { ApiResult } from "../../../types/ApiResult";
 import type { UserProfileData } from "../../../types/perfil";
 
 type PerfilExternoMode = "vendedor" | "tutor";
 
 interface PerfilExternoProps {
   userId: number;
+}
+
+interface PerfilPublicoApi {
+  id_usuario: number;
+  nombre: string;
+  descripcion: string | null;
+  url_foto_perfil?: string;
+  calificacion: number | string | null;
+  metodo_pago?: string;
+  contactos?: unknown[];
 }
 
 export default function PerfilExterno({ userId }: PerfilExternoProps) {
@@ -43,8 +54,10 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
     const fetchUser = async () => {
       try {
         setError(null);
-        const data = await apiClient.get<any>(`/api/user/${userId}`);
-        const contacts = await obtenerContactosUsuario(userId);
+        const response = await apiClient.get<ApiResult<PerfilPublicoApi> | PerfilPublicoApi>(
+          `/api/usuarios/${userId}/perfil-publico`
+        );
+        const data = unwrapPerfilPublico(response);
         setUser({
           id_usuario: data.id_usuario,
           name: data.nombre,
@@ -52,7 +65,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
           imageUrl: data.url_foto_perfil,
           rating: Number(data.calificacion),
           totalReviews: 0,
-          contacts,
+          contacts: mapApiContactosToContacts(data.contactos ?? []),
           paymentMethod: data.metodo_pago,
           tags: TAGS_MATERIAS,
         });
@@ -115,4 +128,18 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
       )}
     </PerspectivaInternaProvider>
   );
+}
+
+function unwrapPerfilPublico(
+  response: ApiResult<PerfilPublicoApi> | PerfilPublicoApi
+): PerfilPublicoApi {
+  if (response && typeof response === "object" && "success" in response) {
+    const data = (response as ApiResult<PerfilPublicoApi>).data;
+    if (!data) {
+      throw new Error("No fue posible cargar el perfil.");
+    }
+    return data;
+  }
+
+  return response as PerfilPublicoApi;
 }

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaLogin, type LoginFormData } from "../schemas/zodSchemas";
 import { apiClient } from "../lib/apiClient";
+import { unwrapAuthResponse } from "../lib/authResponse";
 import { useAuthStore } from "../store/authStore";
 
 export function useFormLogin() {
@@ -22,7 +23,8 @@ export function useFormLogin() {
       "/api/auth/login",
       data
     );
-    login(respuesta.usuario, respuesta.rol);
+    const sesion = unwrapAuthResponse(respuesta);
+    login(sesion.usuario, sesion.rol);
   });
 
   return { form, onSubmit };

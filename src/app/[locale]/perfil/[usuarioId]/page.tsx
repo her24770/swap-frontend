@@ -5,8 +5,8 @@ import PerfilExterno from "../../../../components/perfiles/PerfilExterno/PerfilE
 import "../PerfilConsumidorPage.css";
 
 export default function PerfilExternoPage() {
-  const { id } = useParams<{ id: string }>();
-  const userId = Number(id);
+  const { usuarioId } = useParams<{ usuarioId: string }>();
+  const userId = Number(usuarioId);
 
   if (!Number.isFinite(userId)) {
     return <main className="perfil-page"><p className="perfil-page__loading">Perfil no válido.</p></main>;

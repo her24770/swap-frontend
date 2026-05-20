@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaRegistro, type RegistroFormData } from "../schemas/zodSchemas";
 import { apiClient } from "../lib/apiClient";
+import { unwrapAuthResponse } from "../lib/authResponse";
 import { useAuthStore } from "../store/authStore";
 
 export function useFormRegistro() {
@@ -43,7 +44,8 @@ export function useFormRegistro() {
         descripcion: data.descripcion || "Sin descripción",
       }
     );
-    login(respuesta.usuario, respuesta.rol);
+    const sesion = unwrapAuthResponse(respuesta);
+    login(sesion.usuario, sesion.rol);
   });
 
   return { form, onSubmit };
