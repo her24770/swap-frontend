@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { TAG_TUTORIA } from "../../../lib/tags";
-import "./tutorias.css";
+import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
@@ -46,7 +46,7 @@ export default function TutoriasPage() {
     } = useDetallePublicacion();
 
   return (
-    <main className="tutorias-page">
+    <main className="seccion-page">
       <PublicacionesList
         title={t('title')}
         recentsPublicaciones={recentsData || []}

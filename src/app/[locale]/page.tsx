@@ -6,10 +6,9 @@ import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../components/pages/PublicacionesList/PublicacionesList";
 import { useToast } from "../../hooks/useToast";
-import SearchBar from "../../components/ui/SearchBar/SearchBar";
 import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
-import "./descubre.css";
+import "./seccion.css";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -58,7 +57,7 @@ export default function HomePage() {
   } = useDetallePublicacion();
 
   return (
-    <main className="descubre-page">
+    <main className="seccion-page">
       <Suspense fallback={null}>
         <RegisteredToast />
       </Suspense>

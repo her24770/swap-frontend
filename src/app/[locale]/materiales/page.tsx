@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import { TAG_MATERIAL } from "../../../lib/tags";
-import "./MaterialesPage.css";
+import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
@@ -40,7 +40,7 @@ export default function MaterialesPage() {
   } = useDetallePublicacion();
 
   return (
-    <main className="materiales-page">
+    <main className="seccion-page">
       <PublicacionesList
         title={t('title')}
         recentsPublicaciones={recentsData || []}

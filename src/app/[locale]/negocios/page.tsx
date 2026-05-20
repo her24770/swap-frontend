@@ -3,7 +3,7 @@ import { useTranslations } from 'next-intl';
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import { TAG_NEGOCIO } from "../../../lib/tags";
-import "./NegociosPage.css";
+import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
@@ -41,7 +41,7 @@ export default function NegociosPage() {
 
 
   return (
-    <main className="negocios-page">
+    <main className="seccion-page">
       <PublicacionesList
         title={t('title')}
         recentsPublicaciones={recentsData || []}
