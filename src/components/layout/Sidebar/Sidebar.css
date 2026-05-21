@@ -91,20 +91,3 @@
   opacity: 1;
   margin-left: 0.75rem;
 }
-
-.sidebar__bottom {
-  margin-top: auto; 
-  display: flex;
-  flex-direction: row; 
-  gap: 0.5rem;
-  padding: 4rem 0.5rem; 
-  opacity: 0;
-  visibility: hidden;
-  transition: max-width 0.5s ease, opacity 0.5s ease;
-
-}
-
-.sidebar--open .sidebar__bottom {
-  opacity: 1;
-  visibility: visible;
-}

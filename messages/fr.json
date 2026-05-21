@@ -1,7 +1,7 @@
 {
 	"layout": {
 		"meta": {
-			"title": "Swap",
+			"title": "SWAP",
 			"description": "Site d'échange pour les étudiants de l'UVG"
 		},
 		"navbar": {
@@ -17,6 +17,13 @@
 			"tutorias": "Tutorat",
 			"materiales": "Matériels",
 			"negocios": "Commerces"
+		},
+		"settings":{
+			"settings" : "Paramètres de l'application",
+			"theme" : "Thème",
+			"themeDesc" : "Basculer entre le mode clair et sombre",
+			"language" : "Langue",
+			"languageDesc": "Sélectionnez votre langue préférée"
 		}
 	},
 	"locales": {
@@ -99,6 +106,11 @@
 		"placeholderTitle": "Découvrir",
 		"placeholderDescription": "Page de découverte des publications — À venir"
 	},
+	"seccion":{
+		"reciente": "Publication récente",
+		"recomendado" : "Publication recommandée", 
+		"explorar" : "Explorer plus"
+	},
 	"login": {
 		"title": "Connexion",
 		"subtitle": "Nouveau ici ? Saisissez vos identifiants pour vous connecter.",
@@ -169,7 +181,8 @@
 		},
 		"actions": {
 			"newPublication": "Nouvelle publication",
-			"changeAd": "Changer l'annonce"
+			"changeAd": "Changer l'annonce",
+			"editSchedule": "Modifier l'horaire"
 		},
 		"modal": {
 			"createPublicationAria": "Créer une publication",
@@ -190,7 +203,9 @@
 	"posts": {
 		"actions": {
 			"details": "Détails",
-			"edit": "Modifier"
+			"edit": "Modifier",
+			"acordar": "Convenir d'un achat",
+			"certificado" : "Voir les certificats"
 		},
 		"aria": {
 			"uploadImage": "Téléverser une image"
@@ -199,6 +214,13 @@
 			"invalidType": "Seules les images JPG, PNG ou WEBP sont autorisées",
 			"tooLarge": "L'image ne peut pas dépasser 5 Mo",
 			"generic": "Erreur lors du téléversement de l'image"
+		},
+		"estado": {
+			"activo": "Actif",
+			"disponible": "Disponible",
+			"reservado": "Réservé",
+			"vendido": "Vendu",
+			"inactivo": "Inactif"
 		}
 	},
 	"comments": {

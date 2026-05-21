@@ -381,7 +381,7 @@ export default function VistaTutor({
               onClick={() => setHorarioEditando(true)}
             >
               <Pencil size={18} strokeWidth={1.8} aria-hidden />
-              Actualizar horario
+              {t('actions.editSchedule')}
             </button>
           )}
           {canCreatePublication && horarioEditando && (

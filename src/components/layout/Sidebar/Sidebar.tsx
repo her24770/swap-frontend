@@ -7,19 +7,12 @@ import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import "./Sidebar.css";
-import LocaleSwitcher from "../Navbar/LocaleSwitcher/LocaleSwitcher";
-import ThemeToggle from "../../ui/Button/ThemeToggle/ThemeToggle";
-import { useTheme } from "../../../context/Themecontext"
-
-
 
 interface SidebarProps {
   isOpen: boolean;
 }
 
-const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen }, ref) {
-  const { theme, toggle: toggleTheme } = useTheme()
-  
+const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen }, ref) {  
   const t = useTranslations('layout.sidebar');
   const pathname = usePathname();
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
@@ -53,10 +46,6 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen 
               </Link>
             );
           })}
-        </div>
-        <div className="sidebar__bottom">
-          <ThemeToggle theme={theme} onToggle={toggleTheme} />
-          <LocaleSwitcher />
         </div>
       </nav>
     </aside>
