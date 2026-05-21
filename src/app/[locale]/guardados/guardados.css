@@ -1,0 +1,45 @@
+.guardados-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+@media (min-width: 48rem) {
+  .guardados-page {
+    padding: 2rem;
+  }
+}
+
+.guardados-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.guardados-page__title {
+  font-family: var(--swap-font-titulos);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 48rem) {
+  .guardados-page__title {
+    font-size: 2rem;
+  }
+}
+
+.guardados-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.guardados-page__state {
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+  margin: 0;
+}

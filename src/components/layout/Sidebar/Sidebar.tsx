@@ -2,7 +2,7 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, BookOpen, Package, Briefcase } from "lucide-react";
+import { Bookmark, Compass, BookOpen, Package, Briefcase } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
@@ -31,6 +31,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen 
     { icon: BookOpen, label: t('tutorias'), href: '/tutorias' },
     { icon: Package, label: t('materiales'), href: '/materiales' },
     { icon: Briefcase, label: t('negocios'), href: '/negocios' },
+    { icon: Bookmark, label: t('guardados'), href: '/guardados' },
   ] as const;
 
   return (

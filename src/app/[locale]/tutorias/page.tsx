@@ -41,8 +41,6 @@ export default function TutoriasPage() {
   const{
       selectedPublicacion,
       loadingDetalle,
-      isSaved,
-      setIsSaved,
       handleDetallesClick,
       handleClose,
     } = useDetallePublicacion();
@@ -70,16 +68,15 @@ export default function TutoriasPage() {
                 description={selectedPublicacion.descripcion}
                 imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
                 likes={selectedPublicacion.me_gusta}
+                publicacionId={selectedPublicacion.id_publicacion}
                 sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
                 sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
                 sellerId={selectedPublicacion.usuario.id_usuario}
                 sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
-                isSaved={isSaved}
                 onSellerClick={(sellerId) => {
                   handleClose();
                   router.push(`/perfil/${sellerId}?modo=tutor`);
                 }}
-                onToggleSave={() => setIsSaved((prev) => !prev)}
                 onVerCertificados={() => console.log("ver certificados")}
                 onSolicitarTutoria={() => console.log("solicitar tutoría")}
               />

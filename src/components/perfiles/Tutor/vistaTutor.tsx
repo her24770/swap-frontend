@@ -58,7 +58,6 @@ export default function VistaTutor({
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
   const [horarioSlots, setHorarioSlots] = useState<EspacioHorario[]>([]);
   const [horarioOriginal, setHorarioOriginal] = useState<EspacioHorario[]>([]);
   const [horarioLoading, setHorarioLoading] = useState(true);
@@ -436,11 +435,10 @@ export default function VistaTutor({
           description={selectedPost.description}
           imageUrl={selectedPost.images[0] ?? ""}
           likes={0}
+          publicacionId={selectedPost.id}
           sellerName={userName}
           sellerRating={userRating}
           sellerImageUrl={userImageUrl}
-          isSaved={isSaved}
-          onToggleSave={() => setIsSaved((prev) => !prev)}
           onAcordarCompra={() => console.log("acordar compra")}
         />
       )}

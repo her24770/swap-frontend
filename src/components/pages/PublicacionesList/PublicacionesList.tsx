@@ -112,6 +112,7 @@ export default function PublicacionesList({
                                     {recentsPublicaciones.map(p => (
                                         <div key={p.id_publicacion} className="h-carousel__item">
                                             <PostCard
+                                                publicacionId={p.id_publicacion}
                                                 tags={mapTags(p)}
                                                 title={p.titulo}
                                                 price={parseFloat(p.precio)}
@@ -137,6 +138,7 @@ export default function PublicacionesList({
                                     {recommendedPublicaciones.map(p => (
                                         <div key={p.id_publicacion} className="h-carousel__item">
                                             <PostCard
+                                                publicacionId={p.id_publicacion}
                                                 tags={mapTags(p)}
                                                 title={p.titulo}
                                                 price={parseFloat(p.precio)}
@@ -159,6 +161,7 @@ export default function PublicacionesList({
                             {paginatedData.map(p => (
                                 <PostCard
                                     key={p.id_publicacion}
+                                    publicacionId={p.id_publicacion}
                                     tags={mapTags(p)}
                                     title={p.titulo}
                                     price={parseFloat(p.precio)}
@@ -178,6 +181,7 @@ export default function PublicacionesList({
                         {paginatedData.map(p => (
                             <PostCard
                                 key={p.id_publicacion}
+                                publicacionId={p.id_publicacion}
                                 tags={mapTags(p)}
                                 title={p.titulo}
                                 price={parseFloat(p.precio)}

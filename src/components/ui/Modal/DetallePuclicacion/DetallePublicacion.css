@@ -143,6 +143,16 @@
 
 .post-modal__save--saved {
   color: var(--swap-primary-color);
+  fill: var(--swap-primary-color);
+}
+
+.post-modal__save:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+.post-modal__save-spinner {
+  animation: spin 0.8s linear infinite;
 }
 
 .post-modal__body {

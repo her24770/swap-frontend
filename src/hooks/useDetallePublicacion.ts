@@ -5,7 +5,6 @@ import type { Publicacion, PublicacionDetalle } from "../types/publicacion";
 export function useDetallePublicacion() {
   const [selectedPublicacion, setSelectedPublicacion] = useState<PublicacionDetalle | null>(null);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
 
   const handleDetallesClick = async (publicacion: Publicacion) => {
     try {
@@ -26,8 +25,6 @@ export function useDetallePublicacion() {
   return {
     selectedPublicacion,
     loadingDetalle,
-    isSaved,
-    setIsSaved,
     handleDetallesClick,
     handleClose,
   };
