@@ -9,12 +9,15 @@ import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
 import { TAGS_MATERIAS } from "../../../lib/tags";
 import { apiClient } from "../../../lib/apiClient";
-import { obtenerContactosUsuario } from "../../../lib/contactosUsuario";
+import { unwrapAuthResponse } from "../../../lib/authResponse";
+import { mapApiContactosToContacts } from "../../../lib/contactosUsuario";
 import {
   PerspectivaInternaProvider,
   usePerspectivaInterna,
 } from "../../../context/PerspectivaInternaContext";
 import { useAuthStore } from "../../../store/authStore";
+import type { ApiResult } from "../../../types/ApiResult";
+import type { AuthResponse } from "../../../types/usuario";
 import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
 
@@ -37,6 +40,16 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ];
 
+interface PerfilPublicoApi {
+  id_usuario: number;
+  nombre: string;
+  descripcion: string | null;
+  url_foto_perfil?: string;
+  calificacion: number | string | null;
+  metodo_pago?: string;
+  contactos?: unknown[];
+}
+
 export default function PerfilInterno() {
   const t = useTranslations("perfil");
   const tCommon = useTranslations("common");
@@ -44,18 +57,29 @@ export default function PerfilInterno() {
   const [mode, setMode] = useState<PerfilMode>("consumidor");
   const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
   const [user, setUser] = useState<UserProfileData | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const login = useAuthStore((s) => s.login);
 
   useEffect(() => {
-    if (!idUsuario) {
-      setUser(null);
-      return;
-    }
-
     const fetchUser = async () => {
       try {
-        const data = await apiClient.get<any>(`/api/user/${idUsuario}`);
-        const contacts = await obtenerContactosUsuario(idUsuario);
+        setError(null);
+        let usuarioId = idUsuario;
+
+        if (!usuarioId) {
+          const sesionResponse = await apiClient.get<ApiResult<AuthResponse> | AuthResponse>(
+            "/api/auth/me"
+          );
+          const sesion = unwrapAuthResponse(sesionResponse);
+          login(sesion.usuario, sesion.rol);
+          usuarioId = sesion.usuario.id_usuario;
+        }
+
+        const response = await apiClient.get<ApiResult<PerfilPublicoApi> | PerfilPublicoApi>(
+          `/api/user/${usuarioId}/perfil-publico`
+        );
+        const data = unwrapPerfilPublico(response);
         setUser({
           id_usuario: data.id_usuario,
           name: data.nombre,
@@ -63,15 +87,15 @@ export default function PerfilInterno() {
           imageUrl: data.url_foto_perfil,
           rating: Number(data.calificacion),
           totalReviews: 0,
-          contacts,
+          contacts: mapApiContactosToContacts(data.contactos ?? []),
         });
-      } catch (error) {
-        console.error("Error cargando usuario:", error);
+      } catch (err: any) {
+        setError(err.message || "No fue posible cargar tu perfil.");
       }
     };
 
     fetchUser();
-  }, [idUsuario]);
+  }, [idUsuario, login]);
 
   const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
     setComments((prev) => [
@@ -86,6 +110,7 @@ export default function PerfilInterno() {
     ]);
   };
 
+  if (error) return <p className="perfil-page__loading">{error}</p>;
   if (!user) return <p className="perfil-page__loading">{t("loading")}</p>;
 
   const MODES: { key: PerfilMode; label: string }[] = [
@@ -156,6 +181,20 @@ export default function PerfilInterno() {
       />
     </PerspectivaInternaProvider>
   );
+}
+
+function unwrapPerfilPublico(
+  response: ApiResult<PerfilPublicoApi> | PerfilPublicoApi
+): PerfilPublicoApi {
+  if (response && typeof response === "object" && "success" in response) {
+    const data = (response as ApiResult<PerfilPublicoApi>).data;
+    if (!data) {
+      throw new Error("No fue posible cargar el perfil.");
+    }
+    return data;
+  }
+
+  return response as PerfilPublicoApi;
 }
 
 interface PerfilModeToggleProps {

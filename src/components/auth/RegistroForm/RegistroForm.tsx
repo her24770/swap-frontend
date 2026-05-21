@@ -8,12 +8,12 @@ import { useToast } from "../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import { TAGS_MATERIAS } from "../../../lib/tags";
 import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
-import { serializeUseCacheCacheStore } from "next/dist/server/resume-data-cache/cache-store";
 
 export const extractCarnetFromEmail = (email: string): number | null => {
   const match = email.match(/^[a-zA-Z]+(\d+)@uvg\.edu\.gt$/);
@@ -93,7 +93,8 @@ export default function RegistroForm() {
         descripcion: data.descripcion || "Sin descripción",
         tags: selectedTags,
       });
-      login(respuesta.usuario, respuesta.rol);
+      const sesion = unwrapAuthResponse(respuesta);
+      login(sesion.usuario, sesion.rol);
       router.push("/?registered=true");
     } catch (error) {
       const apiError = error as ApiError;
