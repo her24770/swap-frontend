@@ -31,7 +31,6 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen 
     { icon: BookOpen, label: t('tutorias'), href: '/tutorias' },
     { icon: Package, label: t('materiales'), href: '/materiales' },
     { icon: Briefcase, label: t('negocios'), href: '/negocios' },
-    { icon: Bookmark, label: t('guardados'), href: '/guardados' },
   ] as const;
 
   return (
