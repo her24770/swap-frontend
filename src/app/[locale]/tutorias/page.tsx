@@ -9,7 +9,7 @@ import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 10;
 
 export default function TutoriasPage() {
   const t = useTranslations('tutorias');

@@ -6,16 +6,24 @@ import { useTranslations } from "next-intl";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import { useGuardados } from "../../../hooks/useGuardados";
+import { useInfiniteVisibleItems } from "../../../hooks/useInfiniteVisibleItems";
 import type { Publicacion } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
 import "../seccion.css";
 import "./guardados.css";
+
+const ITEMS_PER_PAGE = 10;
 
 export default function GuardadosPage() {
   const t = useTranslations("perfil.sections");
   const router = useRouter();
   const { guardados, loading } = useGuardados();
   const [selectedPublicacion, setSelectedPublicacion] = useState<Publicacion | null>(null);
+  const {
+    visibleItems: visibleGuardados,
+    hasMore,
+    sentinelRef,
+  } = useInfiniteVisibleItems(guardados, ITEMS_PER_PAGE);
 
   return (
     <main className="seccion-page guardados-page">
@@ -32,22 +40,31 @@ export default function GuardadosPage() {
       )}
 
       {!loading && guardados.length > 0 && (
-        <section className="guardados-page__grid">
-          {guardados.map((publicacion) => (
-            <PostCard
-              key={publicacion.id_publicacion}
-              publicacionId={publicacion.id_publicacion}
-              modoGuardado
-              tags={mapTags(publicacion)}
-              title={publicacion.titulo}
-              price={parseFloat(publicacion.precio)}
-              description={publicacion.descripcion}
-              images={publicacion.imagenes.map((img) => img.url_imagen)}
-              estado={publicacion.estadoRel?.estado ?? publicacion.estado}
-              onDetallesClick={() => setSelectedPublicacion(publicacion)}
+        <>
+          <section className="guardados-page__grid">
+            {visibleGuardados.map((publicacion) => (
+              <PostCard
+                key={publicacion.id_publicacion}
+                publicacionId={publicacion.id_publicacion}
+                modoGuardado
+                tags={mapTags(publicacion)}
+                title={publicacion.titulo}
+                price={parseFloat(publicacion.precio)}
+                description={publicacion.descripcion}
+                images={publicacion.imagenes.map((img) => img.url_imagen)}
+                estado={publicacion.estadoRel?.estado ?? publicacion.estado}
+                onDetallesClick={() => setSelectedPublicacion(publicacion)}
+              />
+            ))}
+          </section>
+          {hasMore && (
+            <div
+              ref={sentinelRef}
+              className="guardados-page__infinite-sentinel"
+              aria-label="Cargando más publicaciones guardadas"
             />
-          ))}
-        </section>
+          )}
+        </>
       )}
 
       {selectedPublicacion && (

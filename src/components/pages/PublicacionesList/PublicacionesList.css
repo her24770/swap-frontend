@@ -175,6 +175,27 @@
 .publicaciones-list__empty-icon { font-size: 2.5rem; }
 @media (min-width: 48rem) { .publicaciones-list__empty-icon { font-size: 3.5rem; } }
 
+.publicaciones-list__infinite-sentinel {
+  width: 100%;
+  min-height: 2.5rem;
+}
+
+.publicaciones-list__infinite-sentinel::after {
+  content: "";
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0.5rem auto 0;
+  border: 2px solid var(--swap-primary-border-color);
+  border-top-color: var(--swap-primary-color);
+  border-radius: 9999px;
+  animation: publicaciones-list-spin 0.8s linear infinite;
+}
+
+@keyframes publicaciones-list-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* 8. PAGINACIÓN */
 .publicaciones-list__pagination {
   display: flex;

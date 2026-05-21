@@ -9,6 +9,49 @@
   --h-carousel-arrow-gutter: 2.5rem;
 }
 
+.h-carousel__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+  min-height: 2rem;
+}
+
+.h-carousel__page {
+  font-family: var(--swap-font-textos);
+  font-size: 0.75rem;
+  color: var(--swap-tertiary-text-color);
+}
+
+.h-carousel__page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.h-carousel__page-btn:hover:not(:disabled) {
+  border-color: var(--swap-primary-color);
+  color: var(--swap-primary-color);
+}
+
+.h-carousel__page-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .h-carousel__track {
   display: flex;
   gap: 1rem;

@@ -43,3 +43,24 @@
   font-family: var(--swap-font-textos);
   margin: 0;
 }
+
+.guardados-page__infinite-sentinel {
+  width: 100%;
+  min-height: 2.5rem;
+}
+
+.guardados-page__infinite-sentinel::after {
+  content: "";
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0.5rem auto 0;
+  border: 2px solid var(--swap-primary-border-color);
+  border-top-color: var(--swap-primary-color);
+  border-radius: 9999px;
+  animation: guardados-page-spin 0.8s linear infinite;
+}
+
+@keyframes guardados-page-spin {
+  to { transform: rotate(360deg); }
+}

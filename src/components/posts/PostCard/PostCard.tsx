@@ -65,6 +65,7 @@ export default function PostCard({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const guardada = isSaved ?? (publicacionId !== undefined && guardados.isSaved(publicacionId));
+  const visuallySaved = modoGuardado || guardada;
 
   useEffect(() => {
     setDisplayImages(images);
@@ -255,7 +256,7 @@ export default function PostCard({
             {publicacionId !== undefined && (
               <button
                 type="button"
-                className={`post-card__save-button${guardada ? " post-card__save-button--saved" : ""}`}
+                className={`post-card__save-button${visuallySaved ? " post-card__save-button--saved" : ""}`}
                 onClick={handleToggleSave}
                 aria-label={guardada ? "Eliminar de guardados" : "Guardar publicación"}
                 title={guardada ? "Eliminar de guardados" : "Guardar publicación"}

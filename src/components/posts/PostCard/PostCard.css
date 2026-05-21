@@ -182,7 +182,10 @@
 
 .post-card__save-button--saved {
   color: var(--swap-primary-color, #10b981);
-  fill: var(--swap-primary-color, #10b981);
+}
+
+.post-card__save-button--saved svg {
+  fill: currentColor;
 }
 
 .post-card__save-button:disabled {
