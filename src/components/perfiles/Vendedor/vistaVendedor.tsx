@@ -64,7 +64,6 @@ export default function VistaVendedor({
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
@@ -364,11 +363,10 @@ export default function VistaVendedor({
           description={selectedPost.description}
           imageUrl={selectedPost.images[0] ?? ""}
           likes={0}
+          publicacionId={selectedPost.id}
           sellerName={userName}
           sellerRating={userRating}
           sellerImageUrl={userImageUrl}
-          isSaved={isSaved}
-          onToggleSave={() => setIsSaved((prev) => !prev)}
           onAcordarCompra={() => console.log("acordar compra")}
         />
       )}

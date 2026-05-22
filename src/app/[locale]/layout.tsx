@@ -4,6 +4,7 @@ import Layout from '../../components/layout/Layout/layout';
 import ToastContainer from '../../components/ui/Toast/Toast';
 import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog';
 import { ThemeProvider } from '../../context/Themecontext'
+import { GuardadosProvider } from '../../context/GuardadosContext';
 import { jockey, palanquin, lato } from '../../styles/fonts';
 import './globals.css';
 
@@ -40,7 +41,9 @@ export default async function RootLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
-            <Layout>{children}</Layout>
+            <GuardadosProvider>
+              <Layout>{children}</Layout>
+            </GuardadosProvider>
             <ToastContainer />
             <ConfirmDialog />
           </ThemeProvider>

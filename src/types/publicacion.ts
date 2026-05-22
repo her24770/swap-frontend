@@ -26,9 +26,21 @@ export interface Publicacion {
   id_usuario: number;
   imagenes: ImagenPublicacion[];
   etiquetas: PublicacionEtiquetaRel[];
+  esGuardada?: boolean;
   estadoRel?: {
     id_estado: number;
     estado: string;
+  };
+  tipoPerfil?: {
+    id_tipo_perfil: number;
+    tipo_perfil: string;
+  };
+  usuario?: {
+    id_usuario: number;
+    nombre: string;
+    url_foto_perfil: string;
+    calificacion: number;
+    email_institucional: string;
   };
 }
 
@@ -81,6 +93,8 @@ export interface PublicacionDetalle {
       nombre: string;
     };
   }[];
+
+  esGuardada?: boolean;
 }
 
 export interface PublicacionDetalleResponse {

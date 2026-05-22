@@ -2,7 +2,7 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, BookOpen, Package, Briefcase } from "lucide-react";
+import { Bookmark, Compass, BookOpen, Package, Briefcase } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';

@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { X, Bookmark, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { X, Bookmark, ChevronRight, Loader2 } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
+import { useGuardados } from "../../../../hooks/useGuardados";
 import "../../Button/Button.css";
 import "../Modal.css";
 import "./DetallePublicacion.css";
@@ -22,6 +24,7 @@ interface PostModalProps {
   imageUrl: string;
   tags?: Tag[];
   likes?: number;
+  publicacionId?: number;
 
   // Vendedor
   sellerName: string;
@@ -48,6 +51,7 @@ export default function DetallePublicacion({
   imageUrl,
   tags = [],
   likes = 0,
+  publicacionId,
   sellerName,
   sellerRating,
   sellerId,
@@ -59,9 +63,36 @@ export default function DetallePublicacion({
   onToggleSave,
   isSaved = false,
 }: PostModalProps) {
+  const guardados = useGuardados();
+  const [saving, setSaving] = useState(false);
+
   if (!isOpen) return null;
 
   const MAX_STARS = 5;
+  const guardada = publicacionId ? guardados.isSaved(publicacionId) : isSaved;
+
+  const handleToggleSave = async () => {
+    if (saving) return;
+
+    if (!publicacionId) {
+      onToggleSave?.();
+      return;
+    }
+
+    try {
+      setSaving(true);
+      if (guardada) {
+        await guardados.eliminarGuardado(publicacionId);
+      } else {
+        await guardados.guardarPublicacion(publicacionId);
+      }
+      onToggleSave?.();
+    } catch (error) {
+      console.error("Error al actualizar guardado:", error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -169,11 +200,12 @@ export default function DetallePublicacion({
             <div className="post-modal__likes">
                 <button
                     type="button"
-                    className={`post-modal__save${isSaved ? " post-modal__save--saved" : ""}`}
-                    onClick={onToggleSave}
-                    aria-label="Guardar publicación"
+                    className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
+                    onClick={handleToggleSave}
+                    aria-label={guardada ? "Eliminar de guardados" : "Guardar publicación"}
+                    disabled={saving}
                 >
-                    <Bookmark size={18} />
+                    {saving ? <Loader2 size={18} className="post-modal__save-spinner" /> : <Bookmark size={18} />}
                 </button>
                 <span className="post-modal__likes-count">{likes}</span>
             </div>

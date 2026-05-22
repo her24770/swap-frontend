@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import SearchBar from "../../../components/ui/SearchBar/SearchBar";
+import { useInfiniteVisibleItems } from "../../../hooks/useInfiniteVisibleItems";
 import type { Publicacion } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
 import "./PublicacionesList.css";
@@ -18,8 +19,6 @@ type Props = {
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
-    currentPage?: number;
-    onPageChange?: (page: number) => void;
 };
 
 export default function PublicacionesList({
@@ -32,21 +31,13 @@ export default function PublicacionesList({
     itemsPerPage = 12,
     tagsForAll,
     onDetallesClick,
-    currentPage: controlledPage,
-    onPageChange,
 }: Props) {
     const t = useTranslations();
     const tEmpty = useTranslations('common.empty');
     const tTags = useTranslations('common.tags');
     const [searchQuery, setSearchQuery] = useState("");
-    const [internalPage, setInternalPage] = useState(1);
 
-    const currentPage = controlledPage ?? internalPage;
     const normalizedQuery = searchQuery.trim().toLowerCase();
-
-    const setCurrentPage = (p: number) => {
-        onPageChange ? onPageChange(p) : setInternalPage(p);
-    };
 
     // 1. Unificar para búsquedas (quitando duplicados)
     const allPublicaciones = useMemo(() => {
@@ -70,8 +61,11 @@ export default function PublicacionesList({
     const showingSearchResults = normalizedQuery.length > 0;
     
     const mainSectionData = showingSearchResults ? filtered : morePublicaciones;
-    const totalPages = Math.ceil(mainSectionData.length / itemsPerPage);
-    const paginatedData = mainSectionData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const {
+        visibleItems: visibleGridData,
+        hasMore,
+        sentinelRef,
+    } = useInfiniteVisibleItems(mainSectionData, itemsPerPage);
 
     const mapTags = (p: Publicacion) => 
         tagsForAll ? tagsForAll(tTags) : [{ id: 0, name: tTags("negocio"), colorKey: "diseno" }];
@@ -85,7 +79,7 @@ export default function PublicacionesList({
         <main className="publicaciones-list">
             <div className="publicaciones-list__header">
                 <h1 className="publicaciones-list__title">{title}</h1>
-                <SearchBar value={searchQuery} onChange={(v) => { setSearchQuery(v); setCurrentPage(1); }} />
+                <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
 
             {/* Estado de carga global (solo si todo está vacío) */}
@@ -112,6 +106,7 @@ export default function PublicacionesList({
                                     {recentsPublicaciones.map(p => (
                                         <div key={p.id_publicacion} className="h-carousel__item">
                                             <PostCard
+                                                publicacionId={p.id_publicacion}
                                                 tags={mapTags(p)}
                                                 title={p.titulo}
                                                 price={parseFloat(p.precio)}
@@ -137,6 +132,7 @@ export default function PublicacionesList({
                                     {recommendedPublicaciones.map(p => (
                                         <div key={p.id_publicacion} className="h-carousel__item">
                                             <PostCard
+                                                publicacionId={p.id_publicacion}
                                                 tags={mapTags(p)}
                                                 title={p.titulo}
                                                 price={parseFloat(p.precio)}
@@ -156,9 +152,10 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">Explora más</h2>
                         <RenderError error={errors.more} />
                         <div className="publicaciones-list__grid">
-                            {paginatedData.map(p => (
+                            {visibleGridData.map(p => (
                                 <PostCard
                                     key={p.id_publicacion}
+                                    publicacionId={p.id_publicacion}
                                     tags={mapTags(p)}
                                     title={p.titulo}
                                     price={parseFloat(p.precio)}
@@ -169,15 +166,23 @@ export default function PublicacionesList({
                                 />
                             ))}
                         </div>
+                        {hasMore && (
+                            <div
+                                ref={sentinelRef}
+                                className="publicaciones-list__infinite-sentinel"
+                                aria-label="Cargando más publicaciones"
+                            />
+                        )}
                     </section>
                 </div>
             ) : (
                 <section className="publicaciones-list__search-results">
                     <h2 className="publicaciones-list__section-title">Resultados ({filtered.length})</h2>
                     <div className="publicaciones-list__grid">
-                        {paginatedData.map(p => (
+                        {visibleGridData.map(p => (
                             <PostCard
                                 key={p.id_publicacion}
+                                publicacionId={p.id_publicacion}
                                 tags={mapTags(p)}
                                 title={p.titulo}
                                 price={parseFloat(p.precio)}
@@ -188,14 +193,14 @@ export default function PublicacionesList({
                             />
                         ))}
                     </div>
+                    {hasMore && (
+                        <div
+                            ref={sentinelRef}
+                            className="publicaciones-list__infinite-sentinel"
+                            aria-label="Cargando más publicaciones"
+                        />
+                    )}
                 </section>
-            )}
-
-            {/* PAGINACIÓN ÚNICA (Sirve para Búsqueda o para "Más") */}
-            {totalPages > 1 && (
-                <div className="publicaciones-list__pagination">
-                    {/* ... lógica de botones de página que ya tenías ... */}
-                </div>
             )}
         </main>
     );
