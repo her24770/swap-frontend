@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
@@ -10,7 +10,7 @@ import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import "./seccion.css";
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 10;
 
 function RegisteredToast() {
   const searchParams = useSearchParams();
@@ -30,7 +30,6 @@ export default function HomePage() {
   const tTags = useTranslations('common.tags');
   const router = useRouter();
 
-  const [currentPage, setCurrentPage] = useState(1);
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ limit: ITEMS_PER_PAGE });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
   const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "me_gusta" });
@@ -51,8 +50,6 @@ export default function HomePage() {
   const{
     selectedPublicacion,
     loadingDetalle,
-    isSaved,
-    setIsSaved,
     handleDetallesClick,
     handleClose,
   } = useDetallePublicacion();
@@ -71,8 +68,6 @@ export default function HomePage() {
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ id: 1, name: tTags('negocio'), colorKey: "diseno" }]}
-        currentPage={currentPage}
-        onPageChange={(p) => setCurrentPage(p)}
         onDetallesClick={(p) => handleDetallesClick(p)}
       />
       {selectedPublicacion && (
@@ -85,16 +80,15 @@ export default function HomePage() {
         description={selectedPublicacion.descripcion}
         imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
         likes={selectedPublicacion.me_gusta}
+        publicacionId={selectedPublicacion.id_publicacion}
         sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
         sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
         sellerId={selectedPublicacion.usuario.id_usuario}
         sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
-        isSaved={isSaved}
         onSellerClick={(sellerId) => {
           handleClose();
           router.push(`/perfil/${sellerId}?modo=vendedor`);
         }}
-        onToggleSave={() => setIsSaved((prev) => !prev)}
         onVerCertificados={() => console.log("ver certificados")}
         onSolicitarTutoria={() => console.log("solicitar tutoría")}
         />

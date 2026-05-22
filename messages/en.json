@@ -16,7 +16,8 @@
 			"descubre": "Discover",
 			"tutorias": "Tutoring",
 			"materiales": "Materials",
-			"negocios": "Businesses"
+			"negocios": "Businesses",
+			"guardados": "Saved"
 		},
 		"settings":{
 			"settings" : "Application settings",

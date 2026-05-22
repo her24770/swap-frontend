@@ -1,13 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Camera, ChevronRight, Loader2, SquarePen, Trash2 } from "lucide-react";
+import { Bookmark, Camera, ChevronRight, Heart, Loader2, SquarePen, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
+import { useGuardados } from "../../../hooks/useGuardados";
 import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
@@ -29,6 +30,9 @@ interface PostCardProps {
   onImageUpdate?: (newUrl: string) => void;
   onEstadoChange?: (nuevoEstado: string) => void;
   onDetallesClick?: () => void;
+  modoGuardado?: boolean;
+  isSaved?: boolean;
+  onToggleSave?: () => void | Promise<void>;
 }
 
 export default function PostCard({
@@ -46,15 +50,22 @@ export default function PostCard({
   onImageUpdate,
   onEstadoChange,
   onDetallesClick,
+  modoGuardado = false,
+  isSaved,
+  onToggleSave,
 }: PostCardProps) {
   const t = useTranslations("posts");
   const { canEditCards } = usePerspectivaInterna();
+  const guardados = useGuardados();
   const { mostrarConfirm, agregarNotificacion } = useUIStore();
 
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const guardada = isSaved ?? (publicacionId !== undefined && guardados.isSaved(publicacionId));
+  const visuallySaved = modoGuardado || guardada;
 
   useEffect(() => {
     setDisplayImages(images);
@@ -63,6 +74,32 @@ export default function PostCard({
   const handleDetailsClick = () => {
     if (onDetallesClick) {
       onDetallesClick();
+    }
+  };
+
+  const handleToggleSave = async () => {
+    if (publicacionId === undefined || isSaving) return;
+
+    try {
+      setIsSaving(true);
+      if (onToggleSave) {
+        await onToggleSave();
+        return;
+      }
+
+      if (guardada) {
+        await guardados.eliminarGuardado(publicacionId);
+      } else {
+        await guardados.guardarPublicacion(publicacionId);
+      }
+    } catch (err) {
+      const error = err as Error;
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: error.message || "No fue posible actualizar el guardado.",
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -120,7 +157,7 @@ export default function PostCard({
   };
 
   return (
-    <article className="post-card">
+    <article className={`post-card${modoGuardado || guardada ? " post-card--saved" : ""}`}>
       <header className="post-card__header">
         {estado !== undefined && (
           <div className="post-card__estado-tag-container">
@@ -132,28 +169,30 @@ export default function PostCard({
           </div>
         )}
 
-        {canEditCards && onEditClick && (
-          <button
-            type="button"
-            className="post-card__edit-button"
-            onClick={onEditClick}
-            aria-label={t("actions.edit")}
-            title={t("actions.edit")}
-          >
-            <SquarePen size={24} strokeWidth={2} />
-          </button>
-        )}
-        {canEditCards && onDeleteClick && (
-          <button
-            type="button"
-            className="post-card__delete-button"
-            onClick={onDeleteClick}
-            aria-label="Eliminar publicación"
-            title="Eliminar publicación"
-          >
-            <Trash2 size={24} strokeWidth={2} />
-          </button>
-        )}
+        <div className="post-card__header-actions">
+          {canEditCards && onEditClick && (
+            <button
+              type="button"
+              className="post-card__edit-button"
+              onClick={onEditClick}
+              aria-label={t("actions.edit")}
+              title={t("actions.edit")}
+            >
+              <SquarePen size={24} strokeWidth={2} />
+            </button>
+          )}
+          {canEditCards && onDeleteClick && (
+            <button
+              type="button"
+              className="post-card__delete-button"
+              onClick={onDeleteClick}
+              aria-label="Eliminar publicación"
+              title="Eliminar publicación"
+            >
+              <Trash2 size={24} strokeWidth={2} />
+            </button>
+          )}
+        </div>
       </header>
 
       <div className="post-card__media">
@@ -203,6 +242,34 @@ export default function PostCard({
           >
             {t("actions.details")} <ChevronRight size={14} />
           </button>
+
+          <div className="post-card__footer-actions">
+            <button
+              type="button"
+              className="post-card__like-button"
+              aria-label="Me gusta"
+              title="Me gusta"
+            >
+              <Heart size={22} strokeWidth={2} />
+            </button>
+
+            {publicacionId !== undefined && (
+              <button
+                type="button"
+                className={`post-card__save-button${visuallySaved ? " post-card__save-button--saved" : ""}`}
+                onClick={handleToggleSave}
+                aria-label={guardada ? "Eliminar de guardados" : "Guardar publicación"}
+                title={guardada ? "Eliminar de guardados" : "Guardar publicación"}
+                disabled={isSaving}
+              >
+                {isSaving ? (
+                  <Loader2 size={22} className="post-card__upload-spinner" />
+                ) : (
+                  <Bookmark size={22} strokeWidth={2} />
+                )}
+              </button>
+            )}
+          </div>
         </footer>
       </div>
     </article>
