@@ -42,13 +42,20 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  color: var(--swap-primary-text-color);
-  background-color: rgba(255, 255, 255, 0.85);
-  transition: background-color 0.15s ease;
+  color: #ffffff; 
+  background-color: rgba(0, 0, 0, 0.55); 
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .image-carousel__btn:hover {
-  background-color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.image-carousel__btn:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 .image-carousel__btn--prev {
