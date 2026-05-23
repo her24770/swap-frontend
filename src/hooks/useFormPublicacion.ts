@@ -135,13 +135,15 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
     setIsSubmitting(true);
 
     try {
-      const imagen = data.imagenes?.[0];
+      const imagenes = data.imagenes ?? [];
+      const [primeraImagen, ...imagenesAdicionales] = imagenes;
+
       const resultado = await imagenService.crearPublicacion({
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
         tipo_publicacion: data.tipo_publicacion,
-        imagen,
+        imagen: primeraImagen,
       });
 
       if (data.categorias?.length) {
@@ -150,11 +152,25 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
         });
       }
 
+      if (imagenesAdicionales.length > 0) {
+        await imagenService.uploadFotosPublicacion(
+          resultado.id_publicacion,
+          imagenesAdicionales,
+        );
+      }
+
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       form.reset();
-      agregarNotificacion({ tipo: "success", mensaje: "Tu publicación fue creada exitosamente." });
+      const totalImagenes = imagenes.length;
+      agregarNotificacion({
+        tipo: "success",
+        mensaje:
+          totalImagenes > 1
+            ? `Publicación creada con ${totalImagenes} imágenes.`
+            : "Tu publicación fue creada exitosamente.",
+      });
     } catch (error) {
       const apiError = error as ApiError;
       const message = apiError.message || "No fue posible crear la publicación.";
@@ -302,7 +318,7 @@ export function useFormEditarPublicacion(id: number,
       await apiClient.put(`/api/publicacion/${id}`, payload);
 
       if (data.imagenesNuevas && data.imagenesNuevas.length > 0) {
-        await imagenService.uploadFotoPublicacion(id, data.imagenesNuevas[0]);
+        await imagenService.uploadFotosPublicacion(id, data.imagenesNuevas);
       }
 
       setIsSuccess(true);
