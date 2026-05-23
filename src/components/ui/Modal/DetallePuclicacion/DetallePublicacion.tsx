@@ -9,6 +9,7 @@ import "../../Button/Button.css";
 import "../Modal.css";
 import "./DetallePublicacion.css";
 import type { Tag } from "../../../../types/tag";
+import { useTranslations } from "next-intl";
 
 export type DetallePublicacionType = "venta" | "tutoria";
 
@@ -63,6 +64,7 @@ export default function DetallePublicacion({
   onToggleSave,
   isSaved = false,
 }: PostModalProps) {
+  const t = useTranslations("posts");
   const guardados = useGuardados();
   const [saving, setSaving] = useState(false);
 
@@ -173,7 +175,7 @@ export default function DetallePublicacion({
                   className="button button--medium"
                   onClick={onAcordarCompra}
                 >
-                  Acordar Compra <ChevronRight size={16} />
+                  {t('actions.acordar')} <ChevronRight size={16} />
                 </button>
               )}
 
@@ -184,7 +186,7 @@ export default function DetallePublicacion({
                     className="button button--medium button--warning"
                     onClick={onVerCertificados}
                   >
-                    Certificados
+                    {t('actions.certificado')}
                   </button>
                   <button
                     type="button"

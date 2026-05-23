@@ -1,7 +1,7 @@
 {
 	"layout": {
 		"meta": {
-			"title": "Swap",
+			"title": "SWAP",
 			"description": "Exchange site for UVG students"
 		},
 		"navbar": {
@@ -18,6 +18,13 @@
 			"materiales": "Materials",
 			"negocios": "Businesses",
 			"guardados": "Saved"
+		},
+		"settings":{
+			"settings" : "Application settings",
+			"theme" : "Theme",
+			"themeDesc" : "Switch between light and dark",
+			"language" : "Language",
+			"languageDesc": "Select your preferred language"
 		}
 	},
 	"locales": {
@@ -100,6 +107,11 @@
 		"placeholderTitle": "Discover",
 		"placeholderDescription": "Post discovery page — Coming soon"
 	},
+	"seccion":{
+		"reciente": "Recent post",
+		"recomendado" : "Recommended post", 
+		"explorar" : "Explore more"
+	},
 	"login": {
 		"title": "Sign in",
 		"subtitle": "New here? Enter your credentials to sign in.",
@@ -173,7 +185,8 @@
 		},
 		"actions": {
 			"newPublication": "New post",
-			"changeAd": "Change ad"
+			"changeAd": "Change ad", 
+			"editSchedule": "Edit Schedule"
 		},
 		"modal": {
 			"createPublicationAria": "Create post",
@@ -194,7 +207,9 @@
 	"posts": {
 		"actions": {
 			"details": "Details",
-			"edit": "Edit"
+			"edit": "Edit",
+			"acordar": "Agree on purchase",
+			"certificado" : "View Certificates"
 		},
 		"aria": {
 			"uploadImage": "Upload image"
@@ -203,6 +218,13 @@
 			"invalidType": "Only JPG, PNG, or WEBP images are allowed",
 			"tooLarge": "The image cannot be larger than 5 MB",
 			"generic": "Error uploading image"
+		},
+		"estado": {
+			"activo": "Active",
+			"disponible": "Available",
+			"reservado": "Reserved",
+			"vendido": "Sold",
+			"inactivo": "Inactive"
 		}
 	},
 	"comments": {

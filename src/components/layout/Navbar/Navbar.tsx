@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Menu, UserCircle2, LogOut} from "lucide-react";
+import { Menu, UserCircle2, LogOut, Settings } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,6 +8,7 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
+import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -19,10 +20,11 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const t = useTranslations('layout.navbar');
 
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { logout, usuario } = useAuth();
-
+  
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
 
@@ -48,7 +50,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
             type="button"
             className="navbar__menu-btn"
           >
-            <Menu size={20} strokeWidth={2} />
+            <Menu size={28} strokeWidth={2} />
           </button>
         )}
         <Link href="/" className="navbar__logo-link" aria-label="Ir a descubre">
@@ -56,6 +58,20 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
         </Link>
       </div>
       <div className="navbar__left">
+        {!isAuthRoute && (
+          <>
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              aria-label="Abrir configuraciones"
+              type="button"
+              className="navbar__menu-btn"
+            >
+              <Settings size={25} strokeWidth={2} />
+            </button>
+
+            <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+          </>
+        )}
         {/* Perfil/USER SOLO si NO es auth route */}
         {!isAuthRoute && (
           <div ref={dropdownRef} className="navbar__profile">
