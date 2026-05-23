@@ -35,7 +35,7 @@ export default function PublicacionesList({
     tagsForAll,
     onDetallesClick,
 }: Props) {
-    const t = useTranslations();
+    const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');
     const tTags = useTranslations('common.tags');
     const router = useRouter();
@@ -112,7 +112,7 @@ export default function PublicacionesList({
                 <div className="publicaciones-list__sections">
                     {/* SECCIÓN RECIENTES */}
                     <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">Publicaciones recientes</h2>
+                        <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
                         <RenderError error={errors.recents} />
                         {loading.recents ? <p>Cargando recientes...</p> : (
                             <div className="publicaciones-list__carousel-wrap">
@@ -138,7 +138,7 @@ export default function PublicacionesList({
 
                     {/* SECCIÓN RECOMENDADOS */}
                     <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">Publicaciones Recomendadas</h2>
+                        <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
                         <RenderError error={errors.recommended} />
                         {loading.recommended ? <p>Buscando sugerencias...</p> : (
                             <div className="publicaciones-list__carousel-wrap">
@@ -164,7 +164,7 @@ export default function PublicacionesList({
 
                     {/* EXPLORA MÁS */}
                     <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">Explora más</h2>
+                        <h2 className="publicaciones-list__section-title"> {t('explorar')}</h2>
                         <RenderError error={errors.more} />
                         <div className="publicaciones-list__grid">
                             {visibleGridData.map(p => (

@@ -1,7 +1,7 @@
 {
 	"layout": {
 		"meta": {
-			"title": "Swap",
+			"title": "SWAP",
 			"description": "Sitio de intercambio entre estudiantes de la UVG"
 		},
 		"navbar": {
@@ -18,6 +18,13 @@
 			"materiales": "Materiales",
 			"negocios": "Negocios",
 			"guardados": "Guardados"
+		},
+		"settings":{
+			"settings" : "Ajustes de la aplicación",
+			"theme" : "Tema",
+			"themeDesc" : "Cambia entre claro y oscuro",
+			"language" : "Idioma",
+			"languageDesc": "Selecciona tu idioma de preferencia"
 		}
 	},
 	"locales": {
@@ -100,6 +107,12 @@
 		"placeholderTitle": "Descubre",
 		"placeholderDescription": "Página de descubrimiento de publicaciones - Por desarrollar"
 	},
+	"seccion":{
+		"reciente": "Publicaciones Recientes",
+		"recomendado" : "Publicaciones Recomendadas", 
+		"explorar" : "Explorar más",
+		"error_loading_section": "No fue posible cargar esta sección"
+	},
 	"login": {
 		"title": "Iniciar Sesión",
 		"subtitle": "¿Eres nuevo? Ingresa tus credenciales para ingresar.",
@@ -173,7 +186,8 @@
 		},
 		"actions": {
 			"newPublication": "Nueva publicación",
-			"changeAd": "Cambiar anuncio"
+			"changeAd": "Cambiar anuncio",
+			"editSchedule": "Editar Horario"
 		},
 		"modal": {
 			"createPublicationAria": "Crear publicación",
@@ -194,7 +208,9 @@
 	"posts": {
 		"actions": {
 			"details": "Detalles",
-			"edit": "Editar"
+			"edit": "Editar",
+			"acordar": "Acordar Compra",
+			"certificado" : "View Certificates"
 		},
 		"aria": {
 			"uploadImage": "Subir imagen"
@@ -203,6 +219,13 @@
 			"invalidType": "Solo se permiten imágenes JPG, PNG o WEBP",
 			"tooLarge": "La imagen no puede superar los 5 MB",
 			"generic": "Error al subir la imagen"
+		},
+		"estado": {
+			"activo": "Activo",
+			"disponible": "Disponible",
+			"reservado": "Reservado",
+			"vendido": "Vendido",
+			"inactivo": "Inactivo"
 		}
 	},
 	"comments": {
@@ -278,7 +301,6 @@
 			"currentImageAlt": "Imagen actual"
 		}
 	},
-	"error_loading_section": "No fue posible cargar esta sección",
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
 		"titleCreate": "Crear Publicación",
@@ -312,6 +334,13 @@
 			"publishing": "Publicando...",
 			"saveChanges": "Guardar Cambios",
 			"saving": "Guardando..."
+		},
+		"estado": {
+			"activo": "Activo",
+			"disponible": "Disponible",
+			"reservado": "Reservado",
+			"vendido": "Vendido",
+			"inactivo": "Inactivo"
 		}
 	}
 }

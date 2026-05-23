@@ -33,6 +33,7 @@ type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormPro
 export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const t = useTranslations("publicacionForm");
   const tTags = useTranslations("common.tags");
+  const testado = useTranslations("posts.estado");
 
   const { onSuccess, onCancel} =props;
   const isEditing = props.mode === "editar";
@@ -119,7 +120,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
               <label className="crear-publicacion__label">{t("fields.status")}</label>
               <select {...register("estado")} className="crear-publicacion__select">
                 {estadosDisponibles.map((e) => (
-                  <option key={e.id_estado} value={e.estado}>{e.estado}</option>
+                  <option key={e.id_estado} value={e.estado}>{testado(e.estado)}</option>
                 ))}
               </select>
             </div>

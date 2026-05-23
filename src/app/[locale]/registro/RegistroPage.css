@@ -7,6 +7,7 @@
 }
 
 .registro-page__content {
+  position: relative;
   display: flex;
   flex: 1;
   align-items: center;
@@ -63,4 +64,37 @@
   .registro-page__form {
     flex: 1;
   }
+}
+
+.registro__arrow {
+  color:var(--swap-primary-text-color);
+  height: 2.10rem;
+  width: auto;
+}
+
+.registro-link {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.registro-link:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+  border-radius: 0.375rem;
+}
+
+/* El nuevo contenedor se encarga de apilar la flecha sobre el bloque de registro */
+.registro-page__main-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 56rem; /* Mantenemos el límite de ancho aquí */
+}
+
+.registro-page__main-container .registro-link {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
 }

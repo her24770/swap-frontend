@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
 import "./EstadoTag.css";
 import type { EstadoOpcion } from "../../../../hooks/useEstados";
+import { useTranslations } from "next-intl";
 
 const COLOR_MAP: Record<string, string> = {
   activo:    "green",
@@ -32,6 +33,7 @@ export default function EstadoTag({
 
   const estadoStr = String(estado).toLowerCase();
   const color = getColor(estadoStr);
+  const t = useTranslations("posts.estado");
 
   const handleEstadoChange = (nuevoEstado: string) => {
     onEstadoChange?.(nuevoEstado);
@@ -41,7 +43,7 @@ export default function EstadoTag({
   if (!canEditCards || !onEstadoChange || estadosDisponibles.length === 0) {
     return (
       <span className={`estado-tag estado-tag--${color}`} title={estadoStr}>
-        {estadoStr}
+        {t(estadoStr)}
       </span>
     );
   }
@@ -55,7 +57,7 @@ export default function EstadoTag({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        {estadoStr}
+        {t(estadoStr)}
         <ChevronDown size={14} className="estado-tag__chevron" />
       </button>
 
@@ -72,7 +74,7 @@ export default function EstadoTag({
               role="option"
             >
               <span className={`estado-tag__dot estado-tag__dot--${getColor(opt.estado)}`} />
-              {opt.estado}
+              {t(opt.estado)}
             </button>
           ))}
         </div>

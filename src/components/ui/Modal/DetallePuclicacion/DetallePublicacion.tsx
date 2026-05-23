@@ -14,6 +14,7 @@ import "./DetallePublicacion.css";
 import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
+import { useTranslations } from "next-intl";
 
 export type DetallePublicacionType = "venta" | "tutoria";
 
@@ -87,6 +88,7 @@ export default function DetallePublicacion({
   estadosDisponibles = [],
   onEstadoChange,
 }: PostModalProps) {
+  const t = useTranslations("posts");
   const guardados = useGuardados();
   const [saving, setSaving] = useState(false);
 
@@ -207,7 +209,7 @@ export default function DetallePublicacion({
               className="button button--medium button--full-width"
               onClick={onAcordarCompra}
             >
-              Acordar Compra <ChevronRight size={16} />
+              {t('actions.acordar')} <ChevronRight size={16} />
             </button>
           )}
           {type === "tutoria" && (
@@ -217,7 +219,7 @@ export default function DetallePublicacion({
                 className="button button--medium button--warning button--full-width"
                 onClick={onVerCertificados}
               >
-                Certificados
+                {t('actions.certificado')}
               </button>
               <button
                 type="button"

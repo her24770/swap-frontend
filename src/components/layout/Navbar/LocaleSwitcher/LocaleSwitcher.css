@@ -1,40 +1,32 @@
 .locale-switcher {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .locale-switcher__select {
-    appearance: none; 
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1.5px solid rgba(255, 255, 255, 0.35);
-    border-radius: 9999px; 
-    color: #ffffff;
-    padding: 0.25rem 1rem;
-    font-size: 0.800rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    outline: none;
-}
-
-.theme-toggle--dark + .locale-switcher .locale-switcher__select,
-.dark-mode .locale-switcher__select {
-  background-color: rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
+  appearance: none; 
+  -webkit-appearance: none;
+  background-color: var(--swap-secondary-background);
+  border: 1.5px solid var(--swap-primary-border-color);
+  border-radius: 9999px; 
+  color: var(--swap-primary-text-color);
+  padding: 0.35rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  outline: none;
 }
 
 .locale-switcher__select:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: var(--swap-tertiary-background);
 }
 
 .locale-switcher__select:focus {
-  border-color: #f59e0b; /* Color del icono del sol para consistencia */
+  border-color: var(--swap-primary-color);
 }
 
-/* Estilo para las opciones (limitado por el SO) */
 .locale-switcher__select option {
-  background-color: #1e293b; /* Color oscuro para legibilidad */
-  color: #ffffff;
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
 }
