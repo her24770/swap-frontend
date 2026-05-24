@@ -29,7 +29,7 @@ export const anuncioService = {
     },
 
     async getAnunciosdeUsuario(idUsuario: number): Promise<Anuncio[]> {
-        const response = await apiClient.get<ApiResult<Anuncio[]>>(`/api/anuncio/usuario/${idUsuario}`);
+        const response = await apiClient.get<ApiResult<Anuncio[]>>(`/api/anuncio/user/${idUsuario}`);
         return response.data; 
     },
 };

@@ -103,7 +103,9 @@ export default function PublicacionesList({
             {!showingSearchResults ? (
                 <div className="publicaciones-list__sections">
 
-                    {/* SECCIÓN ADS */}
+                    {/* SECCIÓN ADS si el arreglo no está vacío */}
+                    {Ads.length > 0 && (    
+                    
                     <section className="publicaciones-list__section">
                         <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
                         <RenderError error={errors.ads} />
@@ -123,6 +125,7 @@ export default function PublicacionesList({
                             </div>
                         )}
                     </section>
+                    )}
 
                     {/* SECCIÓN RECIENTES */}
                     <section className="publicaciones-list__section">

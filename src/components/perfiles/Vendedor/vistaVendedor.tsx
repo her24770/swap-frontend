@@ -19,6 +19,7 @@ import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
 import { CrearAnuncioForm } from "../../ui/Modal/CrearAnuncio/CrearAnuncioForm";
+import { useAnunciosUsuario } from "../../../hooks/fetch/useAnunciosUsuario";
 
 
 interface CatalogPost {
@@ -85,7 +86,12 @@ export default function VistaVendedor({
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
   const [crearAnuncioOpen, setCrearAnuncioOpen] = useState(false);
-
+const { 
+  data: anunciosData, 
+  loading: anunciosLoading, 
+  error: anunciosError,
+  refetch: refetchAnuncios 
+} = useAnunciosUsuario(idUsuario!);
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
@@ -171,12 +177,12 @@ export default function VistaVendedor({
         </div>
 
         <AnunciosCarousel>
-          {MOCK_ADs.map((ad, index) => (
+          {anunciosData.map((ad, index) => (
             <div key={index} className="h-carousel__item">
               <AdBanner
-                imageUrl={ad.imageUrl}
-                title={ad.title}
-                description={ad.description}
+                imageUrl={ad.imagen_url}
+                title={ad.titulo}
+                description={ad.descripcion}
               />
             </div>
           ))} 
