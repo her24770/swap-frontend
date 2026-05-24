@@ -15,6 +15,7 @@ import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContex
 import "../../ui/Modal/Modal.css";
 import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
+import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 
@@ -87,9 +88,9 @@ export default function VistaVendedor({
             title: pub.titulo,
             price: typeof pub.precio === 'string' ? parseFloat(pub.precio) : pub.precio,
             description: pub.descripcion,
-            tags: tipoPub === "material"
-              ? [{ id: 3, name: "Material", colorKey: "diseno" }]
-              : [{ id: 4, name: "Negocio", colorKey: "negocio" }],
+            tags: mapPublicacionEtiquetasToTags(pub.etiquetas, {
+              name: tipoPub === "material" ? "Material" : "Negocio",
+            }),
             estado: pub.estadoRel?.estado ?? "activo",
             images: pub.imagenes?.map((img) => img.url_imagen) || [],
             tipo: tipoPub,

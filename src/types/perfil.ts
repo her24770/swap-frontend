@@ -1,5 +1,6 @@
 import type { Tag } from "./tag";
 import type { Contact } from "./comment";
+import type { UsuarioEtiquetaRel } from "../lib/tags";
 
 export interface UserProfileData {
   id_usuario: number;
@@ -23,5 +24,16 @@ export interface UserProfileEditData {
     tipo_contacto: string;
     valor: string;
   }[];
+}
+
+export interface PerfilPublicoApi {
+  id_usuario: number;
+  nombre: string;
+  descripcion: string | null;
+  url_foto_perfil?: string;
+  calificacion: number | string | null;
+  metodo_pago?: string;
+  contactos?: unknown[];
+  etiquetas?: UsuarioEtiquetaRel[];
 }
 

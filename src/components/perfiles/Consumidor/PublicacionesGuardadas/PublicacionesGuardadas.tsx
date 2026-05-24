@@ -8,8 +8,8 @@ import HorizontalCarousel from "../../../ui/HorizontalCarousel/HorizontalCarouse
 import DetallePublicacion from "../../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import { useGuardados } from "../../../../hooks/useGuardados";
 import { useInfiniteVisibleItems } from "../../../../hooks/useInfiniteVisibleItems";
+import { mapPublicacionEtiquetasToTags } from "../../../../lib/tags";
 import type { Publicacion } from "../../../../types/publicacion";
-import type { Tag } from "../../../../types/tag";
 import "./PublicacionesGuardadas.css";
 
 type PublicacionesGuardadasVariant = "carousel" | "grid";
@@ -134,14 +134,8 @@ export default function PublicacionesGuardadas({
   );
 }
 
-function mapTags(publicacion: Publicacion): Tag[] {
-  if (!publicacion.etiquetas?.length) {
-    return [{ id: 0, name: publicacion.tipoPerfil?.tipo_perfil ?? "Publicación", colorKey: "diseno" }];
-  }
-
-  return publicacion.etiquetas.map((rel) => ({
-    id: rel.etiqueta.id_etiqueta,
-    name: rel.etiqueta.nombre,
-    colorKey: "diseno",
-  }));
+function mapTags(publicacion: Publicacion) {
+  return mapPublicacionEtiquetasToTags(publicacion.etiquetas, {
+    name: publicacion.tipoPerfil?.tipo_perfil ?? "Publicación",
+  });
 }

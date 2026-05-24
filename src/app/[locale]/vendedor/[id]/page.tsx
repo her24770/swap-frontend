@@ -11,9 +11,7 @@ import AdBanner from "../../../../components/perfiles/Vendedor/AdBanner/AdBanner
 import HorizontalCarousel from "../../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../../../components/ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import imagePath from "../../../../../public/images/uvg.jpg";
-import { TAGS_MATERIAS } from "../../../../lib/tags";
-import { apiClient } from "../../../../lib/apiClient";
-import { obtenerContactosUsuario } from "../../../../lib/contactosUsuario";
+import { getPerfilPublico } from "../../../../services/perfilService";
 import {
   PerspectivaInternaProvider,
   usePerspectivaInterna,
@@ -32,7 +30,7 @@ const MOCK_CATALOG = Array.from({ length: 6 }, (_, i) => ({
   title: "Porción pastel",
   price: 15,
   description: "Media porción de pastel de chocolate hecho en casa.",
-  tags: [{ id: 3, name: "Negocio", colorKey: "diseno" }] as Tag[],
+  tags: [{ id: 3, name: "Negocio", parentId: null }] as Tag[],
   estado: i % 3 === 0 ? "vendido" : "activo",
 }));
 
@@ -74,19 +72,7 @@ export default function PerfilVendedorPage() {
 
     const fetchUser = async () => {
       try {
-        const data = await apiClient.get<any>(`/api/user/${id}`);
-        const contacts = await obtenerContactosUsuario(Number(id));
-        setUser({
-          id_usuario: data.id_usuario,
-          name: data.nombre,
-          description: data.descripcion,
-          imageUrl: data.url_foto_perfil,
-          rating: Number(data.calificacion),
-          totalReviews: 0,
-          paymentMethod: data.metodo_pago,
-          contacts,
-          tags: TAGS_MATERIAS,
-        });
+        setUser(await getPerfilPublico(Number(id)));
       } catch (error) {
         console.error("Error cargando vendedor:", error);
       }

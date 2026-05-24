@@ -7,10 +7,9 @@ import CommentSection from "../../users/UserCard/Comments/CommentSection";
 import VistaConsumidor from "../Consumidor/vistaConsumidor";
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
-import { TAGS_MATERIAS } from "../../../lib/tags";
 import { apiClient } from "../../../lib/apiClient";
 import { unwrapAuthResponse } from "../../../lib/authResponse";
-import { mapApiContactosToContacts } from "../../../lib/contactosUsuario";
+import { getPerfilPublico } from "../../../services/perfilService";
 import {
   PerspectivaInternaProvider,
   usePerspectivaInterna,
@@ -40,16 +39,6 @@ const MOCK_COMMENTS: Comment[] = [
   },
 ];
 
-interface PerfilPublicoApi {
-  id_usuario: number;
-  nombre: string;
-  descripcion: string | null;
-  url_foto_perfil?: string;
-  calificacion: number | string | null;
-  metodo_pago?: string;
-  contactos?: unknown[];
-}
-
 export default function PerfilInterno() {
   const t = useTranslations("perfil");
   const tCommon = useTranslations("common");
@@ -76,19 +65,7 @@ export default function PerfilInterno() {
           usuarioId = sesion.usuario.id_usuario;
         }
 
-        const response = await apiClient.get<ApiResult<PerfilPublicoApi> | PerfilPublicoApi>(
-          `/api/user/${usuarioId}/perfil-publico`
-        );
-        const data = unwrapPerfilPublico(response);
-        setUser({
-          id_usuario: data.id_usuario,
-          name: data.nombre,
-          description: data.descripcion,
-          imageUrl: data.url_foto_perfil,
-          rating: Number(data.calificacion),
-          totalReviews: 0,
-          contacts: mapApiContactosToContacts(data.contactos ?? []),
-        });
+        setUser(await getPerfilPublico(usuarioId));
       } catch (err: any) {
         setError(err.message || "No fue posible cargar tu perfil.");
       }
@@ -126,7 +103,7 @@ export default function PerfilInterno() {
       activeProfileMode={mode}
     >
       <UserProfileHeader
-        user={{ ...user, tags: TAGS_MATERIAS }}
+        user={user}
         onSave={async (updated) => {
           setUser((prev) =>
             prev
@@ -181,20 +158,6 @@ export default function PerfilInterno() {
       />
     </PerspectivaInternaProvider>
   );
-}
-
-function unwrapPerfilPublico(
-  response: ApiResult<PerfilPublicoApi> | PerfilPublicoApi
-): PerfilPublicoApi {
-  if (response && typeof response === "object" && "success" in response) {
-    const data = (response as ApiResult<PerfilPublicoApi>).data;
-    if (!data) {
-      throw new Error("No fue posible cargar el perfil.");
-    }
-    return data;
-  }
-
-  return response as PerfilPublicoApi;
 }
 
 interface PerfilModeToggleProps {

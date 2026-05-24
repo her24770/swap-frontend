@@ -152,16 +152,6 @@
   gap: 0.375rem;
 }
 
-.post-modal__tag {
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: var(--swap-font-textos);
-  padding: 0.2rem 0.65rem;
-  border-radius: 999rem;
-  background-color: var(--swap-primary-color);
-  color: var(--swap-secondary-text-color);
-}
-
 /* ── Precio + título ── */
 .post-modal__price-row {
   display: flex;
