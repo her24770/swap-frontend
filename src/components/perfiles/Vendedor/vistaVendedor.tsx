@@ -431,16 +431,24 @@ export default function VistaVendedor({
         <DetallePublicacion
           isOpen={true}
           onClose={() => setSelectedPost(null)}
-          type="venta"
+          type={selectedPost.tipo === "tutoria" ? "tutoria" : "venta"}
           title={selectedPost.title}
           price={selectedPost.price}
           description={selectedPost.description}
           imageUrl={selectedPost.images[0] ?? ""}
+          images={selectedPost.images}
+          tags={selectedPost.tags.map(t => ({
+            id: t.id,
+            name: t.name
+          }))}
+          
           likes={0}
           publicacionId={selectedPost.id}
           sellerName={userName}
           sellerRating={userRating}
+          sellerId={userId}
           sellerImageUrl={userImageUrl}
+          estado={selectedPost.estado}
           onAcordarCompra={() => console.log("acordar compra")}
         />
       )}

@@ -429,7 +429,7 @@ export default function VistaTutor({
         <DetallePublicacion
           isOpen={true}
           onClose={() => setSelectedPost(null)}
-          type="venta"
+          type="tutoria"
           title={selectedPost.title}
           price={selectedPost.price}
           description={selectedPost.description}
@@ -439,7 +439,8 @@ export default function VistaTutor({
           sellerName={userName}
           sellerRating={userRating}
           sellerImageUrl={userImageUrl}
-          onAcordarCompra={() => console.log("acordar compra")}
+          onSolicitarTutoria={() => console.log("Solicitar tutoría")}
+          estado={selectedPost.estado}
         />
       )}
     </>

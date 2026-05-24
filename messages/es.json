@@ -113,6 +113,7 @@
 		"explorar" : "Explorar más",
 		"ads" : "Anuncios"
 
+		"error_loading_section": "No fue posible cargar esta sección"
 	},
 	"login": {
 		"title": "Iniciar Sesión",
@@ -304,7 +305,6 @@
 			"currentImageAlt": "Imagen actual"
 		}
 	},
-	"error_loading_section": "No fue posible cargar esta sección",
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
 		"titleCreate": "Crear Publicación",

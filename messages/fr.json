@@ -112,6 +112,7 @@
 		"recomendado" : "Publication recommandée", 
 		"explorar" : "Explorer plus",
 		"ads" : "Publicités"
+		"error_loading_section": "Impossible de charger cette section"
 	},
 	"login": {
 		"title": "Connexion",
@@ -300,7 +301,6 @@
 			"currentImageAlt": "Image actuelle"
 		}
 	},
-	"error_loading_section": "Impossible de charger cette section",
 	"loading": "Chargement des publications...",
 	"publicacionForm": {
 		"titleCreate": "Créer une publication",

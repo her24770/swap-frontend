@@ -1,5 +1,14 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
+async function throwApiError(res: Response, fallback: string): Promise<never> {
+  const body = await res.json().catch(() => ({}));
+  throw new Error(
+    (body as { message?: string; error?: string }).message ??
+      (body as { message?: string; error?: string }).error ??
+      fallback,
+  );
+}
+
 export interface CrearPublicacionPayload {
   titulo: string;
   descripcion: string;
@@ -31,8 +40,7 @@ export const imagenService = {
     });
 
     if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? body.error ?? `Error ${res.status} al crear publicación`);
+      await throwApiError(res, `Error ${res.status} al crear publicación`);
     }
 
     const json = await res.json();
@@ -50,8 +58,7 @@ export const imagenService = {
     });
 
     if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? body.error ?? `Error ${res.status} al subir foto de perfil`);
+      await throwApiError(res, `Error ${res.status} al subir foto de perfil`);
     }
 
     const data = await res.json();
@@ -69,11 +76,22 @@ export const imagenService = {
     });
 
     if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? body.error ?? `Error ${res.status} al subir imagen`);
+      await throwApiError(res, `Error ${res.status} al subir imagen de publicación`);
     }
 
     const data = await res.json();
-    return data.data.url_imagen as string;
+    const url = data?.data?.url_imagen ?? data?.url_imagen;
+    if (!url || typeof url !== "string") {
+      throw new Error("El servidor no devolvió la URL de la imagen");
+    }
+    return url;
+  },
+
+  async uploadFotosPublicacion(publicacionId: number, files: File[]): Promise<string[]> {
+    const urls: string[] = [];
+    for (const file of files) {
+      urls.push(await this.uploadFotoPublicacion(publicacionId, file));
+    }
+    return urls;
   },
 };
