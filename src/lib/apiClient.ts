@@ -90,14 +90,19 @@ async function handleResponse<T>(
   return response.json() as Promise<T>;
 }
 
-async function get<T>(path: string, options?: RequestInit): Promise<T> {
+interface ApiClientRequestOptions extends RequestInit {
+  skipUnauthorizedRedirect?: boolean;
+}
+
+async function get<T>(path: string, options?: ApiClientRequestOptions): Promise<T> {
+  const { skipUnauthorizedRedirect, ...fetchOptions } = options ?? {};
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "GET",
-    headers: buildHeaders(options?.headers),
+    headers: buildHeaders(fetchOptions?.headers),
     credentials: "include",
-    ...options,
+    ...fetchOptions,
   });
-  return handleResponse<T>(response);
+  return handleResponse<T>(response, { skipUnauthorizedRedirect });
 }
 
 async function post<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {

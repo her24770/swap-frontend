@@ -8,6 +8,7 @@ import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useInfiniteVisibleItems } from "../../../hooks/useInfiniteVisibleItems";
 import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
+import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import type { Publicacion } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
 import type {Anuncio} from "../../../types/anuncio";
@@ -89,8 +90,10 @@ export default function PublicacionesList({
         sentinelRef,
     } = useInfiniteVisibleItems(mainSectionData, itemsPerPage);
 
-    const mapTags = (p: Publicacion) => 
-        tagsForAll ? tagsForAll(tTags) : [{ id: 0, name: tTags("negocio"), colorKey: "diseno" }];
+    const mapTags = (p: Publicacion) =>
+        tagsForAll
+            ? tagsForAll(tTags)
+            : mapPublicacionEtiquetasToTags(p.etiquetas, { name: tTags("negocio") });
 
     const RenderError = ({ error }: { error: any }) => (
         error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null
@@ -253,10 +256,9 @@ export default function PublicacionesList({
                     description={selectedPublicacion.descripcion}
                     imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
                     images={selectedPublicacion.imagenes.map(img => img.url_imagen)}
-                    tags={selectedPublicacion.etiquetas.map(e => ({
-                        id: e.etiqueta.id_etiqueta,
-                        name: e.etiqueta.nombre
-                    }))}
+                    tags={mapPublicacionEtiquetasToTags(selectedPublicacion.etiquetas, {
+                        name: selectedPublicacion.tipoPerfil?.tipo_perfil ?? tTags("negocio"),
+                    })}
                     
                     likes={selectedPublicacion.me_gusta}
                     publicacionId={selectedPublicacion.id_publicacion}

@@ -6,19 +6,38 @@ import { apiClient } from "../lib/apiClient";
 export interface EtiquetaBD {
   id_etiqueta: number;
   nombre: string;
+  id_etiqueta_padre: number | null;
 }
 
-export function useTodasEtiquetas() {
+interface UseTodasEtiquetasOptions {
+  /** When true, only root/parent tags (no course children) are returned. */
+  soloPadres?: boolean;
+}
+
+export function useTodasEtiquetas(options: UseTodasEtiquetasOptions = {}) {
   const [etiquetas, setEtiquetas] = useState<EtiquetaBD[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiClient
-      .get<{ data: EtiquetaBD[] }>("/api/etiqueta")
-      .then((res) => setEtiquetas(res.data))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+    setLoading(true);
+    setError(null);
 
-  return { etiquetas, loading };
+    apiClient
+      .get<{ data: EtiquetaBD[] }>("/api/etiqueta", { skipUnauthorizedRedirect: true })
+      .then((res) => {
+        const list = res.data ?? [];
+        setEtiquetas(
+          options.soloPadres
+            ? list.filter((e) => e.id_etiqueta_padre == null)
+            : list
+        );
+      })
+      .catch(() => {
+        setError("No fue posible cargar las categorías.");
+      })
+      .finally(() => setLoading(false));
+  }, [options.soloPadres]);
+
+  return { etiquetas, loading, error };
 }

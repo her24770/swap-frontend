@@ -18,6 +18,18 @@
   user-select: none;
 }
 
+.tag-badge--parent {
+  background-color: var(--swap-tag-padre-bg);
+  color: var(--swap-tag-padre-text);
+  border-color: var(--swap-tag-padre-border);
+}
+
+.tag-badge--child {
+  background-color: var(--swap-tag-hija-bg);
+  color: var(--swap-tag-hija-text);
+  border-color: var(--swap-tag-hija-border);
+}
+
 /* Variante clickeable (para filtros) */
 .tag-badge--clickable {
   cursor: pointer;

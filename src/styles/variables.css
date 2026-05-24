@@ -20,6 +20,15 @@
     /* Danger */
   --swap-danger-color: #dc2626;
   --swap-danger-background: #fef2f2;
+
+  /* Colores para las tags de padres e hijas */
+  --swap-tag-padre-bg: #c4d2ff;
+  --swap-tag-padre-text: #4338CA;
+  --swap-tag-padre-border: #E0E7FF;
+
+  --swap-tag-hija-bg: #F0F9FF;
+  --swap-tag-hija-text: #0369A1;
+  --swap-tag-hija-border: #E0F2FE;
 }
 
 [data-theme="dark"] {
@@ -43,4 +52,13 @@
     /* Danger */
   --swap-danger-color: #EF4444;
   --swap-danger-background: #450A0A;
+
+  /* Colores para las tags de padres e hijas */
+  --swap-tag-padre-bg: #1E1B4B;
+  --swap-tag-padre-text: #C7D2FE;
+  --swap-tag-padre-border: #312E81;
+
+  --swap-tag-hija-bg: #0C4A6E;
+  --swap-tag-hija-text: #7DD3FC;
+  --swap-tag-hija-border: #075985;
 }

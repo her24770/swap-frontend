@@ -11,6 +11,7 @@ export interface PublicacionEtiquetaRel {
     id_etiqueta: number;
     nombre: string;
     descripcion?: string;
+    id_etiqueta_padre?: number | null;
   };
 }
 
@@ -87,12 +88,7 @@ export interface PublicacionDetalle {
 
   imagenes: ImagenPublicacion[];
 
-  etiquetas: {
-    etiqueta: {
-      id_etiqueta: number;
-      nombre: string;
-    };
-  }[];
+  etiquetas: PublicacionEtiquetaRel[];
 
   esGuardada?: boolean;
 }

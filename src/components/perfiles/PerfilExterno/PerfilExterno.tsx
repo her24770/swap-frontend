@@ -7,12 +7,9 @@ import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfil
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
-import { apiClient } from "../../../lib/apiClient";
-import { mapApiContactosToContacts } from "../../../lib/contactosUsuario";
-import { TAGS_MATERIAS } from "../../../lib/tags";
+import { getPerfilPublico } from "../../../services/perfilService";
 import { PerspectivaInternaProvider } from "../../../context/PerspectivaInternaContext";
 import { useAuthStore } from "../../../store/authStore";
-import type { ApiResult } from "../../../types/ApiResult";
 import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
 
@@ -20,16 +17,6 @@ type PerfilExternoMode = "vendedor" | "tutor";
 
 interface PerfilExternoProps {
   userId: number;
-}
-
-interface PerfilPublicoApi {
-  id_usuario: number;
-  nombre: string;
-  descripcion: string | null;
-  url_foto_perfil?: string;
-  calificacion: number | string | null;
-  metodo_pago?: string;
-  contactos?: unknown[];
 }
 
 export default function PerfilExterno({ userId }: PerfilExternoProps) {
@@ -63,21 +50,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
     const fetchUser = async () => {
       try {
         setError(null);
-        const response = await apiClient.get<ApiResult<PerfilPublicoApi> | PerfilPublicoApi>(
-          `/api/user/${userId}/perfil-publico`
-        );
-        const data = unwrapPerfilPublico(response);
-        setUser({
-          id_usuario: data.id_usuario,
-          name: data.nombre,
-          description: data.descripcion,
-          imageUrl: data.url_foto_perfil,
-          rating: Number(data.calificacion),
-          totalReviews: 0,
-          contacts: mapApiContactosToContacts(data.contactos ?? []),
-          paymentMethod: data.metodo_pago,
-          tags: TAGS_MATERIAS,
-        });
+        setUser(await getPerfilPublico(userId));
       } catch (err: any) {
         setError(err.message || "No fue posible cargar el perfil.");
       }
@@ -164,18 +137,4 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
       </section>
     </PerspectivaInternaProvider>
   );
-}
-
-function unwrapPerfilPublico(
-  response: ApiResult<PerfilPublicoApi> | PerfilPublicoApi
-): PerfilPublicoApi {
-  if (response && typeof response === "object" && "success" in response) {
-    const data = (response as ApiResult<PerfilPublicoApi>).data;
-    if (!data) {
-      throw new Error("No fue posible cargar el perfil.");
-    }
-    return data;
-  }
-
-  return response as PerfilPublicoApi;
 }

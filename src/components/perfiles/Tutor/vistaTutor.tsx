@@ -9,7 +9,7 @@ import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPubli
 import HorarioSemanal from "./Horario/Horario";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
-import { TAG_TUTORIA } from "../../../lib/tags";
+import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import { useEstados } from "../../../hooks/useEstados";
 import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
@@ -86,7 +86,7 @@ export default function VistaTutor({
           title: pub.titulo,
           price: typeof pub.precio === "string" ? parseFloat(pub.precio) : pub.precio,
           description: pub.descripcion,
-          tags: [{ ...TAG_TUTORIA, name: "Tutoría" }],
+          tags: mapPublicacionEtiquetasToTags(pub.etiquetas, { name: "Tutoría" }),
           estado: pub.estadoRel?.estado ?? "activo",
           images: pub.imagenes?.map((img) => img.url_imagen) || [],
           categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],

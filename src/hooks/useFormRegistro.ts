@@ -20,6 +20,7 @@ export function useFormRegistro() {
       confirmar_password: "",
       url_foto_perfil: "",
       descripcion: "",
+      etiquetas: [],
     },
   });
 
@@ -42,6 +43,7 @@ export function useFormRegistro() {
         password: data.password,
         url_foto_perfil: data.url_foto_perfil || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || "",
         descripcion: data.descripcion || "Sin descripción",
+        etiquetas: data.etiquetas,
       }
     );
     const sesion = unwrapAuthResponse(respuesta);

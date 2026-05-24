@@ -11,6 +11,7 @@ import CarruselImagen from "./CarruselImagen/CarruselImagen";
 import "../../Button/Button.css";
 import "../Modal.css";
 import "./DetallePublicacion.css";
+import TagBadge from "../../TagBadge/TagBadge";
 import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
@@ -187,9 +188,7 @@ export default function DetallePublicacion({
         {tags.length > 0 && (
           <div className="post-modal__tags">
             {tags.map((tag) => (
-              <span key={tag.id} className="post-modal__tag">
-                {tag.name}
-              </span>
+              <TagBadge key={tag.id} tag={tag} size="sm" />
             ))}
           </div>
         )}

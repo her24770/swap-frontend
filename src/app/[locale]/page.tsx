@@ -93,7 +93,7 @@ export default function HomePage() {
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
-        tagsForAll={() => [{ id: 1, name: tTags('negocio'), colorKey: "diseno" }]}
+        tagsForAll={() => [{ id: 1, name: tTags('negocio'), parentId: null }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
         Ads={adsData || []}
       />
