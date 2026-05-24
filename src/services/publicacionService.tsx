@@ -2,6 +2,29 @@
 import { apiClient } from "../lib/apiClient";
 import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse} from "../types/publicacion";
 
+interface GuardadoPublicacion {
+  id_usuario: number;
+  id_publicacion: number;
+  is_like: boolean;
+  is_save: boolean;
+  publicacion: Publicacion;
+}
+
+interface GuardadosResponse {
+  message: string;
+  data: Array<Publicacion | GuardadoPublicacion>;
+}
+
+function normalizarGuardados(data: GuardadosResponse["data"]): Publicacion[] {
+  return data.map((item) => {
+    if ("publicacion" in item) {
+      return item.publicacion;
+    }
+
+    return item;
+  });
+}
+
 export const publicacionService = {
 
 
@@ -30,16 +53,16 @@ export const publicacionService = {
   },
 
   async getGuardadas(): Promise<Publicacion[]> {
-    const response = await apiClient.get<PublicacionesResponse>("/api/publicacion/guardadas");
-    return response.data;
+    const response = await apiClient.get<GuardadosResponse>("/api/guardados");
+    return normalizarGuardados(response.data);
   },
 
   async guardar(id: number): Promise<void> {
-    await apiClient.post(`/api/publicacion/${id}/guardar`);
+    await apiClient.post(`/api/guardados/${id}`);
   },
 
   async eliminarGuardado(id: number): Promise<void> {
-    await apiClient.delete(`/api/publicacion/${id}/guardar`);
+    await apiClient.delete(`/api/guardados/${id}`);
   }
 
 };

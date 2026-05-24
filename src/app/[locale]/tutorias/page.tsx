@@ -57,30 +57,8 @@ export default function TutoriasPage() {
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ ...TAG_TUTORIA, name: tTags('tutoria') }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
+        Ads={[]}
       />
-      {selectedPublicacion && (
-              <DetallePublicacion
-                isOpen={true}
-                onClose={handleClose}
-                type="tutoria"
-                title={selectedPublicacion.titulo}
-                price={parseFloat(selectedPublicacion.precio)}
-                description={selectedPublicacion.descripcion}
-                imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
-                likes={selectedPublicacion.me_gusta}
-                publicacionId={selectedPublicacion.id_publicacion}
-                sellerName={loadingDetalle ? "Cargando..." : (selectedPublicacion.usuario.nombre ?? "Usuario de SWAP")}
-                sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
-                sellerId={selectedPublicacion.usuario.id_usuario}
-                sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
-                onSellerClick={(sellerId) => {
-                  handleClose();
-                  router.push(`/perfil/${sellerId}?modo=tutor`);
-                }}
-                onVerCertificados={() => console.log("ver certificados")}
-                onSolicitarTutoria={() => console.log("solicitar tutoría")}
-              />
-            )}
     </main>
   );
 }

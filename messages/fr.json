@@ -110,7 +110,9 @@
 	"seccion":{
 		"reciente": "Publication récente",
 		"recomendado" : "Publication recommandée", 
-		"explorar" : "Explorer plus"
+		"explorar" : "Explorer plus",
+		"ads" : "Publicités"
+		"error_loading_section": "Impossible de charger cette section"
 	},
 	"login": {
 		"title": "Connexion",
@@ -183,6 +185,8 @@
 		"actions": {
 			"newPublication": "Nouvelle publication",
 			"changeAd": "Changer l'annonce",
+			"createAd": "Create ad",
+			"editAd": "Edit ad",
 			"editSchedule": "Modifier l'horaire"
 		},
 		"modal": {
@@ -297,7 +301,6 @@
 			"currentImageAlt": "Image actuelle"
 		}
 	},
-	"error_loading_section": "Impossible de charger cette section",
 	"loading": "Chargement des publications...",
 	"publicacionForm": {
 		"titleCreate": "Créer une publication",

@@ -110,7 +110,9 @@
 	"seccion":{
 		"reciente": "Recent post",
 		"recomendado" : "Recommended post", 
-		"explorar" : "Explore more"
+		"explorar" : "Explore more",
+		"ads" : "Advertisements"
+		"error_loading_section": "Couldn't load this section"
 	},
 	"login": {
 		"title": "Sign in",
@@ -186,6 +188,8 @@
 		"actions": {
 			"newPublication": "New post",
 			"changeAd": "Change ad", 
+			"createAd": "Create ad",
+			"editAd": "Edit ad",
 			"editSchedule": "Edit Schedule"
 		},
 		"modal": {
@@ -300,7 +304,6 @@
 			"currentImageAlt": "Current image"
 		}
 	},
-	"error_loading_section": "Couldn't load this section",
 	"loading": "Loading publications...",
 	"publicacionForm": {
 		"titleCreate": "Create post",
