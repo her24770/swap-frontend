@@ -170,7 +170,7 @@ export default function PerfilVendedorPage() {
           <AdBanner
             imageUrl={MOCK_AD.imageUrl}
             title={MOCK_AD.title}
-            subtitle={MOCK_AD.subtitle}
+            description={MOCK_AD.subtitle}
           />
         </section>
 

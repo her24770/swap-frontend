@@ -111,7 +111,7 @@
 		"reciente": "Publication récente",
 		"recomendado" : "Publication recommandée", 
 		"explorar" : "Explorer plus",
-		"ads" : "Publicités"
+		"ads" : "Publicités",
 		"error_loading_section": "Impossible de charger cette section"
 	},
 	"login": {

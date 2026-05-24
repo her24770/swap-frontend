@@ -111,7 +111,7 @@
 		"reciente": "Recent post",
 		"recomendado" : "Recommended post", 
 		"explorar" : "Explore more",
-		"ads" : "Advertisements"
+		"ads" : "Advertisements",
 		"error_loading_section": "Couldn't load this section"
 	},
 	"login": {

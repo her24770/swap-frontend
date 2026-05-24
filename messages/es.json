@@ -111,7 +111,7 @@
 		"reciente": "Publicaciones Recientes",
 		"recomendado" : "Publicaciones Recomendadas", 
 		"explorar" : "Explorar más",
-		"ads" : "Anuncios"
+		"ads" : "Anuncios",
 
 		"error_loading_section": "No fue posible cargar esta sección"
 	},
