@@ -17,6 +17,8 @@ import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
+import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
+
 
 interface CatalogPost {
   id: number;
@@ -30,11 +32,28 @@ interface CatalogPost {
   categorias: number[];
 }
 
-const MOCK_AD = {
-  imageUrl: imagePath.src,
-  title: "2x1 en porción de pasteles",
-  subtitle: "¡Oferta por tiempo limitado!",
-};
+const MOCK_ADs = [
+  {
+    imageUrl: imagePath.src,
+    title: "2x1 en porción de pasteles",
+    subtitle: "¡Oferta por tiempo limitado!",
+  },
+  {
+    imageUrl: imagePath.src,
+    title: "3x2 en porción de pasteles",
+    subtitle: "¡Oferta por tiempo limitado!",
+  },
+  {
+    imageUrl: imagePath.src,
+    title: "4x3 en porción de pasteles",
+    subtitle: "¡Oferta por tiempo limitado!", 
+  },
+  {
+    imageUrl: imagePath.src,
+    title: "5x4 en porción de pasteles",
+    subtitle: "¡Oferta por tiempo limitado!",
+  }
+];
 
 interface VistaVendedorProps {
   userId?: number;
@@ -284,11 +303,22 @@ export default function VistaVendedor({
             </button>
           )}
         </div>
-        <AdBanner
-          imageUrl={MOCK_AD.imageUrl}
-          title={MOCK_AD.title}
-          subtitle={MOCK_AD.subtitle}
-        />
+
+        <AnunciosCarousel>
+          {MOCK_ADs.map((ad, index) => (
+            <div key={index} className="h-carousel__item">
+              <AdBanner
+                imageUrl={ad.imageUrl}
+                title={ad.title}
+                subtitle={ad.subtitle}
+              />
+            </div>
+          ))} 
+        </AnunciosCarousel>
+
+          
+
+        
       </section>
 
       {/* Modal crear publicación */}

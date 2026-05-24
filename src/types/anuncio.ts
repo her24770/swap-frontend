@@ -1,4 +1,4 @@
-export interface UserProfileData {
+export interface Anuncio {
     id_anuncio: number;
     descripcion: string;
     titulo: string;
