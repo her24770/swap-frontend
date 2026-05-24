@@ -36,22 +36,22 @@ const MOCK_ADs = [
   {
     imageUrl: imagePath.src,
     title: "2x1 en porción de pasteles",
-    subtitle: "¡Oferta por tiempo limitado!",
+    description: "¡Oferta por tiempo limitado!",
   },
   {
     imageUrl: imagePath.src,
     title: "3x2 en porción de pasteles",
-    subtitle: "¡Oferta por tiempo limitado!",
+    description: "¡Oferta por tiempo limitado!",
   },
   {
     imageUrl: imagePath.src,
     title: "4x3 en porción de pasteles",
-    subtitle: "¡Oferta por tiempo limitado!", 
+    description: "¡Oferta por tiempo limitado!", 
   },
   {
     imageUrl: imagePath.src,
     title: "5x4 en porción de pasteles",
-    subtitle: "¡Oferta por tiempo limitado!",
+    description: "¡Oferta por tiempo limitado!",
   }
 ];
 
@@ -154,7 +154,32 @@ export default function VistaVendedor({
   }, [fetchPublicaciones]);
 
   return (
-    <>
+    <>  
+      {/* ADbanners */}
+      <section className="perfil-page__section">
+        <div className="perfil-page__catalog-bar">
+          <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
+          {canCreatePublication && (
+            <button type="button" className="perfil-page__new-publication-btn">
+              {t("actions.changeAd")}
+            </button>
+          )}
+        </div>
+
+        <AnunciosCarousel>
+          {MOCK_ADs.map((ad, index) => (
+            <div key={index} className="h-carousel__item">
+              <AdBanner
+                imageUrl={ad.imageUrl}
+                title={ad.title}
+                description={ad.description}
+              />
+            </div>
+          ))} 
+        </AnunciosCarousel>
+
+      </section>
+
       {/* Catálogo de Materiales con carrusel de cards */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
@@ -293,33 +318,6 @@ export default function VistaVendedor({
 
       <hr className="perfil-page__divider" />
 
-      {/* ADbanners */}
-      <section className="perfil-page__section">
-        <div className="perfil-page__catalog-bar">
-          <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
-          {canCreatePublication && (
-            <button type="button" className="perfil-page__new-publication-btn">
-              {t("actions.changeAd")}
-            </button>
-          )}
-        </div>
-
-        <AnunciosCarousel>
-          {MOCK_ADs.map((ad, index) => (
-            <div key={index} className="h-carousel__item">
-              <AdBanner
-                imageUrl={ad.imageUrl}
-                title={ad.title}
-                subtitle={ad.subtitle}
-              />
-            </div>
-          ))} 
-        </AnunciosCarousel>
-
-          
-
-        
-      </section>
 
       {/* Modal crear publicación */}
       {canCreatePublication && crearOpen && (

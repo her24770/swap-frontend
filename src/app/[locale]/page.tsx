@@ -8,10 +8,31 @@ import PublicacionesList from "../../components/pages/PublicacionesList/Publicac
 import { useToast } from "../../hooks/useToast";
 import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
+import AnunciosCarousel from "../../components/ui/AnunciosCarousel/AnunciosCarousel";
+import AdBanner from "../../components/perfiles/Vendedor/AdBanner/AdBanner";
+import imagePath from "../../../public/images/uvg.jpg";
+
 import "./seccion.css";
 
 const ITEMS_PER_PAGE = 10;
 
+const MOCK_ADs = [ 
+  {
+    imageUrl: imagePath.src,
+    title: "¡Vende tus productos fácilmente!",
+    description: "Publica tus productos en SWAP y llega a miles de compradores potenciales.",
+  },
+  {
+    imageUrl: imagePath.src,
+    title: "¿Buscas algo específico?",
+    description: "Encuentra lo que necesitas en una sola plataforma.",
+  },
+  {
+    imageUrl: imagePath.src,
+    title: "¡Únete a la comunidad de SWAP!",
+    description: "Conecta con otros vendedores y compradores en nuestra comunidad.",
+  },
+];
 function RegisteredToast() {
   const searchParams = useSearchParams();
   const toast = useToast();
@@ -59,6 +80,20 @@ export default function HomePage() {
       <Suspense fallback={null}>
         <RegisteredToast />
       </Suspense>
+
+      <AnunciosCarousel>
+        {MOCK_ADs.map((ad, index) => (
+          <div key={index} className="h-carousel__item">
+            <AdBanner
+              imageUrl={ad.imageUrl}
+              title={ad.title}
+              description={ad.description}
+            />
+          </div>
+        ))} 
+      </AnunciosCarousel>
+
+
       <PublicacionesList
         title={t('title')}
         recentsPublicaciones={recentsData || []}

@@ -3,7 +3,7 @@
 .ad-banner {
   width: 100%;
   border-radius: 1rem;
-  overflow: hidden;
+  overflow: clip;
   position: relative;
   min-height: 10rem;
   background-color: var(--swap-tertiary-background);
@@ -11,11 +11,22 @@
   align-items: center;
   justify-content: center;
   border: 2px dashed var(--swap-primary-border-color);
+  height: 300px;
+  transition: transform 0.2s ease;
+  will-change: transform;
+
+}
+
+.ad-banner:hover {
+  transform: translateY(-4px);
+
 }
 
 .ad-banner--image {
   border: none;
   min-height: 12rem;
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
 .ad-banner__img {
@@ -23,7 +34,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  max-height: 18rem;
+  max-height: 20rem;
 }
 
 .ad-banner__overlay {
@@ -31,8 +42,8 @@
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(0, 115, 41, 0.75) 0%,
-    rgba(0, 60, 20, 0.85) 100%
+    rgba(0, 24, 10, 0.75) 0%,
+    rgba(2, 11, 5, 0.85) 100%
   );
   display: flex;
   flex-direction: column;
@@ -64,7 +75,7 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.ad-banner__subtitle {
+.ad-banner__description {
   font-family: var(--swap-font-subtitulos);
   font-size: clamp(0.875rem, 2vw, 1.125rem);
   color: rgba(255, 255, 255, 0.9);

@@ -4,12 +4,12 @@ import "./AdBanner.css";
 export interface AdBannerData {
   imageUrl?: string;
   title?: string;
-  subtitle?: string;
+  description?: string;
 }
 
 interface AdBannerProps extends AdBannerData {}
 
-export default function AdBanner({ imageUrl, title, subtitle }: AdBannerProps) {
+export default function AdBanner({ imageUrl, title, description }: AdBannerProps) {
   if (!imageUrl && !title) {
     return (
       <div className="ad-banner">
@@ -29,7 +29,7 @@ export default function AdBanner({ imageUrl, title, subtitle }: AdBannerProps) {
       <div className="ad-banner__overlay">
         <span className="ad-banner__badge">Anuncio</span>
         {title && <h3 className="ad-banner__title">{title}</h3>}
-        {subtitle && <p className="ad-banner__subtitle">{subtitle}</p>}
+        {description && <p className="ad-banner__description">{description}</p>}
       </div>
     </div>
   );

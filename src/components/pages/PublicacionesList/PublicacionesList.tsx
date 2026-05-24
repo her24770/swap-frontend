@@ -19,6 +19,7 @@ type Props = {
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
+    showAds?: boolean;
 };
 
 export default function PublicacionesList({
@@ -31,6 +32,7 @@ export default function PublicacionesList({
     itemsPerPage = 12,
     tagsForAll,
     onDetallesClick,
+    showAds = true,
 }: Props) {
     const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');
