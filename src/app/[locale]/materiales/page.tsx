@@ -44,6 +44,7 @@ export default function MaterialesPage() {
     <main className="seccion-page">
       <PublicacionesList
         title={t('title')}
+        tipo="material"
         recentsPublicaciones={recentsData || []}
         recommendedPublicaciones={recommendedData || []}
         morePublicaciones={moreData || []}

@@ -49,10 +49,11 @@ export default function TutoriasPage() {
     <main className="seccion-page">
       <PublicacionesList
         title={t('title')}
+        tipo="tutoria"
         recentsPublicaciones={recentsData || []}
         recommendedPublicaciones={recommendedData || []}
         morePublicaciones={moreData || []}
-        loading={loadingStates} 
+        loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ ...TAG_TUTORIA, name: tTags('tutoria') }]}

@@ -7,6 +7,7 @@ import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/Horizo
 import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useInfiniteVisibleItems } from "../../../hooks/useInfiniteVisibleItems";
 import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
+import { useBusquedaSemantica } from "../../../hooks/fetch/useBusquedaSemantica";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import type { Publicacion } from "../../../types/publicacion";
@@ -19,6 +20,7 @@ import "./PublicacionesList.css";
 
 type Props = {
     title: string;
+    tipo?: string;
     recommendedPublicaciones?: Publicacion[];
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
@@ -32,6 +34,7 @@ type Props = {
 
 export default function PublicacionesList({
     title,
+    tipo,
     recentsPublicaciones = [],
     recommendedPublicaciones = [],
     morePublicaciones = [],
@@ -48,7 +51,7 @@ export default function PublicacionesList({
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
 
-    const normalizedQuery = searchQuery.trim().toLowerCase();
+    const { results: searchResults, loading: searchLoading } = useBusquedaSemantica(searchQuery, tipo);
 
     const {
         selectedPublicacion,
@@ -62,28 +65,9 @@ export default function PublicacionesList({
         if (onDetallesClick) onDetallesClick(p);
     };
 
-    // 1. Unificar para búsquedas (quitando duplicados)
-    const allPublicaciones = useMemo(() => {
-        const seen = new Set<number>();
-        return [...recentsPublicaciones, ...recommendedPublicaciones, ...morePublicaciones].filter((p) => {
-            if (seen.has(p.id_publicacion)) return false;
-            seen.add(p.id_publicacion);
-            return true;
-        });
-    }, [morePublicaciones, recentsPublicaciones, recommendedPublicaciones]);
+    const showingSearchResults = searchQuery.trim().length > 0;
 
-    // 2. Filtrado 
-    const filtered = useMemo(() => {
-        if (!normalizedQuery) return allPublicaciones;
-        return allPublicaciones.filter((p) =>
-            p.titulo?.toLowerCase().includes(normalizedQuery) ||
-            p.descripcion?.toLowerCase().includes(normalizedQuery)
-        );
-    }, [allPublicaciones, normalizedQuery]);
-
-    const showingSearchResults = normalizedQuery.length > 0;
-    
-    const mainSectionData = showingSearchResults ? filtered : morePublicaciones;
+    const mainSectionData = showingSearchResults ? searchResults : morePublicaciones;
     const {
         visibleItems: visibleGridData,
         hasMore,
@@ -106,14 +90,24 @@ export default function PublicacionesList({
                 <SearchBar value={searchQuery} onChange={setSearchQuery} />
             </div>
 
-            {/* Estado de carga global (solo si todo está vacío) */}
-            {loading.global && allPublicaciones.length === 0 && (
+            {/* Estado de carga global */}
+            {(loading.global && !showingSearchResults) && morePublicaciones.length === 0 && (
                 <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
             )}
 
-            {!loading.global && filtered.length === 0 && (
+            {showingSearchResults && searchLoading && (
+                <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
+            )}
+
+            {showingSearchResults && !searchLoading && searchResults.length === 0 && (
                 <div className="publicaciones-list__empty">
-                    <p>{showingSearchResults ? tEmpty("noResultsFor", { query: searchQuery }) : tEmpty("description")}</p>
+                    <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
+                </div>
+            )}
+
+            {!showingSearchResults && !loading.global && morePublicaciones.length === 0 && (
+                <div className="publicaciones-list__empty">
+                    <p>{tEmpty("description")}</p>
                 </div>
             )}
 
@@ -223,7 +217,7 @@ export default function PublicacionesList({
             ) : (
                 /* RESULTADOS DE BÚSQUEDA */
                 <section className="publicaciones-list__search-results">
-                    <h2 className="publicaciones-list__section-title">Resultados ({filtered.length})</h2>
+                    <h2 className="publicaciones-list__section-title">Resultados ({searchResults.length})</h2>
                     <div className="publicaciones-list__grid">
                         {visibleGridData.map(p => (
                             <PostCard

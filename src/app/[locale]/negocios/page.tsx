@@ -44,6 +44,7 @@ export default function NegociosPage() {
     <main className="seccion-page">
       <PublicacionesList
         title={t('title')}
+        tipo="negocio"
         recentsPublicaciones={recentsData || []}
         recommendedPublicaciones={recommendedData || []}
         morePublicaciones={moreData || []}
