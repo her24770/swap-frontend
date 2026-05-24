@@ -1,8 +1,10 @@
 import React, { createContext, useContext } from 'react';
 import { publicacionService } from '../publicacionService';
+import { anuncioService } from '../anuncioService';
 
 const services = {
     publicacion: publicacionService,
+    anuncio: anuncioService,
 };
 
 const ServiceContext = createContext(services);

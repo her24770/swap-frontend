@@ -10,18 +10,23 @@ import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Publicacion } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
+import type {Anuncio} from "../../../types/anuncio";
+import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
+import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import "./PublicacionesList.css";
+
 
 type Props = {
     title: string;
     recommendedPublicaciones?: Publicacion[];
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
-    loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean };
-    errors: { recents?: any; recommended?: any; more?: any };
+    loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean };
+    errors: { recents?: any; recommended?: any; more?: any; ads?: any };
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
+    Ads: Anuncio[];
 };
 
 export default function PublicacionesList({
@@ -34,6 +39,7 @@ export default function PublicacionesList({
     itemsPerPage = 12,
     tagsForAll,
     onDetallesClick,
+    Ads = [],
 }: Props) {
     const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');
@@ -110,6 +116,31 @@ export default function PublicacionesList({
 
             {!showingSearchResults ? (
                 <div className="publicaciones-list__sections">
+
+                    {/* SECCIÓN ADS si el arreglo no está vacío */}
+                    {Ads.length > 0 && (    
+                    
+                    <section className="publicaciones-list__section">
+                        <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
+                        <RenderError error={errors.ads} />
+                        {loading.ads ? <p>Cargando anuncios...</p> : (
+                            <div className="publicaciones-list__carousel-wrap">
+                                <AnunciosCarousel>
+                                    {Ads.map((ad, index) => (
+                                    <div key={index} className="h-carousel__item">
+                                        <AdBanner
+                                            imageUrl={ad.imagen_url}
+                                            title={ad.titulo}
+                                            description={ad.descripcion}
+                                        />
+                                    </div>
+                                    ))} 
+                                </AnunciosCarousel>
+                            </div>
+                        )}
+                    </section>
+                    )}
+
                     {/* SECCIÓN RECIENTES */}
                     <section className="publicaciones-list__section">
                         <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>

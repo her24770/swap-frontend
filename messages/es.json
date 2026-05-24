@@ -111,6 +111,8 @@
 		"reciente": "Publicaciones Recientes",
 		"recomendado" : "Publicaciones Recomendadas", 
 		"explorar" : "Explorar más",
+		"ads" : "Anuncios"
+
 		"error_loading_section": "No fue posible cargar esta sección"
 	},
 	"login": {
@@ -187,6 +189,8 @@
 		"actions": {
 			"newPublication": "Nueva publicación",
 			"changeAd": "Cambiar anuncio",
+			"createAd": "Crear anuncio",
+			"editAd": "Editar anuncio",
 			"editSchedule": "Editar Horario"
 		},
 		"modal": {

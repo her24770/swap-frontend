@@ -52,6 +52,7 @@ export default function NegociosPage() {
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ ...TAG_NEGOCIO, name: tTags('negocio') }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
+        Ads={[]}
       />
     </main>
   );

@@ -111,6 +111,7 @@
 		"reciente": "Recent post",
 		"recomendado" : "Recommended post", 
 		"explorar" : "Explore more",
+		"ads" : "Advertisements"
 		"error_loading_section": "Couldn't load this section"
 	},
 	"login": {
@@ -187,6 +188,8 @@
 		"actions": {
 			"newPublication": "New post",
 			"changeAd": "Change ad", 
+			"createAd": "Create ad",
+			"editAd": "Edit ad",
 			"editSchedule": "Edit Schedule"
 		},
 		"modal": {
