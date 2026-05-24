@@ -13,14 +13,14 @@ import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import "../../ui/Modal/Modal.css";
-import imagePath from "../../../../public/images/uvg.jpg";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
 import { CrearAnuncioForm } from "../../ui/Modal/CrearAnuncio/CrearAnuncioForm";
 import { useAnunciosUsuario } from "../../../hooks/fetch/useAnunciosUsuario";
-
+import type { Anuncio } from "../../../types/anuncio";
+import { useServices } from "../../../services/context/ServiceContext";
 
 interface CatalogPost {
   id: number;
@@ -33,29 +33,6 @@ interface CatalogPost {
   tipo: string;
   categorias: number[];
 }
-
-const MOCK_ADs = [
-  {
-    imageUrl: imagePath.src,
-    title: "2x1 en porción de pasteles",
-    description: "¡Oferta por tiempo limitado!",
-  },
-  {
-    imageUrl: imagePath.src,
-    title: "3x2 en porción de pasteles",
-    description: "¡Oferta por tiempo limitado!",
-  },
-  {
-    imageUrl: imagePath.src,
-    title: "4x3 en porción de pasteles",
-    description: "¡Oferta por tiempo limitado!", 
-  },
-  {
-    imageUrl: imagePath.src,
-    title: "5x4 en porción de pasteles",
-    description: "¡Oferta por tiempo limitado!",
-  }
-];
 
 interface VistaVendedorProps {
   userId?: number;
@@ -75,7 +52,8 @@ export default function VistaVendedor({
   const { mostrarConfirm, agregarNotificacion } = useUIStore();
   const idUsuario = userId ?? authUserId;
   const estadosMaterial = useEstados("material");
-  const { canCreatePublication, canEditCards, isOwnProfile } = usePerspectivaInterna();
+  const { canCreatePublication, canEditCards } = usePerspectivaInterna();
+  const { anuncio: anuncioService } = useServices();
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
@@ -85,13 +63,16 @@ export default function VistaVendedor({
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
-  const [crearAnuncioOpen, setCrearAnuncioOpen] = useState(false);
-const { 
-  data: anunciosData, 
-  loading: anunciosLoading, 
-  error: anunciosError,
-  refetch: refetchAnuncios 
-} = useAnunciosUsuario(idUsuario!);
+  
+  const [anuncioModalOpen, setAnuncioModalOpen] = useState(false);
+  const [anuncioEditando, setAnuncioEditando] = useState<Anuncio | null>(null);
+
+  const { 
+    data: anunciosData, 
+    loading: anunciosLoading, 
+    error: anunciosError,
+    refetch: refetchAnuncios 
+  } = useAnunciosUsuario(idUsuario!);
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
@@ -135,6 +116,35 @@ const {
     }
   }, [idUsuario]);
 
+  // ── MANEJO DE ELIMINACIÓN DE ANUNCIOS ────────────────────────────────────
+  const handleEliminarAnuncio = useCallback((idAnuncio: number) => {
+    mostrarConfirm({
+      titulo: "Eliminar anuncio",
+      mensaje: "¿Estás seguro de que deseas eliminar este anuncio de la plataforma? Esta acción es permanente.",
+      onConfirm: async () => {
+        try {
+          await anuncioService.eliminarAnuncio(idAnuncio);
+          agregarNotificacion({
+            tipo: "success",
+            mensaje: "Anuncio removido con éxito.",
+          });
+          refetchAnuncios(); 
+        } catch (err: any) {
+          agregarNotificacion({
+            tipo: "error",
+            mensaje: err.message || "No fue posible eliminar el anuncio.",
+          });
+        }
+      },
+    });
+  }, [agregarNotificacion, refetchAnuncios, mostrarConfirm, anuncioService]);
+
+  // ── MANEJO DE APERTURA DE MODAL DE EDICIÓN ───────────────────────────────
+  const handleAbrirEdicionAnuncio = (anuncio: Anuncio) => {
+    setAnuncioEditando(anuncio);
+    setAnuncioModalOpen(true);
+  };
+
   const handleEliminar = useCallback((id: number) => {
     mostrarConfirm({
       titulo: "Eliminar publicación",
@@ -164,33 +174,57 @@ const {
 
   return (
     <>  
-      {/* ADbanners */}
+      {/* ADbanners (Sección Anuncios) */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
           {canCreatePublication && (
-            <button type="button" className="perfil-page__new-publication-btn" onClick={() => setCrearAnuncioOpen(true)}>
+            <button 
+              type="button" 
+              className="perfil-page__new-publication-btn" 
+              onClick={() => {
+                setAnuncioEditando(null); 
+                setAnuncioModalOpen(true);
+              }}
+            >
               <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
               {t("actions.createAd")}
             </button>
           )}
         </div>
 
-        <AnunciosCarousel>
-          {anunciosData.map((ad, index) => (
-            <div key={index} className="h-carousel__item">
-              <AdBanner
-                imageUrl={ad.imagen_url}
-                title={ad.titulo}
-                description={ad.descripcion}
-              />
-            </div>
-          ))} 
-        </AnunciosCarousel>
+        {anunciosLoading && (
+          <p className="perfil-page__coming-soon">Cargando anuncios de SWAP...</p>
+        )}
 
+        {anunciosError && (
+          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+            {anunciosError}
+          </p>
+        )}
+
+        {!anunciosLoading && !anunciosError && anunciosData && anunciosData.length === 0 && (
+          <p className="perfil-page__coming-soon">Este estudiante aún no tiene anuncios publicados.</p>
+        )}
+
+        {!anunciosLoading && !anunciosError && anunciosData && anunciosData.length > 0 && (
+          <AnunciosCarousel>
+            {anunciosData.map((ad) => (
+              <div key={ad.id_anuncio} className="h-carousel__item">
+                <AdBanner
+                  imageUrl={ad.imagen_url}
+                  title={ad.titulo}
+                  description={ad.descripcion}
+                  onEditClick={() => handleAbrirEdicionAnuncio(ad)}
+                  onDeleteClick={() => handleEliminarAnuncio(ad.id_anuncio)}
+                />
+              </div>
+            ))} 
+          </AnunciosCarousel>
+        )}
       </section>
 
-      {/* Catálogo de Materiales con carrusel de cards */}
+      {/* Catálogo de Materiales */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogMaterial")}</h2>
@@ -206,20 +240,11 @@ const {
           )}
         </div>
 
-        {loading && (
-          <p className="perfil-page__coming-soon">Cargando publicaciones...</p>
-        )}
-
-        {error && (
-          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
-            {error}
-          </p>
-        )}
+        {loading && <p className="perfil-page__coming-soon">Cargando publicaciones...</p>}
+        {error && <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>{error}</p>}
 
         {!loading && !error && catalogMaterial.length === 0 && (
-          <p className="perfil-page__coming-soon">
-            Aún no tienes publicaciones de negocio.
-          </p>
+          <p className="perfil-page__coming-soon">Aún no tienes publicaciones de materiales.</p>
         )}
 
         {!loading && !error && catalogMaterial.length > 0 && (
@@ -266,7 +291,7 @@ const {
         )}
       </section>
 
-      {/* Catálogo de productos con carrusel de cards */}
+      {/* Catálogo de Productos/Negocios */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogNegocio")}</h2>
@@ -282,20 +307,11 @@ const {
           )}
         </div>
 
-        {loading && (
-          <p className="perfil-page__coming-soon">Cargando publicaciones...</p>
-        )}
-
-        {error && (
-          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
-            {error}
-          </p>
-        )}
+        {loading && <p className="perfil-page__coming-soon">Cargando publicaciones...</p>}
+        {error && <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>{error}</p>}
 
         {!loading && !error && catalogNegocio.length === 0 && (
-          <p className="perfil-page__coming-soon">
-            Aún no tienes publicaciones de negocio.
-          </p>
+          <p className="perfil-page__coming-soon">Aún no tienes publicaciones de negocio.</p>
         )}
 
         {!loading && !error && catalogNegocio.length > 0 && (
@@ -328,17 +344,10 @@ const {
 
       <hr className="perfil-page__divider" />
 
-
       {/* Modal crear publicación */}
       {canCreatePublication && crearOpen && (
         <div className="modal-overlay" onClick={() => setCrearOpen(false)}>
-          <div
-            className="perfil-page__crear-pub-modal"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("modal.createPublicationAria")}
-          >
+          <div className="perfil-page__crear-pub-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t("modal.createPublicationAria")}>
             <div className="perfil-page__crear-pub-modal-content">
               <CrearPublicacionForm
                 mode="crear"
@@ -356,13 +365,7 @@ const {
       {/* Modal editar publicación */}
       {canEditCards && editOpen && postEditando && (
         <div className="modal-overlay" onClick={() => setEditOpen(false)}>
-          <div
-            className="perfil-page__crear-pub-modal"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("modal.editPublicationAria")}
-          >
+          <div className="perfil-page__crear-pub-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t("modal.editPublicationAria")}>
             <div className="perfil-page__crear-pub-modal-content">
               <CrearPublicacionForm
                 mode="editar"
@@ -391,22 +394,32 @@ const {
         </div>
       )}
 
-
-      {canCreatePublication && crearAnuncioOpen && (
-        <div className="modal-overlay" onClick={() => setCrearAnuncioOpen(false)}>
+      {canCreatePublication && anuncioModalOpen && (
+        <div 
+          className="modal-overlay" 
+          onClick={() => {
+            setAnuncioModalOpen(false);
+            setAnuncioEditando(null);
+          }}
+        >
           <div
             className="perfil-page__crear-pub-modal"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label={t("modal.createAdAria")}
+            aria-label={anuncioEditando ? "Editar anuncio" : t("modal.createAdAria")}
           >
             <div className="perfil-page__crear-pub-modal-content">
               <CrearAnuncioForm
-                onCancelar={() => setCrearAnuncioOpen(false)}
-                onAnuncioCreado={() => {
-                  setCrearAnuncioOpen(false);
-                  fetchPublicaciones();
+                anuncio={anuncioEditando} // Pasa el objeto si es edición, o null si es nuevo
+                onCancelar={() => {
+                  setAnuncioModalOpen(false);
+                  setAnuncioEditando(null);
+                }}
+                onAnuncioProcesado={() => {
+                  setAnuncioModalOpen(false);
+                  setAnuncioEditando(null);
+                  refetchAnuncios(); // Refresca exclusivamente la data multimedia de R2
                 }}
               />
             </div>

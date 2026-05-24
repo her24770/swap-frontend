@@ -22,6 +22,40 @@
 
 }
 
+.ad-banner__header-actions{
+  position: absolute;
+  top: 0.875rem;     
+  right: 0.875rem;   
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;      
+  z-index: 10;      
+}
+
+.ad-card__edit-button,
+.ad-card__delete-button {
+  background: var(--swap-primary-background);
+  border: none;
+  cursor: pointer;
+  color: var(--swap-primary-text-color, #000);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  border-radius: 8px
+}
+
+.ad-card__edit-button:hover {
+  transform: scale(1.1);
+  color: var(--swap-primary-color, #10b981);
+}
+
+.ad-card__delete-button:hover {
+  transform: scale(1.1);
+  color: var(--swap-danger-color, #ef4444);
+}
+
 .ad-banner--image {
   border: none;
   min-height: 12rem;
