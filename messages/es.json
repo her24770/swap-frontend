@@ -110,7 +110,8 @@
 	"seccion":{
 		"reciente": "Publicaciones Recientes",
 		"recomendado" : "Publicaciones Recomendadas", 
-		"explorar" : "Explorar más"
+		"explorar" : "Explorar más",
+		"error_loading_section": "No fue posible cargar esta sección"
 	},
 	"login": {
 		"title": "Iniciar Sesión",
@@ -300,7 +301,6 @@
 			"currentImageAlt": "Imagen actual"
 		}
 	},
-	"error_loading_section": "No fue posible cargar esta sección",
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
 		"titleCreate": "Crear Publicación",

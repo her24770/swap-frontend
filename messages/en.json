@@ -110,7 +110,8 @@
 	"seccion":{
 		"reciente": "Recent post",
 		"recomendado" : "Recommended post", 
-		"explorar" : "Explore more"
+		"explorar" : "Explore more",
+		"error_loading_section": "Couldn't load this section"
 	},
 	"login": {
 		"title": "Sign in",
@@ -300,7 +301,6 @@
 			"currentImageAlt": "Current image"
 		}
 	},
-	"error_loading_section": "Couldn't load this section",
 	"loading": "Loading publications...",
 	"publicacionForm": {
 		"titleCreate": "Create post",
