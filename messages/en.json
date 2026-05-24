@@ -186,6 +186,8 @@
 		"actions": {
 			"newPublication": "New post",
 			"changeAd": "Change ad", 
+			"createAd": "Create ad",
+			"editAd": "Edit ad",
 			"editSchedule": "Edit Schedule"
 		},
 		"modal": {

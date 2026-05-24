@@ -32,7 +32,7 @@ export default function PublicacionesList({
     itemsPerPage = 12,
     tagsForAll,
     onDetallesClick,
-    showAds = true,
+    showAds,
 }: Props) {
     const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');

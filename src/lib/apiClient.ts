@@ -101,11 +101,13 @@ async function get<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 async function post<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+  const isFormData = body instanceof FormData; // Para permitir enviar FormData 
+
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
-    headers: buildHeaders(options?.headers),
+    headers: isFormData ? options?.headers : buildHeaders(options?.headers), // No setear Content-Type si es FormData, el navegador lo hará automáticamente
     credentials: "include",
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: isFormData ? (body as FormData) : body !== undefined ? JSON.stringify(body) : undefined, // Si es FormData, usarlo directamente.
     ...options,
   });
   return handleResponse<T>(response, {
@@ -114,11 +116,13 @@ async function post<T>(path: string, body?: unknown, options?: RequestInit): Pro
 }
 
 async function put<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+  const isFormData = body instanceof FormData;
+
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "PUT",
-    headers: buildHeaders(options?.headers),
+    headers: isFormData ? options?.headers : buildHeaders(options?.headers),
     credentials: "include",
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: isFormData ? (body as FormData) : body !== undefined ? JSON.stringify(body) : undefined,
     ...options,
   });
   return handleResponse<T>(response);

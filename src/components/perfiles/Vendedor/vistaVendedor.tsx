@@ -18,6 +18,7 @@ import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublica
 import type { Tag } from "../../../types/tag";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
+import { CrearAnuncioForm } from "../../ui/Modal/CrearAnuncio/CrearAnuncioForm";
 
 
 interface CatalogPost {
@@ -73,7 +74,7 @@ export default function VistaVendedor({
   const { mostrarConfirm, agregarNotificacion } = useUIStore();
   const idUsuario = userId ?? authUserId;
   const estadosMaterial = useEstados("material");
-  const { canCreatePublication, canEditCards } = usePerspectivaInterna();
+  const { canCreatePublication, canEditCards, isOwnProfile } = usePerspectivaInterna();
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
@@ -83,6 +84,8 @@ export default function VistaVendedor({
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
+  const [crearAnuncioOpen, setCrearAnuncioOpen] = useState(false);
+
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
@@ -160,8 +163,9 @@ export default function VistaVendedor({
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
           {canCreatePublication && (
-            <button type="button" className="perfil-page__new-publication-btn">
-              {t("actions.changeAd")}
+            <button type="button" className="perfil-page__new-publication-btn" onClick={() => setCrearAnuncioOpen(true)}>
+              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+              {t("actions.createAd")}
             </button>
           )}
         </div>
@@ -380,6 +384,29 @@ export default function VistaVendedor({
           </div>
         </div>
       )}
+
+
+      {canCreatePublication && crearAnuncioOpen && (
+        <div className="modal-overlay" onClick={() => setCrearAnuncioOpen(false)}>
+          <div
+            className="perfil-page__crear-pub-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={t("modal.createAdAria")}
+          >
+            <div className="perfil-page__crear-pub-modal-content">
+              <CrearAnuncioForm
+                onCancelar={() => setCrearAnuncioOpen(false)}
+                onAnuncioCreado={() => {
+                  setCrearAnuncioOpen(false);
+                  fetchPublicaciones();
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}  
 
       {selectedPost && (
         <DetallePublicacion

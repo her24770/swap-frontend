@@ -186,6 +186,8 @@
 		"actions": {
 			"newPublication": "Nueva publicación",
 			"changeAd": "Cambiar anuncio",
+			"createAd": "Crear anuncio",
+			"editAd": "Editar anuncio",
 			"editSchedule": "Editar Horario"
 		},
 		"modal": {
