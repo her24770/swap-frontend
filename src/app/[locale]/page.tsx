@@ -11,6 +11,7 @@ import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/Det
 import AnunciosCarousel from "../../components/ui/AnunciosCarousel/AnunciosCarousel";
 import AdBanner from "../../components/perfiles/Vendedor/AdBanner/AdBanner";
 import imagePath from "../../../public/images/uvg.jpg";
+import { useAnuncios } from "../../hooks/fetch/useAnuncios";
 
 import "./seccion.css";
 
@@ -54,18 +55,21 @@ export default function HomePage() {
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ limit: ITEMS_PER_PAGE });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
   const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "me_gusta" });
+  const { data: adsData, loading: adsLoading, error: adsError } = useAnuncios();
 
   const loadingStates = {
     more: moreLoading,
     recents: recentsLoading,
     recommended: recommendedLoading,
-    global: moreLoading || recentsLoading || recommendedLoading
+    ads: adsLoading,
+    global: moreLoading || recentsLoading || recommendedLoading || adsLoading
   };
 
   const errors = {
     more: moreError,
     recents: recentsError,
     recommended: recommendedError
+    ,ads: adsError
   };
 
   const{
@@ -80,20 +84,7 @@ export default function HomePage() {
       <Suspense fallback={null}>
         <RegisteredToast />
       </Suspense>
-
-      <AnunciosCarousel>
-        {MOCK_ADs.map((ad, index) => (
-          <div key={index} className="h-carousel__item">
-            <AdBanner
-              imageUrl={ad.imageUrl}
-              title={ad.title}
-              description={ad.description}
-            />
-          </div>
-        ))} 
-      </AnunciosCarousel>
-
-
+      
       <PublicacionesList
         title={t('title')}
         recentsPublicaciones={recentsData || []}
@@ -104,6 +95,7 @@ export default function HomePage() {
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ id: 1, name: tTags('negocio'), colorKey: "diseno" }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
+        Ads={adsData || []}
       />
       {selectedPublicacion && (
       <DetallePublicacion

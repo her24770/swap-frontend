@@ -110,7 +110,8 @@
 	"seccion":{
 		"reciente": "Recent post",
 		"recomendado" : "Recommended post", 
-		"explorar" : "Explore more"
+		"explorar" : "Explore more",
+		"ads" : "Advertisements"
 	},
 	"login": {
 		"title": "Sign in",

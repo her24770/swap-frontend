@@ -7,19 +7,23 @@ import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useInfiniteVisibleItems } from "../../../hooks/useInfiniteVisibleItems";
 import type { Publicacion } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
+import type {Anuncio} from "../../../types/anuncio";
+import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
+import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import "./PublicacionesList.css";
+
 
 type Props = {
     title: string;
     recommendedPublicaciones?: Publicacion[];
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
-    loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean };
-    errors: { recents?: any; recommended?: any; more?: any };
+    loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean };
+    errors: { recents?: any; recommended?: any; more?: any; ads?: any };
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
-    showAds?: boolean;
+    Ads: Anuncio[];
 };
 
 export default function PublicacionesList({
@@ -32,7 +36,7 @@ export default function PublicacionesList({
     itemsPerPage = 12,
     tagsForAll,
     onDetallesClick,
-    showAds,
+    Ads = [],
 }: Props) {
     const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');
@@ -98,6 +102,28 @@ export default function PublicacionesList({
 
             {!showingSearchResults ? (
                 <div className="publicaciones-list__sections">
+
+                    {/* SECCIÓN ADS */}
+                    <section className="publicaciones-list__section">
+                        <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
+                        <RenderError error={errors.ads} />
+                        {loading.ads ? <p>Cargando anuncios...</p> : (
+                            <div className="publicaciones-list__carousel-wrap">
+                                <AnunciosCarousel>
+                                    {Ads.map((ad, index) => (
+                                    <div key={index} className="h-carousel__item">
+                                        <AdBanner
+                                            imageUrl={ad.imagen_url}
+                                            title={ad.titulo}
+                                            description={ad.descripcion}
+                                        />
+                                    </div>
+                                    ))} 
+                                </AnunciosCarousel>
+                            </div>
+                        )}
+                    </section>
+
                     {/* SECCIÓN RECIENTES */}
                     <section className="publicaciones-list__section">
                         <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>

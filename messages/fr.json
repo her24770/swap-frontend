@@ -110,7 +110,8 @@
 	"seccion":{
 		"reciente": "Publication récente",
 		"recomendado" : "Publication recommandée", 
-		"explorar" : "Explorer plus"
+		"explorar" : "Explorer plus",
+		"ads" : "Publicités"
 	},
 	"login": {
 		"title": "Connexion",

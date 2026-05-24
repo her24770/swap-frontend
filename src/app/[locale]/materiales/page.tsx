@@ -7,6 +7,7 @@ import { TAG_MATERIAL } from "../../../lib/tags";
 import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
+import { useAnuncios } from "../../../hooks/fetch/useAnuncios";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -51,6 +52,7 @@ export default function MaterialesPage() {
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ ...TAG_MATERIAL, name: tTags('material') }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
+        Ads={[]}
       />
 
       {selectedPublicacion && (
