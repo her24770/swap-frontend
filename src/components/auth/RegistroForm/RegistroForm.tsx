@@ -11,7 +11,7 @@ import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
-import { TAGS_MATERIAS } from "../../../lib/tags";
+import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
 
@@ -30,9 +30,10 @@ export default function RegistroForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const { etiquetas: etiquetasBD, loading: etiquetasLoading, error: etiquetasError } =
+    useTodasEtiquetas({soloPadres : true});
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -44,24 +45,11 @@ export default function RegistroForm() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const toggleTag = (id: number) => {
-    setSelectedTags((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((tagId) => tagId !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-
-  const triggerLabel =
-    selectedTags.length === 0
-      ? t('tagsPlaceholder')
-      : `${selectedTags.length} ${selectedTags.length === 1 ? "categoría seleccionada" : "categorías seleccionadas"}`;
-
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegistroFormData>({
     resolver: zodResolver(schemaRegistro),
@@ -73,8 +61,25 @@ export default function RegistroForm() {
       confirmar_password: "",
       url_foto_perfil: process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL ?? "",
       descripcion: "Sin descripción",
+      etiquetas: [],
     },
   });
+
+  const toggleEtiqueta = (id: number) => {
+    const current = watch("etiquetas") ?? [];
+    const updated = current.includes(id)
+      ? current.filter((tagId) => tagId !== id)
+      : [...current, id];
+    setValue("etiquetas", updated, { shouldValidate: true, shouldDirty: true });
+  };
+
+  const selectedEtiquetas: number[] = watch("etiquetas") ?? [];
+
+  const triggerLabel = etiquetasLoading
+    ? t("tagsLoading")
+    : selectedEtiquetas.length === 0
+      ? t("tagsPlaceholder")
+      : `${selectedEtiquetas.length} ${selectedEtiquetas.length === 1 ? "categoría seleccionada" : "categorías seleccionadas"}`;
 
   const onSubmit = async (data: RegistroFormData) => {
     try {
@@ -91,7 +96,7 @@ export default function RegistroForm() {
         password: data.password,
         url_foto_perfil: data.url_foto_perfil || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || "",
         descripcion: data.descripcion || "Sin descripción",
-        tags: selectedTags,
+        etiquetas: data.etiquetas,
       });
       const sesion = unwrapAuthResponse(respuesta);
       login(sesion.usuario, sesion.rol);
@@ -154,32 +159,33 @@ export default function RegistroForm() {
         <div ref={dropdownRef} className="registro-form__tags-dropdown">
           <button
             type="button"
+            disabled={etiquetasLoading}
             onClick={() => setDropdownOpen((prev) => !(prev))}
             className= {[
               "registro-form__tags-trigger",
-              selectedTags.length > 0 ? "registro-form__tags-trigger--has-value" : "",
+              selectedEtiquetas.length > 0 ? "registro-form__tags-trigger--has-value" : "",
               dropdownOpen ? "registro-form__tags-trigger--open" : "",
-              
+              errors.etiquetas ? "registro-form__tags-trigger--error" : "",
             ].join(" ")}>
               <span>{triggerLabel}</span>
               <ChevronDown size={16} className={`registro-form__tags-chevron${dropdownOpen ? " registro-form__tags-chevron--open" : ""}`} />
             </button>
 
-            {dropdownOpen && (
+            {dropdownOpen && !etiquetasLoading && (
               <div className="registro-form__tags-menu">
-                {TAGS_MATERIAS.map((tag) => {
-                  const selected = selectedTags.includes(tag.id);
+                {etiquetasBD.map((etiqueta) => {
+                  const selected = selectedEtiquetas.includes(etiqueta.id_etiqueta);
                   return (
                     <button 
-                    key= {tag.id}
+                    key={etiqueta.id_etiqueta}
                     type="button"
-                    onClick={() => toggleTag(tag.id)}
+                    onClick={() => toggleEtiqueta(etiqueta.id_etiqueta)}
                     className={`registro-form__tags-option${selected ? " registro-form__tags-option--selected" : ""}`}
                     >
                       <span className={`registro-form__tags-checkbox${selected ? " registro-form__tags-checkbox--checked" : ""}`}>
                         {selected && <Check size={11} strokeWidth={3} color="white" />}
                       </span>
-                      {tag.name}
+                      {etiqueta.nombre}
                     </button>
                   );
                 })}
@@ -187,16 +193,16 @@ export default function RegistroForm() {
             )}
         </div>
 
-          {selectedTags.length > 0 && (
+          {selectedEtiquetas.length > 0 && (
             <div className="registro-form__tags-list">
-              {selectedTags.map((id) => {
-                const tag = TAGS_MATERIAS.find((t) => t.id === id);
-                return tag ?(
+              {selectedEtiquetas.map((id) => {
+                const etiqueta = etiquetasBD.find((e) => e.id_etiqueta === id);
+                return etiqueta ?(
                   <span key={id} className="registro-form__tag">
-                    {tag.name}
+                    {etiqueta.nombre}
                     <button 
                     type="button"
-                    onClick={()=> toggleTag(id)}
+                    onClick={() => toggleEtiqueta(id)}
                     className="registro-form__tag-remove">
                       <X size={11} strokeWidth = {2.5} />
                     </button>
@@ -205,6 +211,12 @@ export default function RegistroForm() {
               })}
             </div>
           )}
+        {etiquetasError && (
+          <span className="registro-form__error">{etiquetasError}</span>
+        )}
+        {errors.etiquetas && (
+          <span className="registro-form__error">{errors.etiquetas.message}</span>
+        )}
       </div>
 
       {/* Contraseña */}

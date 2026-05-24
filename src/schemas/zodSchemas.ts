@@ -39,6 +39,12 @@ export const schemaRegistro = z.object({
     .string()
     .max(500, "La descripción no puede superar 500 caracteres.")
     .optional(),
+
+  /** IDs de etiquetas de interés — solo se asignan al registrarse. */
+  etiquetas: z
+    .array(z.coerce.number().int().positive("ID de etiqueta inválido."))
+    .min(1, "Selecciona al menos una categoría.")
+    .max(10, "No puedes seleccionar más de 10 categorías."),
 }).refine(
   (data) => data.password === data.confirmar_password,
   {

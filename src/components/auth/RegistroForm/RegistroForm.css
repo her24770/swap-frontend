@@ -117,6 +117,10 @@
   box-shadow: 0 0 0 2px rgba(0, 115, 41, 0.12);
 }
 
+.registro-form__tags-trigger--error {
+  border-color: var(--swap-danger-color);
+}
+
 .registro-form__tags-menu {
   position: absolute;
   top: calc(100% + 0.35rem);
