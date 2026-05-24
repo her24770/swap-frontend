@@ -4,7 +4,7 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
-import { apiClient, type ApiError } from "../lib/apiClient";
+import { type ApiError } from "../lib/apiClient";
 import { imagenService } from "../services/imagenService";
 import { useUIStore } from "../store/uiStore";
 import {
@@ -135,17 +135,16 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
     setIsSubmitting(true);
 
     try {
-      const imagen = data.imagenes?.[0];
       const resultado = await imagenService.crearPublicacion({
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
         tipo_publicacion: data.tipo_publicacion,
-        imagen,
+        imagenes: data.imagenes ?? [],
       });
 
       if (data.categorias?.length) {
-        await apiClient.put(`/api/publicacion/${resultado.id_publicacion}`, {
+        await imagenService.actualizarPublicacion(resultado.id_publicacion, {
           etiquetas: data.categorias,
         });
       }
@@ -287,23 +286,15 @@ export function useFormEditarPublicacion(id: number,
     setIsSubmitting(true);
 
     try {
-      // Solo incluye los campos que el usuario realmente modificó
-      const payload: Record<string, unknown> = {};
-
-      if (data.titulo !== undefined) payload.titulo = data.titulo;
-      if (data.descripcion !== undefined) payload.descripcion = data.descripcion;
-      if (data.precio !== undefined && data.precio !== "")
-        payload.precio = parseFloat(data.precio);
-      if (data.tipo_publicacion !== undefined)
-        payload.tipo_publicacion = data.tipo_publicacion;
-      payload.estado = 3;
-      if (data.estado !== undefined) payload.estado = data.estado;
-      payload.etiquetas = data.categorias?.length ? data.categorias : [1];
-      await apiClient.put(`/api/publicacion/${id}`, payload);
-
-      if (data.imagenesNuevas && data.imagenesNuevas.length > 0) {
-        await imagenService.uploadFotoPublicacion(id, data.imagenesNuevas[0]);
-      }
+      await imagenService.actualizarPublicacion(id, {
+        titulo: data.titulo,
+        descripcion: data.descripcion,
+        precio: data.precio,
+        tipo_publicacion: data.tipo_publicacion,
+        estado: data.estado,
+        etiquetas: data.categorias?.length ? data.categorias : undefined,
+        imagenes: data.imagenesNuevas ?? [],
+      });
 
       setIsSuccess(true);
       revocarPreviews(imagePreviews);

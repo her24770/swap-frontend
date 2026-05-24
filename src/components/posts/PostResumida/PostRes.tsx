@@ -36,8 +36,8 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
     setUploadError(null);
 
     try {
-      const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
-      setDisplayImages((prev) => [url, ...prev.slice(1)]);
+      const { urlsNuevas } = await imagenService.actualizarPublicacion(publicacionId, { imagenes: [file] });
+      if (urlsNuevas[0]) setDisplayImages((prev) => [...prev, urlsNuevas[0]]);
       agregarNotificacion({
         tipo: "success",
         mensaje: "La imagen de la publicación fue actualizada exitosamente.",

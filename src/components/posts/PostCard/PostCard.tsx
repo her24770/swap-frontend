@@ -110,9 +110,9 @@ export default function PostCard({
     setUploadError(null);
 
     try {
-      const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
-      const urlConBuster = `${url}?t=${Date.now()}`;
-      setDisplayImages((prev) => [urlConBuster, ...prev.slice(1)]);
+      const { urlsNuevas } = await imagenService.actualizarPublicacion(publicacionId, { imagenes: [file] });
+      const urlConBuster = urlsNuevas[0] ? `${urlsNuevas[0]}?t=${Date.now()}` : undefined;
+      if (urlConBuster) setDisplayImages((prev) => [...prev, urlConBuster]);
       onImageUpdate?.(urlConBuster);
       agregarNotificacion({
         tipo: "success",
