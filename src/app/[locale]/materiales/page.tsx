@@ -9,14 +9,15 @@ import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import { useAnuncios } from "../../../hooks/fetch/useAnuncios";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 12;
+const PUBLICACIONES_FETCH_LIMIT = 100;
 
 export default function MaterialesPage() {
   const t = useTranslations('materiales');
   const tTags = useTranslations('common.tags');
   const router = useRouter();
 
-  const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE });
+  const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", all: true, limit: PUBLICACIONES_FETCH_LIMIT });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "fecha" });
   const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "me_gusta" });
 

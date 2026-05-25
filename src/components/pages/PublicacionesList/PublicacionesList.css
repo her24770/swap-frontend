@@ -221,6 +221,10 @@
   transition: all 0.15s ease;
 }
 
+.publicaciones-list__pagination-btn--arrow {
+  padding: 0;
+}
+
 .publicaciones-list__pagination-btn--active {
   background-color: var(--swap-primary-color);
   border-color: var(--swap-primary-color);
