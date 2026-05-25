@@ -221,6 +221,10 @@
   transition: all 0.15s ease;
 }
 
+.publicaciones-list__pagination-btn--arrow {
+  padding: 0;
+}
+
 .publicaciones-list__pagination-btn--active {
   background-color: var(--swap-primary-color);
   border-color: var(--swap-primary-color);
@@ -228,3 +232,58 @@
 }
 
 .publicaciones-list__pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+
+/* 9. Búsqueda + dropdown de filtros */
+.publicaciones-list__search-actions {
+  position: relative;
+  width: 100%;
+  max-width: 32rem;
+}
+
+@media (min-width: 48rem) {
+  .publicaciones-list__search-actions {
+    width: min(32rem, 100%);
+    margin-left: auto;
+  }
+}
+
+.filtros-dropdown__backdrop {
+  display: none;
+}
+
+@media (max-width: 47.99rem) {
+  .filtros-dropdown__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
+}
+
+.filtros-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  width: 100%;
+  min-width: 0;
+}
+
+@media (min-width: 48rem) {
+  .filtros-dropdown {
+    left: auto;
+    right: 0;
+    width: min(20rem, calc(100vw - 4rem));
+  }
+}
+
+.publicaciones-list__content {
+  width: 100%;
+}

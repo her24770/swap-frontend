@@ -35,7 +35,63 @@
 	"common": {
 		"brand": "SWAP",
 		"search": {
-			"placeholder": "Search..."
+			"placeholder": "Search...",
+			"filterAria": "Filter posts",
+			"closeFiltersAria": "Close filters"
+		},
+		"filtros": {
+			"title": "Filters",
+			"ariaLabel": "Post filters",
+			"close": "Close filters",
+			"modalidad": "Format",
+			"tipo": "Type",
+			"etiquetas": "Tags",
+			"precio": "Price",
+			"horario": "Schedule",
+			"dias": "Days",
+			"calificacion": "Rating",
+			"aplicar": "Apply filters",
+			"limpiar": "Clear all",
+			"loading": "Loading...",
+			"categoriesEmpty": "Select categories",
+			"categoriesOne": "1 category selected",
+			"categoriesMany": "{count} categories selected",
+			"timeFrom": "From",
+			"timeTo": "to",
+			"removeTagAria": "Remove {name}",
+			"starsAria": "{count} stars",
+			"currencyMin": "Q0",
+			"currencyMax": "Q{amount}",
+			"modalidadOptions": {
+				"virtual": "Virtual",
+				"presencial": "In person"
+			},
+			"materialOptions": {
+				"compra": "Buy",
+				"alquiler": "Rent"
+			},
+			"negocioOptions": {
+				"producto": "Product",
+				"servicio": "Service"
+			},
+			"daysShort": {
+				"lunes": "M",
+				"martes": "T",
+				"miercoles": "W",
+				"jueves": "T",
+				"viernes": "F",
+				"sabado": "S",
+				"domingo": "S"
+			},
+			"daysAria": {
+				"lunes": "Monday",
+				"martes": "Tuesday",
+				"miercoles": "Wednesday",
+				"jueves": "Thursday",
+				"viernes": "Friday",
+				"sabado": "Saturday",
+				"domingo": "Sunday"
+			}
 		},
 		"empty": {
 			"noResultsFor": "No results found for \"{query}\"",

@@ -9,7 +9,8 @@ import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 12;
+const PUBLICACIONES_FETCH_LIMIT = 100;
 
 export default function TutoriasPage() {
   const t = useTranslations('tutorias');
@@ -17,7 +18,7 @@ export default function TutoriasPage() {
   const router = useRouter();
 
   const { data: moreData, loading: moreLoading, error: moreError } = 
-    usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE });
+    usePublicaciones({ tipo: "tutoria", all: true, limit: PUBLICACIONES_FETCH_LIMIT });
   
   const { data: recentsData, loading: recentsLoading, error: recentsError } = 
     usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "fecha" });

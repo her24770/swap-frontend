@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
 import SearchBar from "../../../components/ui/SearchBar/SearchBar";
-import { useInfiniteVisibleItems } from "../../../hooks/useInfiniteVisibleItems";
 import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
 import { useBusquedaSemantica } from "../../../hooks/fetch/useBusquedaSemantica";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
@@ -15,12 +15,16 @@ import { Tag } from "../../../types/tag";
 import type {Anuncio} from "../../../types/anuncio";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
 import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
+import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
+import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import "./PublicacionesList.css";
 
 
+const VISIBLE_PAGINATION_PAGES = 3;
+
 type Props = {
     title: string;
-    tipo?: string;
+    tipo?: TipoFiltro;
     recommendedPublicaciones?: Publicacion[];
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
@@ -48,8 +52,34 @@ export default function PublicacionesList({
     const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');
     const tTags = useTranslations('common.tags');
+    const tSearch = useTranslations('common.search');
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const filterAnchorRef = useRef<HTMLDivElement>(null);
+    const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
+
+    useEffect(() => {
+        if (!isFilterOpen) return;
+
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsFilterOpen(false);
+        };
+
+        const handleClickOutside = (e: MouseEvent) => {
+            if (filterAnchorRef.current?.contains(e.target as Node)) return;
+            setIsFilterOpen(false);
+        };
+
+        document.addEventListener("keydown", handleEscape);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("keydown", handleEscape);
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isFilterOpen]);
 
     const { results: searchResults, loading: searchLoading } = useBusquedaSemantica(searchQuery, tipo);
 
@@ -68,11 +98,38 @@ export default function PublicacionesList({
     const showingSearchResults = searchQuery.trim().length > 0;
 
     const mainSectionData = showingSearchResults ? searchResults : morePublicaciones;
-    const {
-        visibleItems: visibleGridData,
-        hasMore,
-        sentinelRef,
-    } = useInfiniteVisibleItems(mainSectionData, itemsPerPage);
+    const pageCount = Math.max(1, Math.ceil(mainSectionData.length / itemsPerPage));
+    const safeCurrentPage = Math.min(currentPage, pageCount);
+    const visibleGridData = useMemo(() => {
+        const startIndex = (safeCurrentPage - 1) * itemsPerPage;
+        return mainSectionData.slice(startIndex, startIndex + itemsPerPage);
+    }, [mainSectionData, safeCurrentPage, itemsPerPage]);
+    const paginationPages = useMemo(() => {
+        const visiblePages = Math.min(VISIBLE_PAGINATION_PAGES, pageCount);
+        const halfWindow = Math.floor(visiblePages / 2);
+        let startPage = safeCurrentPage - halfWindow;
+        let endPage = startPage + visiblePages - 1;
+
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = visiblePages;
+        }
+
+        if (endPage > pageCount) {
+            endPage = pageCount;
+            startPage = Math.max(1, endPage - visiblePages + 1);
+        }
+
+        return Array.from(
+            { length: endPage - startPage + 1 },
+            (_, index) => startPage + index
+        );
+    }, [pageCount, safeCurrentPage]);
+    const hasPagination = mainSectionData.length > itemsPerPage;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [mainSectionData, itemsPerPage]);
 
     const mapTags = (p: Publicacion) =>
         tagsForAll
@@ -83,169 +140,244 @@ export default function PublicacionesList({
         error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null
     );
 
+    const handleAplicarFiltros = (values: FiltroValues) => {
+        console.log("Aplicar filtros para:", tipo, values);
+        setIsFilterOpen(false);
+    };
+
+    const renderPagination = (label: string) => {
+        if (!hasPagination) return null;
+
+        return (
+            <div className="publicaciones-list__pagination" aria-label={label}>
+                <button
+                    className="publicaciones-list__pagination-btn publicaciones-list__pagination-btn--arrow"
+                    type="button"
+                    aria-label="Página anterior"
+                    disabled={safeCurrentPage === 1}
+                    onClick={() => setCurrentPage((page) => Math.max(page - 1, 1))}
+                >
+                    <ChevronLeft size={16} aria-hidden />
+                </button>
+                {paginationPages.map((page) => (
+                    <button
+                        key={page}
+                        className={`publicaciones-list__pagination-btn${page === safeCurrentPage ? " publicaciones-list__pagination-btn--active" : ""}`}
+                        type="button"
+                        aria-current={page === safeCurrentPage ? "page" : undefined}
+                        onClick={() => setCurrentPage(page)}
+                    >
+                        {page}
+                    </button>
+                ))}
+                <button
+                    className="publicaciones-list__pagination-btn publicaciones-list__pagination-btn--arrow"
+                    type="button"
+                    aria-label="Página siguiente"
+                    disabled={safeCurrentPage === pageCount}
+                    onClick={() => setCurrentPage((page) => Math.min(page + 1, pageCount))}
+                >
+                    <ChevronRight size={16} aria-hidden />
+                </button>
+            </div>
+        );
+    };
+
     return (
         <main className="publicaciones-list">
             <div className="publicaciones-list__header">
                 <h1 className="publicaciones-list__title">{title}</h1>
-                <SearchBar value={searchQuery} onChange={setSearchQuery} />
-            </div>
-
-            {/* Estado de carga global */}
-            {(loading.global && !showingSearchResults) && morePublicaciones.length === 0 && (
-                <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-            )}
-
-            {showingSearchResults && searchLoading && (
-                <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-            )}
-
-            {showingSearchResults && !searchLoading && searchResults.length === 0 && (
-                <div className="publicaciones-list__empty">
-                    <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
-                </div>
-            )}
-
-            {!showingSearchResults && !loading.global && morePublicaciones.length === 0 && (
-                <div className="publicaciones-list__empty">
-                    <p>{tEmpty("description")}</p>
-                </div>
-            )}
-
-            {!showingSearchResults ? (
-                <div className="publicaciones-list__sections">
-
-                    {/* SECCIÓN ADS si el arreglo no está vacío */}
-                    {Ads.length > 0 && (    
-                    
-                    <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
-                        <RenderError error={errors.ads} />
-                        {loading.ads ? <p>Cargando anuncios...</p> : (
-                            <div className="publicaciones-list__carousel-wrap">
-                                <AnunciosCarousel>
-                                    {Ads.map((ad, index) => (
-                                    <div key={index} className="h-carousel__item">
-                                        <AdBanner
-                                            imageUrl={ad.imagen_url}
-                                            title={ad.titulo}
-                                            description={ad.descripcion}
-                                        />
-                                    </div>
-                                    ))} 
-                                </AnunciosCarousel>
-                            </div>
-                        )}
-                    </section>
-                    )}
-
-                    {/* SECCIÓN RECIENTES */}
-                    <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
-                        <RenderError error={errors.recents} />
-                        {loading.recents ? <p>Cargando recientes...</p> : (
-                            <div className="publicaciones-list__carousel-wrap">
-                                <HorizontalCarousel>
-                                    {recentsPublicaciones.map(p => (
-                                        <div key={p.id_publicacion} className="h-carousel__item">
-                                            <PostCard
-                                                publicacionId={p.id_publicacion}
-                                                tags={mapTags(p)}
-                                                title={p.titulo}
-                                                price={parseFloat(p.precio)}
-                                                description={p.descripcion}
-                                                images={p.imagenes.map((img) => img.url_imagen)}
-                                                estado={p.estado}
-                                                onDetallesClick={() => handleCardClick(p)}
-                                                initialLikeado={p.likeado ?? false}      
-                                                initialLikes={p.me_gusta}     // nuevo
-                                            />
-                                        </div>
-                                    ))}
-                                </HorizontalCarousel>
-                            </div>
-                        )}
-                    </section>
-
-                    {/* SECCIÓN RECOMENDADOS */}
-                    <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
-                        <RenderError error={errors.recommended} />
-                        {loading.recommended ? <p>Buscando sugerencias...</p> : (
-                            <div className="publicaciones-list__carousel-wrap">
-                                <HorizontalCarousel>
-                                    {recommendedPublicaciones.map(p => (
-                                        <div key={p.id_publicacion} className="h-carousel__item">
-                                            <PostCard
-                                                publicacionId={p.id_publicacion}
-                                                tags={mapTags(p)}
-                                                title={p.titulo}
-                                                price={parseFloat(p.precio)}
-                                                description={p.descripcion}
-                                                images={p.imagenes.map((img) => img.url_imagen)}
-                                                estado={p.estado}
-                                                onDetallesClick={() => handleCardClick(p)}
-                                                initialLikeado={p.likeado ?? false}      
-                                                initialLikes={p.me_gusta}     // nuevo
-                                            />
-                                        </div>
-                                    ))}
-                                </HorizontalCarousel>
-                            </div>
-                        )}
-                    </section>
-
-                    {/* EXPLORA MÁS */}
-                    <section className="publicaciones-list__section">
-                        <h2 className="publicaciones-list__section-title"> {t('explorar')}</h2>
-                        <RenderError error={errors.more} />
-                        <div className="publicaciones-list__grid">
-                            {visibleGridData.map(p => (
-                                <PostCard
-                                    key={p.id_publicacion}
-                                    publicacionId={p.id_publicacion}
-                                    tags={mapTags(p)}
-                                    title={p.titulo}
-                                    price={parseFloat(p.precio)}
-                                    description={p.descripcion}
-                                    images={p.imagenes.map((img) => img.url_imagen)}
-                                    estado={p.estado}
-                                    onDetallesClick={() => handleCardClick(p)}
-                                    initialLikeado={p.likeado ?? false}
-                                    initialLikes={p.me_gusta}
-                                />
-                            ))}
-                        </div>
-                        {hasMore && (
-                            <div ref={sentinelRef} className="publicaciones-list__infinite-sentinel" aria-label="Cargando más publicaciones" />
-                        )}
-                    </section>
-                </div>
-            ) : (
-                /* RESULTADOS DE BÚSQUEDA */
-                <section className="publicaciones-list__search-results">
-                    <h2 className="publicaciones-list__section-title">Resultados ({searchResults.length})</h2>
-                    <div className="publicaciones-list__grid">
-                        {visibleGridData.map(p => (
-                            <PostCard
-                                key={p.id_publicacion}
-                                publicacionId={p.id_publicacion}
-                                tags={mapTags(p)}
-                                title={p.titulo}
-                                price={parseFloat(p.precio)}
-                                description={p.descripcion}
-                                images={p.imagenes.map((img) => img.url_imagen)}
-                                estado={p.estado}
-                                onDetallesClick={() => handleCardClick(p)}
-                                initialLikeado={p.likeado ?? false}
-                                initialLikes={p.me_gusta}
+                <div className="publicaciones-list__search-actions" ref={filterAnchorRef}>
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        filter={
+                            tipo
+                                ? {
+                                      isOpen: isFilterOpen,
+                                      onToggle: () => setIsFilterOpen((prev) => !prev),
+                                  }
+                                : undefined
+                        }
+                    />
+                    {isFilterOpen && tipo && (
+                        <>
+                            <button
+                                type="button"
+                                className="filtros-dropdown__backdrop"
+                                aria-label={tSearch("closeFiltersAria")}
+                                onClick={() => setIsFilterOpen(false)}
                             />
-                        ))}
-                    </div>
-                    {hasMore && (
-                        <div ref={sentinelRef} className="publicaciones-list__infinite-sentinel" aria-label="Cargando más publicaciones" />
+                            <div className="filtros-dropdown">
+                                <FiltrosModal
+                                    tipo={tipo}
+                                    etiquetas={etiquetas}
+                                    etiquetasLoading={etiquetasLoading}
+                                    precioMax={tipo === "tutoria" ? 200 : 1000}
+                                    onAplicar={handleAplicarFiltros}
+                                    onLimpiar={() => console.log("Limpiar")}
+                                    onClose={() => setIsFilterOpen(false)}
+                                />
+                            </div>
+                        </>
                     )}
-                </section>
-            )}
+                </div>
+            </div>
+            <div className="publicaciones-list__content">
+                    {/* Estado de carga global */}
+                    {(loading.global && !showingSearchResults) && morePublicaciones.length === 0 && (
+                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
+                    )}
+                    {showingSearchResults && searchLoading && (
+                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
+                    )}
+                    {showingSearchResults && searchLoading && (
+                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
+                    )}
+
+                    {showingSearchResults && !searchLoading && searchResults.length === 0 && (
+                        <div className="publicaciones-list__empty">
+                            <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
+                        </div>
+                    )}
+
+                    {!showingSearchResults && !loading.global && morePublicaciones.length === 0 && (
+                        <div className="publicaciones-list__empty">
+                            <p>{tEmpty("description")}</p>
+                        </div>
+                    )}
+
+                    {!showingSearchResults ? (
+                        <div className="publicaciones-list__sections">
+
+                            {/* SECCIÓN ADS si el arreglo no está vacío */}
+                            {Ads.length > 0 && (    
+                            
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
+                                <RenderError error={errors.ads} />
+                                {loading.ads ? <p>Cargando anuncios...</p> : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <AnunciosCarousel>
+                                            {Ads.map((ad, index) => (
+                                            <div key={index} className="h-carousel__item">
+                                                <AdBanner
+                                                    imageUrl={ad.imagen_url}
+                                                    title={ad.titulo}
+                                                    description={ad.descripcion}
+                                                />
+                                            </div>
+                                            ))} 
+                                        </AnunciosCarousel>
+                                    </div>
+                                )}
+                            </section>
+                            )}
+        
+                            {/* SECCIÓN RECIENTES */}
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
+                                <RenderError error={errors.recents} />
+                                {loading.recents ? <p>Cargando recientes...</p> : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {recentsPublicaciones.map(p => (
+                                                <div key={p.id_publicacion} className="h-carousel__item">
+                                                    <PostCard
+                                                        publicacionId={p.id_publicacion}
+                                                        tags={mapTags(p)}
+                                                        title={p.titulo}
+                                                        price={parseFloat(p.precio)}
+                                                        description={p.descripcion}
+                                                        images={p.imagenes.map((img) => img.url_imagen)}
+                                                        estado={p.estado}
+                                                        onDetallesClick={() => handleCardClick(p)}
+                                                        initialLikeado={p.likeado ?? false}      
+                                                        initialLikes={p.me_gusta} 
+                                                    />
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+                            {/* SECCIÓN RECOMENDADOS */}
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
+                                <RenderError error={errors.recommended} />
+                                {loading.recommended ? <p>Buscando sugerencias...</p> : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {recommendedPublicaciones.map(p => (
+                                                <div key={p.id_publicacion} className="h-carousel__item">
+                                                    <PostCard
+                                                        publicacionId={p.id_publicacion}
+                                                        tags={mapTags(p)}
+                                                        title={p.titulo}
+                                                        price={parseFloat(p.precio)}
+                                                        description={p.descripcion}
+                                                        images={p.imagenes.map((img) => img.url_imagen)}
+                                                        estado={p.estado}
+                                                        onDetallesClick={() => handleCardClick(p)}
+                                                        initialLikeado={p.likeado ?? false}      
+                                                        initialLikes={p.me_gusta} 
+                                                    />
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+
+                            {/* EXPLORA MÁS */}
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title"> {t('explorar')}</h2>
+                                <RenderError error={errors.more} />
+                                <div className="publicaciones-list__grid">
+                                    {visibleGridData.map(p => (
+                                        <PostCard
+                                            key={p.id_publicacion}
+                                            publicacionId={p.id_publicacion}
+                                            tags={mapTags(p)}
+                                            title={p.titulo}
+                                            price={parseFloat(p.precio)}
+                                            description={p.descripcion}
+                                            images={p.imagenes.map((img) => img.url_imagen)}
+                                            estado={p.estado}
+                                            onDetallesClick={() => handleCardClick(p)}
+                                            initialLikeado={p.likeado ?? false}
+                                            initialLikes={p.me_gusta}
+                                        />
+                                    ))}
+                                </div>
+                              {renderPagination("Paginación de publicaciones")}
+                            </section>
+                        </div>
+                    ) : (
+                        /* RESULTADOS DE BÚSQUEDA */
+                        <section className="publicaciones-list__search-results">
+                            <h2 className="publicaciones-list__section-title">Resultados ({searchResults.length})</h2>
+                            <div className="publicaciones-list__grid">
+                                {visibleGridData.map(p => (
+                                    <PostCard
+                                        key={p.id_publicacion}
+                                        publicacionId={p.id_publicacion}
+                                        tags={mapTags(p)}
+                                        title={p.titulo}
+                                        price={parseFloat(p.precio)}
+                                        description={p.descripcion}
+                                        images={p.imagenes.map((img) => img.url_imagen)}
+                                        estado={p.estado}
+                                        onDetallesClick={() => handleCardClick(p)}
+                                        initialLikeado={p.likeado ?? false}
+                                        initialLikes={p.me_gusta}
+                                    />
+                                ))}
+                            </div>
+                            {renderPagination("Paginación de resultados")}
+                        </section>
+                    )}
+            </div>
 
             {/* Renderizacion del modal de detalles*/}
             {selectedPublicacion && (
