@@ -7,6 +7,7 @@ import "./HorizontalCarousel.css";
 interface HorizontalCarouselProps {
   children: React.ReactNode;
   pageSize?: number;
+  showPagination?: boolean;
   previousLabel?: string;
   moreLabel?: string;
 }
@@ -14,6 +15,7 @@ interface HorizontalCarouselProps {
 export default function HorizontalCarousel({
   children,
   pageSize = 5,
+  showPagination = true,
   previousLabel = "Anterior",
   moreLabel = "Ver más",
 }: HorizontalCarouselProps) {
@@ -22,8 +24,10 @@ export default function HorizontalCarousel({
   const items = useMemo(() => React.Children.toArray(children), [children]);
   const pageCount = Math.max(1, Math.ceil(items.length / pageSize));
   const currentPage = Math.min(page, pageCount - 1);
-  const visibleItems = items.slice(currentPage * pageSize, currentPage * pageSize + pageSize);
-  const hasPagination = items.length > pageSize;
+  const hasPagination = showPagination && items.length > pageSize;
+  const visibleItems = showPagination
+    ? items.slice(currentPage * pageSize, currentPage * pageSize + pageSize)
+    : items;
   const canGoBack = currentPage > 0;
   const canGoForward = currentPage < pageCount - 1;
 
