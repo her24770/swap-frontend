@@ -9,6 +9,7 @@ import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import { useGuardados } from "../../../hooks/useGuardados";
+import { useLike } from "../../../hooks/useLike";
 import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
@@ -33,6 +34,8 @@ interface PostCardProps {
   modoGuardado?: boolean;
   isSaved?: boolean;
   onToggleSave?: () => void | Promise<void>;
+  initialLikeado?: boolean;
+  initialLikes?: number;
 }
 
 export default function PostCard({
@@ -53,6 +56,8 @@ export default function PostCard({
   modoGuardado = false,
   isSaved,
   onToggleSave,
+  initialLikeado = false,
+  initialLikes = 0,
 }: PostCardProps) {
   const t = useTranslations("posts");
   const { canEditCards } = usePerspectivaInterna();
@@ -66,6 +71,11 @@ export default function PostCard({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const guardada = isSaved ?? (publicacionId !== undefined && guardados.isSaved(publicacionId));
   const visuallySaved = modoGuardado || guardada;
+  const { likeado, count, toggleLike, loading: likeLoading } = useLike(
+    publicacionId ?? 0,
+    initialLikeado,
+    initialLikes
+  );
 
   useEffect(() => {
     setDisplayImages(images);
@@ -244,15 +254,22 @@ export default function PostCard({
           </button>
 
           <div className="post-card__footer-actions">
-            <button
-              type="button"
-              className="post-card__like-button"
-              aria-label="Me gusta"
-              title="Me gusta"
-            >
-              <Heart size={22} strokeWidth={2} />
-            </button>
+            {/* Botón Like con contador */}
+            {publicacionId !== undefined && (
+              <button
+                type="button"
+                className={`post-card__like-button${likeado ? " post-card__like-button--liked" : ""}`}
+                onClick={toggleLike}
+                disabled={likeLoading}
+                aria-label={likeado ? "Quitar like" : "Dar like"}
+                title={likeado ? "Quitar like" : "Dar like"}
+              >
+                <Heart size={18} fill={likeado ? "currentColor" : "none"} strokeWidth={2} />
+                <span className="post-card__like-count">{count}</span>
+              </button>
+            )}
 
+            {/* Botón Guardar */}
             {publicacionId !== undefined && (
               <button
                 type="button"

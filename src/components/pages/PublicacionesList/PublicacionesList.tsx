@@ -156,6 +156,8 @@ export default function PublicacionesList({
                                                 images={p.imagenes.map((img) => img.url_imagen)}
                                                 estado={p.estado}
                                                 onDetallesClick={() => handleCardClick(p)}
+                                                initialLikeado={false}        // El backend aún no devuelve este campo en el listado
+                                                initialLikes={p.me_gusta}     // nuevo
                                             />
                                         </div>
                                     ))}
@@ -182,6 +184,8 @@ export default function PublicacionesList({
                                                 images={p.imagenes.map((img) => img.url_imagen)}
                                                 estado={p.estado}
                                                 onDetallesClick={() => handleCardClick(p)}
+                                                initialLikeado={false}        // El backend aún no devuelve este campo en el listado
+                                                initialLikes={p.me_gusta}     // nuevo
                                             />
                                         </div>
                                     ))}
@@ -206,6 +210,8 @@ export default function PublicacionesList({
                                     images={p.imagenes.map((img) => img.url_imagen)}
                                     estado={p.estado}
                                     onDetallesClick={() => handleCardClick(p)}
+                                    initialLikeado={false}
+                                    initialLikes={p.me_gusta}
                                 />
                             ))}
                         </div>
@@ -230,6 +236,8 @@ export default function PublicacionesList({
                                 images={p.imagenes.map((img) => img.url_imagen)}
                                 estado={p.estado}
                                 onDetallesClick={() => handleCardClick(p)}
+                                initialLikeado={false}
+                                initialLikes={p.me_gusta}
                             />
                         ))}
                     </div>
