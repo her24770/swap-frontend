@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { publicacionService } from "../services/publicacionService";
 import { useUIStore } from "../store/uiStore";
 
@@ -13,6 +13,15 @@ export function useLike(
     const [count, setCount] = useState(initialCount);
     const [loading, setLoading] = useState(false);
     const { agregarNotificacion } = useUIStore();
+
+    // Sincronizar si cambian las props iniciales
+    useEffect(() => {
+        setLikeado(initialLikeado);
+    }, [initialLikeado]);
+
+    useEffect(() => {
+        setCount(initialCount);
+    }, [initialCount]);
 
     const toggleLike = async () => {
         if (loading || !idPublicacion) return;
