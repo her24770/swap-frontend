@@ -143,7 +143,8 @@ export default function PublicacionesList({
     const handleAplicarFiltros = (values: FiltroValues) => {
         console.log("Aplicar filtros para:", tipo, values);
         setIsFilterOpen(false);
-      
+    };
+
     const renderPagination = (label: string) => {
         if (!hasPagination) return null;
 
@@ -343,9 +344,6 @@ export default function PublicacionesList({
                                         />
                                     ))}
                                 </div>
-                                {hasMore && (
-                                    <div ref={sentinelRef} className="publicaciones-list__infinite-sentinel" aria-label="Cargando más publicaciones" />
-                                )}
                               {renderPagination("Paginación de publicaciones")}
                             </section>
                         </div>
@@ -368,9 +366,6 @@ export default function PublicacionesList({
                                     />
                                 ))}
                             </div>
-                            {hasMore && (
-                                <div ref={sentinelRef} className="publicaciones-list__infinite-sentinel" aria-label="Cargando más publicaciones" />
-                            )}
                             {renderPagination("Paginación de resultados")}
                         </section>
                     )}
