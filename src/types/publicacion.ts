@@ -28,6 +28,7 @@ export interface Publicacion {
   imagenes: ImagenPublicacion[];
   etiquetas: PublicacionEtiquetaRel[];
   esGuardada?: boolean;
+  likeado?: boolean;
   estadoRel?: {
     id_estado: number;
     estado: string;

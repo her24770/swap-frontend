@@ -292,6 +292,8 @@ export default function PublicacionesList({
                                                         images={p.imagenes.map((img) => img.url_imagen)}
                                                         estado={p.estado}
                                                         onDetallesClick={() => handleCardClick(p)}
+                                                        initialLikeado={p.likeado ?? false}      
+                                                        initialLikes={p.me_gusta} 
                                                     />
                                                 </div>
                                             ))}
@@ -317,6 +319,8 @@ export default function PublicacionesList({
                                                         images={p.imagenes.map((img) => img.url_imagen)}
                                                         estado={p.estado}
                                                         onDetallesClick={() => handleCardClick(p)}
+                                                        initialLikeado={p.likeado ?? false}      
+                                                        initialLikes={p.me_gusta} 
                                                     />
                                                 </div>
                                             ))}
@@ -341,6 +345,8 @@ export default function PublicacionesList({
                                             images={p.imagenes.map((img) => img.url_imagen)}
                                             estado={p.estado}
                                             onDetallesClick={() => handleCardClick(p)}
+                                            initialLikeado={p.likeado ?? false}
+                                            initialLikes={p.me_gusta}
                                         />
                                     ))}
                                 </div>
@@ -363,6 +369,8 @@ export default function PublicacionesList({
                                         images={p.imagenes.map((img) => img.url_imagen)}
                                         estado={p.estado}
                                         onDetallesClick={() => handleCardClick(p)}
+                                        initialLikeado={p.likeado ?? false}
+                                        initialLikes={p.me_gusta}
                                     />
                                 ))}
                             </div>
