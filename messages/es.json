@@ -35,7 +35,63 @@
 	"common": {
 		"brand": "SWAP",
 		"search": {
-			"placeholder": "Buscar..."
+			"placeholder": "Buscar...",
+			"filterAria": "Filtrar publicaciones",
+			"closeFiltersAria": "Cerrar filtros"
+		},
+		"filtros": {
+			"title": "Filtros",
+			"ariaLabel": "Filtros de publicaciones",
+			"close": "Cerrar filtros",
+			"modalidad": "Modalidad",
+			"tipo": "Tipo",
+			"etiquetas": "Etiquetas",
+			"precio": "Precio",
+			"horario": "Horario",
+			"dias": "Días",
+			"calificacion": "Calificación",
+			"aplicar": "Aplicar filtros",
+			"limpiar": "Limpiar todo",
+			"loading": "Cargando...",
+			"categoriesEmpty": "Selecciona categorías",
+			"categoriesOne": "1 categoría seleccionada",
+			"categoriesMany": "{count} categorías seleccionadas",
+			"timeFrom": "De",
+			"timeTo": "a",
+			"removeTagAria": "Quitar {name}",
+			"starsAria": "{count} estrellas",
+			"currencyMin": "Q0",
+			"currencyMax": "Q{amount}",
+			"modalidadOptions": {
+				"virtual": "Virtual",
+				"presencial": "Presencial"
+			},
+			"materialOptions": {
+				"compra": "Compra",
+				"alquiler": "Alquiler"
+			},
+			"negocioOptions": {
+				"producto": "Producto",
+				"servicio": "Servicio"
+			},
+			"daysShort": {
+				"lunes": "L",
+				"martes": "M",
+				"miercoles": "Mi",
+				"jueves": "J",
+				"viernes": "V",
+				"sabado": "S",
+				"domingo": "D"
+			},
+			"daysAria": {
+				"lunes": "Lunes",
+				"martes": "Martes",
+				"miercoles": "Miércoles",
+				"jueves": "Jueves",
+				"viernes": "Viernes",
+				"sabado": "Sábado",
+				"domingo": "Domingo"
+			}
 		},
 		"empty": {
 			"noResultsFor": "No se encontraron resultados para \"{query}\"",
