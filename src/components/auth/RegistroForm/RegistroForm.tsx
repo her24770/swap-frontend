@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight, ChevronDown, Check, X } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useToast } from "../../../hooks/useToast";
-import { useRouter } from "next/navigation";
+import { useRouter } from "../../../i18n/routing";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { unwrapAuthResponse } from "../../../lib/authResponse";
@@ -153,7 +153,8 @@ export default function RegistroForm() {
       });
       const sesion = unwrapAuthResponse(respuesta);
       login(sesion.usuario, sesion.rol);
-      router.push("/?registered=true");
+      router.replace({ pathname: "/", query: { registered: "true" } });
+      router.refresh();
     } catch (error) {
       const apiError = error as ApiError;
       const message = apiError.message || t('toast.errorFallback');

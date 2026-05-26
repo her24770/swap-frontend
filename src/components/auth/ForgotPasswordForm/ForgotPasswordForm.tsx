@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "../../../i18n/routing";
 import { useTranslations } from "next-intl";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useToast } from "../../../hooks/useToast";
@@ -55,7 +55,7 @@ export default function ForgotPasswordForm() {
       newPassword,
     });
     toast.success(t("toast.passwordUpdated"));
-    router.push("/login");
+    router.replace("/login");
   };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
