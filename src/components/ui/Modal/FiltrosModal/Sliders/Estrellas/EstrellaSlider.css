@@ -1,32 +1,76 @@
 .star-range-slider {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+}
+
+.star-range-slider__container {
+  display: grid;
+  align-items: center;
+  position: relative;
   width: 100%;
 }
 
-/* ── Fila de estrellas ──────────────────────────────────────────────────── */
-
-.star-range-slider__stars {
-  display: flex;
-  gap: 0.1rem;
+.star-range-slider__track-stars,
+.star-range-slider__container .range-slider {
+  grid-area: 1 / 1;
 }
 
-.star-range-slider__star {
-  font-size: 1.5rem;
+.star-range-slider__track-stars {
+  display: flex;
+  justify-content: space-between; 
+  padding-left: 18%;
+  padding-right: 2px;
+  pointer-events: none;
+  z-index: 2; 
+}
+
+.star-range-slider__star-tick {
+  font-size: 1.125rem;
   line-height: 1;
   color: var(--swap-primary-border-color);
-  transition: color 0.12s ease;
+  opacity: 0.6;
+  transition: color 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
 }
 
-/* Estrella en el rango */
-.star-range-slider__star--partial {
+.star-range-slider__star-tick--active {
   color: #f59e0b;
-  opacity: 0.45;
+  opacity: 1;
+  transform: scale(1.15);
 }
 
-/* Estrella por debajo del mínimo */
-.star-range-slider__star--full {
-  color: var(--swap-primary-border-color);
-  opacity: 1;
+.star-range-slider__container .range-slider__fill {
+  display: block;
+  background-color: #f59e0b;
+  height: 6px;
+  opacity: 0.25;
+}
+
+.star-range-slider__container .range-slider__rail {
+  display: block;
+  height: 4px;
+  background-color: var(--swap-primary-border-color);
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.star-range-slider__container .range-slider__track {
+  height: 2.5rem;
+  z-index: 3;
+}
+
+.star-range-slider__container .range-slider__input::-webkit-slider-thumb {
+  width: 13px;
+  height: 13px;
+  background-color: #f59e0b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  border: 1.5px solid var(--swap-primary-background);
+}
+
+.star-range-slider__container .range-slider__input::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  background-color: #f59e0b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  border: 1.5px solid var(--swap-primary-background);
 }

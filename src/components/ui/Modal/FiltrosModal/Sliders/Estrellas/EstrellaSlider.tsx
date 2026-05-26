@@ -16,34 +16,35 @@ export default function EstrellaSlider({
 }: EstrellaSliderProps) {
   return (
     <div className="star-range-slider">
-      {/* Estrellas visuales */}
-      <div className="star-range-slider__stars" aria-hidden>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span
-            key={star}
-            className={`star-range-slider__star${
-              star <= valueMax
-                ? star <= valueMin
-                  ? " star-range-slider__star--full"
-                  : " star-range-slider__star--partial"
-                : ""
-            }`}
-          >
-            ★
-          </span>
-        ))}
-      </div>
+      <div className="star-range-slider__container">
+        
+        {/* Capa de Estrellas de fondo */}
+        <div className="star-range-slider__track-stars" aria-hidden>
+          {[1, 2, 3, 4, 5].map((star) => {
+            const isActive = star >= valueMin && star <= valueMax;
+            return (
+              <span
+                key={star}
+                className={`star-range-slider__star-tick${
+                  isActive ? " star-range-slider__star-tick--active" : ""
+                }`}
+              >
+                ★
+              </span>
+            );
+          })}
+        </div>
 
-      {/* Slider de rango */}
-      <RangoSlider
-        min={0}
-        max={5}
-        step={1}
-        valueMin={valueMin}
-        valueMax={valueMax}
-        onChange={onChange}
-        formatLabel={(v) => (v === 0 ? "Cualquiera" : `${v}★`)}
-      />
+        <RangoSlider
+          min={0}
+          max={5}
+          step={1}
+          valueMin={valueMin}
+          valueMax={valueMax}
+          onChange={onChange}
+          formatLabel={(v) => (v === 0 ? "Cualquiera" : `${v}★`)}
+        />
+      </div>
     </div>
   );
 }
