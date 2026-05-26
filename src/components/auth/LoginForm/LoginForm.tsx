@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "../../../i18n/routing";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { useAuthStore } from "../../../store/authStore";
@@ -47,7 +47,8 @@ export default function LoginForm() {
       const sesion = unwrapAuthResponse(response);
       login(sesion.usuario, sesion.rol);
       toast.success(t('toast.welcomeBack'));
-      router.push("/");
+      router.replace("/");
+      router.refresh();
     } catch (error) {
       const apiError = error as ApiError;
       const message =

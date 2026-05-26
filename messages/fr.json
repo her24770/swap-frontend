@@ -198,6 +198,44 @@
 			"passwordMin": "Minimum 6 caractères"
 		}
 	},
+	"forgotPassword": {
+		"title": "Réinitialiser le mot de passe",
+		"emailLabel": "E-mail",
+		"emailPlaceholder": "exemple@uvg.edu.gt",
+		"codeLabel": "Code de vérification",
+		"codePlaceholder": "000000",
+		"newPasswordLabel": "Nouveau mot de passe",
+		"confirmPasswordLabel": "Confirmer le mot de passe",
+		"passwordPlaceholder": "Au moins 8 caractères",
+		"togglePasswordAria": "Afficher ou masquer le mot de passe",
+		"backToLogin": "Retour à la connexion",
+		"steps": {
+			"email": {
+				"subtitle": "Saisissez votre e-mail institutionnel pour recevoir un code.",
+				"submit": "Envoyer le code",
+				"submitting": "Envoi..."
+			},
+			"code": {
+				"subtitle": "Saisissez le code à 6 chiffres envoyé à votre e-mail.",
+				"submit": "Vérifier le code",
+				"submitting": "Vérification..."
+			},
+			"password": {
+				"subtitle": "Créez un nouveau mot de passe pour votre compte.",
+				"submit": "Mettre à jour",
+				"submitting": "Mise à jour..."
+			}
+		},
+		"toast": {
+			"codeSent": "Si l'e-mail existe, vous recevrez un code.",
+			"codeValid": "Code vérifié.",
+			"passwordUpdated": "Mot de passe mis à jour.",
+			"errorFallback": "Impossible de terminer la récupération"
+		},
+		"validation": {
+			"passwordMismatch": "Les mots de passe ne correspondent pas."
+		}
+	},
 	"registro": {
 		"page": {
 			"title": "Créer un compte sur SWAP",
@@ -218,11 +256,21 @@
 			"tagsLoading": "Chargement des catégories...",
 			"passwordPlaceholder": "Au moins 8 caractères",
 			"confirmPasswordPlaceholder": "Au moins 8 caractères",
+			"verificationTitle": "Vérifiez votre e-mail",
+			"verificationDescription": "Saisissez le code à 6 chiffres envoyé à votre e-mail institutionnel.",
+			"verificationCodeLabel": "Code de vérification",
+			"verificationCodePlaceholder": "000000",
+			"verificationCodeInvalid": "Le code doit comporter 6 chiffres.",
+			"verificationSessionExpired": "Remplissez à nouveau le formulaire pour demander un nouveau code.",
+			"changeEmail": "Changer l'e-mail",
 			"emailInvalid": "E-mail invalide",
+			"sendingCode": "Envoi du code...",
 			"submitting": "Inscription...",
 			"submit": "Continuer",
+			"submitWithCode": "Créer le compte",
 			"toast": {
 				"success": "Inscription réussie ! Bienvenue sur SWAP.",
+				"codeSent": "Nous avons envoyé un code à votre e-mail institutionnel.",
 				"errorFallback": "Impossible de s'inscrire"
 			}
 		}

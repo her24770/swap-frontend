@@ -198,6 +198,44 @@
 			"passwordMin": "Minimum 6 characters"
 		}
 	},
+	"forgotPassword": {
+		"title": "Reset password",
+		"emailLabel": "Email",
+		"emailPlaceholder": "example@uvg.edu.gt",
+		"codeLabel": "Verification code",
+		"codePlaceholder": "000000",
+		"newPasswordLabel": "New password",
+		"confirmPasswordLabel": "Confirm password",
+		"passwordPlaceholder": "At least 8 characters",
+		"togglePasswordAria": "Show or hide password",
+		"backToLogin": "Back to sign in",
+		"steps": {
+			"email": {
+				"subtitle": "Enter your institutional email to receive a code.",
+				"submit": "Send code",
+				"submitting": "Sending..."
+			},
+			"code": {
+				"subtitle": "Enter the 6-digit code we sent to your email.",
+				"submit": "Verify code",
+				"submitting": "Verifying..."
+			},
+			"password": {
+				"subtitle": "Create a new password for your account.",
+				"submit": "Update password",
+				"submitting": "Updating..."
+			}
+		},
+		"toast": {
+			"codeSent": "If the email exists, you will receive a code.",
+			"codeValid": "Code verified.",
+			"passwordUpdated": "Password updated successfully.",
+			"errorFallback": "Couldn't complete password recovery"
+		},
+		"validation": {
+			"passwordMismatch": "Passwords do not match."
+		}
+	},
 	"registro": {
 		"page": {
 			"title": "Create an account on SWAP",
@@ -218,11 +256,21 @@
 			"tagsLoading": "Loading categories...",
 			"passwordPlaceholder": "At least 8 characters",
 			"confirmPasswordPlaceholder": "At least 8 characters",
+			"verificationTitle": "Verify your email",
+			"verificationDescription": "Enter the 6-digit code we sent to your institutional email.",
+			"verificationCodeLabel": "Verification code",
+			"verificationCodePlaceholder": "000000",
+			"verificationCodeInvalid": "The code must have 6 digits.",
+			"verificationSessionExpired": "Complete the form again to request a new code.",
+			"changeEmail": "Change email",
 			"emailInvalid": "Email is not valid",
+			"sendingCode": "Sending code...",
 			"submitting": "Signing up...",
 			"submit": "Continue",
+			"submitWithCode": "Create account",
 			"toast": {
 				"success": "Registration successful! Welcome to SWAP.",
+				"codeSent": "We sent a code to your institutional email.",
 				"errorFallback": "Couldn't sign up"
 			}
 		}
