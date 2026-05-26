@@ -371,6 +371,7 @@ export default function VistaVendedor({
               <CrearPublicacionForm
                 mode="editar"
                 publicacionId={postEditando.id}
+                imagenesExistentes={postEditando.images}
                 defaultValues={{
                   titulo: postEditando.title,
                   descripcion: postEditando.description,

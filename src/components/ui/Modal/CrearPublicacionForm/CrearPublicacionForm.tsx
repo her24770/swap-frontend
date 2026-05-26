@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useFormCrearPublicacion, useFormEditarPublicacion } from "../../../../hooks/useFormPublicacion";
+import { useFormCrearPublicacion, useFormEditarPublicacion, type UseFormEditarPublicacionReturn } from "../../../../hooks/useFormPublicacion";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useEstados } from "../../../../hooks/useEstados";
 import "../../../ui/Button/Button.css";
@@ -26,6 +26,7 @@ interface EditarPublicacionFormProps extends BasePublicacionFormProps {
   mode: "editar";
   publicacionId: number;
   defaultValues?: Partial<EditarPublicacionFormData>;
+  imagenesExistentes?: string[];
 }
 
 type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormProps;
@@ -40,7 +41,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const createHook = useFormCrearPublicacion();
   const editHook = useFormEditarPublicacion(
     isEditing ? props.publicacionId : 0,
-    isEditing ? props.defaultValues : undefined
+    isEditing ? props.defaultValues : undefined,
+    isEditing ? (props as EditarPublicacionFormProps).imagenesExistentes ?? [] : []
   );
 
   const { etiquetas: etiquetasBD } = useTodasEtiquetas();
@@ -62,6 +64,10 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
     addImages,
     removeImage
   } = isEditing ? editHook : createHook;
+
+  const { imagenesExistentes = [], removeExistingImage } = isEditing
+    ? (editHook as UseFormEditarPublicacionReturn)
+    : { imagenesExistentes: [], removeExistingImage: undefined };
 
   const { register, formState: { errors }, setValue, watch } = form as UseFormReturn<FormFields>;
 
@@ -288,8 +294,21 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
               />
             </div>
 
-            {imagePreviews.length > 0 && (
+            {(imagenesExistentes.length > 0 || imagePreviews.length > 0) && (
               <div className="crear-publicacion__previews">
+                {imagenesExistentes.map((url) => (
+                  <div key={url} className="crear-publicacion__preview-item">
+                    <img src={url} alt="imagen-existente" className="crear-publicacion__preview-img" />
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage?.(url)}
+                      className="crear-publicacion__preview-remove"
+                      aria-label={t("fields.removeImageAria")}
+                    >
+                      <X size={10} strokeWidth={3} />
+                    </button>
+                  </div>
+                ))}
                 {imagePreviews.map((src, i) => (
                   <div key={i} className="crear-publicacion__preview-item">
                     <img src={src} alt={`preview-${i}`} className="crear-publicacion__preview-img" />

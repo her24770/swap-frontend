@@ -206,18 +206,23 @@ export interface UseFormEditarPublicacionReturn {
   serverError: string | null;
   isSuccess: boolean;
   imagePreviews: string[];
+  imagenesExistentes: string[];
   addImages: (files: FileList | File[]) => void;
   removeImage: (index: number) => void;
+  removeExistingImage: (url: string) => void;
 }
 
-export function useFormEditarPublicacion(id: number,
-  /** Valores iniciales cargados desde el servidor */
-  defaults?: Partial<EditarPublicacionFormData>
+export function useFormEditarPublicacion(
+  id: number,
+  defaults?: Partial<EditarPublicacionFormData>,
+  imagenesIniciales: string[] = []
 ): UseFormEditarPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState<string[]>(imagenesIniciales);
+  const [imagenesAEliminar, setImagenesAEliminar] = useState<string[]>([]);
 
   const form = useForm<EditarPublicacionFormData>({
     resolver: zodResolver(schemaEditarPublicacion),
@@ -246,19 +251,19 @@ export function useFormEditarPublicacion(id: number,
   const addImages = useCallback(
     (files: FileList | File[]) => {
       const filesArray = Array.from(files);
-      const current = form.getValues("imagenesNuevas") ?? [];
-      const available = 5 - current.length;
+      const nuevas = form.getValues("imagenesNuevas") ?? [];
+      const available = 5 - imagenesExistentes.length - nuevas.length;
       if (available <= 0) return;
 
       const toAdd = filesArray.slice(0, available);
-      form.setValue("imagenesNuevas", [...current, ...toAdd], {
+      form.setValue("imagenesNuevas", [...nuevas, ...toAdd], {
         shouldValidate: true,
         shouldDirty: true,
       });
 
       setImagePreviews((prev) => [...prev, ...crearPreviews(toAdd)]);
     },
-    [form]
+    [form, imagenesExistentes]
   );
 
   const removeImage = useCallback(
@@ -278,6 +283,11 @@ export function useFormEditarPublicacion(id: number,
     [form]
   );
 
+  const removeExistingImage = useCallback((url: string) => {
+    setImagenesExistentes((prev) => prev.filter((u) => u !== url));
+    setImagenesAEliminar((prev) => [...prev, url]);
+  }, []);
+
   // ── Envío al backend ────────────────────────────────────────────────────────
 
   const actualizarPublicacion = useCallback(async (data: EditarPublicacionFormData) => {
@@ -294,11 +304,13 @@ export function useFormEditarPublicacion(id: number,
         estado: data.estado,
         etiquetas: data.categorias?.length ? data.categorias : undefined,
         imagenes: data.imagenesNuevas ?? [],
+        imagenesEliminar: imagenesAEliminar.length ? imagenesAEliminar : undefined,
       });
 
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
+      setImagenesAEliminar([]);
       agregarNotificacion({ tipo: "success", mensaje: "Publicación actualizada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
@@ -308,7 +320,7 @@ export function useFormEditarPublicacion(id: number,
     } finally {
       setIsSubmitting(false);
     }
-  }, [id, imagePreviews]);
+  }, [id, imagePreviews, imagenesAEliminar]);
 
   const onSubmit = form.handleSubmit((data: EditarPublicacionFormData) => {
     const { mostrarConfirm } = useUIStore.getState();
@@ -327,7 +339,9 @@ export function useFormEditarPublicacion(id: number,
     serverError,
     isSuccess,
     imagePreviews,
+    imagenesExistentes,
     addImages,
     removeImage,
+    removeExistingImage,
   };
 }
