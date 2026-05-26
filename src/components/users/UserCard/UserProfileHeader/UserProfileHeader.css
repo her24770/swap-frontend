@@ -4,7 +4,7 @@
 
 .user-profile-header {
   display: grid;
-  grid-template-columns: 120px 1fr minmax(220px, 400px);
+  grid-template-columns: 120px 1fr minmax(220px, 700px);
   gap: 2rem;
   align-items: flex-start;
 }
