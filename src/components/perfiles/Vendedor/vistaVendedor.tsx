@@ -33,6 +33,7 @@ interface CatalogPost {
   images: string[];
   tipo: string;
   categorias: number[];
+  isPinned: boolean;
 }
 
 interface VistaVendedorProps {
@@ -104,11 +105,17 @@ export default function VistaVendedor({
             images: pub.imagenes?.map((img) => img.url_imagen) || [],
             tipo: tipoPub,
             categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
+            isPinned: (pub as any).is_pinned ?? false,
           };
         });
       };
-      setCatalogMaterial(mapPublicaciones(resMaterial.data, "material"));
-      setCatalogNegocio(mapPublicaciones(resNegocio.data, "negocio"));
+
+      // Sort: pinned first within each list
+      const sortPinned = (list: CatalogPost[]) =>
+        [...list].sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
+
+      setCatalogMaterial(sortPinned(mapPublicaciones(resMaterial.data, "material")));
+      setCatalogNegocio(sortPinned(mapPublicaciones(resNegocio.data, "negocio")));
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.message || "No fue posible obtener las publicaciones");
@@ -168,6 +175,35 @@ export default function VistaVendedor({
       },
     });
   }, [agregarNotificacion, fetchPublicaciones, mostrarConfirm]);
+
+    // ── MANEJO DE PINNED/DESTACADO ─────────────────────────────────────────────
+  const handlePinChangeMaterial = useCallback(
+    (id: number, newPinned: boolean) => {
+      setCatalogMaterial((prev) => {
+        const updated = prev.map((p) =>
+          p.id === id ? { ...p, isPinned: newPinned } : p
+        );
+        return [...updated].sort(
+          (a, b) => Number(b.isPinned) - Number(a.isPinned)
+        );
+      });
+    },
+    []
+  );
+
+  const handlePinChangeNegocio = useCallback(
+    (id: number, newPinned: boolean) => {
+      setCatalogNegocio((prev) => {
+        const updated = prev.map((p) =>
+          p.id === id ? { ...p, isPinned: newPinned } : p
+        );
+        return [...updated].sort(
+          (a, b) => Number(b.isPinned) - Number(a.isPinned)
+        );
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     fetchPublicaciones();
@@ -261,6 +297,10 @@ export default function VistaVendedor({
                   images={pub.images}
                   estado={pub.estado}
                   estadosDisponibles={estadosMaterial}
+                  isPinned={pub.isPinned}
+                  onPinChange={(newPinned) =>
+                    handlePinChangeMaterial(pub.id, newPinned)
+                  }
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -327,6 +367,10 @@ export default function VistaVendedor({
                   description={pub.description}
                   images={pub.images}
                   estado={pub.estado}
+                  isPinned={pub.isPinned}
+                  onPinChange={(newPinned) =>
+                    handlePinChangeNegocio(pub.id, newPinned)
+                  }
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -378,7 +422,7 @@ export default function VistaVendedor({
                   precio: String(postEditando.price),
                   tipo_publicacion: postEditando.tipo as "material" | "tutoria" | "negocio",
                   categorias: postEditando.categorias,
-                  destacado: false,
+                  destacado: postEditando.isPinned,
                   estado: postEditando.estado as "disponible" | "vendido" | "reservado",
                 }}
                 onCancel={() => {

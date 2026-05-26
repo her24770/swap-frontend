@@ -29,6 +29,7 @@ interface CatalogPost {
   estado: string;
   images: string[];
   categorias: number[];
+  isPinned: boolean;
 }
 
 interface VistaTutorProps {
@@ -90,9 +91,15 @@ export default function VistaTutor({
           estado: pub.estadoRel?.estado ?? "activo",
           images: pub.imagenes?.map((img) => img.url_imagen) || [],
           categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
+          isPinned: (pub as any).is_pinned ?? false,
         }));
 
-      setCatalogTutorias(mapPublicaciones(resTutorias.data));
+      // Pinned first
+      const sorted = mapPublicaciones(resTutorias.data).sort(
+        (a, b) => Number(b.isPinned) - Number(a.isPinned)
+      );
+
+      setCatalogTutorias(sorted);
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.message || "No fue posible obtener las tutorías");
@@ -147,6 +154,17 @@ export default function VistaTutor({
       },
     });
   }, [agregarNotificacion, fetchPublicaciones, mostrarConfirm]);
+
+  const handlePinChange = useCallback((id: number, newPinned: boolean) => {
+    setCatalogTutorias((prev) => {
+      const updated = prev.map((p) =>
+        p.id === id ? { ...p, isPinned: newPinned } : p
+      );
+      return [...updated].sort(
+        (a, b) => Number(b.isPinned) - Number(a.isPinned)
+      );
+    });
+  }, []);
 
   useEffect(() => {
     fetchPublicaciones();
@@ -274,6 +292,10 @@ export default function VistaTutor({
                   images={pub.images}
                   estado={pub.estado}
                   estadosDisponibles={estadosTutoria}
+                  isPinned={pub.isPinned}
+                  onPinChange={(newPinned) =>
+                    handlePinChange(pub.id, newPinned)
+                  }
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -355,7 +377,7 @@ export default function VistaTutor({
                   precio:           String(postEditando.price),
                   tipo_publicacion: "tutoria",
                   categorias:       postEditando.categorias,
-                  destacado:        false,
+                  destacado:        postEditando.isPinned,
                   estado:           postEditando.estado as "disponible" | "vendido" | "reservado",
                 }}
                 onCancel={() => { setEditOpen(false); setPostEditando(null); }}

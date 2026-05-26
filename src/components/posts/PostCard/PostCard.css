@@ -229,3 +229,27 @@
   cursor: wait;
   opacity: 0.7;
 }
+
+/* ── Pin button ──────────────────────────────────────────────────────────── */
+
+.post-card__pin-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.post-card__pin-button:hover {
+  color: #f59e0b;
+  transform: scale(1.1);
+}
+
+.post-card__pin-button--pinned {
+  color: #f59e0b;
+}

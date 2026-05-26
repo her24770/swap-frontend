@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Bookmark, Camera, ChevronRight, Heart, Loader2, SquarePen, Trash2 } from "lucide-react";
+import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
@@ -11,6 +11,7 @@ import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContex
 import { useGuardados } from "../../../hooks/useGuardados";
 import { useLike } from "../../../hooks/useLike";
 import { useUIStore } from "../../../store/uiStore";
+import { apiClient } from "../../../lib/apiClient";
 import "../../ui/Button/Button.css";
 import "./PostCard.css";
 import type { Tag } from "../../../types/tag";
@@ -36,6 +37,8 @@ interface PostCardProps {
   onToggleSave?: () => void | Promise<void>;
   initialLikeado?: boolean;
   initialLikes?: number;
+  isPinned?: boolean;
+  onPinChange?: (newPinned: boolean) => void;
 }
 
 export default function PostCard({
@@ -58,6 +61,8 @@ export default function PostCard({
   onToggleSave,
   initialLikeado = false,
   initialLikes = 0,
+  isPinned = false,
+  onPinChange,
 }: PostCardProps) {
   const t = useTranslations("posts");
   const { canEditCards } = usePerspectivaInterna();
@@ -67,6 +72,8 @@ export default function PostCard({
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isPinning, setIsPinning] = useState(false);
+  const [pinned, setPinned] = useState(isPinned);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const guardada = isSaved ?? (publicacionId !== undefined && guardados.isSaved(publicacionId));
@@ -76,6 +83,11 @@ export default function PostCard({
     initialLikeado,
     initialLikes
   );
+
+  // Sync pinned state if parent prop changes
+  useEffect(() => {
+    setPinned(isPinned);
+  }, [isPinned]);
 
   useEffect(() => {
     setDisplayImages(images);
@@ -111,6 +123,44 @@ export default function PostCard({
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleTogglePin = () => {
+    if (publicacionId === undefined || isPinning) return;
+
+    const nextPinned = !pinned;
+    const titulo = nextPinned ? "Destacar publicación" : "Quitar de destacados";
+    const mensaje = nextPinned
+      ? "¿Deseas destacar esta publicación? Aparecerá en la parte superior de tu catálogo. Solo puedes tener 3 publicaciones destacadas por tipo."
+      : "¿Deseas quitar esta publicación de destacados?";
+
+    mostrarConfirm({
+      titulo,
+      mensaje,
+      onConfirm: async () => {
+        try {
+          setIsPinning(true);
+          await apiClient.patch(`/api/publicacion/${publicacionId}/destacar`, {
+            destacar: nextPinned,
+          });
+          setPinned(nextPinned);
+          onPinChange?.(nextPinned);
+          agregarNotificacion({
+            tipo: "success",
+            mensaje: nextPinned
+              ? "Publicación destacada exitosamente."
+              : "Publicación quitada de destacados.",
+          });
+        } catch (err: any) {
+          agregarNotificacion({
+            tipo: "error",
+            mensaje: err.message || "No fue posible actualizar el estado de destacado.",
+          });
+        } finally {
+          setIsPinning(false);
+        }
+      },
+    });
   };
 
   const uploadImage = async (file: File) => {
@@ -167,7 +217,15 @@ export default function PostCard({
   };
 
   return (
-    <article className={`post-card${modoGuardado || guardada ? " post-card--saved" : ""}`}>
+    <article
+      className={[
+        "post-card",
+        modoGuardado || guardada ? "post-card--saved" : "",
+        pinned ? "post-card--pinned" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <header className="post-card__header">
         {estado !== undefined && (
           <div className="post-card__estado-tag-container">
@@ -180,6 +238,26 @@ export default function PostCard({
         )}
 
         <div className="post-card__header-actions">
+          {/* Pin/Destacar button — only visible in own profile edit mode */}
+          {canEditCards && publicacionId !== undefined && (
+            <button
+              type="button"
+              className={`post-card__pin-button${pinned ? " post-card__pin-button--pinned" : ""}`}
+              onClick={handleTogglePin}
+              disabled={isPinning}
+              aria-label={pinned ? "Quitar de destacados" : "Destacar publicación"}
+              title={pinned ? "Quitar de destacados" : "Destacar publicación"}
+            >
+              {isPinning ? (
+                <Loader2 size={20} className="post-card__upload-spinner" />
+              ) : pinned ? (
+                <PinOff size={20} strokeWidth={2} />
+              ) : (
+                <Pin size={20} strokeWidth={2} />
+              )}
+            </button>
+          )}
+
           {canEditCards && onEditClick && (
             <button
               type="button"
@@ -254,7 +332,7 @@ export default function PostCard({
           </button>
 
           <div className="post-card__footer-actions">
-            {/* Botón Like con contador */}
+            {/* Like button */}
             {publicacionId !== undefined && (
               <button
                 type="button"
@@ -269,7 +347,7 @@ export default function PostCard({
               </button>
             )}
 
-            {/* Botón Guardar */}
+            {/* Save button */}
             {publicacionId !== undefined && (
               <button
                 type="button"
