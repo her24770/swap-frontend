@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Pencil, Save, SquarePlus, X, FileText} from "lucide-react";
+import { Pencil, Save, SquarePlus, X} from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
@@ -19,18 +19,6 @@ import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublica
 import type { DiaHorario, EspacioHorario, EstadoHorario } from "../../../types/horario";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
-import Certificaciones from "./Certificaciones/Certificaciones";
-
-const MOCK_CERTS = [
-  {
-    id: 1,
-    nombre: "Diploma de Intecap electricidad",
-    anio: 2018,
-    url_pdf: "/Prueba.pdf",
-  },
-  { id: 2, nombre: "Certificado Google", anio: 2020, url_pdf: "" },
-  { id: 3, nombre: "Curso aprobado de algebra", anio: 2021, url_pdf: "" },
-];
 
 interface CatalogPost {
   id: number;
@@ -77,8 +65,6 @@ export default function VistaTutor({
   const [horarioEditando, setHorarioEditando] = useState(false);
   const [horarioGuardando, setHorarioGuardando] = useState(false);
   const [cambiosPendientes, setCambiosPendientes] = useState<Set<string>>(new Set());
-
-  const [showCerts, setShowCerts] = useState(false);
 
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
@@ -243,27 +229,6 @@ export default function VistaTutor({
 
   return (
     <>
-        <button
-          type="button"
-          className="perfil-page__certificacion-btn button--warning"
-          onClick={() => setShowCerts((v) => !v)}
-        >
-          <FileText size={18} strokeWidth={1.8} aria-hidden />
-          {showCerts ? "Ocultar certificaciones" : "Ver certificaciones"}
-        </button>
-
-      {showCerts && (
-        <>
-          <hr className="perfil-page__divider" />
-          <section className="perfil-page__section">
-            <Certificaciones
-              certificaciones={MOCK_CERTS}
-              canEdit={canCreatePublication}
-              onAgregar={() => console.log("Agregar certificación")}
-            />
-          </section>
-        </>
-      )}
       {/* Catalogo de tutorias con carrusel de cards */}
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
