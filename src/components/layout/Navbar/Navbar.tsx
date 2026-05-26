@@ -11,26 +11,8 @@ import {LogoCompleto} from "../../ui/Icono/Logo";
 import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
 import NotificacionModal from "../../ui/Modal/NotificacionModal/NotificacionModal";
 import type { NotificacionData } from "../../ui/Modal/NotificacionModal/Notificacion/Notificacion";
+import { notificacionService } from "../../../services/notificacionService";
 import "./Navbar.css";
-
-export const MOCK_NOTIFICACIONES: NotificacionData[] = [
-  {
-    id: 1,
-    tipo: "sistema",
-    titulo: "Publicacion bloqueada",
-    descripcion: "Tu publicación incumple las normas de SWAP",
-    fecha: "hace 5 min",
-    leida: false,
-  },
-  {
-    id: 2,
-    tipo: "sistema",
-    titulo: "Publicacion subida con exito",
-    descripcion: "Tu publicacion ya esta publicada",
-    fecha: "hace 2 días",
-    leida: true,
-  },
-];
 
 interface NavbarProps {
   onMenuToggle: () => void;
@@ -49,7 +31,14 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
 
   const bellRef = useRef<HTMLButtonElement>(null);
   const [notifOpen, setNotifOpen] = useState(false);
-  const [notificaciones, setNotificaciones] = useState<NotificacionData[]>(MOCK_NOTIFICACIONES);
+  const [notificaciones, setNotificaciones] = useState<NotificacionData[]>([]);
+
+  useEffect(() => {
+    if (!notifOpen) return;
+    notificacionService.getAll()
+      .then(setNotificaciones)
+      .catch(() => {});
+  }, [notifOpen]);
 
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
