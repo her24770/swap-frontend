@@ -402,5 +402,28 @@
 			"saveChanges": "Save changes",
 			"saving": "Saving..."
 		}
+	},
+	"certificacionForm": {
+		"titleCreate": "Add certification",
+		"titleEdit": "Edit certification",
+		"fields": {
+			"name": "Certification name",
+			"namePlaceholder": "e.g. INTECAP electrical diploma",
+			"year": "Year obtained",
+			"pdf": "PDF file",
+			"pdfEditHint": " (optional — keeps the previous file if you do not upload a new one)",
+			"existingPdf": "Existing PDF",
+			"uploadText": "Click or drag a PDF to upload",
+			"uploadHint": "PDF files only (max 10MB)",
+			"removePdfAria": "Remove PDF file"
+		},
+		"errors": {
+			"pdfRequired": "PDF file is required."
+		},
+		"actions": {
+			"cancel": "Cancel",
+			"create": "Add certification",
+			"saveChanges": "Save changes"
+		}
 	}
 }

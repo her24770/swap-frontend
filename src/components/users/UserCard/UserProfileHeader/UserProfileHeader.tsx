@@ -117,7 +117,7 @@ export default function UserProfileHeader({
           <UserRating score={user.rating} totalReviews={user.totalReviews} />
             <button
               type="button"
-              className="perfil-page__certificacion-btn button--warning"
+              className="certificacion-btn"
               onClick={() => setShowCerts((v) => !v)}
             >
               <FileText size={18} strokeWidth={1.8} aria-hidden />
@@ -179,7 +179,6 @@ export default function UserProfileHeader({
             <Certificaciones
               certificaciones={MOCK_CERTS}
               canEdit={canEditProfile}
-              onAgregar={() => console.log("Agregar certificación")}
             />
           </section>
         </div>

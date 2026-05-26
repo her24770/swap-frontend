@@ -399,5 +399,28 @@
 			"saveChanges": "Enregistrer les modifications",
 			"saving": "Enregistrement..."
 		}
+	},
+	"certificacionForm": {
+		"titleCreate": "Ajouter une certification",
+		"titleEdit": "Modifier la certification",
+		"fields": {
+			"name": "Nom de la certification",
+			"namePlaceholder": "ex. Diplôme d'électricité INTECAP",
+			"year": "Année d'obtention",
+			"pdf": "Fichier PDF",
+			"pdfEditHint": " (facultatif — conserve le fichier précédent si vous n'en téléversez pas un nouveau)",
+			"existingPdf": "PDF existant",
+			"uploadText": "Cliquez ou glissez un PDF pour le téléverser",
+			"uploadHint": "Fichiers PDF uniquement (max. 10 Mo)",
+			"removePdfAria": "Supprimer le fichier PDF"
+		},
+		"errors": {
+			"pdfRequired": "Le fichier PDF est obligatoire."
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"create": "Ajouter la certification",
+			"saveChanges": "Enregistrer les modifications"
+		}
 	}
 }
