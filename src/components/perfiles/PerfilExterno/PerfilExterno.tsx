@@ -9,11 +9,10 @@ import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
 import { getPerfilPublico } from "../../../services/perfilService";
 import { PerspectivaInternaProvider } from "../../../context/PerspectivaInternaContext";
-import { useAuthStore } from "../../../store/authStore";
-import type { Comment } from "../../../types/comment";
 import type { UserProfileData } from "../../../types/perfil";
-
+import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
 type PerfilExternoMode = "vendedor" | "tutor";
+import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 
 interface PerfilExternoProps {
   userId: number;
@@ -21,18 +20,13 @@ interface PerfilExternoProps {
 
 export default function PerfilExterno({ userId }: PerfilExternoProps) {
   const t = useTranslations("perfil");
-  const tCommon = useTranslations("common");
+  const { activeProfileMode } = usePerspectivaInterna();
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("modo") === "tutor" ? "tutor" : "vendedor";
-  const authUserName = useAuthStore((s) => s.usuario?.nombre);
-
   const [mode, setMode] = useState<PerfilExternoMode>(initialMode);
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [commentsByMode, setCommentsByMode] = useState<Record<PerfilExternoMode, Comment[]>>({
-    vendedor: [],
-    tutor: [],
-  });
+  const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, activeProfileMode);
 
   const modes = useMemo(
     () => [
@@ -59,20 +53,6 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
     fetchUser();
   }, [userId]);
 
-  const handleCommentSubmit = (comment: string, rating: number, anonymous: boolean) => {
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      authorName: anonymous ? tCommon("people.anonymous") : authUserName ?? tCommon("people.you"),
-      timeAgo: tCommon("time.justNow"),
-      rating,
-      comment,
-    };
-
-    setCommentsByMode((prev) => ({
-      ...prev,
-      [mode]: [newComment, ...prev[mode]],
-    }));
-  };
 
   if (error) {
     return <p className="perfil-page__loading">{error}</p>;
@@ -81,6 +61,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
   if (!user) {
     return <p className="perfil-page__loading">{t("loading")}</p>;
   }
+
 
   return (
     <PerspectivaInternaProvider
@@ -129,10 +110,11 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
       <section className="perfil-page__section">
         <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
         <CommentSection
-          targetName={user.name}
-          comments={commentsByMode[mode]}
-          onSubmit={handleCommentSubmit}
-          onCancel={() => {}}
+            targetName={user.name}
+            idReceptor={user.id_usuario} 
+            comments={ResenasUsuario} 
+            onSuccessSubmit={refetchResenas}
+            onCancel={() => {}}
         />
       </section>
     </PerspectivaInternaProvider>
