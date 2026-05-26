@@ -5,15 +5,15 @@
 .user-profile-header {
   display: grid;
   grid-template-columns: 120px 1fr minmax(220px, 700px);
-  gap: 2rem;
+  gap: 1.25rem;
   align-items: flex-start;
 }
 
-@media (max-width: 56rem) {
+@media (max-width: 75rem) {
   .user-profile-header {
     grid-template-columns: auto 1fr;
     grid-template-rows: auto auto;
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
 
   /* Side col spans full width on mobile */
