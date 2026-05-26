@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Plus, FileText, FileX, Maximize2, Minimize2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "./Certificaciones.css";
 
 export interface Certificacion {
@@ -22,6 +23,8 @@ export default function Certificaciones({
   canEdit = false,
   onAgregar,
 }: CertificacionesProps) {
+  const t = useTranslations('profileHeader.certification');
+
   const [selectedId, setSelectedId] = useState<number | null>(
     certificaciones[0]?.id ?? null
   );
@@ -58,7 +61,7 @@ export default function Certificaciones({
     <div className="certificaciones">
       {/* ── Header General ── */}
       <div className="certificaciones__header">
-        <h2 className="certificaciones__title">Certificaciones</h2>
+        <h2 className="certificaciones__title">{t('title')}</h2>
         {canEdit && (
           <button
             type="button"
@@ -66,7 +69,7 @@ export default function Certificaciones({
             onClick={onAgregar}
           >
             <Plus size={15} strokeWidth={2.5} />
-            Agregar certificación
+            {t('add')}
           </button>
         )}
       </div>
@@ -76,7 +79,7 @@ export default function Certificaciones({
         <div className="certificaciones__list">
           {certificaciones.length === 0 && (
             <p className="certificaciones__empty-list">
-              No hay certificaciones aún.
+              {t('noCert')}
             </p>
           )}
           {certificaciones.map((cert) => (
@@ -130,7 +133,7 @@ export default function Certificaciones({
                 ) : (
                   <div className="certificaciones__viewer-empty">
                     <FileX size={32} strokeWidth={1.2} />
-                    <span>PDF no disponible</span>
+                    <span>{t('pdfNotA')}</span>
                   </div>
                 )}
               </div>
@@ -139,7 +142,7 @@ export default function Certificaciones({
             <div className="certificaciones__viewer-body">
               <div className="certificaciones__viewer-empty">
                 <FileText size={32} strokeWidth={1.2} />
-                <span>Selecciona una certificación para verla</span>
+                <span>{t('select')}</span>
               </div>
             </div>
           )}
