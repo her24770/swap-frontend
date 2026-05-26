@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Rutas que no requieren autenticación (sin el prefijo del idioma)
-const rutasPublicas = ["/login", "/registro"];
+const rutasPublicas = ["/login", "/registro", "/forgot-password"];
 const locales = ["es", "en", "fr"]; 
 const defaultLocale = "es";
 

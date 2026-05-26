@@ -1,1 +1,1 @@
-export const AUTH_ROUTES = ["/login", "/registro"];
+export const AUTH_ROUTES = ["/login", "/registro", "/forgot-password"];

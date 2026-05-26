@@ -199,6 +199,44 @@
 			"passwordMin": "Mínimo 6 caracteres"
 		}
 	},
+	"forgotPassword": {
+		"title": "Recuperar contraseña",
+		"emailLabel": "Correo electrónico",
+		"emailPlaceholder": "ejemplo@uvg.edu.gt",
+		"codeLabel": "Código de verificación",
+		"codePlaceholder": "000000",
+		"newPasswordLabel": "Nueva contraseña",
+		"confirmPasswordLabel": "Confirmar contraseña",
+		"passwordPlaceholder": "Al menos 8 caracteres",
+		"togglePasswordAria": "Mostrar u ocultar contraseña",
+		"backToLogin": "Volver a iniciar sesión",
+		"steps": {
+			"email": {
+				"subtitle": "Ingresa tu correo institucional para recibir un código.",
+				"submit": "Enviar código",
+				"submitting": "Enviando..."
+			},
+			"code": {
+				"subtitle": "Escribe el código de 6 dígitos que enviamos a tu correo.",
+				"submit": "Verificar código",
+				"submitting": "Verificando..."
+			},
+			"password": {
+				"subtitle": "Crea una nueva contraseña para tu cuenta.",
+				"submit": "Actualizar contraseña",
+				"submitting": "Actualizando..."
+			}
+		},
+		"toast": {
+			"codeSent": "Si el correo existe, recibirás un código.",
+			"codeValid": "Código verificado.",
+			"passwordUpdated": "Contraseña actualizada correctamente.",
+			"errorFallback": "No fue posible completar la recuperación"
+		},
+		"validation": {
+			"passwordMismatch": "Las contraseñas no coinciden."
+		}
+	},
 	"registro": {
 		"page": {
 			"title": "Crea una cuenta en SWAP",
@@ -219,11 +257,17 @@
 			"tagsLoading": "Cargando categorías...",
 			"passwordPlaceholder": "Al menos 8 caracteres",
 			"confirmPasswordPlaceholder": "Al menos 8 caracteres",
+			"verificationCodeLabel": "Código de verificación",
+			"verificationCodePlaceholder": "000000",
+			"verificationCodeInvalid": "El código debe tener 6 dígitos.",
+			"changeEmail": "Cambiar correo",
 			"emailInvalid": "El correo no es válido",
 			"submitting": "Registrando...",
 			"submit": "Continuar",
+			"submitWithCode": "Crear cuenta",
 			"toast": {
 				"success": "¡Registro exitoso! Bienvenido a SWAP.",
+				"codeSent": "Te enviamos un código a tu correo institucional.",
 				"errorFallback": "No fue posible registrarse"
 			}
 		}

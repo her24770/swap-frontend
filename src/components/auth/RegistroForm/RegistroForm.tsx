@@ -31,6 +31,8 @@ export default function RegistroForm() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationStep, setVerificationStep] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { etiquetas: etiquetasBD, loading: etiquetasLoading, error: etiquetasError } =
     useTodasEtiquetas({soloPadres : true});
@@ -89,6 +91,22 @@ export default function RegistroForm() {
         setServerError(t('emailInvalid'));
         return;
       }
+
+      if (!verificationStep) {
+        await apiClient.post("/api/auth/send-register-code", {
+          email_institucional: data.email_institucional,
+          carnet,
+        });
+        setVerificationStep(true);
+        toast.success(t('toast.codeSent'));
+        return;
+      }
+
+      if (!/^\d{6}$/.test(verificationCode)) {
+        setServerError(t('verificationCodeInvalid'));
+        return;
+      }
+
       const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>("/api/auth/register", {
         nombre: `${data.nombre} ${data.apellido}`.trim(),
         carnet,
@@ -97,13 +115,16 @@ export default function RegistroForm() {
         url_foto_perfil: data.url_foto_perfil || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || "",
         descripcion: data.descripcion || "Sin descripción",
         etiquetas: data.etiquetas,
+        codigo_verificacion: verificationCode,
       });
       const sesion = unwrapAuthResponse(respuesta);
       login(sesion.usuario, sesion.rol);
       router.push("/?registered=true");
     } catch (error) {
       const apiError = error as ApiError;
-      toast.error(apiError.message || t('toast.errorFallback'));
+      const message = apiError.message || t('toast.errorFallback');
+      setServerError(message);
+      toast.error(message);
     }
   };
 
@@ -145,6 +166,7 @@ export default function RegistroForm() {
         <input
           type="email"
           placeholder={t('emailPlaceholder')}
+          readOnly={verificationStep}
           {...register("email_institucional")}
           className={`registro-form__input${errors.email_institucional ? " registro-form__input--error" : ""}`}
         />
@@ -152,6 +174,33 @@ export default function RegistroForm() {
           <span className="registro-form__error">{errors.email_institucional.message}</span>
         )}
       </div>
+
+      {verificationStep && (
+        <div className="registro-form__field">
+          <label className="registro-form__label">{t('verificationCodeLabel')}</label>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={6}
+            value={verificationCode}
+            onChange={(event) => setVerificationCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+            placeholder={t('verificationCodePlaceholder')}
+            className="registro-form__input registro-form__input--code"
+          />
+          <button
+            type="button"
+            className="registro-form__secondary-action"
+            onClick={() => {
+              setVerificationStep(false);
+              setVerificationCode("");
+              setServerError(null);
+            }}
+          >
+            {t('changeEmail')}
+          </button>
+        </div>
+      )}
 
       {/*tags del perfil*/}
       <div className="registro-form__field">
@@ -275,7 +324,11 @@ export default function RegistroForm() {
         disabled={isSubmitting}
         className="button button--large button--full-width"
       >
-        {isSubmitting ? t('submitting') : t('submit')}
+        {isSubmitting
+          ? t('submitting')
+          : verificationStep
+            ? t('submitWithCode')
+            : t('submit')}
         {!isSubmitting && <ChevronRight size={16} />}
       </button>
 
