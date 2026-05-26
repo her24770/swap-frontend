@@ -55,22 +55,25 @@ export default function HomePage() {
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: PUBLICACIONES_FETCH_LIMIT });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
-  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "me_gusta" });
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({personalized: true});
+  const { data: popularData, loading: popularLoading, error: popularError } = usePublicaciones({ recommended: true });
   const { data: adsData, loading: adsLoading, error: adsError } = useAnuncios();
 
   const loadingStates = {
     more: moreLoading,
     recents: recentsLoading,
     recommended: recommendedLoading,
+    popular: popularLoading,
     ads: adsLoading,
-    global: moreLoading || recentsLoading || recommendedLoading || adsLoading
+    global: moreLoading || recentsLoading || recommendedLoading || popularLoading || adsLoading
   };
 
   const errors = {
     more: moreError,
     recents: recentsError,
-    recommended: recommendedError
-    ,ads: adsError
+    recommended: recommendedError,
+    popular: popularError,
+    ads: adsError
   };
 
   const{
@@ -90,6 +93,7 @@ export default function HomePage() {
         title={t('title')}
         recentsPublicaciones={recentsData || []}
         recommendedPublicaciones={recommendedData || []}
+        popularPublicaciones={popularData || []}
         morePublicaciones={moreData || []}
         loading={loadingStates}
         errors={errors}

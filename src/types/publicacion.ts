@@ -59,6 +59,8 @@ export interface PublicacionFilters {
   sort?: string;
   order?: 'asc' | 'desc';
   all?: boolean;
+  recommended?: boolean;
+  personalized?: boolean;
 }
 
 export interface PublicacionDetalle {

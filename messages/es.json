@@ -168,6 +168,8 @@
 		"recomendado" : "Publicaciones Recomendadas", 
 		"explorar" : "Explorar más",
 		"ads" : "Anuncios",
+		"populares": "Publicaciones Populares",
+		"tutores": "Tutores",
 
 		"error_loading_section": "No fue posible cargar esta sección"
 	},

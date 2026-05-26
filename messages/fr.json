@@ -168,6 +168,8 @@
 		"recomendado" : "Publication recommandée", 
 		"explorar" : "Explorer plus",
 		"ads" : "Publicités",
+		"populares": "Publications Populaires",
+		"tutores": "Tuteurs",
 		"error_loading_section": "Impossible de charger cette section"
 	},
 	"login": {

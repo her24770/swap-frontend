@@ -168,7 +168,9 @@
 		"recomendado" : "Recommended post", 
 		"explorar" : "Explore more",
 		"ads" : "Advertisements",
-		"error_loading_section": "Couldn't load this section"
+		"error_loading_section": "Couldn't load this section",
+		"populares": "Popular Posts",
+		"tutores": "Tutors"
 	},
 	"login": {
 		"title": "Sign in",
