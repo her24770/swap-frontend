@@ -14,6 +14,7 @@ export interface UserProfileData {
   tags?: Tag[];
   paymentMethod?: string;
   calificacion?: number;
+  totalResenas?: number;
 }
 
 // Campos que el usuario puede editar desde el modal de perfil
@@ -37,5 +38,6 @@ export interface PerfilPublicoApi {
   metodo_pago?: string;
   contactos?: unknown[];
   etiquetas?: UsuarioEtiquetaRel[];
+  total_resenas: number;
 }
 
