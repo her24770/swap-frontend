@@ -170,7 +170,10 @@
 		"ads" : "Advertisements",
 		"error_loading_section": "Couldn't load this section",
 		"populares": "Popular Posts",
-		"tutores": "Tutors"
+		"tutores": "Tutors",
+		"loadingTutores": "Loading tutors...",
+		"tutorFallbackName": "SWAP Tutor",
+		"noTutores": "No tutors to show yet."
 	},
 	"login": {
 		"title": "Sign in",
@@ -272,8 +275,10 @@
 			"details": "Details",
 			"edit": "Edit",
 			"acordar": "Agree on purchase",
-			"certificado" : "View Certificates"
+			"certificado": "View certificates",
+			"viewProfile": "View profile"
 		},
+		"tutorTopicsLabel": "Tutoring topics",
 		"aria": {
 			"uploadImage": "Upload image"
 		},
