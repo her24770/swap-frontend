@@ -18,6 +18,7 @@ import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import "./PublicacionesList.css";
+import { Usuario } from "../../../types/usuario";
 
 
 const VISIBLE_PAGINATION_PAGES = 3;
@@ -28,8 +29,10 @@ type Props = {
     recommendedPublicaciones?: Publicacion[];
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
-    loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean };
-    errors: { recents?: any; recommended?: any; more?: any; ads?: any };
+    popularPublicaciones?: Publicacion[];
+    tutores?: Usuario[]
+    loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean; popular?: boolean; tutores?: boolean };
+    errors: { recents?: any; recommended?: any; more?: any; ads?: any; popular?: any; tutores?: any };
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
@@ -42,6 +45,8 @@ export default function PublicacionesList({
     recentsPublicaciones = [],
     recommendedPublicaciones = [],
     morePublicaciones = [],
+    popularPublicaciones = [],
+    tutores = [],
     loading,
     errors,
     itemsPerPage = 12,
@@ -231,10 +236,7 @@ export default function PublicacionesList({
                     {showingSearchResults && searchLoading && (
                         <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
                     )}
-                    {showingSearchResults && searchLoading && (
-                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-                    )}
-
+                    
                     {showingSearchResults && !searchLoading && searchResults.length === 0 && (
                         <div className="publicaciones-list__empty">
                             <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
@@ -249,57 +251,9 @@ export default function PublicacionesList({
 
                     {!showingSearchResults ? (
                         <div className="publicaciones-list__sections">
-
-                            {/* SECCIÓN ADS si el arreglo no está vacío */}
-                            {Ads.length > 0 && (    
-                            
-                            <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
-                                <RenderError error={errors.ads} />
-                                {loading.ads ? <p>Cargando anuncios...</p> : (
-                                    <div className="publicaciones-list__carousel-wrap">
-                                        <AnunciosCarousel>
-                                            {Ads.map((ad, index) => (
-                                            <div key={index} className="h-carousel__item">
-                                                <AdBanner
-                                                    imageUrl={ad.imagen_url}
-                                                    title={ad.titulo}
-                                                    description={ad.descripcion}
-                                                />
-                                            </div>
-                                            ))} 
-                                        </AnunciosCarousel>
-                                    </div>
-                                )}
-                            </section>
-                            )}
         
-                            {/* SECCIÓN RECIENTES */}
-                            <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
-                                <RenderError error={errors.recents} />
-                                {loading.recents ? <p>Cargando recientes...</p> : (
-                                    <div className="publicaciones-list__carousel-wrap">
-                                        <HorizontalCarousel showPagination={false}>
-                                            {recentsPublicaciones.map(p => (
-                                                <div key={p.id_publicacion} className="h-carousel__item">
-                                                    <PostCard
-                                                        publicacionId={p.id_publicacion}
-                                                        tags={mapTags(p)}
-                                                        title={p.titulo}
-                                                        price={parseFloat(p.precio)}
-                                                        description={p.descripcion}
-                                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                                        estado={p.estado}
-                                                        onDetallesClick={() => handleCardClick(p)}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </HorizontalCarousel>
-                                    </div>
-                                )}
-                            </section>
-                            {/* SECCIÓN RECOMENDADOS */}
+                        {/* SECCIÓN RECOMENDADOS */}
+                        {recommendedPublicaciones.length > 0 &&(
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
                                 <RenderError error={errors.recommended} />
@@ -324,6 +278,99 @@ export default function PublicacionesList({
                                     </div>
                                 )}
                             </section>
+                        )}
+
+                        {/* SECCIÓN POPULARES */}
+                        {popularPublicaciones.length > 0 && (
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t('populares')}</h2>
+                                <RenderError error={errors.popular} />
+                                {loading.popular ? <p>Buscando sugerencias...</p> : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {popularPublicaciones.map(p => (
+                                                <div key={p.id_publicacion} className="h-carousel__item">
+                                                    <PostCard
+                                                        publicacionId={p.id_publicacion}
+                                                        tags={mapTags(p)}
+                                                        title={p.titulo}
+                                                        price={parseFloat(p.precio)}
+                                                        description={p.descripcion}
+                                                        images={p.imagenes.map((img) => img.url_imagen)}
+                                                        estado={p.estado}
+                                                        onDetallesClick={() => handleCardClick(p)}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+                        )}
+
+                            {/* SECCIÓN TUTORES */}
+                            {tutores.length > 0 && (
+                                <section className="publicaciones-list__section">
+                                    <h2 className="publicaciones-list__section-title">Tutores</h2>
+
+                                    <div className="publicaciones-list__empty">
+                                        <p>Próximamente</p>
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* SECCIÓN ADS si el arreglo no está vacío */}
+                            {Ads.length > 0 && (    
+                            
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
+                                <RenderError error={errors.ads} />
+                                {loading.ads ? <p>Cargando anuncios...</p> : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <AnunciosCarousel>
+                                            {Ads.map((ad, index) => (
+                                            <div key={index} className="h-carousel__item">
+                                                <AdBanner
+                                                    imageUrl={ad.imagen_url}
+                                                    title={ad.titulo}
+                                                    description={ad.descripcion}
+                                                />
+                                            </div>
+                                            ))} 
+                                        </AnunciosCarousel>
+                                    </div>
+                                )}
+                            </section>
+                            )}
+
+                            {/* SECCIÓN RECIENTES */}
+                            { recentsPublicaciones.length > 0 && (
+                                <section className="publicaciones-list__section">
+                                    <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
+                                    <RenderError error={errors.recents} />
+                                    {loading.recents ? <p>Cargando recientes...</p> : (
+                                        <div className="publicaciones-list__carousel-wrap">
+                                            <HorizontalCarousel showPagination={false}>
+                                                {recentsPublicaciones.map(p => (
+                                                    <div key={p.id_publicacion} className="h-carousel__item">
+                                                        <PostCard
+                                                            publicacionId={p.id_publicacion}
+                                                            tags={mapTags(p)}
+                                                            title={p.titulo}
+                                                            price={parseFloat(p.precio)}
+                                                            description={p.descripcion}
+                                                            images={p.imagenes.map((img) => img.url_imagen)}
+                                                            estado={p.estado}
+                                                            onDetallesClick={() => handleCardClick(p)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </HorizontalCarousel>
+                                        </div>
+                                    )}
+                                </section>
+                            )}
+
 
                             {/* EXPLORA MÁS */}
                             <section className="publicaciones-list__section">

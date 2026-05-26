@@ -12,7 +12,12 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
     try {
       setLoading(true);
       setError(null);
-      const result = await service.getAll(filters);
+      let result: Publicacion[];
+      if (filters.recommended) {
+        result = await service.getGlobalRecommendations(filters.tipo);
+      } else {
+        result = await service.getAll(filters);
+      }
       setData(result);
     } catch (err: any) {
       console.error(err);

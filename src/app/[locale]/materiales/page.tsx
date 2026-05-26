@@ -19,7 +19,7 @@ export default function MaterialesPage() {
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", all: true, limit: PUBLICACIONES_FETCH_LIMIT });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "fecha" });
-  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "me_gusta" });
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "material", recommended: true});
 
   const loadingStates = {
     more: moreLoading,

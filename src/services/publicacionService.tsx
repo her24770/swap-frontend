@@ -47,6 +47,18 @@ export const publicacionService = {
     return response.data;
   },
 
+  async getGlobalRecommendations(tipo?: string): Promise<Publicacion[]> {
+    
+    const response = await apiClient.get<PublicacionesResponse>(
+      tipo ? `/api/recomendacion/globales/${tipo}` : `/api/recomendacion/globales/`
+    );
+    if(response.data.length === 0){
+      return [];
+    }
+
+    return response.data;
+  },
+
   async getById(id: number): Promise<PublicacionDetalle> {
     const response = await apiClient.get<PublicacionDetalleResponse>(`/api/publicacion/${id}`);
     return response.data;

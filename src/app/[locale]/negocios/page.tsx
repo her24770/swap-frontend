@@ -18,7 +18,7 @@ export default function NegociosPage() {
 
   const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "negocio", all: true, limit: PUBLICACIONES_FETCH_LIMIT });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ tipo: "negocio", limit: ITEMS_PER_PAGE, sort: "fecha" });
-  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "negocio", limit: ITEMS_PER_PAGE, sort: "me_gusta"  });
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ tipo: "negocio", recommended: true});
 
   const loadingStates = {
     more: moreLoading,
