@@ -60,6 +60,8 @@ export default function PublicacionesGuardadas({
       images={publicacion.imagenes.map((img) => img.url_imagen)}
       estado={publicacion.estadoRel?.estado ?? publicacion.estado}
       onDetallesClick={() => setSelectedPublicacion(publicacion)}
+      initialLikeado={publicacion.likeado ?? false}   
+      initialLikes={publicacion.me_gusta ?? 0}         
     />
   );
 

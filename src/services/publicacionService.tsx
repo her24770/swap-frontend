@@ -64,6 +64,8 @@ export const publicacionService = {
     return response.data;
   },
 
+
+  // ── Guardados ──────────────────────────────────────────────────────────
   async getGuardadas(): Promise<Publicacion[]> {
     const response = await apiClient.get<GuardadosResponse>("/api/guardados");
     return normalizarGuardados(response.data);
@@ -75,6 +77,15 @@ export const publicacionService = {
 
   async eliminarGuardado(id: number): Promise<void> {
     await apiClient.delete(`/api/guardados/${id}`);
-  }
+  },
+
+  // ── Likes ──────────────────────────────────────────────────────────────
+    async darLike(id: number): Promise<void> {
+        await apiClient.post(`/api/likes/${id}`);
+    },
+
+    async quitarLike(id: number): Promise<void> {
+        await apiClient.delete(`/api/likes/${id}`);
+    },
 
 };

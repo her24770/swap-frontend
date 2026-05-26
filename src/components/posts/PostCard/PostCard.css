@@ -158,7 +158,9 @@
   margin-left: auto;
 }
 
-.post-card__like-button,
+
+/* ── Guardar button ─────────────────────────────────────────────────────────── */
+
 .post-card__save-button {
   width: 2rem;
   height: 2rem;
@@ -174,7 +176,6 @@
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.post-card__like-button:hover,
 .post-card__save-button:hover {
   transform: scale(1.1);
   color: var(--swap-primary-color, #10b981);
@@ -189,6 +190,42 @@
 }
 
 .post-card__save-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* ── Like button ─────────────────────────────────────────────────────────── */
+
+.post-card__like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.375rem;
+  font-family: var(--swap-font-textos);
+  font-size: 0.75rem;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.post-card__like-button:hover:not(:disabled) {
+  color: #ef4444;
+  transform: scale(1.1);
+}
+
+.post-card__like-button--liked {
+  color: #ef4444;
+}
+
+.post-card__like-count {
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.post-card__like-button:disabled {
   cursor: wait;
   opacity: 0.7;
 }
