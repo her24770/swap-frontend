@@ -1,0 +1,32 @@
+.star-range-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+/* ── Fila de estrellas ──────────────────────────────────────────────────── */
+
+.star-range-slider__stars {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.star-range-slider__star {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--swap-primary-border-color);
+  transition: color 0.12s ease;
+}
+
+/* Estrella en el rango */
+.star-range-slider__star--partial {
+  color: #f59e0b;
+  opacity: 0.45;
+}
+
+/* Estrella por debajo del mínimo */
+.star-range-slider__star--full {
+  color: var(--swap-primary-border-color);
+  opacity: 1;
+}
