@@ -213,11 +213,14 @@ export const schemaCertificacion = z.object({
     .string()
     .min(3, "El nombre debe tener al menos 3 caracteres.")
     .max(100, "El nombre no puede superar los 100 caracteres."),
-  anio: z.coerce
-    .number({ message: "El año es obligatorio." })
-    .int("El año debe ser un número entero.")
-    .min(1950, "El año debe ser mayor a 1950.")
-    .max(new Date().getFullYear(), `El año no puede ser mayor a ${new Date().getFullYear()}.`),
+  lugar_emision: z
+    .string({ required_error: "El lugar de emisión es obligatorio." })
+    .min(3, "El lugar de emisión debe tener al menos 3 caracteres.")
+    .max(100, "El lugar de emisión no puede superar los 100 caracteres."),
+  id_etiqueta: z.coerce
+    .number({ message: "La etiqueta es obligatoria." })
+    .int("El ID de etiqueta debe ser un entero.")
+    .positive("Debes seleccionar una etiqueta válida."),
 });
 
 export function validateCertificacionPdf(file: File): string | null {

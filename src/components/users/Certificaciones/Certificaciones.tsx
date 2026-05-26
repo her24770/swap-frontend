@@ -1,59 +1,61 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Plus, FileText, FileX, Maximize2, Minimize2 } from "lucide-react";
+import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
 import type { Certificacion } from "../../../types/certificacion";
+import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Modal/Modal.css";
 import "./Certificaciones.css";
 
 export type { Certificacion };
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+
 interface CertificacionesProps {
   certificaciones: Certificacion[];
   canEdit?: boolean;
+  onRefresh?: () => void;
 }
 
 export default function Certificaciones({
   certificaciones,
   canEdit = false,
+  onRefresh,
 }: CertificacionesProps) {
   const t = useTranslations("profileHeader.certification");
+  const { mostrarConfirm, agregarNotificacion } = useUIStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(
-    certificaciones[0]?.id ?? null,
+    certificaciones[0]?.id_certificacion ?? null,
   );
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [certModalOpen, setCertModalOpen] = useState(false);
 
   const viewerRef = useRef<HTMLDivElement>(null);
 
-  const selected = certificaciones.find((c) => c.id === selectedId) ?? null;
+  const selected = certificaciones.find((c) => c.id_certificacion === selectedId) ?? null;
 
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(document.fullscreenElement === viewerRef.current);
     };
-
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
   useEffect(() => {
     if (!certModalOpen) return;
-
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") setCertModalOpen(false);
     };
-
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [certModalOpen]);
 
   const toggleFullscreen = async () => {
     if (!viewerRef.current) return;
-
     try {
       if (!document.fullscreenElement) {
         await viewerRef.current.requestFullscreen();
@@ -63,6 +65,30 @@ export default function Certificaciones({
     } catch (err) {
       console.error("Error toggling fullscreen:", err);
     }
+  };
+
+  const handleEliminar = (id: number) => {
+    mostrarConfirm({
+      titulo: "Eliminar certificación",
+      mensaje: "¿Estás seguro de que deseas eliminar esta certificación? Esta acción no se puede deshacer.",
+      onConfirm: async () => {
+        try {
+          const res = await fetch(`${BASE_URL}/api/certificacion/${id}`, {
+            method: "DELETE",
+            credentials: "include",
+          });
+          if (!res.ok) {
+            const json = await res.json().catch(() => ({}));
+            throw new Error(json.message ?? `Error ${res.status}`);
+          }
+          if (selectedId === id) setSelectedId(null);
+          agregarNotificacion({ tipo: "success", mensaje: "Certificación eliminada exitosamente." });
+          onRefresh?.();
+        } catch (err: any) {
+          agregarNotificacion({ tipo: "error", mensaje: err.message || "No fue posible eliminar la certificación." });
+        }
+      },
+    });
   };
 
   return (
@@ -88,18 +114,32 @@ export default function Certificaciones({
               <p className="certificaciones__empty-list">{t("noCert")}</p>
             )}
             {certificaciones.map((cert) => (
-              <button
-                key={cert.id}
-                type="button"
-                className={`certificaciones__item${selectedId === cert.id ? " certificaciones__item--active" : ""}`}
-                onClick={() => setSelectedId(cert.id)}
+              <div
+                key={cert.id_certificacion}
+                className={`certificaciones__item${selectedId === cert.id_certificacion ? " certificaciones__item--active" : ""}`}
               >
-                <FileText size={16} className="certificaciones__item-icon" />
-                <div className="certificaciones__item-info">
-                  <span className="certificaciones__item-name">{cert.nombre}</span>
-                  <span className="certificaciones__item-year">{cert.anio}</span>
-                </div>
-              </button>
+                <button
+                  type="button"
+                  className="certificaciones__item-btn"
+                  onClick={() => setSelectedId(cert.id_certificacion)}
+                >
+                  <FileText size={16} className="certificaciones__item-icon" />
+                  <div className="certificaciones__item-info">
+                    <span className="certificaciones__item-name">{cert.nombre}</span>
+                    <span className="certificaciones__item-year">{cert.lugar_emision}</span>
+                  </div>
+                </button>
+                {canEdit && (
+                  <button
+                    type="button"
+                    className="certificaciones__item-delete"
+                    onClick={() => handleEliminar(cert.id_certificacion)}
+                    title={t("delete")}
+                  >
+                    <Trash2 size={14} strokeWidth={2} />
+                  </button>
+                )}
+              </div>
             ))}
           </div>
 
@@ -112,10 +152,10 @@ export default function Certificaciones({
                 <div className="certificaciones__viewer-header">
                   <div className="certificaciones__viewer-titles">
                     <span className="certificaciones__viewer-name">{selected.nombre}</span>
-                    <span className="certificaciones__viewer-year">{selected.anio}</span>
+                    <span className="certificaciones__viewer-year">{selected.lugar_emision}</span>
                   </div>
 
-                  {selected.url_pdf && (
+                  {selected.ruta_pdf && (
                     <button
                       type="button"
                       className="certificaciones__btn-fullscreen"
@@ -128,9 +168,9 @@ export default function Certificaciones({
                 </div>
 
                 <div className="certificaciones__viewer-body">
-                  {selected.url_pdf ? (
+                  {selected.ruta_pdf ? (
                     <iframe
-                      src={selected.url_pdf}
+                      src={selected.ruta_pdf}
                       title={selected.nombre}
                       className="certificaciones__iframe"
                     />
@@ -171,7 +211,10 @@ export default function Certificaciones({
               <SubirCertForm
                 mode="crear"
                 onCancel={() => setCertModalOpen(false)}
-                onSuccess={() => setCertModalOpen(false)}
+                onSuccess={() => {
+                  setCertModalOpen(false);
+                  onRefresh?.();
+                }}
               />
             </div>
           </div>

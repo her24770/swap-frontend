@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Pencil, CreditCard, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
@@ -12,22 +12,12 @@ import { apiClient } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
 import type { Tag } from "../../../../types/tag";
+import type { Certificacion } from "../../../../types/certificacion";
 import { useToast } from "../../../../hooks/useToast";
 import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
-import {contactosToUpsertBody, reemplazarContactosUsuario,} from "../../../../lib/contactosUsuario";
+import { contactosToUpsertBody, reemplazarContactosUsuario } from "../../../../lib/contactosUsuario";
 import "./UserProfileHeader.css";
 import Certificaciones from "../../../users/Certificaciones/Certificaciones";
-
-const MOCK_CERTS = [
-  {
-    id: 1,
-    nombre: "Diploma de Intecap electricidad",
-    anio: 2018,
-    url_pdf: "/Prueba.pdf",
-  },
-  { id: 2, nombre: "Certificado Google", anio: 2020, url_pdf: "" },
-  { id: 3, nombre: "Curso aprobado de algebra", anio: 2021, url_pdf: "" },
-];
 
 interface UserProfileHeaderProps {
   user: UserProfileData;
@@ -44,12 +34,26 @@ export default function UserProfileHeader({
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
+  const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
+  const [showCerts, setShowCerts] = useState(false);
   const toast = useToast();
   const { canEditProfile } = usePerspectivaInterna();
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
-  
-  const [showCerts, setShowCerts] = useState(false);
+
+  const fetchCertificaciones = useCallback(async () => {
+    if (!user.id_usuario) return;
+    try {
+      const res = await apiClient.get<{ data: Certificacion[] }>(`/api/certificacion/user/${user.id_usuario}`);
+      setCertificaciones(res.data ?? []);
+    } catch {
+      setCertificaciones([]);
+    }
+  }, [user.id_usuario]);
+
+  useEffect(() => {
+    fetchCertificaciones();
+  }, [fetchCertificaciones]);
 
 
   const initialModalContacts = useMemo(
@@ -177,8 +181,9 @@ export default function UserProfileHeader({
           <hr className="perfil-page__divider" />
           <section className="perfil-page__section">
             <Certificaciones
-              certificaciones={MOCK_CERTS}
+              certificaciones={certificaciones}
               canEdit={canEditProfile}
+              onRefresh={fetchCertificaciones}
             />
           </section>
         </div>

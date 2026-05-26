@@ -366,7 +366,8 @@
 			"add": "Add certification",
 			"noCert" : "There are no certifications yet.",
 			"pdfNotA" : "Pdf is not available",
-			"select" : "Select a certification to view"
+			"select" : "Select a certification to view",
+			"delete": "Delete certification"
 		}
 	},
 	"updateProfileModal": {
@@ -459,11 +460,15 @@
 		"fields": {
 			"name": "Certification name",
 			"namePlaceholder": "e.g. INTECAP electrical diploma",
-			"year": "Year obtained",
+			"lugarEmision": "Place of issuance",
+			"lugarEmisionPlaceholder": "e.g. Universidad del Valle de Guatemala",
+			"etiqueta": "Area or category",
+			"etiquetaPlaceholder": "Select a category",
 			"pdf": "PDF file",
 			"pdfEditHint": " (optional — keeps the previous file if you do not upload a new one)",
 			"existingPdf": "Existing PDF",
 			"uploadText": "Click or drag a PDF to upload",
+			"uploadMaxReached": "You already have a PDF selected. Remove it to upload another.",
 			"uploadHint": "PDF files only (max 10MB)",
 			"removePdfAria": "Remove PDF file"
 		},
@@ -473,7 +478,8 @@
 		"actions": {
 			"cancel": "Cancel",
 			"create": "Add certification",
-			"saveChanges": "Save changes"
+			"saveChanges": "Save changes",
+			"saving": "Saving..."
 		}
 	}
 }

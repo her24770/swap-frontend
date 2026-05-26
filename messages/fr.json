@@ -363,7 +363,8 @@
 			"add": "Ajouter une certification",
 			"noCert": "Il n'y a pas encore de certifications.",
 			"pdfNotA": "PDF non disponible",
-			"select": "Sélectionnez une certification para l'afficher"
+			"select": "Sélectionnez une certification pour l'afficher",
+			"delete": "Supprimer la certification"
 		}
 	},
 	"updateProfileModal": {
@@ -456,11 +457,15 @@
 		"fields": {
 			"name": "Nom de la certification",
 			"namePlaceholder": "ex. Diplôme d'électricité INTECAP",
-			"year": "Année d'obtention",
+			"lugarEmision": "Lieu d'émission",
+			"lugarEmisionPlaceholder": "ex. Université du Val de Guatemala",
+			"etiqueta": "Domaine ou catégorie",
+			"etiquetaPlaceholder": "Sélectionnez une catégorie",
 			"pdf": "Fichier PDF",
 			"pdfEditHint": " (facultatif — conserve le fichier précédent si vous n'en téléversez pas un nouveau)",
 			"existingPdf": "PDF existant",
 			"uploadText": "Cliquez ou glissez un PDF pour le téléverser",
+			"uploadMaxReached": "Vous avez déjà un PDF sélectionné. Supprimez-le pour en téléverser un autre.",
 			"uploadHint": "Fichiers PDF uniquement (max. 10 Mo)",
 			"removePdfAria": "Supprimer le fichier PDF"
 		},
@@ -470,7 +475,8 @@
 		"actions": {
 			"cancel": "Annuler",
 			"create": "Ajouter la certification",
-			"saveChanges": "Enregistrer les modifications"
+			"saveChanges": "Enregistrer les modifications",
+			"saving": "Enregistrement..."
 		}
 	}
 }

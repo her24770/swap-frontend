@@ -1,6 +1,11 @@
 export interface Certificacion {
-  id: number;
+  id_certificacion: number;
   nombre: string;
-  anio: number;
-  url_pdf: string;
+  lugar_emision: string;
+  ruta_pdf: string;
+  id_etiqueta: number;
+  etiqueta?: {
+    id_etiqueta: number;
+    nombre: string;
+  };
 }
