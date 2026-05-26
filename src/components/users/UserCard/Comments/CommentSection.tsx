@@ -3,17 +3,25 @@
 import { useTranslations } from 'next-intl';
 import CommentCard from "./CommentCard/CommentCard";
 import CommentForm from "./CommentForm/CommentForm";
-import type { Comment } from "../../../../types/comment";
 import "./CommentSection.css";
+import type { Resena} from "../../../../types/resena";
+
 
 interface CommentSectionProps {
   targetName: string;
-  comments: Comment[];
-  onSubmit: (comment: string, rating: number, anonymous: boolean) => void;
+  idReceptor: number;                               
+  comments: Resena[];                            
+  onSuccessSubmit?: () => void;                     
   onCancel: () => void;
 }
 
-export default function CommentSection({ targetName, comments, onSubmit, onCancel }: CommentSectionProps) {
+export default function CommentSection({ 
+  targetName, 
+  idReceptor, 
+  comments, 
+  onSuccessSubmit, 
+  onCancel 
+}: CommentSectionProps) {
   const t = useTranslations('comments');
 
   return (
@@ -22,21 +30,21 @@ export default function CommentSection({ targetName, comments, onSubmit, onCance
       <div className="comment-section__form-col">
         <CommentForm
           targetName={targetName}
-          onSubmit={onSubmit}
+          idReceptor={idReceptor} 
+          onSuccess={onSuccessSubmit} 
           onCancel={onCancel}
         />
       </div>
 
-      {/* Lista derecha con scroll */}
       <div className="comment-section__list-col">
         <div className="comment-section__list">
           {comments.map((c) => (
             <CommentCard
-              key={c.id}
-              authorName={c.authorName}
-              timeAgo={c.timeAgo}
-              rating={c.rating}
-              comment={c.comment}
+              key={c.id_resena}
+              authorName={c.emisor.nombre}
+              timeAgo={c.fecha_resena}
+              rating={c.calificacion}
+              comment={c.contenido}
             />
           ))}
           {comments.length === 0 && (

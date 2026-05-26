@@ -51,7 +51,7 @@ export default function TutoriasPage() {
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ ...TAG_TUTORIA, name: tTags('tutoria') }]}
-        Ads={[]}
+        onDetallesClick={(p) => handleDetallesClick(p)}
       />
     </main>
   );
