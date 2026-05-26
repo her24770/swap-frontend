@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
+import type { FormEvent } from "react";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight, ChevronDown, Check, X } from "lucide-react";
 import { useTranslations } from 'next-intl';
@@ -14,6 +15,16 @@ import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
+
+type RegistroPayload = {
+  nombre: string;
+  carnet: number;
+  email_institucional: string;
+  password: string;
+  url_foto_perfil: string;
+  descripcion: string;
+  etiquetas: number[];
+};
 
 export const extractCarnetFromEmail = (email: string): number | null => {
   const match = email.match(/^[a-zA-Z]+(\d+)@uvg\.edu\.gt$/);
@@ -33,6 +44,8 @@ export default function RegistroForm() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [verificationStep, setVerificationStep] = useState(false);
+  const [pendingRegistration, setPendingRegistration] = useState<RegistroPayload | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { etiquetas: etiquetasBD, loading: etiquetasLoading, error: etiquetasError } =
     useTodasEtiquetas({soloPadres : true});
@@ -92,22 +105,7 @@ export default function RegistroForm() {
         return;
       }
 
-      if (!verificationStep) {
-        await apiClient.post("/api/auth/send-register-code", {
-          email_institucional: data.email_institucional,
-          carnet,
-        });
-        setVerificationStep(true);
-        toast.success(t('toast.codeSent'));
-        return;
-      }
-
-      if (!/^\d{6}$/.test(verificationCode)) {
-        setServerError(t('verificationCodeInvalid'));
-        return;
-      }
-
-      const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>("/api/auth/register", {
+      const payload: RegistroPayload = {
         nombre: `${data.nombre} ${data.apellido}`.trim(),
         carnet,
         email_institucional: data.email_institucional,
@@ -115,6 +113,42 @@ export default function RegistroForm() {
         url_foto_perfil: data.url_foto_perfil || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || "",
         descripcion: data.descripcion || "Sin descripción",
         etiquetas: data.etiquetas,
+      };
+
+      await apiClient.post("/api/auth/send-register-code", {
+        email_institucional: payload.email_institucional,
+        carnet: payload.carnet,
+      });
+      setPendingRegistration(payload);
+      setVerificationStep(true);
+      toast.success(t('toast.codeSent'));
+    } catch (error) {
+      const apiError = error as ApiError;
+      const message = apiError.message || t('toast.errorFallback');
+      setServerError(message);
+      toast.error(message);
+    }
+  };
+
+  const handleVerificationSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      setServerError(null);
+      if (!/^\d{6}$/.test(verificationCode)) {
+        setServerError(t('verificationCodeInvalid'));
+        return;
+      }
+
+      if (!pendingRegistration) {
+        setServerError(t('verificationSessionExpired'));
+        setVerificationStep(false);
+        return;
+      }
+
+      setIsVerifying(true);
+      const respuesta = await apiClient.post<{ usuario: Usuario; rol: Rol }>("/api/auth/register", {
+        ...pendingRegistration,
         codigo_verificacion: verificationCode,
       });
       const sesion = unwrapAuthResponse(respuesta);
@@ -125,8 +159,63 @@ export default function RegistroForm() {
       const message = apiError.message || t('toast.errorFallback');
       setServerError(message);
       toast.error(message);
+    } finally {
+      setIsVerifying(false);
     }
   };
+
+  if (verificationStep) {
+    return (
+      <form onSubmit={handleVerificationSubmit} noValidate className="registro-form registro-form--verification">
+        <div className="registro-form__verification-header">
+          <h2 className="registro-form__verification-title">{t('verificationTitle')}</h2>
+          <p className="registro-form__verification-description">
+            {t('verificationDescription')}
+          </p>
+        </div>
+
+        <div className="registro-form__field">
+          <label className="registro-form__label">{t('verificationCodeLabel')}</label>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={6}
+            value={verificationCode}
+            onChange={(event) => setVerificationCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
+            placeholder={t('verificationCodePlaceholder')}
+            className="registro-form__input registro-form__input--code"
+          />
+        </div>
+
+        {serverError && (
+          <span className="registro-form__error">{serverError}</span>
+        )}
+
+        <button
+          type="submit"
+          disabled={isVerifying}
+          className="button button--large button--full-width"
+        >
+          {isVerifying ? t('submitting') : t('submitWithCode')}
+          {!isVerifying && <ChevronRight size={16} />}
+        </button>
+
+        <button
+          type="button"
+          className="registro-form__secondary-action registro-form__secondary-action--center"
+          onClick={() => {
+            setVerificationStep(false);
+            setVerificationCode("");
+            setPendingRegistration(null);
+            setServerError(null);
+          }}
+        >
+          {t('changeEmail')}
+        </button>
+      </form>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="registro-form">
@@ -174,33 +263,6 @@ export default function RegistroForm() {
           <span className="registro-form__error">{errors.email_institucional.message}</span>
         )}
       </div>
-
-      {verificationStep && (
-        <div className="registro-form__field">
-          <label className="registro-form__label">{t('verificationCodeLabel')}</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={6}
-            value={verificationCode}
-            onChange={(event) => setVerificationCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
-            placeholder={t('verificationCodePlaceholder')}
-            className="registro-form__input registro-form__input--code"
-          />
-          <button
-            type="button"
-            className="registro-form__secondary-action"
-            onClick={() => {
-              setVerificationStep(false);
-              setVerificationCode("");
-              setServerError(null);
-            }}
-          >
-            {t('changeEmail')}
-          </button>
-        </div>
-      )}
 
       {/*tags del perfil*/}
       <div className="registro-form__field">
@@ -324,11 +386,7 @@ export default function RegistroForm() {
         disabled={isSubmitting}
         className="button button--large button--full-width"
       >
-        {isSubmitting
-          ? t('submitting')
-          : verificationStep
-            ? t('submitWithCode')
-            : t('submit')}
+        {isSubmitting ? t('sendingCode') : t('submit')}
         {!isSubmitting && <ChevronRight size={16} />}
       </button>
 

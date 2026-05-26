@@ -4,6 +4,32 @@
   gap: 1rem;
 }
 
+.registro-form--verification {
+  gap: 1.25rem;
+}
+
+.registro-form__verification-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.registro-form__verification-title {
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.registro-form__verification-description {
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
 .registro-form__row {
   display: flex;
   gap: 0.75rem;
@@ -104,6 +130,10 @@
 
 .registro-form__secondary-action:hover {
   text-decoration: underline;
+}
+
+.registro-form__secondary-action--center {
+  align-self: center;
 }
 
 .registro-form__input--password::-ms-reveal,
