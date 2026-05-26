@@ -27,6 +27,7 @@ function mapPerfilPublicoToUserProfile(data: PerfilPublicoApi): UserProfileData 
     contacts: mapApiContactosToContacts(data.contactos ?? []),
     paymentMethod: data.metodo_pago,
     tags: mapUsuarioEtiquetasToTags(data.etiquetas ?? []),
+    calificacion: data.calificacion
   };
 }
 
