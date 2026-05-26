@@ -13,6 +13,9 @@ import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
 type PerfilExternoMode = "vendedor" | "tutor";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
+import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
+import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
+import PostCard from "../../posts/PostCard/PostCard";
 
 interface PerfilExternoProps {
   userId: number;
@@ -26,6 +29,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, mode);
+  const { data: publicacionesDestacadas } = usePublicacionesDestacadas(userId);
 
   const modes = useMemo(
     () => [
@@ -87,6 +91,40 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
       </div>
 
       <hr className="perfil-page__divider" />
+
+
+
+      {publicacionesDestacadas.length > 0 && (
+        <section className="perfil-page__section">
+          <h2 className="perfil-page__section-title">{t("sections.featured")}</h2>
+          <HorizontalCarousel>
+            {publicacionesDestacadas.map((pub) => (
+              <PostCard 
+                title = pub.
+                price = 
+                description= 
+                images= 
+                tags= 
+                onTagClick= 
+                publicacionId= 
+                estado= 
+                estadosDisponibles = 
+                onEditClick
+                onDeleteClick
+                onImageUpdate
+                onEstadoChange
+                onDetallesClick
+                modoGuardado =
+                isSaved
+                onToggleSave
+                initialLikeado = false
+                initialLikes = 0
+              />    
+            ))}
+          </HorizontalCarousel>
+        </section>
+      )}    
+
 
       {mode === "vendedor" && (
         <VistaVendedor

@@ -101,4 +101,11 @@ export const publicacionService = {
         await apiClient.delete(`/api/likes/${id}`);
     },
 
+    // publicaciones destacadas de usuario
+
+    async getDestacadasUsuario(id_usuario: number): Promise<Publicacion[]> {
+        const response = await apiClient.get<PublicacionesResponse>(`/api/publicacion/destacadas/user/${id_usuario}`);
+        return response.data;
+    }
+
 };
