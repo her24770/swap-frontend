@@ -311,6 +311,13 @@
 		"labels": {
 			"paymentMethod": "Método de pago:",
 			"contact": "Contacto"
+		},
+		"certification": {
+			"title": "Certificaciones",
+			"add": "Agregar certificación",
+			"noCert": "No hay certificaciones aún.",
+			"pdfNotA": "PDF no disponible",
+			"select": "Selecciona una certificación para verla"
 		}
 	},
 	"updateProfileModal": {
