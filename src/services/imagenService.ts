@@ -99,6 +99,6 @@ export const imagenService = {
     }
 
     const data = await res.json();
-    return data.url as string;
+    return data.data as string;
   },
 };
