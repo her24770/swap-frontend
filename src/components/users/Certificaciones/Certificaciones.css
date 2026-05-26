@@ -251,3 +251,49 @@
   height: 100%;
   min-height: 100%;
 }
+
+.certificaciones__item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.certificaciones__item-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+/* Botón de eliminar */
+.certificaciones__item-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--swap-tertiary-text-color);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Mostrar X solo al hacer hover en el item */
+.certificaciones__item:hover .certificaciones__item-delete {
+  opacity: 1;
+}
+
+.certificaciones__item-delete:hover {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: var(--swap-danger-color);
+}
