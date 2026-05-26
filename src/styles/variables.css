@@ -26,9 +26,9 @@
   --swap-tag-padre-text: #FFFFFF;
   --swap-tag-padre-border: #E0E7FF;
 
-  --swap-tag-hija-bg: #d9ecf9;
-  --swap-tag-hija-text: #035480;
-  --swap-tag-hija-border: #E0F2FE;
+  --swap-tag-hija-bg: #5e9fb7;
+  --swap-tag-hija-text: #ffffff;
+  --swap-tag-hija-border: #334155;
 }
 
 [data-theme="dark"] {
@@ -56,11 +56,11 @@
   /* Colores para las tags de padres e hijas */
   --swap-tag-padre-bg: #2596be;
   --swap-tag-padre-text: #FFFFFF;
-  --swap-tag-padre-border: #E0E7FF;
+  --swap-tag-padre-border: #334155;
 
-  --swap-tag-hija-bg: #d9ecf9;
-  --swap-tag-hija-text: #035480;
-  --swap-tag-hija-border: #E0F2FE;
+  --swap-tag-hija-bg: #5e9fb7;
+  --swap-tag-hija-text: #ffffff;
+  --swap-tag-hija-border: #334155;
 }
 
 
