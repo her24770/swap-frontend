@@ -23,20 +23,20 @@ export default function TutoriasPage() {
   const { data: recentsData, loading: recentsLoading, error: recentsError } = 
     usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "fecha" });
   
-  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = 
+  const { data: popularData, loading: popularLoading, error: popularError } = 
     usePublicaciones({ tipo: "tutoria", recommended: true}); 
 
   const loadingStates = {
     more: moreLoading,
     recents: recentsLoading,
-    recommended: recommendedLoading,
-    global: moreLoading || recentsLoading || recommendedLoading
+    popular: popularLoading,
+    global: moreLoading || recentsLoading || popularLoading
   };
 
   const errors = {
     more: moreError,
     recents: recentsError,
-    recommended: recommendedError
+    popular: popularError
   };
 
   const{
@@ -52,7 +52,7 @@ export default function TutoriasPage() {
         title={t('title')}
         tipo="tutoria"
         recentsPublicaciones={recentsData || []}
-        recommendedPublicaciones={recommendedData || []}
+        popularPublicaciones={popularData || []}
         morePublicaciones={moreData || []}
         loading={loadingStates}
         errors={errors}

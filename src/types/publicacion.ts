@@ -60,6 +60,7 @@ export interface PublicacionFilters {
   order?: 'asc' | 'desc';
   all?: boolean;
   recommended?: boolean;
+  personalized?: boolean;
 }
 
 export interface PublicacionDetalle {

@@ -252,6 +252,31 @@ export default function PublicacionesList({
                     {!showingSearchResults ? (
                         <div className="publicaciones-list__sections">
         
+                        {/* SECCIÓN ADS si el arreglo no está vacío */}
+                        {Ads.length > 0 && (    
+                        
+                        <section className="publicaciones-list__section">
+                            <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
+                            <RenderError error={errors.ads} />
+                            {loading.ads ? <p>Cargando anuncios...</p> : (
+                                <div className="publicaciones-list__carousel-wrap">
+                                    <AnunciosCarousel>
+                                        {Ads.map((ad, index) => (
+                                        <div key={index} className="h-carousel__item">
+                                            <AdBanner
+                                                imageUrl={ad.imagen_url}
+                                                title={ad.titulo}
+                                                description={ad.descripcion}
+                                            />
+                                        </div>
+                                        ))} 
+                                    </AnunciosCarousel>
+                                </div>
+                            )}
+                        </section>
+                        )}
+
+
                         {/* SECCIÓN RECOMENDADOS */}
                         {recommendedPublicaciones.length > 0 &&(
                             <section className="publicaciones-list__section">
@@ -319,30 +344,6 @@ export default function PublicacionesList({
                                         <p>Próximamente</p>
                                     </div>
                                 </section>
-                            )}
-
-                            {/* SECCIÓN ADS si el arreglo no está vacío */}
-                            {Ads.length > 0 && (    
-                            
-                            <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
-                                <RenderError error={errors.ads} />
-                                {loading.ads ? <p>Cargando anuncios...</p> : (
-                                    <div className="publicaciones-list__carousel-wrap">
-                                        <AnunciosCarousel>
-                                            {Ads.map((ad, index) => (
-                                            <div key={index} className="h-carousel__item">
-                                                <AdBanner
-                                                    imageUrl={ad.imagen_url}
-                                                    title={ad.titulo}
-                                                    description={ad.descripcion}
-                                                />
-                                            </div>
-                                            ))} 
-                                        </AnunciosCarousel>
-                                    </div>
-                                )}
-                            </section>
                             )}
 
                             {/* SECCIÓN RECIENTES */}
