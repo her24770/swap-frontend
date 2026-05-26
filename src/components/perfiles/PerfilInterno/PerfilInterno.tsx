@@ -118,7 +118,6 @@ export default function PerfilInterno() {
           userImageUrl={user.imageUrl}
         />
       )}
-
       <hr className="perfil-page__divider" />
 
       <CommentSection
@@ -147,7 +146,7 @@ function PerfilModeToggle({
   const visibleModes = canViewConsumerSection
     ? modes
     : modes.filter(({ key }) => key !== "consumidor");
-
+  
   return (
     <div className="perfil-page__mode-toggle">
       {visibleModes.map(({ key, label }) => (
@@ -157,7 +156,7 @@ function PerfilModeToggle({
           className={`perfil-page__mode-btn${
             mode === key ? " perfil-page__mode-btn--active" : ""
           }`}
-          onClick={() => onModeChange(key)}
+          onClick={() => onModeChange(key) }
         >
           {label}
         </button>
