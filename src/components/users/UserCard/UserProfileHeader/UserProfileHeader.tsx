@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Pencil, CreditCard } from "lucide-react";
+import { Pencil, CreditCard, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
@@ -14,12 +14,20 @@ import type { UserProfileData, UserProfileEditData } from "../../../../types/per
 import type { Tag } from "../../../../types/tag";
 import { useToast } from "../../../../hooks/useToast";
 import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
-import {
-  contactosToUpsertBody,
-  reemplazarContactosUsuario,
-} from "../../../../lib/contactosUsuario";
-
+import {contactosToUpsertBody, reemplazarContactosUsuario,} from "../../../../lib/contactosUsuario";
 import "./UserProfileHeader.css";
+import Certificaciones from "../../../users/Certificaciones/Certificaciones";
+
+const MOCK_CERTS = [
+  {
+    id: 1,
+    nombre: "Diploma de Intecap electricidad",
+    anio: 2018,
+    url_pdf: "/Prueba.pdf",
+  },
+  { id: 2, nombre: "Certificado Google", anio: 2020, url_pdf: "" },
+  { id: 3, nombre: "Curso aprobado de algebra", anio: 2021, url_pdf: "" },
+];
 
 interface UserProfileHeaderProps {
   user: UserProfileData;
@@ -41,6 +49,8 @@ export default function UserProfileHeader({
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
   
+  const [showCerts, setShowCerts] = useState(false);
+
 
   const initialModalContacts = useMemo(
     () =>
@@ -105,6 +115,14 @@ export default function UserProfileHeader({
         <div className="user-profile-header__avatar-col">
           <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
           <UserRating score={user.rating} totalReviews={user.totalReviews} />
+            <button
+              type="button"
+              className="certificacion-btn"
+              onClick={() => setShowCerts((v) => !v)}
+            >
+              <FileText size={18} strokeWidth={1.8} aria-hidden />
+              {showCerts ? "Ocultar certificaciones" : "Ver certificaciones"}
+            </button>
         </div>
 
         <div className="user-profile-header__info-col">
@@ -153,8 +171,18 @@ export default function UserProfileHeader({
             <UserContact contacts={user.contacts} />
           </div>
         </div>
-
       </div>
+      {showCerts && (
+        <div className="user-profile-header__certs-panel">
+          <hr className="perfil-page__divider" />
+          <section className="perfil-page__section">
+            <Certificaciones
+              certificaciones={MOCK_CERTS}
+              canEdit={canEditProfile}
+            />
+          </section>
+        </div>
+      )}
 
       {canEditProfile && modalOpen && (
         <ActualizarPerfilModal

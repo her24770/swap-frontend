@@ -203,6 +203,33 @@ export const schemaEditarPerfil = z.object({
     .optional(),
 });
 
+// Certificacion
+
+const MAX_PDF_SIZE_BYTES = 10 * 1024 * 1024;
+const ACCEPTED_PDF_TYPE = "application/pdf";
+
+export const schemaCertificacion = z.object({
+  nombre: z
+    .string()
+    .min(3, "El nombre debe tener al menos 3 caracteres.")
+    .max(100, "El nombre no puede superar los 100 caracteres."),
+  anio: z.coerce
+    .number({ message: "El año es obligatorio." })
+    .int("El año debe ser un número entero.")
+    .min(1950, "El año debe ser mayor a 1950.")
+    .max(new Date().getFullYear(), `El año no puede ser mayor a ${new Date().getFullYear()}.`),
+});
+
+export function validateCertificacionPdf(file: File): string | null {
+  if (file.type !== ACCEPTED_PDF_TYPE) {
+    return "El archivo debe ser un PDF válido.";
+  }
+  if (file.size > MAX_PDF_SIZE_BYTES) {
+    return "El PDF no debe pesar más de 10MB.";
+  }
+  return null;
+}
+
 // ─── Horario / Disponibilidad ─────────────────────────────────────────────────
 
 export const schemaHorario = z.object({
@@ -232,6 +259,7 @@ export type CrearPublicacionFormData = z.infer<typeof schemaCrearPublicacion>;
 export type EditarPublicacionFormData = z.infer<typeof schemaEditarPublicacion>;
 export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
+export type CertificacionFormData = z.infer<typeof schemaCertificacion>;
 export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
 
 /** Tamaño máximo por imagen: 5 MB */

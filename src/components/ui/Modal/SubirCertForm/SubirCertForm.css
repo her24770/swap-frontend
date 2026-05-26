@@ -1,0 +1,49 @@
+.subir-cert-form__label-hint {
+  font-family: var(--swap-font-textos);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--swap-tertiary-text-color);
+}
+
+.subir-cert-form__pdf-file {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  background-color: var(--swap-secondary-background);
+}
+
+.subir-cert-form__pdf-icon {
+  flex-shrink: 0;
+  color: var(--swap-primary-color);
+}
+
+.subir-cert-form__pdf-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-primary-text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subir-cert-form__pdf-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  transition: color 0.12s ease;
+}
+
+.subir-cert-form__pdf-remove:hover {
+  color: var(--swap-danger-color);
+}

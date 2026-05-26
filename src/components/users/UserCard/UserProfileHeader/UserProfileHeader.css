@@ -156,3 +156,30 @@
   color: var(--swap-primary-text-color);
   margin: 0;
 }
+
+.user-profile-header__certs-panel {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.certificacion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-family: var(--swap-font-textos);
+  font-weight: 600;
+  color: var(--swap-secondary-text-color);
+  background-color: #bb7600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.certificacion-btn:active {
+  transform: scale(0.98);
+  background-color: #d97706;
+}

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Pencil, Save, SquarePlus, X } from "lucide-react";
+import { Pencil, Save, SquarePlus, X} from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
