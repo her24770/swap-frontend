@@ -9,7 +9,9 @@ import SearchBar from "../../../components/ui/SearchBar/SearchBar";
 import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
 import { useBusquedaSemantica } from "../../../hooks/fetch/useBusquedaSemantica";
 import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
+import DetalleUsuario from "../../../components/ui/Modal/DetalleUsuario/DetalleUsuario";
 import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
+import { normalizeImageUrl } from "../../../lib/imageUrl";
 import type { Publicacion } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
 import type {Anuncio} from "../../../types/anuncio";
@@ -18,10 +20,82 @@ import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import "./PublicacionesList.css";
-import { Usuario } from "../../../types/usuario";
+import UserResCard from "../../posts/UserResumida/UserResCard";
 
 
 const VISIBLE_PAGINATION_PAGES = 3;
+
+type TutorEntry = {
+    id_usuario: number;
+    nombre: string;
+    url_foto_perfil: string;
+    calificacion: number | null;
+    temas: string[];
+};
+
+function dedupePublicaciones(publicaciones: Publicacion[]): Publicacion[] {
+    const seen = new Set<number>();
+    return publicaciones.filter((p) => {
+        if (seen.has(p.id_publicacion)) return false;
+        seen.add(p.id_publicacion);
+        return true;
+    });
+}
+
+//Muestra usuario swap como nombre en lo que hay endpoint especifico para los detalles de usuario
+function resolveTutorDisplayName(pub: Publicacion): string {
+  return pub.usuario?.nombre?.trim() || "Usuario SWAP";
+}
+
+function buildTutorEntries(publicaciones: Publicacion[]): TutorEntry[] {
+    const byUserId = new Map<number, TutorEntry>();
+
+    for (const pub of publicaciones) {
+        const userId = pub.usuario?.id_usuario ?? pub.id_usuario;
+        if (!userId) continue;
+
+        const tema = pub.titulo?.trim();
+        const existing = byUserId.get(userId);
+
+        if (existing) {
+            if (tema && !existing.temas.includes(tema)) {
+                existing.temas.push(tema);
+            }
+            const apiName = pub.usuario?.nombre?.trim();
+            if (apiName) {
+                existing.nombre = apiName;
+            }
+            if (pub.usuario?.url_foto_perfil?.trim()) {
+                existing.url_foto_perfil = pub.usuario.url_foto_perfil.trim();
+            }
+            if (pub.usuario?.calificacion != null) {
+                existing.calificacion = pub.usuario.calificacion;
+            }
+            continue;
+        }
+
+        byUserId.set(userId, {
+            id_usuario: userId,
+            nombre: resolveTutorDisplayName(pub),
+            url_foto_perfil: pub.usuario?.url_foto_perfil?.trim() ?? "",
+            calificacion: pub.usuario?.calificacion ?? null,
+            temas: tema ? [tema] : [],
+        });
+    }
+
+    return Array.from(byUserId.values());
+}
+
+function toStarRating(calificacion: number | null | undefined): number {
+    return Math.min(5, Math.max(0, Math.round(calificacion ?? 0)));
+}
+
+function toVisualStarRating(calificacion: number | null | undefined): number {
+    if (calificacion != null && calificacion > 0) {
+        return toStarRating(calificacion);
+    }
+    return 4;
+}
 
 type Props = {
     title: string;
@@ -30,7 +104,8 @@ type Props = {
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
     popularPublicaciones?: Publicacion[];
-    tutores?: Usuario[]
+    /** Optional extra tutoria publications for the tutors carousel (merged with recents/popular/more when tipo is tutoria). */
+    tutoriaPublicaciones?: Publicacion[];
     loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean; popular?: boolean; tutores?: boolean };
     errors: { recents?: any; recommended?: any; more?: any; ads?: any; popular?: any; tutores?: any };
     itemsPerPage?: number;
@@ -46,7 +121,7 @@ export default function PublicacionesList({
     recommendedPublicaciones = [],
     morePublicaciones = [],
     popularPublicaciones = [],
-    tutores = [],
+    tutoriaPublicaciones = [],
     loading,
     errors,
     itemsPerPage = 12,
@@ -63,6 +138,7 @@ export default function PublicacionesList({
     const [currentPage, setCurrentPage] = useState(1);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [selectedTutor, setSelectedTutor] = useState<TutorEntry | null>(null);
     const filterAnchorRef = useRef<HTMLDivElement>(null);
     const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
 
@@ -140,6 +216,42 @@ export default function PublicacionesList({
         tagsForAll
             ? tagsForAll(tTags)
             : mapPublicacionEtiquetasToTags(p.etiquetas, { name: tTags("negocio") });
+
+    const tutoriaSourcePublicaciones = useMemo(() => {
+        if (tipo !== "tutoria") return [];
+        return dedupePublicaciones([
+            ...tutoriaPublicaciones,
+            ...recentsPublicaciones,
+            ...popularPublicaciones,
+            ...morePublicaciones,
+        ]);
+    }, [
+        tipo,
+        tutoriaPublicaciones,
+        recentsPublicaciones,
+        popularPublicaciones,
+        morePublicaciones,
+    ]);
+
+    const tutorEntries = useMemo(
+        () => buildTutorEntries(tutoriaSourcePublicaciones),
+        [tutoriaSourcePublicaciones],
+    );
+
+    const tutorTags = useMemo(
+        () => (tagsForAll ? tagsForAll(tTags) : []),
+        [tagsForAll, tTags],
+    );
+
+    const tutorsSectionLoading =
+        Boolean(loading.tutores) && tutoriaSourcePublicaciones.length === 0;
+
+    const showTutorsSection = tipo === "tutoria" && tutoriaSourcePublicaciones.length > 0;
+
+    const navigateToTutorProfile = (userId: number) => {
+        setSelectedTutor(null);
+        router.push(`/perfil/${userId}?modo=tutor`);
+    };
 
     const RenderError = ({ error }: { error: any }) => (
         error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null
@@ -336,13 +448,35 @@ export default function PublicacionesList({
                         )}
 
                             {/* SECCIÓN TUTORES */}
-                            {tutores.length > 0 && (
+                            {showTutorsSection && (
                                 <section className="publicaciones-list__section">
-                                    <h2 className="publicaciones-list__section-title">Tutores</h2>
-
-                                    <div className="publicaciones-list__empty">
-                                        <p>Próximamente</p>
-                                    </div>
+                                    <h2 className="publicaciones-list__section-title">{t("tutores")}</h2>
+                                    <RenderError error={errors.tutores ?? errors.popular ?? errors.recents} />
+                                    {tutorsSectionLoading ? (
+                                        <p>{t("loadingTutores")}</p>
+                                    ) : tutorEntries.length === 0 ? (
+                                        <p>{t("noTutores")}</p>
+                                    ) : (
+                                        <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
+                                            <HorizontalCarousel showPagination={false}>
+                                                {tutorEntries.map((tutor) => (
+                                                    <div key={tutor.id_usuario} className="h-carousel__item">
+                                                        <UserResCard
+                                                            userId={tutor.id_usuario}
+                                                            userName={tutor.nombre}
+                                                            userRating={toVisualStarRating(tutor.calificacion)}
+                                                            userImageUrl={
+                                                                tutor.url_foto_perfil
+                                                                    ? normalizeImageUrl(tutor.url_foto_perfil)
+                                                                    : undefined
+                                                            }
+                                                            onDetallesClick={() => setSelectedTutor(tutor)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </HorizontalCarousel>
+                                        </div>
+                                    )}
                                 </section>
                             )}
 
@@ -453,6 +587,25 @@ export default function PublicacionesList({
                     }}
                     onVerCertificados={() => console.log("ver certificados")}
                     onSolicitarTutoria={() => console.log("solicitar tutoría")}
+                />
+            )}
+
+            {selectedTutor && (
+                <DetalleUsuario
+                    isOpen
+                    onClose={() => setSelectedTutor(null)}
+                    userId={selectedTutor.id_usuario}
+                    userName={selectedTutor.nombre}
+                    userRating={toVisualStarRating(selectedTutor.calificacion)}
+                    userImageUrl={
+                        selectedTutor.url_foto_perfil
+                            ? normalizeImageUrl(selectedTutor.url_foto_perfil)
+                            : undefined
+                    }
+                    temas={selectedTutor.temas}
+                    tags={tutorTags}
+                    onVerCertificados={() => navigateToTutorProfile(selectedTutor.id_usuario)}
+                    onVerPerfil={navigateToTutorProfile}
                 />
             )}
         </main>

@@ -170,6 +170,9 @@
 		"ads" : "Publicités",
 		"populares": "Publications Populaires",
 		"tutores": "Tuteurs",
+		"loadingTutores": "Chargement des tuteurs...",
+		"tutorFallbackName": "Tuteur SWAP",
+		"noTutores": "Aucun tuteur à afficher pour le moment.",
 		"error_loading_section": "Impossible de charger cette section"
 	},
 	"login": {
@@ -317,8 +320,10 @@
 			"details": "Détails",
 			"edit": "Modifier",
 			"acordar": "Convenir d'un achat",
-			"certificado" : "Voir les certificats"
+			"certificado": "Voir les certificats",
+			"viewProfile": "Voir le profil"
 		},
+		"tutorTopicsLabel": "Thèmes de tutorat",
 		"aria": {
 			"uploadImage": "Téléverser une image"
 		},

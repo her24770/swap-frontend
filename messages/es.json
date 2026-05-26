@@ -170,7 +170,9 @@
 		"ads" : "Anuncios",
 		"populares": "Publicaciones Populares",
 		"tutores": "Tutores",
-
+		"loadingTutores": "Cargando tutores...",
+		"tutorFallbackName": "Tutor SWAP",
+		"noTutores": "No hay tutores para mostrar todavía.",
 		"error_loading_section": "No fue posible cargar esta sección"
 	},
 	"login": {
@@ -321,8 +323,10 @@
 			"details": "Detalles",
 			"edit": "Editar",
 			"acordar": "Acordar Compra",
-			"certificado" : "View Certificates"
+			"certificado": "Ver certificados",
+			"viewProfile": "Ver perfil"
 		},
+		"tutorTopicsLabel": "Temas de tutorías",
 		"aria": {
 			"uploadImage": "Subir imagen"
 		},

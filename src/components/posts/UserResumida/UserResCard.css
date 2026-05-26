@@ -1,0 +1,93 @@
+/* UserResCard.css — espejo visual de PostRes, adaptado para usuario */
+
+.user-res-card {
+  background-color: var(--swap-primary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.75rem;
+  min-width: min(17.5rem, 100%);
+  max-width: 20rem;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-res-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Avatar ─────────────────────────────────────────────────────────────── */
+
+.user-res-card__avatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 4rem;   /* igual que la foto en el mockup: más compacto que 6rem de imagen */
+  height: 4rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--swap-secondary-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--swap-primary-border-color);
+}
+
+.user-res-card__avatar-img {
+  object-fit: cover;
+}
+
+.user-res-card__avatar-placeholder {
+  color: var(--swap-primary-border-color);
+}
+
+/* ── Content ─────────────────────────────────────────────────────────────── */
+
+.user-res-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-res-card__name {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Stars ───────────────────────────────────────────────────────────────── */
+
+.user-res-card__stars {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.user-res-card__star {
+  font-size: 0.9rem;
+  color: var(--swap-primary-border-color);
+  line-height: 1;
+}
+
+.user-res-card__star--filled {
+  color: #f59e0b;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+
+.user-res-card__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.125rem;
+}

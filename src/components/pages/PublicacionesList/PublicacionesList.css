@@ -129,6 +129,15 @@
   width: calc((100% - (var(--card-gap) * (var(--grid-cols) - 1))) / var(--grid-cols));
 }
 
+.publicaciones-list__carousel-wrap--tutors .h-carousel__item {
+  width: clamp(17.5rem, calc((100% - (var(--card-gap) * (var(--grid-cols) - 1))) / var(--grid-cols)), 20rem);
+}
+
+.publicaciones-list__carousel-wrap--tutors .user-res-card {
+  width: 100%;
+  max-width: none;
+}
+
 /* 6. TEXTOS DE SECCIÓN */
 .publicaciones-list__section-header {
   display: flex;

@@ -8,6 +8,8 @@ import type { PublicacionFilters } from "../../../../types/publicacion";
 import type { DiaHorario } from "../../../../types/horario";
 import "../../Button/Button.css";
 import "./FiltrosModal.css";
+import RangoSlider from "./Sliders/Rango/RangoSlider";
+import EstrellaSlider from "./Sliders/Estrellas/EstrellaSlider";
 
 export type TipoFiltro = NonNullable<PublicacionFilters["tipo"]>;
 
@@ -50,9 +52,13 @@ export default function FiltrosModal({
   const t = useTranslations("common.filtros");
   const [selectedEtiquetas, setSelectedEtiquetas] = useState<number[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [precio, setPrecio] = useState(precioMax);
   const [calificacion, setCalificacion] = useState(0);
   const [hoverStar, setHoverStar] = useState(0);
+  const [precioMin, setPrecioMin] = useState(0);
+  const [precio, setPrecioMax] = useState(precioMax);
+  const [calMin, setCalMin] = useState(0);
+  const [calMax, setCalMax] = useState(5);
+
 
   // Tutorías
   const [modalidad, setModalidad] = useState<("virtual" | "presencial")[]>([]);
@@ -110,7 +116,7 @@ export default function FiltrosModal({
 
   const handleLimpiar = () => {
     setSelectedEtiquetas([]);
-    setPrecio(precioMax);
+    setPrecioMax(precioMax);
     setCalificacion(0);
     setModalidad([]);
     setHoraDesde("07:00");
@@ -289,20 +295,14 @@ export default function FiltrosModal({
       {/* ── Precio ── */}
       <div className="filtros-panel__section">
         <span className="filtros-panel__label">{t("precio")}</span>
-        <input
-          type="range"
+        <RangoSlider
           min={0}
           max={precioMax}
-          step={1}
-          value={precio}
-          onChange={(e) => setPrecio(Number(e.target.value))}
-          className="filtros-panel__slider"
+          valueMin={precioMin}
+          valueMax={precio}
+          onChange={(mn, mx) => { setPrecioMin(mn); setPrecioMax(mx); }}
+          formatLabel={(v) => `Q${v}`}
         />
-        <div className="filtros-panel__slider-labels">
-          <span>{t("currencyMin")}</span>
-          <span className="filtros-panel__slider-value">{t("currencyMax", { amount: precio })}</span>
-          <span>{t("currencyMax", { amount: precioMax })}</span>
-        </div>
       </div>
 
         {/* ── Horario y días solo tutorías ── */}
@@ -355,19 +355,11 @@ export default function FiltrosModal({
       <div className="filtros-panel__section">
         <span className="filtros-panel__label">{t("calificacion")}</span>
         <div className="filtros-panel__stars">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              className={`filtros-panel__star${star <= (hoverStar || calificacion) ? " filtros-panel__star--active" : ""}`}
-              onClick={() => setCalificacion(star === calificacion ? 0 : star)}
-              onMouseEnter={() => setHoverStar(star)}
-              onMouseLeave={() => setHoverStar(0)}
-              aria-label={t("starsAria", { count: star })}
-            >
-              ★
-            </button>
-          ))}
+          <EstrellaSlider
+            valueMin={calMin}
+            valueMax={calMax}
+            onChange={(mn, mx) => { setCalMin(mn); setCalMax(mx); }}
+          />
         </div>
       </div>
 
