@@ -20,12 +20,13 @@ interface PerfilExternoProps {
 
 export default function PerfilExterno({ userId }: PerfilExternoProps) {
   const t = useTranslations("perfil");
+  const { activeProfileMode } = usePerspectivaInterna();
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("modo") === "tutor" ? "tutor" : "vendedor";
   const [mode, setMode] = useState<PerfilExternoMode>(initialMode);
   const [user, setUser] = useState<UserProfileData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, mode);
+  const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, activeProfileMode);
 
   const modes = useMemo(
     () => [
