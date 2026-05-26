@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Menu, UserCircle2, LogOut, Settings } from "lucide-react";
+import { Menu, UserCircle2, LogOut, Settings, Bell } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,7 +9,28 @@ import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
 import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
+import NotificacionModal from "../../ui/Modal/NotificacionModal/NotificacionModal";
+import type { NotificacionData } from "../../ui/Modal/NotificacionModal/Notificacion/Notificacion";
 import "./Navbar.css";
+
+export const MOCK_NOTIFICACIONES: NotificacionData[] = [
+  {
+    id: 1,
+    tipo: "sistema",
+    titulo: "Publicacion bloqueada",
+    descripcion: "Tu publicación incumple las normas de SWAP",
+    fecha: "hace 5 min",
+    leida: false,
+  },
+  {
+    id: 2,
+    tipo: "sistema",
+    titulo: "Publicacion subida con exito",
+    descripcion: "Tu publicacion ya esta publicada",
+    fecha: "hace 2 días",
+    leida: true,
+  },
+];
 
 interface NavbarProps {
   onMenuToggle: () => void;
@@ -22,26 +43,42 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifWrapperRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const { logout, usuario } = useAuth();
-  
+  const { logout } = useAuth();
+
+  const bellRef = useRef<HTMLButtonElement>(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [notificaciones, setNotificaciones] = useState<NotificacionData[]>(MOCK_NOTIFICACIONES);
+
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
 
+  const unreadCount = notificaciones.filter((n) => !n.leida).length;
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setProfileOpen(false);
-      }
+      const target = e.target as Node;
+      if (dropdownRef.current?.contains(target)) return;
+      setProfileOpen(false);
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    setNotifOpen(false);
+    setProfileOpen(false);
+  }, [pathname]);
+
+  const toggleNotificaciones = () => {
+    setProfileOpen(false);
+    setNotifOpen((open) => !open);
+  };
+
   return (
     <header className="navbar">
       <div className="navbar__left">
-        {/* Botón de menú SOLO si NO es auth route */}
         {!isAuthRoute && (
           <button
             ref={menuButtonRef}
@@ -57,11 +94,15 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
           <LogoCompleto className="navbar__logo"/>
         </Link>
       </div>
-      <div className="navbar__left">
+
+      <div className="navbar__right">
         {!isAuthRoute && (
           <>
             <button
-              onClick={() => setIsSettingsOpen(true)}
+              onClick={() => {
+                setNotifOpen(false);
+                setIsSettingsOpen(true);
+              }}
               aria-label="Abrir configuraciones"
               type="button"
               className="navbar__menu-btn"
@@ -70,42 +111,79 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
             </button>
 
             <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
-          </>
-        )}
-        {/* Perfil/USER SOLO si NO es auth route */}
-        {!isAuthRoute && (
-          <div ref={dropdownRef} className="navbar__profile">
-            <button
-              aria-label={t('ariaUserProfile')}
-              type="button"
-              onClick={() => setProfileOpen((prev) => !prev)}
-              className="navbar__profile-btn"
-            >
-              <UserCircle2 size={28} strokeWidth={1.5} />
-            </button>
 
-            {profileOpen && (
-              <div className="navbar__dropdown">
-                <Link
-                  href="/perfil"
-                  onClick={() => setProfileOpen(false)}
-                  className="navbar__dropdown-item"
-                >
-                  <UserCircle2 size={16} className="navbar__dropdown-icon" />
-                  {t('viewProfile')}
-                </Link>
-                <div className="navbar__dropdown-divider" />
-                <button
-                  type="button"
-                  onClick={logout}
-                  className="navbar__dropdown-item navbar__dropdown-item--danger"
-                >
-                  <LogOut size={16} />
-                  {t('logout')}
-                </button>
-              </div>
-            )}
-          </div>
+            <div ref={notifWrapperRef} className="navbar__notif">
+              <button
+                ref={bellRef}
+                onClick={toggleNotificaciones}
+                aria-label="Abrir notificaciones"
+                aria-expanded={notifOpen}
+                type="button"
+                className="navbar__menu-btn navbar__menu-btn--bell"
+              >
+                <Bell size={25} strokeWidth={2} />
+                {unreadCount > 0 && (
+                  <span className="navbar__notif-badge" aria-hidden>
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <NotificacionModal
+                isOpen={notifOpen}
+                onClose={() => setNotifOpen(false)}
+                anchorRef={bellRef}
+                notificaciones={notificaciones}
+                onDismiss={(id) =>
+                  setNotificaciones((prev) => prev.filter((n) => n.id !== id))
+                }
+                onMarcarLeida={(id) =>
+                  setNotificaciones((prev) =>
+                    prev.map((n) => (n.id === id ? { ...n, leida: true } : n)),
+                  )
+                }
+                onMarcarTodasLeidas={() =>
+                  setNotificaciones((prev) => prev.map((n) => ({ ...n, leida: true })))
+                }
+              />
+            </div>
+
+            <div ref={dropdownRef} className="navbar__profile">
+              <button
+                aria-label={t('ariaUserProfile')}
+                type="button"
+                onClick={() => {
+                  setNotifOpen(false);
+                  setProfileOpen((prev) => !prev);
+                }}
+                className="navbar__profile-btn"
+              >
+                <UserCircle2 size={28} strokeWidth={1.5} />
+              </button>
+
+              {profileOpen && (
+                <div className="navbar__dropdown">
+                  <Link
+                    href="/perfil"
+                    onClick={() => setProfileOpen(false)}
+                    className="navbar__dropdown-item"
+                  >
+                    <UserCircle2 size={16} className="navbar__dropdown-icon" />
+                    {t('viewProfile')}
+                  </Link>
+                  <div className="navbar__dropdown-divider" />
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="navbar__dropdown-item navbar__dropdown-item--danger"
+                  >
+                    <LogOut size={16} />
+                    {t('logout')}
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
     </header>

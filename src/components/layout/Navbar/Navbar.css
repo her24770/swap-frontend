@@ -8,10 +8,42 @@
   position: relative;
 }
 
-.navbar__left {
+.navbar__left,
+.navbar__right {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.navbar__right {
+  position: relative;
+  z-index: 20;
+}
+
+.navbar__notif {
+  position: relative;
+}
+
+.navbar__menu-btn--bell {
+  position: relative;
+}
+
+.navbar__notif-badge {
+  position: absolute;
+  top: 0.125rem;
+  right: 0.125rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.25rem;
+  border-radius: 9999px;
+  background-color: var(--swap-danger-color);
+  color: #fff;
+  font-family: var(--swap-font-textos);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.125rem;
+  text-align: center;
+  pointer-events: none;
 }
 
 .navbar__menu-btn {
