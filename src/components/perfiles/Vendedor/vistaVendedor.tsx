@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { SquarePlus } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
@@ -22,6 +22,7 @@ import { CrearAnuncioForm } from "../../ui/Modal/CrearAnuncio/CrearAnuncioForm";
 import { useAnunciosUsuario } from "../../../hooks/fetch/useAnunciosUsuario";
 import type { Anuncio } from "../../../types/anuncio";
 import { useServices } from "../../../services/context/ServiceContext";
+import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
 
 interface CatalogPost {
   id: number;
@@ -54,7 +55,12 @@ export default function VistaVendedor({
   const idUsuario = userId ?? authUserId;
   const estadosMaterial = useEstados("material");
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
-  const { anuncio: anuncioService } = useServices();
+  const { anuncio: anuncioService, publicacion: publicacionService } = useServices();
+  const { data: publicacionesDestacadas, refetch: refetchDestacadas } = usePublicacionesDestacadas(idUsuario);
+  const publicacionesDestacadasIds = useMemo(
+    () => new Set(publicacionesDestacadas.map((pub) => pub.id_publicacion)),
+    [publicacionesDestacadas]
+  );
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
@@ -169,6 +175,25 @@ export default function VistaVendedor({
     });
   }, [agregarNotificacion, fetchPublicaciones, mostrarConfirm]);
 
+  const handleToggleDestacado = useCallback(async (pub: CatalogPost) => {
+    const destacar = !publicacionesDestacadasIds.has(pub.id);
+
+    try {
+      await publicacionService.actualizarDestacadasUsuario(pub.id, destacar);
+      agregarNotificacion({
+        tipo: "success",
+        mensaje: destacar ? "La publicación fue destacada." : "La publicación ya no está destacada.",
+      });
+      await refetchDestacadas();
+    } catch (err) {
+      const apiError = err as ApiError;
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: apiError.message || "No fue posible actualizar el destacado.",
+      });
+    }
+  }, [agregarNotificacion, publicacionesDestacadasIds, publicacionService, refetchDestacadas]);
+
   useEffect(() => {
     fetchPublicaciones();
   }, [fetchPublicaciones]);
@@ -261,6 +286,8 @@ export default function VistaVendedor({
                   images={pub.images}
                   estado={pub.estado}
                   estadosDisponibles={estadosMaterial}
+                  isDestacado={publicacionesDestacadasIds.has(pub.id)}
+                  onToggleDestacado={() => void handleToggleDestacado(pub)}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -327,6 +354,8 @@ export default function VistaVendedor({
                   description={pub.description}
                   images={pub.images}
                   estado={pub.estado}
+                  isDestacado={publicacionesDestacadasIds.has(pub.id)}
+                  onToggleDestacado={() => void handleToggleDestacado(pub)}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);

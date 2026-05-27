@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Bookmark, Camera, ChevronRight, Heart, Loader2, SquarePen, Trash2 } from "lucide-react";
+import { Bookmark, Camera, ChevronRight, Heart, Loader2, SquarePen, Star, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
@@ -31,11 +31,14 @@ interface PostCardProps {
   onImageUpdate?: (newUrl: string) => void;
   onEstadoChange?: (nuevoEstado: string) => void;
   onDetallesClick?: () => void;
+  onToggleDestacado?: () => void | Promise<void>;
+  isDestacado?: boolean;
   modoGuardado?: boolean;
   isSaved?: boolean;
   onToggleSave?: () => void | Promise<void>;
   initialLikeado?: boolean;
   initialLikes?: number;
+  categorias?: number[];
 }
 
 export default function PostCard({
@@ -53,6 +56,8 @@ export default function PostCard({
   onImageUpdate,
   onEstadoChange,
   onDetallesClick,
+  onToggleDestacado,
+  isDestacado = false,
   modoGuardado = false,
   isSaved,
   onToggleSave,
@@ -191,6 +196,7 @@ export default function PostCard({
               <SquarePen size={24} strokeWidth={2} />
             </button>
           )}
+          
           {canEditCards && onDeleteClick && (
             <button
               type="button"
@@ -202,6 +208,19 @@ export default function PostCard({
               <Trash2 size={24} strokeWidth={2} />
             </button>
           )}
+
+          {canEditCards && onToggleDestacado && (
+            <button
+              type="button"
+              className={`post-card__feature-button${isDestacado ? " post-card__feature-button--featured" : ""}`}
+              onClick={onToggleDestacado}
+              aria-label={isDestacado ? "Quitar destacado" : "Destacar publicación"}
+              title={isDestacado ? "Quitar destacado" : "Destacar publicación"}
+            >
+              <Star size={25} strokeWidth={2} fill={isDestacado ? "currentColor" : "none"} />
+            </button>
+          )}
+
         </div>
       </header>
 
