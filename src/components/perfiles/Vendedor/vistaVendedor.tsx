@@ -57,11 +57,6 @@ export default function VistaVendedor({
   const estadosMaterial = useEstados("material");
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
   const { anuncio: anuncioService, publicacion: publicacionService } = useServices();
-  const { data: publicacionesDestacadas, refetch: refetchDestacadas } = usePublicacionesDestacadas(idUsuario);
-  const publicacionesDestacadasIds = useMemo(
-    () => new Set(publicacionesDestacadas.map((pub) => pub.id_publicacion)),
-    [publicacionesDestacadas]
-  );
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
