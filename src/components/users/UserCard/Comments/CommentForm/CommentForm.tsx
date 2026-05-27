@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Star } from "lucide-react";
@@ -48,9 +48,17 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
     },
   });
 
-  // Registramos manualmente el campo calificacion para que Zod lo rastree
-  // ya que no hay un input <input type="number"> físico mapeado a él.
+
   register("calificacion"); 
+  useEffect(() => {
+    setValue("id_receptor", idReceptor, { shouldValidate: false });
+  }, [idReceptor, setValue]);
+
+  useEffect(() => {
+    if (activeProfileMode) {
+      setValue("tipo_resena", activeProfileMode, { shouldValidate: false });
+    }
+  }, [activeProfileMode, setValue]);
 
   const currentRating = watch("calificacion");
 
