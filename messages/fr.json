@@ -271,6 +271,8 @@
 			"submitting": "Inscription...",
 			"submit": "Continuer",
 			"submitWithCode": "Créer le compte",
+			"tagsCountMin": "Sélectionnez au moins 3 centre d'intérêt",
+			"tagsCountMax": "Vous pouvez sélectionner jusqu'à 20 centres d'intérêt",
 			"toast": {
 				"success": "Inscription réussie ! Bienvenue sur SWAP.",
 				"codeSent": "Nous avons envoyé un code à votre e-mail institutionnel.",

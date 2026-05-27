@@ -63,6 +63,16 @@ export default function UserTagsModal({
     };
 
     const handleSave = async () => {
+        // validate number of tags
+        if (selectedIds.length < 3) {
+            setSaveError("Selecciona al menos 3 etiquetas.");
+            return;
+        }
+        if (selectedIds.length > 20) {
+            setSaveError("No puedes seleccionar más de 20 etiquetas.");
+            return;
+        }
+
         try {
             setSaving(true);
             setSaveError(null);
@@ -157,7 +167,12 @@ export default function UserTagsModal({
                     <button type="button" className="cancel-btn" onClick={onClose} disabled={saving}>
                         Cancelar
                     </button>
-                    <button type="button" className="button button--medium" onClick={handleSave} disabled={saving || loading}>
+                    <button
+                        type="button"
+                        className="button button--medium"
+                        onClick={handleSave}
+                        disabled={saving || loading || selectedIds.length < 3 || selectedIds.length > 20}
+                    >
                         {saving ? "Guardando..." : "Guardar cambios"}
                     </button>
                 </div>

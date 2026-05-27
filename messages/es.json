@@ -271,6 +271,8 @@
 			"submitting": "Registrando...",
 			"submit": "Continuar",
 			"submitWithCode": "Crear cuenta",
+			"tagsCountMin": "Selecciona al menos 3 interés",
+			"tagsCountMax": "Puedes seleccionar hasta 20 intereses",
 			"toast": {
 				"success": "¡Registro exitoso! Bienvenido a SWAP.",
 				"codeSent": "Te enviamos un código a tu correo institucional.",
