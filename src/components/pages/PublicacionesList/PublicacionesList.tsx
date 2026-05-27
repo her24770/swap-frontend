@@ -1,7 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { stripLocalePrefix } from "../../../i18n/pathname";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
@@ -20,6 +21,7 @@ import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import { useServices } from "../../../services/context/ServiceContext";
+import "../../ui/Button/Button.css";
 import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
 
@@ -56,6 +58,7 @@ type Props = {
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
     Ads?: Anuncio[];
+    showPersonalizedRecommendationsButton?: boolean;
 };
 
 export default function PublicacionesList({
@@ -76,12 +79,17 @@ export default function PublicacionesList({
     tagsForAll,
     onDetallesClick,
     Ads = [],
+    showPersonalizedRecommendationsButton = false,
 }: Props) {
     const t = useTranslations('seccion');
     const tEmpty = useTranslations('common.empty');
     const tTags = useTranslations('common.tags');
     const tSearch = useTranslations('common.search');
     const router = useRouter();
+    const pathname = stripLocalePrefix(usePathname());
+    const isDescubreRoute = pathname === "/" || pathname === "/descubre";
+    const showRecommendationsButton =
+        showPersonalizedRecommendationsButton || isDescubreRoute;
     const { publicacion: service } = useServices();
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
@@ -321,13 +329,15 @@ export default function PublicacionesList({
             <div className="publicaciones-list__header">
                 <div className="publicaciones-list__title-actions">
                     <h1 className="publicaciones-list__title">{title}</h1>
-                    <button
-                    type="button"
-                    className="button button--small"
-                    onClick={handleDetailsClick}
-                    >
-                        Recomendados para ti
-                    </button>
+                    {showRecommendationsButton && (
+                        <button
+                            type="button"
+                            className="button button--small"
+                            onClick={handleDetailsClick}
+                        >
+                            Recomendados para ti
+                        </button>
+                    )}
                 </div>
                 <div className="publicaciones-list__search-actions" ref={filterAnchorRef}>
                     <SearchBar

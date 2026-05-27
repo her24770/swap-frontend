@@ -103,6 +103,7 @@ export default function HomePage() {
         itemsPerPage={ITEMS_PER_PAGE}
         tagsForAll={() => [{ id: 1, name: tTags('negocio'), parentId: null }]}
         onDetallesClick={(p) => handleDetallesClick(p)}
+        showPersonalizedRecommendationsButton
         Ads={adsData || []}
       />
     </main>
