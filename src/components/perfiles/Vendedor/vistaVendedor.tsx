@@ -23,6 +23,7 @@ import { useAnunciosUsuario } from "../../../hooks/fetch/useAnunciosUsuario";
 import type { Anuncio } from "../../../types/anuncio";
 import { useServices } from "../../../services/context/ServiceContext";
 import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
+import type { TipoPublicacion } from "../../../schemas/zodSchemas";
 
 interface CatalogPost {
   id: number;
@@ -63,6 +64,7 @@ export default function VistaVendedor({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [crearOpen, setCrearOpen] = useState(false);
+  const [crearTipoPublicacion, setCrearTipoPublicacion] = useState<TipoPublicacion>("material");
   const [editOpen, setEditOpen] = useState(false);
   const [postEditando, setPostEditando] = useState<CatalogPost | null>(null);
   const [selectedPost, setSelectedPost] = useState<CatalogPost | null>(null);
@@ -270,10 +272,13 @@ export default function VistaVendedor({
             <button
               type="button"
               className="perfil-page__new-publication-btn"
-              onClick={() => setCrearOpen(true)}
+              onClick={() => {
+                setCrearTipoPublicacion("material");
+                setCrearOpen(true);
+              }}
             >
               <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.newPublication")}
+              {t("actions.newPostMaterial")}
             </button>
           )}
         </div>
@@ -341,10 +346,13 @@ export default function VistaVendedor({
             <button
               type="button"
               className="perfil-page__new-publication-btn"
-              onClick={() => setCrearOpen(true)}
+              onClick={() => {
+                setCrearTipoPublicacion("negocio");
+                setCrearOpen(true);
+              }}
             >
               <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.newPublication")}
+              {t("actions.newPostNegocio")}
             </button>
           )}
         </div>
@@ -397,6 +405,7 @@ export default function VistaVendedor({
             <div className="perfil-page__crear-pub-modal-content">
               <CrearPublicacionForm
                 mode="crear"
+                tipoPublicacion={crearTipoPublicacion}
                 onCancel={() => setCrearOpen(false)}
                 onSuccess={() => {
                   setCrearOpen(false);

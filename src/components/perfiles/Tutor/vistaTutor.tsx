@@ -285,7 +285,7 @@ export default function VistaTutor({
               onClick={() => setCrearOpen(true)}
             >
               <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.newPublication")}
+              {t("actions.newPostTutoria")}
             </button>
           )}
         </div>
@@ -372,6 +372,7 @@ export default function VistaTutor({
             <div className="perfil-page__crear-pub-modal-content">
               <CrearPublicacionForm
                 mode="crear"
+                tipoPublicacion="tutoria"
                 onCancel={() => setCrearOpen(false)}
                 onSuccess={() => {
                   setCrearOpen(false);

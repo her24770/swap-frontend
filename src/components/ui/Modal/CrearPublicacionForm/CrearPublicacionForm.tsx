@@ -20,6 +20,7 @@ interface BasePublicacionFormProps {
 
 interface CrearPublicacionFormProps extends BasePublicacionFormProps {
   mode: "crear";
+  tipoPublicacion: TipoPublicacion;
 }
 
 interface EditarPublicacionFormProps extends BasePublicacionFormProps {
@@ -38,7 +39,10 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
   const { onSuccess, onCancel} =props;
   const isEditing = props.mode === "editar";
-  const createHook = useFormCrearPublicacion();
+  const tipoPublicacionSeleccionada = isEditing
+    ? ((props as EditarPublicacionFormProps).defaultValues?.tipo_publicacion ?? "material")
+    : props.tipoPublicacion;
+  const createHook = useFormCrearPublicacion(tipoPublicacionSeleccionada);
   const editHook = useFormEditarPublicacion(
     isEditing ? props.publicacionId : 0,
     isEditing ? props.defaultValues : undefined,
@@ -49,10 +53,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const tipoEditar = isEditing ? (props as { defaultValues?: { tipo_publicacion?: string } }).defaultValues?.tipo_publicacion ?? "material" : "material";
   const estadosDisponibles = useEstados(tipoEditar);
 
-  const {
-    tiposPublicacion,
-    resetForm
-  } = createHook;
+  const { resetForm } = createHook;
 
   const {
     form,
@@ -107,6 +108,13 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       : selectedCategorias.length === 1
         ? t("fields.categoryTriggerOne")
         : t("fields.categoryTriggerMany", { count: selectedCategorias.length });
+
+  const tipoPublicacionLabel =
+    tipoPublicacionSeleccionada === "material"
+      ? tTags("material")
+      : tipoPublicacionSeleccionada === "tutoria"
+        ? tTags("tutoria")
+        : tTags("negocio");
 
   return (
 
@@ -174,18 +182,9 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
           {/* Tipo de publicación */}
           <div className="crear-publicacion__field">
             <label className="crear-publicacion__label">{t("fields.type")}</label>
-            <select
-              {...register("tipo_publicacion")}
-              className={`crear-publicacion__input${errors.tipo_publicacion ? " crear-publicacion__input--error" : ""}`}
-            >
-              <option value="">{t("fields.typePlaceholder")}</option>
-              {tiposPublicacion.map((tipo) => (
-                <option key={tipo} value={tipo}>
-                  {tipo === "material" ? tTags("material") : tipo === "tutoria" ? tTags("tutoria") : tTags("negocio")}
-                </option>
-              ))}
-            </select>
-            {errors.tipo_publicacion && <span className="crear-publicacion__error">{errors.tipo_publicacion.message}</span>}
+            <div className="crear-publicacion__readonly-value" aria-readonly="true">
+              {tipoPublicacionLabel}
+            </div>
           </div>
 
           {/* Categorías */}
