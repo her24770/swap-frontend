@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
+import { useTutores } from "../../../hooks/useTutores";
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { TAG_TUTORIA } from "../../../lib/tags";
 import "../seccion.css";
@@ -23,13 +24,13 @@ export default function TutoriasPage() {
   const { data: popularData, loading: popularLoading, error: popularError } = 
     usePublicaciones({ tipo: "tutoria", recommended: true}); 
 
+  const {data: tutoresData, loading: tutoresLoading, error: tutoresError} = useTutores();
+
   const loadingStates = {
     more: moreLoading,
     recents: recentsLoading,
     popular: popularLoading,
-    tutores:
-      (recentsLoading || popularLoading || moreLoading) &&
-      !(recentsData?.length || popularData?.length || moreData?.length),
+    tutores: tutoresLoading,
     global: moreLoading || recentsLoading || popularLoading,
   };
 
@@ -37,7 +38,7 @@ export default function TutoriasPage() {
     more: moreError,
     recents: recentsError,
     popular: popularError,
-    tutores: popularError ?? recentsError ?? moreError,
+    tutores: tutoresError
   };
 
   return (
@@ -48,6 +49,7 @@ export default function TutoriasPage() {
         recentsPublicaciones={recentsData || []}
         popularPublicaciones={popularData || []}
         morePublicaciones={moreData || []}
+        tutores={tutoresData || []}
         totalPublicaciones={moreTotal}
         currentPage={morePage}
         onPageChange={setMorePage}
