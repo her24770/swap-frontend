@@ -62,6 +62,10 @@
     color: var(--swap-tertiary-text-color);
 }
 
+.user-tags-modal__search {
+    margin-bottom: 0.25rem;
+}
+
 .user-tags-modal__content {
     min-height: 8rem;
     overflow-y: auto;
@@ -121,13 +125,6 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-}
-
-.save-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.3rem 
 }
 
 .cancel-btn {
