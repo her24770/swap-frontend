@@ -106,3 +106,26 @@ export interface PublicacionDetalleResponse {
   message: string;
   data: PublicacionDetalle;
 }
+
+export interface FiltroPublicacionBody {
+  tipo?: 'negocio' | 'material' | 'tutoria';
+  precio_min?: number;
+  precio_max?: number;
+  calificacion_min?: number;
+  calificacion_max?: number;
+  etiquetas?: number[];
+  sort?: 'fecha' | 'precio' | 'me_gusta' | 'calificacion';
+  order?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+}
+
+export interface FiltroPublicacionApiResponse {
+  message: string;
+  data: {
+    publicaciones: Publicacion[];
+    total: number;
+    page: number;
+    limit: number;
+  };
+}

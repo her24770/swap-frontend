@@ -1,5 +1,5 @@
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult} from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse } from "../types/publicacion";
 
 interface GuardadoPublicacion {
   id_usuario: number;
@@ -112,5 +112,22 @@ export const publicacionService = {
 
     async actualizarDestacadasUsuario(id_publicacion: number, destacar: boolean): Promise<void> {
       await apiClient.patch(`/api/publicacion/${id_publicacion}/destacar`, { destacar });
+    },
+
+    // ── Filtros por vista ──────────────────────────────────────────────────
+    async getFiltradasNegocios(body: FiltroPublicacionBody): Promise<Publicacion[]> {
+      const response = await apiClient.post<FiltroPublicacionApiResponse>("/api/publicacion/buscar", body);
+      return response.data.publicaciones;
+    },
+
+    async getFiltradasMateriales(body: FiltroPublicacionBody): Promise<Publicacion[]> {
+      const response = await apiClient.post<FiltroPublicacionApiResponse>("/api/publicacion/buscar", body);
+      return response.data.publicaciones;
+    },
+
+    async getFiltradasTutorias(body: FiltroPublicacionBody): Promise<Publicacion[]> {
+      // Usará su propio endpoint cuando esté disponible
+      const response = await apiClient.post<FiltroPublicacionApiResponse>("/api/publicacion/buscar", body);
+      return response.data.publicaciones;
     },
 };

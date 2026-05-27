@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -12,13 +12,14 @@ import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/
 import DetalleUsuario from "../../../components/ui/Modal/DetalleUsuario/DetalleUsuario";
 import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import { normalizeImageUrl } from "../../../lib/imageUrl";
-import type { Publicacion } from "../../../types/publicacion";
+import type { Publicacion, FiltroPublicacionBody } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
 import type {Anuncio} from "../../../types/anuncio";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
 import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
+import { useServices } from "../../../services/context/ServiceContext";
 import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
 
@@ -140,6 +141,7 @@ export default function PublicacionesList({
     const tTags = useTranslations('common.tags');
     const tSearch = useTranslations('common.search');
     const router = useRouter();
+    const { publicacion: service } = useServices();
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
 
@@ -147,6 +149,10 @@ export default function PublicacionesList({
     const [selectedTutor, setSelectedTutor] = useState<TutorEntry | null>(null);
     const filterAnchorRef = useRef<HTMLDivElement>(null);
     const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
+
+    const [filteredResults, setFilteredResults] = useState<Publicacion[] | null>(null);
+    const [filterLoading, setFilterLoading] = useState(false);
+    const [activeFilters, setActiveFilters] = useState<FiltroValues | null>(null);
 
     useEffect(() => {
         if (!isFilterOpen) return;
@@ -183,9 +189,14 @@ export default function PublicacionesList({
     };
 
     const showingSearchResults = searchQuery.trim().length > 0;
+    const showingFiltered = !showingSearchResults && filteredResults !== null;
 
-    const mainSectionData = showingSearchResults ? searchResults : morePublicaciones;
-    const usesServerPagination = !showingSearchResults && totalPublicaciones !== undefined;
+    const mainSectionData = showingSearchResults
+        ? searchResults
+        : showingFiltered
+            ? filteredResults!
+            : morePublicaciones;
+    const usesServerPagination = !showingSearchResults && !showingFiltered && totalPublicaciones !== undefined;
     const totalItems = usesServerPagination ? totalPublicaciones : mainSectionData.length;
     const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
     const activeCurrentPage = showingSearchResults || currentPage === undefined ? internalPage : currentPage;
@@ -268,10 +279,60 @@ export default function PublicacionesList({
         error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null
     );
 
-    const handleAplicarFiltros = (values: FiltroValues) => {
-        console.log("Aplicar filtros para:", tipo, values);
+    const findEtiquetaId = useCallback((nombre: string) => {
+        return etiquetas.find(e => e.nombre.toLowerCase() === nombre.toLowerCase())?.id_etiqueta;
+    }, [etiquetas]);
+
+    const handleAplicarFiltros = useCallback(async (values: FiltroValues) => {
+        if (!tipo) return;
         setIsFilterOpen(false);
-    };
+        setActiveFilters(values);
+        setFilterLoading(true);
+
+        const etiquetasIds = [...values.etiquetas];
+
+        if (tipo === "negocio" && values.tipoNegocio?.length === 1) {
+            const id = findEtiquetaId(values.tipoNegocio[0] === "producto" ? "Producto" : "Servicio");
+            if (id) etiquetasIds.push(id);
+        }
+        if (tipo === "material" && values.tipoMaterial?.length === 1) {
+            const id = findEtiquetaId(values.tipoMaterial[0] === "compra" ? "Compra" : "Alquiler");
+            if (id) etiquetasIds.push(id);
+        }
+        if (tipo === "tutoria" && values.modalidad?.length === 1) {
+            const id = findEtiquetaId(values.modalidad[0] === "virtual" ? "En Línea" : "Presencial");
+            if (id) etiquetasIds.push(id);
+        }
+
+        const precioMaxDefault = tipo === "tutoria" ? 200 : 1000;
+
+        const body: FiltroPublicacionBody = {
+            tipo,
+            etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
+            precio_min: values.precioMin > 0 ? values.precioMin : undefined,
+            precio_max: values.precioMax < precioMaxDefault ? values.precioMax : undefined,
+            calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
+            calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
+            limit: 100,
+        };
+
+        try {
+            let result: Publicacion[];
+            if (tipo === "negocio") result = await service.getFiltradasNegocios(body);
+            else if (tipo === "material") result = await service.getFiltradasMateriales(body);
+            else result = await service.getFiltradasTutorias(body);
+            setFilteredResults(result);
+        } catch {
+            setFilteredResults([]);
+        } finally {
+            setFilterLoading(false);
+        }
+    }, [tipo, etiquetas, findEtiquetaId, service]);
+
+    const handleLimpiarFiltros = useCallback(() => {
+        setFilteredResults(null);
+        setActiveFilters(null);
+    }, []);
 
     const renderPagination = (label: string) => {
         if (!hasPagination) return null;
@@ -326,6 +387,7 @@ export default function PublicacionesList({
                                 ? {
                                       isOpen: isFilterOpen,
                                       onToggle: () => setIsFilterOpen((prev) => !prev),
+                                      active: activeFilters !== null,
                                   }
                                 : undefined
                         }
@@ -345,7 +407,7 @@ export default function PublicacionesList({
                                     etiquetasLoading={etiquetasLoading}
                                     precioMax={tipo === "tutoria" ? 200 : 1000}
                                     onAplicar={handleAplicarFiltros}
-                                    onLimpiar={() => console.log("Limpiar")}
+                                    onLimpiar={handleLimpiarFiltros}
                                     onClose={() => setIsFilterOpen(false)}
                                 />
                             </div>
@@ -355,26 +417,35 @@ export default function PublicacionesList({
             </div>
             <div className="publicaciones-list__content">
                     {/* Estado de carga global */}
-                    {(loading.global && !showingSearchResults) && morePublicaciones.length === 0 && (
+                    {(loading.global && !showingSearchResults && !showingFiltered) && morePublicaciones.length === 0 && (
                         <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
                     )}
                     {showingSearchResults && searchLoading && (
                         <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
                     )}
-                    
+                    {showingFiltered && filterLoading && (
+                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
+                    )}
+
                     {showingSearchResults && !searchLoading && searchResults.length === 0 && (
                         <div className="publicaciones-list__empty">
                             <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
                         </div>
                     )}
 
-                    {!showingSearchResults && !loading.global && morePublicaciones.length === 0 && (
+                    {showingFiltered && !filterLoading && filteredResults!.length === 0 && (
                         <div className="publicaciones-list__empty">
                             <p>{tEmpty("description")}</p>
                         </div>
                     )}
 
-                    {!showingSearchResults ? (
+                    {!showingSearchResults && !showingFiltered && !loading.global && morePublicaciones.length === 0 && (
+                        <div className="publicaciones-list__empty">
+                            <p>{tEmpty("description")}</p>
+                        </div>
+                    )}
+
+                    {!showingSearchResults && !showingFiltered ? (
                         <div className="publicaciones-list__sections">
         
                         {/* SECCIÓN ADS si el arreglo no está vacío */}
@@ -546,6 +617,29 @@ export default function PublicacionesList({
                               {renderPagination("Paginación de publicaciones")}
                             </section>
                         </div>
+                    ) : showingFiltered ? (
+                        /* RESULTADOS FILTRADOS */
+                        <section className="publicaciones-list__search-results">
+                            <h2 className="publicaciones-list__section-title">Resultados ({filteredResults!.length})</h2>
+                            <div className="publicaciones-list__grid">
+                                {visibleGridData.map(p => (
+                                    <PostCard
+                                        key={p.id_publicacion}
+                                        publicacionId={p.id_publicacion}
+                                        tags={mapTags(p)}
+                                        title={p.titulo}
+                                        price={parseFloat(p.precio)}
+                                        description={p.descripcion}
+                                        images={p.imagenes.map((img) => img.url_imagen)}
+                                        estado={p.estado}
+                                        onDetallesClick={() => handleCardClick(p)}
+                                        initialLikeado={p.likeado ?? false}
+                                        initialLikes={p.me_gusta}
+                                    />
+                                ))}
+                            </div>
+                            {renderPagination("Paginación de resultados filtrados")}
+                        </section>
                     ) : (
                         /* RESULTADOS DE BÚSQUEDA */
                         <section className="publicaciones-list__search-results">

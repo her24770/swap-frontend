@@ -17,14 +17,16 @@ const DIAS_FULL: DiaHorario[] = ["lunes", "martes", "miercoles", "jueves", "vier
 
 export interface FiltroValues {
   etiquetas: number[];
+  precioMin: number;
   precioMax: number;
-  calificacion: number;
-//Para las tutorias 
+  calificacionMin: number;
+  calificacionMax: number;
+  // Para tutorías
   modalidad?: ("virtual" | "presencial")[];
   horaDesde?: string;
   horaHasta?: string;
   dias?: DiaHorario[];
-  //Para materiales
+  // Para materiales
   tipoMaterial?: ("compra" | "alquiler")[];
   // Para negocios
   tipoNegocio?: ("producto" | "servicio")[];
@@ -130,8 +132,10 @@ export default function FiltrosModal({
   const handleAplicar = () => {
     onAplicar({
       etiquetas: selectedEtiquetas,
+      precioMin,
       precioMax: precio,
-      calificacion,
+      calificacionMin: calMin,
+      calificacionMax: calMax,
       modalidad,
       horaDesde,
       horaHasta,
