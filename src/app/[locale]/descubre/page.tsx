@@ -45,6 +45,7 @@ export default function DescubrePage() {
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         onDetallesClick={(p) => handleDetallesClick(p)}
+        showPersonalizedRecommendationsButton
         Ads={[]}
       />
     </main>

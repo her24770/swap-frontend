@@ -296,3 +296,9 @@
 .publicaciones-list__content {
   width: 100%;
 }
+.publicaciones-list__title-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
