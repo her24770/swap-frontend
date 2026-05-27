@@ -1,5 +1,5 @@
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse } from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse, FiltroTutorBody, FiltroTutorApiResponse, TutorFiltrado } from "../types/publicacion";
 
 interface GuardadoPublicacion {
   id_usuario: number;
@@ -125,9 +125,8 @@ export const publicacionService = {
       return response.data.publicaciones;
     },
 
-    async getFiltradasTutorias(body: FiltroPublicacionBody): Promise<Publicacion[]> {
-      // Usará su propio endpoint cuando esté disponible
-      const response = await apiClient.post<FiltroPublicacionApiResponse>("/api/publicacion/buscar", body);
-      return response.data.publicaciones;
+    async getFiltradasTutorias(body: FiltroTutorBody): Promise<TutorFiltrado[]> {
+      const response = await apiClient.post<FiltroTutorApiResponse>("/api/user/tutores/buscar", body);
+      return response.data.tutores;
     },
 };
