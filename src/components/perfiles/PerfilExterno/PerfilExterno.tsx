@@ -11,11 +11,9 @@ import { getPerfilPublico } from "../../../services/perfilService";
 import { PerspectivaInternaProvider } from "../../../context/PerspectivaInternaContext";
 import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
+import "../../../app/[locale]/perfil/PerfilConsumidorPage.css";
+
 type PerfilExternoMode = "vendedor" | "tutor";
-import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
-import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
-import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
-import PostCard from "../../posts/PostCard/PostCard";
 
 interface PerfilExternoProps {
   userId: number;
@@ -74,19 +72,27 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
         >
         <UserProfileHeader user={user} />
 
-        <div className="perfil-page__mode-toggle">
-            {modes.map(({ key, label }) => (
-            <button
-                key={key}
-                type="button"
-                className={`perfil-page__mode-btn${
-                mode === key ? " perfil-page__mode-btn--active" : ""
-                }`}
-                onClick={() => setMode(key)}
+        <div className="perfil-page__mode-toolbar">
+            <div
+                className="perfil-page__mode-toggle"
+                role="tablist"
+                aria-label="Profile mode"
             >
-                {label}
-            </button>
-            ))}
+                {modes.map(({ key, label }) => (
+                    <button
+                        key={key}
+                        type="button"
+                        role="tab"
+                        aria-selected={mode === key}
+                        className={`perfil-page__mode-btn${
+                            mode === key ? " perfil-page__mode-btn--active" : ""
+                        }`}
+                        onClick={() => setMode(key)}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
         </div>
 
         <hr className="perfil-page__divider" />

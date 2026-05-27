@@ -19,6 +19,7 @@ import type { ApiResult } from "../../../types/ApiResult";
 import type { AuthResponse } from "../../../types/usuario";
 import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
+import "../../../app/[locale]/perfil/PerfilConsumidorPage.css";
 
 
 type PerfilMode = "consumidor" | "vendedor" | "tutor";
@@ -95,12 +96,14 @@ export default function PerfilInterno() {
         }}
       />
 
-      <PerfilModeToggle
-        mode={mode}
-        modes={MODES}
-        onModeChange={setMode}
-      />
-      
+      <div className="perfil-page__mode-toolbar">
+        <PerfilModeToggle
+          mode={mode}
+          modes={MODES}
+          onModeChange={setMode}
+        />
+      </div>
+
       <hr className="perfil-page__divider" />
 
       {mode === "consumidor" && <VistaConsumidor />}
@@ -153,16 +156,24 @@ function PerfilModeToggle({
     ? modes
     : modes.filter(({ key }) => key !== "consumidor");
   
+  if (visibleModes.length === 0) return null;
+
   return (
-    <div className="perfil-page__mode-toggle">
+    <div
+      className="perfil-page__mode-toggle"
+      role="tablist"
+      aria-label="Profile mode"
+    >
       {visibleModes.map(({ key, label }) => (
         <button
           key={key}
           type="button"
+          role="tab"
+          aria-selected={mode === key}
           className={`perfil-page__mode-btn${
             mode === key ? " perfil-page__mode-btn--active" : ""
           }`}
-          onClick={() => onModeChange(key) }
+          onClick={() => onModeChange(key)}
         >
           {label}
         </button>

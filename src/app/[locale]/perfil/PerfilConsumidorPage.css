@@ -22,27 +22,43 @@
   margin: 0;
 }
 
-/* ── Toggle consumidor / vendedor ────────────────────────────────────────── */
+/* ── Toggle consumidor / vendedor / tutor ─────────────────────────────────── */
+
+.perfil-page__mode-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
 
 .perfil-page__mode-toggle {
   display: flex;
-  width: 100%; 
-  max-width: 450px;
+  width: 100%;
+  max-width: 28rem;
+  min-height: 2.75rem;
+  flex-shrink: 0;
+  align-self: flex-start;
   border: 1px solid var(--swap-primary-border-color);
   border-radius: 0.5rem;
   overflow: hidden;
+  background-color: var(--swap-secondary-background);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 }
 
 .perfil-page__mode-btn {
-  flex: 1; 
+  flex: 1;
   width: auto;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-family: var(--swap-font-textos);
   font-weight: 500;
-  background: transparent;
+  background-color: transparent;
   cursor: pointer;
-  color: var(--swap-tertiary-text-color);
+  color: var(--swap-primary-text-color);
   transition: background-color 0.15s ease, color 0.15s ease;
   border: none;
   border-right: 1px solid var(--swap-primary-border-color);

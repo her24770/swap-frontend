@@ -4,9 +4,11 @@
 
 .user-profile-header {
   display: grid;
-  grid-template-columns: 120px 1fr minmax(220px, 700px);
+  grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: flex-start;
+  width: 100%;
+  max-width: 100%;
 }
 
 @media (max-width: 75rem) {
@@ -72,7 +74,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
-  min-width: 26rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .user-profile-header__name-row {
