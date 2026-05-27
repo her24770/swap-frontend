@@ -107,6 +107,38 @@ export interface PublicacionDetalleResponse {
   data: PublicacionDetalle;
 }
 
+export interface FiltroTutorBody {
+  etiquetas?: number[];
+  precio_min?: number;
+  precio_max?: number;
+  calificacion_min?: number;
+  calificacion_max?: number;
+  dias?: string[];
+  hora_inicio?: string;
+  hora_final?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface TutorFiltrado {
+  id_usuario: number;
+  nombre: string;
+  url_foto_perfil: string;
+  descripcion: string | null;
+  calificacion: number | null;
+  publicaciones: Array<{ titulo: string }>;
+}
+
+export interface FiltroTutorApiResponse {
+  message: string;
+  data: {
+    tutores: TutorFiltrado[];
+    total: number;
+    page: number;
+    limit: number;
+  };
+}
+
 export interface FiltroPublicacionBody {
   tipo?: 'negocio' | 'material' | 'tutoria';
   precio_min?: number;

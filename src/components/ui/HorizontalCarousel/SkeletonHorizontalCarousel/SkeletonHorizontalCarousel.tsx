@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { PostCardSkeleton } from '../../../posts/PostCard/PostCardSkeleton/PostCardSkeleton';
 import './SkeletonHorizontalCarousel.css';
 
 interface SkeletonHorizontalCarouselProps {
   count?: number;
-  renderItem?: () => React.ReactNode;
+  renderItem?: () => ReactNode;
 }
 
 export function SkeletonHorizontalCarousel({ 

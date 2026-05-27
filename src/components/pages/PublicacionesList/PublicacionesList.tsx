@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
@@ -12,7 +12,8 @@ import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/
 import DetalleUsuario from "../../../components/ui/Modal/DetalleUsuario/DetalleUsuario";
 import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import { normalizeImageUrl } from "../../../lib/imageUrl";
-import type { Publicacion, FiltroPublicacionBody } from "../../../types/publicacion";
+import { stripLocalePrefix } from "../../../i18n/pathname";
+import type { Publicacion, FiltroPublicacionBody, FiltroTutorBody, TutorFiltrado } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
 import type { Anuncio } from "../../../types/anuncio";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
@@ -20,9 +21,9 @@ import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import { useServices } from "../../../services/context/ServiceContext";
+import "../../ui/Button/Button.css";
 import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
-// ── Skeletons ────────────────────────────────────────────────────────────────
 import { SkeletonHorizontalCarousel } from "../../ui/HorizontalCarousel/SkeletonHorizontalCarousel/SkeletonHorizontalCarousel";
 import { PublicacionesGridSkeleton } from "./PublicacionesGridSkeleton";
 import { UserResCardSkeleton } from "../../posts/UserResumida/UserResCardSkeleton/UserResCardSkeleton";
@@ -59,6 +60,7 @@ type Props = {
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
     Ads?: Anuncio[];
+    showPersonalizedRecommendationsButton?: boolean;
 };
 
 export default function PublicacionesList({
@@ -72,19 +74,23 @@ export default function PublicacionesList({
     tutores = [],
     onPageChange,
     popularPublicaciones = [],
-    tutoriaPublicaciones = [],
     loading,
     errors,
     itemsPerPage = 12,
     tagsForAll,
     onDetallesClick,
     Ads = [],
+    showPersonalizedRecommendationsButton = false,
 }: Props) {
-    const t = useTranslations('seccion');
-    const tEmpty = useTranslations('common.empty');
-    const tTags = useTranslations('common.tags');
-    const tSearch = useTranslations('common.search');
+    const t = useTranslations("seccion");
+    const tEmpty = useTranslations("common.empty");
+    const tTags = useTranslations("common.tags");
+    const tSearch = useTranslations("common.search");
     const router = useRouter();
+    const pathname = stripLocalePrefix(usePathname());
+    const isDescubreRoute = pathname === "/" || pathname === "/descubre";
+    const showRecommendationsButton =
+        showPersonalizedRecommendationsButton || isDescubreRoute;
     const { publicacion: service } = useServices();
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
@@ -93,6 +99,7 @@ export default function PublicacionesList({
     const filterAnchorRef = useRef<HTMLDivElement>(null);
     const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
     const [filteredResults, setFilteredResults] = useState<Publicacion[] | null>(null);
+    const [filteredTutores, setFilteredTutores] = useState<TutorFiltrado[] | null>(null);
     const [filterLoading, setFilterLoading] = useState(false);
     const [activeFilters, setActiveFilters] = useState<FiltroValues | null>(null);
 
@@ -122,7 +129,8 @@ export default function PublicacionesList({
     };
 
     const showingSearchResults = searchQuery.trim().length > 0;
-    const showingFiltered = !showingSearchResults && filteredResults !== null;
+    const showingFilteredTutores = !showingSearchResults && tipo === "tutoria" && filteredTutores !== null;
+    const showingFiltered = !showingSearchResults && !showingFilteredTutores && filteredResults !== null;
 
     const mainSectionData = showingSearchResults
         ? searchResults
@@ -147,85 +155,116 @@ export default function PublicacionesList({
         const halfWindow = Math.floor(visiblePages / 2);
         let startPage = safeCurrentPage - halfWindow;
         let endPage = startPage + visiblePages - 1;
-        if (startPage < 1) { startPage = 1; endPage = visiblePages; }
-        if (endPage > pageCount) { endPage = pageCount; startPage = Math.max(1, endPage - visiblePages + 1); }
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = visiblePages;
+        }
+        if (endPage > pageCount) {
+            endPage = pageCount;
+            startPage = Math.max(1, endPage - visiblePages + 1);
+        }
         return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     }, [pageCount, safeCurrentPage]);
 
     const hasPagination = totalItems > itemsPerPage;
 
-    useEffect(() => { setInternalPage(1); }, [searchQuery, itemsPerPage]);
+    useEffect(() => {
+        setInternalPage(1);
+    }, [searchQuery, itemsPerPage]);
 
     const mapTags = (p: Publicacion) =>
         tagsForAll
             ? tagsForAll(tTags)
             : mapPublicacionEtiquetasToTags(p.etiquetas, { name: tTags("negocio") });
 
-    // ── Flags de visibilidad de secciones ───────────────────────────────────
     const tutorsSectionLoading = Boolean(loading.tutores) && tutores.length === 0;
-    const showTutorsSection    = tipo === "tutoria" && (tutores.length > 0 || tutorsSectionLoading);
-    const showAdsSection       = Ads.length > 0 || Boolean(loading.ads);
+    const showTutorsSection = tipo === "tutoria" && (tutores.length > 0 || tutorsSectionLoading);
+    const showAdsSection = Ads.length > 0 || Boolean(loading.ads);
     const showRecommendedSection = Boolean(loading.recommended) || recommendedPublicaciones.length > 0;
-    const showPopularSection   = Boolean(loading.popular) || popularPublicaciones.length > 0;
-    const showRecentsSection   = Boolean(loading.recents) || recentsPublicaciones.length > 0;
-    const isMoreGridLoading    = Boolean(loading.more) && visibleGridData.length === 0;
+    const showPopularSection = Boolean(loading.popular) || popularPublicaciones.length > 0;
+    const showRecentsSection = Boolean(loading.recents) || recentsPublicaciones.length > 0;
+    const isMoreGridLoading = Boolean(loading.more) && visibleGridData.length === 0;
+    const isSearchLoading = showingSearchResults && searchLoading;
 
     const navigateToTutorProfile = (userId: number) => {
         setSelectedTutor(null);
         router.push(`/perfil/${userId}?modo=tutor`);
     };
 
-    const RenderError = ({ error }: { error: any }) => (
-        error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null
+    const RenderError = ({ error }: { error: any }) =>
+        error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null;
+
+    const findEtiquetaId = useCallback(
+        (nombre: string) =>
+            etiquetas.find((e) => e.nombre.toLowerCase() === nombre.toLowerCase())?.id_etiqueta,
+        [etiquetas],
     );
 
-    const findEtiquetaId = useCallback((nombre: string) => {
-        return etiquetas.find(e => e.nombre.toLowerCase() === nombre.toLowerCase())?.id_etiqueta;
-    }, [etiquetas]);
+    const handleAplicarFiltros = useCallback(
+        async (values: FiltroValues) => {
+            if (!tipo) return;
+            setIsFilterOpen(false);
+            setActiveFilters(values);
+            setFilterLoading(true);
+            const etiquetasIds = [...values.etiquetas];
+            if (tipo === "negocio" && values.tipoNegocio?.length === 1) {
+                const id = findEtiquetaId(values.tipoNegocio[0] === "producto" ? "Producto" : "Servicio");
+                if (id) etiquetasIds.push(id);
+            }
+            if (tipo === "material" && values.tipoMaterial?.length === 1) {
+                const id = findEtiquetaId(values.tipoMaterial[0] === "compra" ? "Compra" : "Alquiler");
+                if (id) etiquetasIds.push(id);
+            }
+            if (tipo === "tutoria") {
+                const tutorBody: FiltroTutorBody = {
+                    etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
+                    precio_min: values.precioMin > 0 ? values.precioMin : undefined,
+                    precio_max: values.precioMax < 200 ? values.precioMax : undefined,
+                    calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
+                    calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
+                    dias: values.dias && values.dias.length > 0 ? values.dias : undefined,
+                    hora_inicio: values.horaDesde !== "07:00" ? values.horaDesde : undefined,
+                    hora_final: values.horaHasta !== "20:00" ? values.horaHasta : undefined,
+                    limit: 100,
+                };
+                try {
+                    const result = await service.getFiltradasTutorias(tutorBody);
+                    setFilteredTutores(result);
+                } catch {
+                    setFilteredTutores([]);
+                } finally {
+                    setFilterLoading(false);
+                }
+                return;
+            }
 
-    const handleAplicarFiltros = useCallback(async (values: FiltroValues) => {
-        if (!tipo) return;
-        setIsFilterOpen(false);
-        setActiveFilters(values);
-        setFilterLoading(true);
-        const etiquetasIds = [...values.etiquetas];
-        if (tipo === "negocio" && values.tipoNegocio?.length === 1) {
-            const id = findEtiquetaId(values.tipoNegocio[0] === "producto" ? "Producto" : "Servicio");
-            if (id) etiquetasIds.push(id);
-        }
-        if (tipo === "material" && values.tipoMaterial?.length === 1) {
-            const id = findEtiquetaId(values.tipoMaterial[0] === "compra" ? "Compra" : "Alquiler");
-            if (id) etiquetasIds.push(id);
-        }
-        if (tipo === "tutoria" && values.modalidad?.length === 1) {
-            const id = findEtiquetaId(values.modalidad[0] === "virtual" ? "En Línea" : "Presencial");
-            if (id) etiquetasIds.push(id);
-        }
-        const precioMaxDefault = tipo === "tutoria" ? 200 : 1000;
-        const body: FiltroPublicacionBody = {
-            tipo,
-            etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
-            precio_min: values.precioMin > 0 ? values.precioMin : undefined,
-            precio_max: values.precioMax < precioMaxDefault ? values.precioMax : undefined,
-            calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
-            calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
-            limit: 100,
-        };
-        try {
-            let result: Publicacion[];
-            if (tipo === "negocio") result = await service.getFiltradasNegocios(body);
-            else if (tipo === "material") result = await service.getFiltradasMateriales(body);
-            else result = await service.getFiltradasTutorias(body);
-            setFilteredResults(result);
-        } catch {
-            setFilteredResults([]);
-        } finally {
-            setFilterLoading(false);
-        }
-    }, [tipo, etiquetas, findEtiquetaId, service]);
+            const body: FiltroPublicacionBody = {
+                tipo,
+                etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
+                precio_min: values.precioMin > 0 ? values.precioMin : undefined,
+                precio_max: values.precioMax < 1000 ? values.precioMax : undefined,
+                calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
+                calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
+                limit: 100,
+            };
+            try {
+                const result =
+                    tipo === "negocio"
+                        ? await service.getFiltradasNegocios(body)
+                        : await service.getFiltradasMateriales(body);
+                setFilteredResults(result);
+            } catch {
+                setFilteredResults([]);
+            } finally {
+                setFilterLoading(false);
+            }
+        },
+        [tipo, findEtiquetaId, service],
+    );
 
     const handleLimpiarFiltros = useCallback(() => {
         setFilteredResults(null);
+        setFilteredTutores(null);
         setActiveFilters(null);
     }, []);
 
@@ -267,10 +306,45 @@ export default function PublicacionesList({
         );
     };
 
+    const renderPostCard = (p: Publicacion) => (
+        <PostCard
+            key={p.id_publicacion}
+            publicacionId={p.id_publicacion}
+            tags={mapTags(p)}
+            title={p.titulo}
+            price={parseFloat(p.precio)}
+            description={p.descripcion}
+            images={p.imagenes.map((img) => img.url_imagen)}
+            estado={p.estado}
+            onDetallesClick={() => handleCardClick(p)}
+            initialLikeado={p.likeado ?? false}
+            initialLikes={p.me_gusta}
+        />
+    );
+
+    const handlePersonalizedRecommendationsClick = () => {
+        setSearchQuery("");
+        setFilteredResults(null);
+        setFilteredTutores(null);
+        setActiveFilters(null);
+        setInternalPage(1);
+    };
+
     return (
-        <main className="publicaciones-list">
+        <div className="publicaciones-list">
             <div className="publicaciones-list__header">
-                <h1 className="publicaciones-list__title">{title}</h1>
+                <div className="publicaciones-list__title-actions">
+                    <h1 className="publicaciones-list__title">{title}</h1>
+                    {showRecommendationsButton && (
+                        <button
+                            type="button"
+                            className="button button--small"
+                            onClick={handlePersonalizedRecommendationsClick}
+                        >
+                            Recomendados para ti
+                        </button>
+                    )}
+                </div>
                 <div className="publicaciones-list__search-actions" ref={filterAnchorRef}>
                     <SearchBar
                         value={searchQuery}
@@ -310,24 +384,110 @@ export default function PublicacionesList({
             </div>
 
             <div className="publicaciones-list__content">
+                {!showingSearchResults &&
+                    !showingFiltered &&
+                    !showingFilteredTutores &&
+                    !loading.global &&
+                    morePublicaciones.length === 0 &&
+                    !showRecommendedSection &&
+                    !showPopularSection &&
+                    !showRecentsSection &&
+                    !showAdsSection && (
+                        <div className="publicaciones-list__empty">
+                            <p>{tEmpty("description")}</p>
+                        </div>
+                    )}
 
-                {!showingSearchResults && !showingFiltered && !loading.global && morePublicaciones.length === 0 && (
-                    <div className="publicaciones-list__empty">
-                        <p>{tEmpty("description")}</p>
-                    </div>
-                )}
-
-                {!showingSearchResults && !showingFiltered ? (
+                {showingSearchResults ? (
+                    <section className="publicaciones-list__search-results">
+                        <h2 className="publicaciones-list__section-title">
+                            {isSearchLoading
+                                ? tSearch("searching")
+                                : `Resultados (${searchResults.length})`}
+                        </h2>
+                        {isSearchLoading ? (
+                            <PublicacionesGridSkeleton count={itemsPerPage} />
+                        ) : searchResults.length === 0 ? (
+                            <div className="publicaciones-list__empty">
+                                <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="publicaciones-list__grid">
+                                    {visibleGridData.map(renderPostCard)}
+                                </div>
+                                {renderPagination("Paginación de resultados")}
+                            </>
+                        )}
+                    </section>
+                ) : showingFilteredTutores ? (
+                    <section className="publicaciones-list__search-results">
+                        <h2 className="publicaciones-list__section-title">
+                            {filterLoading
+                                ? tSearch("searching")
+                                : `Resultados (${filteredTutores!.length})`}
+                        </h2>
+                        {filterLoading ? (
+                            <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
+                                <SkeletonHorizontalCarousel count={4} renderItem={() => <UserResCardSkeleton />} />
+                            </div>
+                        ) : filteredTutores!.length === 0 ? (
+                            <div className="publicaciones-list__empty">
+                                <p>{tEmpty("description")}</p>
+                            </div>
+                        ) : (
+                            <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
+                                <HorizontalCarousel showPagination={false}>
+                                    {filteredTutores!.map((tutor) => (
+                                        <div key={tutor.id_usuario} className="h-carousel__item">
+                                            <UserResCard
+                                                userId={tutor.id_usuario}
+                                                userName={tutor.nombre}
+                                                userRating={toVisualStarRating(tutor.calificacion)}
+                                                userImageUrl={
+                                                    tutor.url_foto_perfil
+                                                        ? normalizeImageUrl(tutor.url_foto_perfil)
+                                                        : undefined
+                                                }
+                                                onDetallesClick={() => setSelectedTutor(tutor)}
+                                            />
+                                        </div>
+                                    ))}
+                                </HorizontalCarousel>
+                            </div>
+                        )}
+                    </section>
+                ) : showingFiltered ? (
+                    <section className="publicaciones-list__search-results">
+                        <h2 className="publicaciones-list__section-title">
+                            {filterLoading
+                                ? tSearch("searching")
+                                : `Resultados (${filteredResults!.length})`}
+                        </h2>
+                        {filterLoading ? (
+                            <PublicacionesGridSkeleton count={itemsPerPage} />
+                        ) : filteredResults!.length === 0 ? (
+                            <div className="publicaciones-list__empty">
+                                <p>{tEmpty("description")}</p>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="publicaciones-list__grid">
+                                    {visibleGridData.map(renderPostCard)}
+                                </div>
+                                {renderPagination("Paginación de resultados filtrados")}
+                            </>
+                        )}
+                    </section>
+                ) : (
                     <div className="publicaciones-list__sections">
-
-                        {/* ── ADS ── */}
                         {showAdsSection && (
                             <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
+                                <h2 className="publicaciones-list__section-title">{t("ads")}</h2>
                                 <RenderError error={errors.ads} />
                                 {loading.ads ? (
                                     <div className="publicaciones-list__carousel-wrap">
-                                        <AdBannerSkeleton />
+                                        <SkeletonHorizontalCarousel count={3} renderItem={() => <AdBannerSkeleton />} />
                                     </div>
                                 ) : (
                                     <div className="publicaciones-list__carousel-wrap">
@@ -347,10 +507,9 @@ export default function PublicacionesList({
                             </section>
                         )}
 
-                        {/* ── RECOMENDADOS ── */}
                         {showRecommendedSection && (
                             <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
+                                <h2 className="publicaciones-list__section-title">{t("recomendado")}</h2>
                                 <RenderError error={errors.recommended} />
                                 {loading.recommended ? (
                                     <div className="publicaciones-list__carousel-wrap">
@@ -359,20 +518,9 @@ export default function PublicacionesList({
                                 ) : (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <HorizontalCarousel showPagination={false}>
-                                            {recommendedPublicaciones.map(p => (
+                                            {recommendedPublicaciones.map((p) => (
                                                 <div key={p.id_publicacion} className="h-carousel__item">
-                                                    <PostCard
-                                                        publicacionId={p.id_publicacion}
-                                                        tags={mapTags(p)}
-                                                        title={p.titulo}
-                                                        price={parseFloat(p.precio)}
-                                                        description={p.descripcion}
-                                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                                        estado={p.estado}
-                                                        onDetallesClick={() => handleCardClick(p)}
-                                                        initialLikeado={p.likeado ?? false}
-                                                        initialLikes={p.me_gusta}
-                                                    />
+                                                    {renderPostCard(p)}
                                                 </div>
                                             ))}
                                         </HorizontalCarousel>
@@ -381,10 +529,9 @@ export default function PublicacionesList({
                             </section>
                         )}
 
-                        {/* ── POPULARES ── */}
                         {showPopularSection && (
                             <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('populares')}</h2>
+                                <h2 className="publicaciones-list__section-title">{t("populares")}</h2>
                                 <RenderError error={errors.popular} />
                                 {loading.popular ? (
                                     <div className="publicaciones-list__carousel-wrap">
@@ -393,18 +540,9 @@ export default function PublicacionesList({
                                 ) : (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <HorizontalCarousel showPagination={false}>
-                                            {popularPublicaciones.map(p => (
+                                            {popularPublicaciones.map((p) => (
                                                 <div key={p.id_publicacion} className="h-carousel__item">
-                                                    <PostCard
-                                                        publicacionId={p.id_publicacion}
-                                                        tags={mapTags(p)}
-                                                        title={p.titulo}
-                                                        price={parseFloat(p.precio)}
-                                                        description={p.descripcion}
-                                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                                        estado={p.estado}
-                                                        onDetallesClick={() => handleCardClick(p)}
-                                                    />
+                                                    {renderPostCard(p)}
                                                 </div>
                                             ))}
                                         </HorizontalCarousel>
@@ -413,7 +551,6 @@ export default function PublicacionesList({
                             </section>
                         )}
 
-                        {/* ── TUTORES ── */}
                         {showTutorsSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t("tutores")}</h2>
@@ -448,10 +585,9 @@ export default function PublicacionesList({
                             </section>
                         )}
 
-                        {/* ── RECIENTES ── */}
                         {showRecentsSection && (
                             <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
+                                <h2 className="publicaciones-list__section-title">{t("reciente")}</h2>
                                 <RenderError error={errors.recents} />
                                 {loading.recents ? (
                                     <div className="publicaciones-list__carousel-wrap">
@@ -460,18 +596,9 @@ export default function PublicacionesList({
                                 ) : (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <HorizontalCarousel showPagination={false}>
-                                            {recentsPublicaciones.map(p => (
+                                            {recentsPublicaciones.map((p) => (
                                                 <div key={p.id_publicacion} className="h-carousel__item">
-                                                    <PostCard
-                                                        publicacionId={p.id_publicacion}
-                                                        tags={mapTags(p)}
-                                                        title={p.titulo}
-                                                        price={parseFloat(p.precio)}
-                                                        description={p.descripcion}
-                                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                                        estado={p.estado}
-                                                        onDetallesClick={() => handleCardClick(p)}
-                                                    />
+                                                    {renderPostCard(p)}
                                                 </div>
                                             ))}
                                         </HorizontalCarousel>
@@ -480,88 +607,24 @@ export default function PublicacionesList({
                             </section>
                         )}
 
-                        {/* ── EXPLORAR ── */}
                         <section className="publicaciones-list__section">
-                            <h2 className="publicaciones-list__section-title">{t('explorar')}</h2>
+                            <h2 className="publicaciones-list__section-title">{t("explorar")}</h2>
                             <RenderError error={errors.more} />
                             {isMoreGridLoading ? (
                                 <PublicacionesGridSkeleton count={itemsPerPage} />
                             ) : (
-                                <div className="publicaciones-list__grid">
-                                    {visibleGridData.map(p => (
-                                        <PostCard
-                                            key={p.id_publicacion}
-                                            publicacionId={p.id_publicacion}
-                                            tags={mapTags(p)}
-                                            title={p.titulo}
-                                            price={parseFloat(p.precio)}
-                                            description={p.descripcion}
-                                            images={p.imagenes.map((img) => img.url_imagen)}
-                                            estado={p.estado}
-                                            onDetallesClick={() => handleCardClick(p)}
-                                            initialLikeado={p.likeado ?? false}
-                                            initialLikes={p.me_gusta}
-                                        />
-                                    ))}
-                                </div>
+                                <>
+                                    <div className="publicaciones-list__grid">
+                                        {visibleGridData.map(renderPostCard)}
+                                    </div>
+                                    {renderPagination("Paginación de publicaciones")}
+                                </>
                             )}
-                            {!isMoreGridLoading && renderPagination("Paginación de publicaciones")}
                         </section>
-
                     </div>
-
-                ) : showingFiltered ? (
-                    /* ── RESULTADOS FILTRADOS ── */
-                    <section className="publicaciones-list__search-results">
-                        <h2 className="publicaciones-list__section-title">Resultados ({filteredResults!.length})</h2>
-                        <div className="publicaciones-list__grid">
-                            {visibleGridData.map(p => (
-                                <PostCard
-                                    key={p.id_publicacion}
-                                    publicacionId={p.id_publicacion}
-                                    tags={mapTags(p)}
-                                    title={p.titulo}
-                                    price={parseFloat(p.precio)}
-                                    description={p.descripcion}
-                                    images={p.imagenes.map((img) => img.url_imagen)}
-                                    estado={p.estado}
-                                    onDetallesClick={() => handleCardClick(p)}
-                                    initialLikeado={p.likeado ?? false}
-                                    initialLikes={p.me_gusta}
-                                />
-                            ))}
-                        </div>
-                        {renderPagination("Paginación de resultados filtrados")}
-                    </section>
-
-                ) : (
-                    /* ── RESULTADOS DE BÚSQUEDA ── */
-                    <section className="publicaciones-list__search-results">
-                        <h2 className="publicaciones-list__section-title">Resultados ({searchResults.length})</h2>
-                        <div className="publicaciones-list__grid">
-                            {visibleGridData.map(p => (
-                                <PostCard
-                                    key={p.id_publicacion}
-                                    publicacionId={p.id_publicacion}
-                                    tags={mapTags(p)}
-                                    title={p.titulo}
-                                    price={parseFloat(p.precio)}
-                                    description={p.descripcion}
-                                    images={p.imagenes.map((img) => img.url_imagen)}
-                                    estado={p.estado}
-                                    onDetallesClick={() => handleCardClick(p)}
-                                    initialLikeado={p.likeado ?? false}
-                                    initialLikes={p.me_gusta}
-                                />
-                            ))}
-                        </div>
-                        {renderPagination("Paginación de resultados")}
-                    </section>
                 )}
-
             </div>
 
-            {/* ── MODALES ── */}
             {selectedPublicacion && (
                 <DetallePublicacion
                     isOpen={true}
@@ -571,7 +634,7 @@ export default function PublicacionesList({
                     price={parseFloat(selectedPublicacion.precio)}
                     description={selectedPublicacion.descripcion}
                     imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
-                    images={selectedPublicacion.imagenes.map(img => img.url_imagen)}
+                    images={selectedPublicacion.imagenes.map((img) => img.url_imagen)}
                     tags={mapPublicacionEtiquetasToTags(selectedPublicacion.etiquetas, {
                         name: selectedPublicacion.tipoPerfil?.tipo_perfil ?? tTags("negocio"),
                     })}
@@ -615,6 +678,6 @@ export default function PublicacionesList({
                     onVerPerfil={navigateToTutorProfile}
                 />
             )}
-        </main>
+        </div>
     );
 }

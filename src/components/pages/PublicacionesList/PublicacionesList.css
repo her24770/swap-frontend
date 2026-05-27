@@ -73,6 +73,14 @@
   }
 }
 
+.publicaciones-list__title-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  flex-shrink: 0;
+}
+
 .publicaciones-list__title {
   font-family: var(--swap-font-titulos);
   font-size: 1.5rem;
