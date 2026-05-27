@@ -5,7 +5,7 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: 9999rem;
   font-family: var(--swap-font-textos);
   font-size: 0.7rem;
   font-weight: 600;
@@ -55,13 +55,14 @@
 .tag-badge--lg {
   font-size: 0.75rem;
   padding: 0.25rem 0.8rem;
-  display: inline-block; 
+  display: inline-flex; 
+  justify-content: center;
+  align-items: center;
+  height: 2.1rem;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  vertical-align: middle; 
-  text-align: center;
 }
 
 .tag-badge--lg:hover {

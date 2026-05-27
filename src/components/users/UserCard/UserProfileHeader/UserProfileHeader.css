@@ -107,6 +107,23 @@
   white-space: nowrap;
 }
 
+.etiquetas-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--swap-primary-color);
+  background-color: transparent;
+  border: 1.5px solid var(--swap-primary-color);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+
 .user-profile-header__edit-btn:hover {
   background-color: var(--swap-primary-color);
   color: #ffffff;

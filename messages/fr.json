@@ -358,7 +358,8 @@
 			"updateErrorFallback": "Impossible de mettre à jour le profil"
 		},
 		"actions": {
-			"editProfile": "Modifier le profil"
+			"editProfile": "Modifier le profil",
+			"editTags": "Etiquettes"
 		},
 		"aria": {
 			"editProfile": "Modifier le profil"

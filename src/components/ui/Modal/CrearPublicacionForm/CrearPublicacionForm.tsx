@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useFormCrearPublicacion, useFormEditarPublicacion, type UseFormEditarPublicacionReturn } from "../../../../hooks/useFormPublicacion";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useEstados } from "../../../../hooks/useEstados";
+import ImageCropper from "../ActualizarPerfil/SubirImagen/ImageCropper";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
 import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion } from "../../../../schemas/zodSchemas";
@@ -37,7 +38,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const tTags = useTranslations("common.tags");
   const testado = useTranslations("posts.estado");
 
-  const { onSuccess, onCancel} =props;
+  const { onSuccess } = props;
   const isEditing = props.mode === "editar";
   const tipoPublicacionSeleccionada = isEditing
     ? ((props as EditarPublicacionFormProps).defaultValues?.tipo_publicacion ?? "material")
@@ -74,6 +75,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [pendingCropFiles, setPendingCropFiles] = useState<File[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -115,6 +118,55 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       : tipoPublicacionSeleccionada === "tutoria"
         ? tTags("tutoria")
         : tTags("negocio");
+
+  const fileToDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("No fue posible leer la imagen"));
+      reader.readAsDataURL(file);
+    });
+
+  const beginCropFlow = async (files: FileList | File[]) => {
+    try {
+      const filesArray = Array.from(files).filter((file) => file.type.startsWith("image/"));
+      if (filesArray.length === 0) return;
+
+      const [firstFile, ...restFiles] = filesArray;
+      setPendingCropFiles(restFiles);
+      const src = await fileToDataUrl(firstFile);
+      setImageToCrop(src);
+    } catch (error) {
+      console.error(error);
+      setImageToCrop(null);
+      setPendingCropFiles([]);
+    }
+  };
+
+  const handleCropCancel = () => {
+    setImageToCrop(null);
+    setPendingCropFiles([]);
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
+    try {
+      addImages([croppedFile]);
+
+      if (pendingCropFiles.length === 0) {
+        setImageToCrop(null);
+        return;
+      }
+
+      const [nextFile, ...restFiles] = pendingCropFiles;
+      setPendingCropFiles(restFiles);
+      const src = await fileToDataUrl(nextFile);
+      setImageToCrop(src);
+    } catch (error) {
+      console.error(error);
+      setImageToCrop(null);
+      setPendingCropFiles([]);
+    }
+  };
 
   return (
 
@@ -278,7 +330,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
               onDrop={(e) => {
                 e.preventDefault();
                 setDragOver(false);
-                addImages(e.dataTransfer.files);
+                void beginCropFlow(e.dataTransfer.files);
               }}
             >
               <CloudUpload size={40} strokeWidth={1.5} className="crear-publicacion__upload-icon" />
@@ -289,7 +341,11 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 className="crear-publicacion__upload-input"
-                onChange={(e) => { if (e.target.files) addImages(e.target.files); }}
+                onChange={(e) => {
+                  if (!e.target.files) return;
+                  void beginCropFlow(e.target.files);
+                  e.currentTarget.value = "";
+                }}
               />
             </div>
 
@@ -346,6 +402,18 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
           </button>
         </div>
       </form>
+
+      {imageToCrop && (
+        <ImageCropper
+          imageSrc={imageToCrop}
+          onCropComplete={(file) => {
+            void handleCropComplete(file);
+          }}
+          onCancel={handleCropCancel}
+          cropShape="rect"
+          aspect={1}
+        />
+      )}
     </div>
   );
 }

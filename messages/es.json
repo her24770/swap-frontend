@@ -362,7 +362,8 @@
 			"updateErrorFallback": "No fue posible actualizar el perfil"
 		},
 		"actions": {
-			"editProfile": "Editar perfil"
+			"editProfile": "Editar perfil",
+			"editTags": "Etiquetas"
 		},
 		"aria": {
 			"editProfile": "Editar perfil"

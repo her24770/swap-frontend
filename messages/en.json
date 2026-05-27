@@ -362,7 +362,8 @@
 			"updateErrorFallback": "Couldn't update profile"
 		},
 		"actions": {
-			"editProfile": "Edit profile"
+			"editProfile": "Profile",
+			"editTags": "Tags"
 		},
 		"aria": {
 			"editProfile": "Edit profile"
