@@ -43,9 +43,14 @@
 
 /* 2. CONTENEDOR PRINCIPAL */
 .publicaciones-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
   min-height: 100%;
   background-color: var(--swap-primary-background);
   padding: 1rem;
+  box-sizing: border-box;
 }
 
 @media (min-width: 48rem) {
@@ -82,17 +87,17 @@
 }
 
 /* 4. GRID */
-.publicaciones-list__sections {
-  display: flex;
-  flex-direction: column;
-  gap: var(--section-gap);
-}
-
+.publicaciones-list__sections,
 .publicaciones-list__search-results {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  width: 100%;
   gap: var(--section-content-gap);
-  margin-top: var(--section-content-gap);
+}
+
+.publicaciones-list__sections {
+  gap: var(--section-gap);
 }
 
 .publicaciones-list__grid {
@@ -294,5 +299,10 @@
 }
 
 .publicaciones-list__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   width: 100%;
+  min-height: 0;
+  background-color: var(--swap-primary-background);
 }

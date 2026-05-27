@@ -1,0 +1,12 @@
+.carousel-skeleton {
+  display: flex;
+  gap: var(--card-gap, 1rem);
+  overflow: hidden;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+
+.publicaciones-list .carousel-skeleton .h-carousel__item {
+  flex: 0 0 auto;
+  width: calc((100% - (var(--card-gap) * (var(--grid-cols) - 1))) / var(--grid-cols));
+}

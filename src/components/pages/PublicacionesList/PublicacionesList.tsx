@@ -21,6 +21,10 @@ import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosMo
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
+import { SkeletonHorizontalCarousel } from "../../ui/HorizontalCarousel/SkeletonHorizontalCarousel/SkeletonHorizontalCarousel";
+import { PublicacionesGridSkeleton } from "./PublicacionesGridSkeleton";
+import { UserResCardSkeleton } from "../../posts/UserResumida/UserResCardSkeleton/UserResCardSkeleton";
+import { AdBannerSkeleton } from "../../perfiles/Vendedor/AdBanner/AdBannerSkeleton/AdBannerSkeleton";
 
 
 const VISIBLE_PAGINATION_PAGES = 5;
@@ -257,7 +261,19 @@ export default function PublicacionesList({
     const tutorsSectionLoading =
         Boolean(loading.tutores) && tutoriaSourcePublicaciones.length === 0;
 
-    const showTutorsSection = tipo === "tutoria" && tutoriaSourcePublicaciones.length > 0;
+    const showTutorsSection =
+        tipo === "tutoria" && (tutorEntries.length > 0 || tutorsSectionLoading);
+
+    const showRecommendedSection =
+        Boolean(loading.recommended) || recommendedPublicaciones.length > 0;
+    const showPopularSection =
+        Boolean(loading.popular) || popularPublicaciones.length > 0;
+    const showRecentsSection =
+        Boolean(loading.recents) || recentsPublicaciones.length > 0;
+    const showAdsSection = Ads.length > 0 || Boolean(loading.ads);
+    const isMoreGridLoading =
+        Boolean(loading.more) && visibleGridData.length === 0;
+    const isSearchLoading = showingSearchResults && searchLoading;
 
     const navigateToTutorProfile = (userId: number) => {
         setSelectedTutor(null);
@@ -314,7 +330,7 @@ export default function PublicacionesList({
     };
 
     return (
-        <main className="publicaciones-list">
+        <div className="publicaciones-list">
             <div className="publicaciones-list__header">
                 <h1 className="publicaciones-list__title">{title}</h1>
                 <div className="publicaciones-list__search-actions" ref={filterAnchorRef}>
@@ -354,21 +370,13 @@ export default function PublicacionesList({
                 </div>
             </div>
             <div className="publicaciones-list__content">
-                    {/* Estado de carga global */}
-                    {(loading.global && !showingSearchResults) && morePublicaciones.length === 0 && (
-                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-                    )}
-                    {showingSearchResults && searchLoading && (
-                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-                    )}
-                    
-                    {showingSearchResults && !searchLoading && searchResults.length === 0 && (
-                        <div className="publicaciones-list__empty">
-                            <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
-                        </div>
-                    )}
-
-                    {!showingSearchResults && !loading.global && morePublicaciones.length === 0 && (
+                    {!showingSearchResults &&
+                        !loading.global &&
+                        morePublicaciones.length === 0 &&
+                        !showRecommendedSection &&
+                        !showPopularSection &&
+                        !showRecentsSection &&
+                        !showAdsSection && (
                         <div className="publicaciones-list__empty">
                             <p>{tEmpty("description")}</p>
                         </div>
@@ -377,13 +385,15 @@ export default function PublicacionesList({
                     {!showingSearchResults ? (
                         <div className="publicaciones-list__sections">
         
-                        {/* SECCIÓN ADS si el arreglo no está vacío */}
-                        {Ads.length > 0 && (    
-                        
+                        {showAdsSection && (
                         <section className="publicaciones-list__section">
                             <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
                             <RenderError error={errors.ads} />
-                            {loading.ads ? <p>Cargando anuncios...</p> : (
+                            {loading.ads ? (
+                                <div className="publicaciones-list__carousel-wrap">
+                                    <AdBannerSkeleton/>
+                                </div>
+                                ) : (
                                 <div className="publicaciones-list__carousel-wrap">
                                     <AnunciosCarousel>
                                         {Ads.map((ad, index) => (
@@ -402,12 +412,15 @@ export default function PublicacionesList({
                         )}
 
 
-                        {/* SECCIÓN RECOMENDADOS */}
-                        {recommendedPublicaciones.length > 0 &&(
+                        {showRecommendedSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
                                 <RenderError error={errors.recommended} />
-                                {loading.recommended ? <p>Buscando sugerencias...</p> : (
+                                {loading.recommended ? (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <SkeletonHorizontalCarousel count={4}/>
+                                    </div>
+                                ) : (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <HorizontalCarousel showPagination={false}>
                                             {recommendedPublicaciones.map(p => (
@@ -432,12 +445,15 @@ export default function PublicacionesList({
                             </section>
                         )}
 
-                        {/* SECCIÓN POPULARES */}
-                        {popularPublicaciones.length > 0 && (
+                        {showPopularSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t('populares')}</h2>
                                 <RenderError error={errors.popular} />
-                                {loading.popular ? <p>Buscando sugerencias...</p> : (
+                                {loading.popular ? (
+                                <div className="publicaciones-list__carousel-wrap">
+                                    <SkeletonHorizontalCarousel count={4}/>
+                                </div>
+                                ) : (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <HorizontalCarousel showPagination={false}>
                                             {popularPublicaciones.map(p => (
@@ -466,8 +482,11 @@ export default function PublicacionesList({
                                     <h2 className="publicaciones-list__section-title">{t("tutores")}</h2>
                                     <RenderError error={errors.tutores ?? errors.popular ?? errors.recents} />
                                     {tutorsSectionLoading ? (
-                                        <p>{t("loadingTutores")}</p>
-                                    ) : tutorEntries.length === 0 ? (
+                                        <div className="publicaciones-list__carousel-wrap">
+                                            <SkeletonHorizontalCarousel count={4} renderItem={() => <UserResCardSkeleton />}/>
+                                        </div>
+                                        ) 
+                                     : tutorEntries.length === 0 ? (
                                         <p>{t("noTutores")}</p>
                                     ) : (
                                         <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
@@ -493,12 +512,15 @@ export default function PublicacionesList({
                                 </section>
                             )}
 
-                            {/* SECCIÓN RECIENTES */}
-                            { recentsPublicaciones.length > 0 && (
+                            {showRecentsSection && (
                                 <section className="publicaciones-list__section">
                                     <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
                                     <RenderError error={errors.recents} />
-                                    {loading.recents ? <p>Cargando recientes...</p> : (
+                                    {loading.recents ? (
+                                        <div className="publicaciones-list__carousel-wrap">
+                                            <SkeletonHorizontalCarousel count={4}/>
+                                        </div>
+                                        ) : (
                                         <div className="publicaciones-list__carousel-wrap">
                                             <HorizontalCarousel showPagination={false}>
                                                 {recentsPublicaciones.map(p => (
@@ -522,52 +544,68 @@ export default function PublicacionesList({
                             )}
 
 
-                            {/* EXPLORA MÁS */}
                             <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title"> {t('explorar')}</h2>
+                                <h2 className="publicaciones-list__section-title">{t("explorar")}</h2>
                                 <RenderError error={errors.more} />
-                                <div className="publicaciones-list__grid">
-                                    {visibleGridData.map(p => (
-                                        <PostCard
-                                            key={p.id_publicacion}
-                                            publicacionId={p.id_publicacion}
-                                            tags={mapTags(p)}
-                                            title={p.titulo}
-                                            price={parseFloat(p.precio)}
-                                            description={p.descripcion}
-                                            images={p.imagenes.map((img) => img.url_imagen)}
-                                            estado={p.estado}
-                                            onDetallesClick={() => handleCardClick(p)}
-                                            initialLikeado={p.likeado ?? false}
-                                            initialLikes={p.me_gusta}
-                                        />
-                                    ))}
-                                </div>
-                              {renderPagination("Paginación de publicaciones")}
+                                {isMoreGridLoading ? (
+                                    <PublicacionesGridSkeleton count={itemsPerPage} />
+                                ) : (
+                                    <div className="publicaciones-list__grid">
+                                        {visibleGridData.map((p) => (
+                                            <PostCard
+                                                key={p.id_publicacion}
+                                                publicacionId={p.id_publicacion}
+                                                tags={mapTags(p)}
+                                                title={p.titulo}
+                                                price={parseFloat(p.precio)}
+                                                description={p.descripcion}
+                                                images={p.imagenes.map((img) => img.url_imagen)}
+                                                estado={p.estado}
+                                                onDetallesClick={() => handleCardClick(p)}
+                                                initialLikeado={p.likeado ?? false}
+                                                initialLikes={p.me_gusta}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                                {!isMoreGridLoading && renderPagination("Paginación de publicaciones")}
                             </section>
                         </div>
                     ) : (
-                        /* RESULTADOS DE BÚSQUEDA */
                         <section className="publicaciones-list__search-results">
-                            <h2 className="publicaciones-list__section-title">Resultados ({searchResults.length})</h2>
-                            <div className="publicaciones-list__grid">
-                                {visibleGridData.map(p => (
-                                    <PostCard
-                                        key={p.id_publicacion}
-                                        publicacionId={p.id_publicacion}
-                                        tags={mapTags(p)}
-                                        title={p.titulo}
-                                        price={parseFloat(p.precio)}
-                                        description={p.descripcion}
-                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                        estado={p.estado}
-                                        onDetallesClick={() => handleCardClick(p)}
-                                        initialLikeado={p.likeado ?? false}
-                                        initialLikes={p.me_gusta}
-                                    />
-                                ))}
-                            </div>
-                            {renderPagination("Paginación de resultados")}
+                            <h2 className="publicaciones-list__section-title">
+                                {isSearchLoading
+                                    ? tSearch("searching")
+                                    : `Resultados (${searchResults.length})`}
+                            </h2>
+                            {isSearchLoading ? (
+                                <PublicacionesGridSkeleton count={itemsPerPage} />
+                            ) : searchResults.length === 0 ? (
+                                <div className="publicaciones-list__empty">
+                                    <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="publicaciones-list__grid">
+                                        {visibleGridData.map((p) => (
+                                            <PostCard
+                                                key={p.id_publicacion}
+                                                publicacionId={p.id_publicacion}
+                                                tags={mapTags(p)}
+                                                title={p.titulo}
+                                                price={parseFloat(p.precio)}
+                                                description={p.descripcion}
+                                                images={p.imagenes.map((img) => img.url_imagen)}
+                                                estado={p.estado}
+                                                onDetallesClick={() => handleCardClick(p)}
+                                                initialLikeado={p.likeado ?? false}
+                                                initialLikes={p.me_gusta}
+                                            />
+                                        ))}
+                                    </div>
+                                    {renderPagination("Paginación de resultados")}
+                                </>
+                            )}
                         </section>
                     )}
             </div>
@@ -621,6 +659,6 @@ export default function PublicacionesList({
                     onVerPerfil={navigateToTutorProfile}
                 />
             )}
-        </main>
+        </div>
     );
 }
