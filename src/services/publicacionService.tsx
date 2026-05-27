@@ -1,5 +1,5 @@
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse} from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult} from "../types/publicacion";
 
 interface GuardadoPublicacion {
   id_usuario: number;
@@ -27,7 +27,7 @@ function normalizarGuardados(data: GuardadosResponse["data"]): Publicacion[] {
 export const publicacionService = {
 
 
-    async getAll(filters?: PublicacionFilters): Promise<Publicacion[]> {
+    async getAll(filters?: PublicacionFilters): Promise<PublicacionesResult> {
 
     // Convertir el objeto de filtros a query params 
     const params = new URLSearchParams();
@@ -43,7 +43,10 @@ export const publicacionService = {
     const response = await apiClient.get<PublicacionesResponse>(`/api/publicacion?${params.toString()}`);
     
     
-    return response.data;
+    return {
+      data: response.data,
+      total: response.total ?? response.data.length,
+    };
   },
 
   async getGlobalRecommendations(tipo?: string): Promise<Publicacion[]> {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
@@ -16,7 +16,6 @@ import { useAnuncios } from "../../hooks/fetch/useAnuncios";
 import "./seccion.css";
 
 const ITEMS_PER_PAGE = 12;
-const PUBLICACIONES_FETCH_LIMIT = 100;
 
 const MOCK_ADs = [ 
   {
@@ -52,8 +51,9 @@ export default function HomePage() {
   const t = useTranslations('home');
   const tTags = useTranslations('common.tags');
   const router = useRouter();
+  const [morePage, setMorePage] = useState(1);
 
-  const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: PUBLICACIONES_FETCH_LIMIT });
+  const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: ITEMS_PER_PAGE, page: morePage });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
   const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({personalized: true});
   const { data: popularData, loading: popularLoading, error: popularError } = usePublicaciones({ recommended: true });
@@ -95,6 +95,9 @@ export default function HomePage() {
         recommendedPublicaciones={recommendedData || []}
         popularPublicaciones={popularData || []}
         morePublicaciones={moreData || []}
+        totalPublicaciones={moreTotal}
+        currentPage={morePage}
+        onPageChange={setMorePage}
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}

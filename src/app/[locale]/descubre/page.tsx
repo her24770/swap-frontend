@@ -1,4 +1,5 @@
 "use client";
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
@@ -6,12 +7,12 @@ import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
 import "../seccion.css";
 
 const ITEMS_PER_PAGE = 12;
-const PUBLICACIONES_FETCH_LIMIT = 100;
 
 export default function DescubrePage() {
   const t = useTranslations('descubre');
+  const [morePage, setMorePage] = useState(1);
 
-  const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: PUBLICACIONES_FETCH_LIMIT });
+  const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: ITEMS_PER_PAGE, page: morePage });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
   const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({recommended: true});
 
@@ -37,6 +38,9 @@ export default function DescubrePage() {
         recentsPublicaciones={recentsData || []}
         recommendedPublicaciones={recommendedData || []}
         morePublicaciones={moreData || []}
+        totalPublicaciones={moreTotal}
+        currentPage={morePage}
+        onPageChange={setMorePage}
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}

@@ -49,6 +49,12 @@ export interface Publicacion {
 export interface PublicacionesResponse {
   message: string;
   data: Publicacion[];
+  total?: number;
+}
+
+export interface PublicacionesResult {
+  data: Publicacion[];
+  total: number;
 }
 
 // Filtros para obtener publicaciones del api.
