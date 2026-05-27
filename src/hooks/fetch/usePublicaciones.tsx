@@ -5,6 +5,7 @@ import type { Publicacion, PublicacionFilters } from "../../types/publicacion";
 export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
   const { publicacion: service } = useServices();
   const [data, setData] = useState<Publicacion[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,10 +16,14 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
       let result: Publicacion[];
       if (filters.recommended) {
         result = await service.getGlobalRecommendations(filters.tipo);
+        setTotal(result.length);
       } else if (filters.personalized) {
         result = await service.getPersonalizedRecommendations();
+        setTotal(result.length);
       } else {
-        result = await service.getAll(filters);
+        const response = await service.getAll(filters);
+        result = response.data;
+        setTotal(response.total);
       }
       setData(result);
     } catch (err: any) {
@@ -33,5 +38,5 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
     fetchPublicaciones(initialFilters);
   }, [JSON.stringify(initialFilters), fetchPublicaciones]);
 
-  return { data, loading, error, refetch: () => fetchPublicaciones(initialFilters) };
+  return { data, total, loading, error, refetch: () => fetchPublicaciones(initialFilters) };
 }

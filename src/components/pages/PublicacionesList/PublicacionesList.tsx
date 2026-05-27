@@ -23,7 +23,7 @@ import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
 
 
-const VISIBLE_PAGINATION_PAGES = 3;
+const VISIBLE_PAGINATION_PAGES = 5;
 
 type TutorEntry = {
     id_usuario: number;
@@ -103,6 +103,9 @@ type Props = {
     recommendedPublicaciones?: Publicacion[];
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
+    totalPublicaciones?: number;
+    currentPage?: number;
+    onPageChange?: (page: number) => void;
     popularPublicaciones?: Publicacion[];
     /** Optional extra tutoria publications for the tutors carousel (merged with recents/popular/more when tipo is tutoria). */
     tutoriaPublicaciones?: Publicacion[];
@@ -111,7 +114,7 @@ type Props = {
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
-    Ads: Anuncio[];
+    Ads?: Anuncio[];
 };
 
 export default function PublicacionesList({
@@ -120,6 +123,9 @@ export default function PublicacionesList({
     recentsPublicaciones = [],
     recommendedPublicaciones = [],
     morePublicaciones = [],
+    totalPublicaciones,
+    currentPage,
+    onPageChange,
     popularPublicaciones = [],
     tutoriaPublicaciones = [],
     loading,
@@ -135,7 +141,7 @@ export default function PublicacionesList({
     const tSearch = useTranslations('common.search');
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
+    const [internalPage, setInternalPage] = useState(1);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [selectedTutor, setSelectedTutor] = useState<TutorEntry | null>(null);
@@ -179,12 +185,17 @@ export default function PublicacionesList({
     const showingSearchResults = searchQuery.trim().length > 0;
 
     const mainSectionData = showingSearchResults ? searchResults : morePublicaciones;
-    const pageCount = Math.max(1, Math.ceil(mainSectionData.length / itemsPerPage));
-    const safeCurrentPage = Math.min(currentPage, pageCount);
+    const usesServerPagination = !showingSearchResults && totalPublicaciones !== undefined;
+    const totalItems = usesServerPagination ? totalPublicaciones : mainSectionData.length;
+    const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+    const activeCurrentPage = showingSearchResults || currentPage === undefined ? internalPage : currentPage;
+    const safeCurrentPage = Math.min(activeCurrentPage, pageCount);
     const visibleGridData = useMemo(() => {
+        if (usesServerPagination) return mainSectionData;
+
         const startIndex = (safeCurrentPage - 1) * itemsPerPage;
         return mainSectionData.slice(startIndex, startIndex + itemsPerPage);
-    }, [mainSectionData, safeCurrentPage, itemsPerPage]);
+    }, [mainSectionData, safeCurrentPage, itemsPerPage, usesServerPagination]);
     const paginationPages = useMemo(() => {
         const visiblePages = Math.min(VISIBLE_PAGINATION_PAGES, pageCount);
         const halfWindow = Math.floor(visiblePages / 2);
@@ -206,11 +217,11 @@ export default function PublicacionesList({
             (_, index) => startPage + index
         );
     }, [pageCount, safeCurrentPage]);
-    const hasPagination = mainSectionData.length > itemsPerPage;
+    const hasPagination = totalItems > itemsPerPage;
 
     useEffect(() => {
-        setCurrentPage(1);
-    }, [mainSectionData, itemsPerPage]);
+        setInternalPage(1);
+    }, [searchQuery, itemsPerPage]);
 
     const mapTags = (p: Publicacion) =>
         tagsForAll
@@ -265,6 +276,8 @@ export default function PublicacionesList({
     const renderPagination = (label: string) => {
         if (!hasPagination) return null;
 
+        const setPage = showingSearchResults || !onPageChange ? setInternalPage : onPageChange;
+
         return (
             <div className="publicaciones-list__pagination" aria-label={label}>
                 <button
@@ -272,7 +285,7 @@ export default function PublicacionesList({
                     type="button"
                     aria-label="Página anterior"
                     disabled={safeCurrentPage === 1}
-                    onClick={() => setCurrentPage((page) => Math.max(page - 1, 1))}
+                    onClick={() => setPage(Math.max(safeCurrentPage - 1, 1))}
                 >
                     <ChevronLeft size={16} aria-hidden />
                 </button>
@@ -282,7 +295,7 @@ export default function PublicacionesList({
                         className={`publicaciones-list__pagination-btn${page === safeCurrentPage ? " publicaciones-list__pagination-btn--active" : ""}`}
                         type="button"
                         aria-current={page === safeCurrentPage ? "page" : undefined}
-                        onClick={() => setCurrentPage(page)}
+                        onClick={() => setPage(page)}
                     >
                         {page}
                     </button>
@@ -292,7 +305,7 @@ export default function PublicacionesList({
                     type="button"
                     aria-label="Página siguiente"
                     disabled={safeCurrentPage === pageCount}
-                    onClick={() => setCurrentPage((page) => Math.min(page + 1, pageCount))}
+                    onClick={() => setPage(Math.min(safeCurrentPage + 1, pageCount))}
                 >
                     <ChevronRight size={16} aria-hidden />
                 </button>

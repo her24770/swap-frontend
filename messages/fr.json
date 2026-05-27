@@ -290,14 +290,18 @@
 			"purchases": "Achats",
 			"catalog": "Votre catalogue",
 			"ads": "Annonces",
-			"comments": "Commentaires et avis"
+			"comments": "Commentaires et avis",
+			"featured": "Publications en vedette"
 		},
 		"actions": {
 			"newPublication": "Nouvelle publication",
 			"changeAd": "Changer l'annonce",
-			"createAd": "Create ad",
+			"createAd":"Nouvelle annonce",
 			"editAd": "Edit ad",
-			"editSchedule": "Modifier l'horaire"
+			"editSchedule": "Modifier l'horaire",
+			"newPostMaterial": "Nouveau matériel",
+			"newPostNegocio": "Nouveau business",
+			"newPostTutoria": "Nouvelle tutoriale"
 		},
 		"modal": {
 			"createPublicationAria": "Créer une publication",

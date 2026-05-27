@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
@@ -10,14 +11,14 @@ import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/
 import { useAnuncios } from "../../../hooks/fetch/useAnuncios";
 
 const ITEMS_PER_PAGE = 12;
-const PUBLICACIONES_FETCH_LIMIT = 100;
 
 export default function MaterialesPage() {
   const t = useTranslations('materiales');
   const tTags = useTranslations('common.tags');
   const router = useRouter();
+  const [morePage, setMorePage] = useState(1);
 
-  const { data: moreData, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", all: true, limit: PUBLICACIONES_FETCH_LIMIT });
+  const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "material", all: true, limit: ITEMS_PER_PAGE, page: morePage });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ tipo: "material", limit: ITEMS_PER_PAGE, sort: "fecha" });
   const { data: popularData, loading: popularLoading, error: popularError } = usePublicaciones({ tipo: "material", recommended: true});
 
@@ -49,6 +50,9 @@ export default function MaterialesPage() {
         recentsPublicaciones={recentsData || []}
         popularPublicaciones={popularData || []}
         morePublicaciones={moreData || []}
+        totalPublicaciones={moreTotal}
+        currentPage={morePage}
+        onPageChange={setMorePage}
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}

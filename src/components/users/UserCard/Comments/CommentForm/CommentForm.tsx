@@ -1,91 +1,152 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Star } from "lucide-react";
 import { useTranslations } from 'next-intl';
+import { usePerspectivaInterna } from "../../../../../context/PerspectivaInternaContext";
+
+// Esquema e inputs compartidos de Zod y tu Hook de persistencia
+import { schemaResena, ResenaInput } from "../../../../../schemas/schemaResenas";
+import { useResena } from "../../../../../hooks/useResena";
+
 import "../../../../ui/Button/Button.css";
 import "./CommentForm.css";
 
 interface CommentFormProps {
   targetName: string;
-  onSubmit: (comment: string, rating: number, anonymous: boolean) => void;
+  idReceptor: number;
+  onSuccess?: () => void; 
   onCancel: () => void;
 }
 
-export default function CommentForm({ targetName, onSubmit, onCancel }: CommentFormProps) {
+export default function CommentForm({ targetName, idReceptor, onSuccess, onCancel }: CommentFormProps) {
   const t = useTranslations('comments.form');
   const tActions = useTranslations('common.actions');
+  
 
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0);
+  const { crearNuevaResena, loading, error: apiError } = useResena();
+  const {activeProfileMode } = usePerspectivaInterna();
+
   const [hoverRating, setHoverRating] = useState(0);
-  const [anonymous, setAnonymous] = useState(false);
 
-  const handleSubmit = () => {
-    if (!comment.trim()) return;
-    onSubmit(comment.trim(), rating, anonymous);
-    setComment("");
-    setRating(0);
-    setAnonymous(false);
+  const {
+    register,
+    handleSubmit,
+    setValue, 
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<ResenaInput>({
+    resolver: zodResolver(schemaResena),
+    defaultValues: {
+      id_receptor: idReceptor,
+      tipo_resena: activeProfileMode,
+      calificacion: 0, 
+      contenido: "",
+    },
+  });
+
+  // Registramos manualmente el campo calificacion para que Zod lo rastree
+  // ya que no hay un input <input type="number"> físico mapeado a él.
+  register("calificacion"); 
+
+  const currentRating = watch("calificacion");
+
+  const onSubmitForm = async (data: ResenaInput) => {
+    const resultado = await crearNuevaResena(data);
+    
+    if (resultado) {
+      reset(); 
+      if (onSuccess) {
+        onSuccess();
+      }
+    }
   };
 
   return (
-    <div className="comment-form">
-      {/* Estrellas de reseña */}
-      <div className="comment-form__stars">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            className={`comment-form__star${(hoverRating || rating) > i ? " comment-form__star--active" : ""}`}
-            onMouseEnter={() => setHoverRating(i + 1)}
-            onMouseLeave={() => setHoverRating(0)}
-            onClick={() => setRating(i + 1)}
-            aria-label={t('starsAria', { count: i + 1 })}
-          >
-            <Star size={24} fill={(hoverRating || rating) > i ? "currentColor" : "none"}/>
-          </button>
-        ))}
+    <form onSubmit={handleSubmit(onSubmitForm)} className="comment-form">
+      
+      <input type="hidden" {...register("id_receptor", { valueAsNumber: true })} />
+      <input type="hidden" {...register("tipo_resena")} />
+
+      {/* Selector interactivo de Estrellas */}
+      <div className="comment-form__stars-container">
+        <div className="comment-form__stars">
+          {Array.from({ length: 5 }).map((_, i) => {
+            const starValue = i + 1;
+            const isActive = (hoverRating || currentRating) >= starValue;
+
+            return (
+              <button
+                key={i}
+                type="button"
+                className={`comment-form__star${isActive ? " comment-form__star--active" : ""}`}
+                onMouseEnter={() => setHoverRating(starValue)}
+                onMouseLeave={() => setHoverRating(0)}
+                onClick={() => {
+                  if (!loading) {
+                    // ── SOLUCIÓN ──
+                    // Setea el número nativo y fuerza a Zod a validar en tiempo real
+                    setValue("calificacion", starValue, { shouldValidate: true });
+                  }
+                }}
+                disabled={loading}
+                aria-label={t('starsAria', { count: starValue })}
+              >
+                <Star size={24} fill={isActive ? "currentColor" : "none"} />
+              </button>
+            );
+          })}
+        </div>
+        {errors.calificacion && (
+          <p className="text-red-500 text-xs font-medium mt-1">{errors.calificacion.message}</p>
+        )}
       </div>
 
-      {/* Escribir comentario */}
-      <textarea
-        className="comment-form__textarea"
-        placeholder={t('placeholder', { name: targetName })}
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        rows={5}
-      />
+      {/* Entrada del texto de la Reseña */}
+      <div className="comment-form__textarea-container">
+        <textarea
+          {...register("contenido")}
+          className={`comment-form__textarea ${errors.contenido ? "comment-form__textarea--error" : ""}`}
+          placeholder={t('placeholder', { name: targetName })}
+          rows={5}
+          disabled={loading}
+        />
+        {errors.contenido && (
+          <p className="text-red-500 text-xs font-medium mt-1">{errors.contenido.message}</p>
+        )}
+      </div>
 
-      {/* Footer */}
+      {/* Feedback de Errores de la API de SWAP */}
+      {apiError && (
+        <div className="p-3 mb-2 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm font-medium">
+          {apiError}
+        </div>
+      )}
+
+      {/* Footer y Botones de Acción */}
       <div className="comment-form__footer">
-        <label className="comment-form__anonymous">
-          <input
-            type="checkbox"
-            checked={anonymous}
-            onChange={(e) => setAnonymous(e.target.checked)}
-            className="comment-form__checkbox"
-          />
-          {t('sendAnonymous')}
-        </label>
-        <div className="comment-form__actions">
+        <div className="comment-form__actions" style={{ marginLeft: "auto" }}> 
           <button
             type="button"
             className="button button--medium button--danger"
             onClick={onCancel}
+            disabled={loading}
           >
             {tActions('cancel')}
           </button>
           <button
-            type="button"
+            type="submit"
             className="button button--medium"
-            onClick={handleSubmit}
-            disabled={!comment.trim()}
+            disabled={loading}
           >
-            {tActions('send')} <ChevronRight size={16} />
+            {loading ? tActions('sending') || "Enviando..." : tActions('send')}{" "}
+            {!loading && <ChevronRight size={16} />}
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

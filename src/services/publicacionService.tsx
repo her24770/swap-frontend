@@ -1,6 +1,5 @@
-// src/services/publicacionService.ts
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse} from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult} from "../types/publicacion";
 
 interface GuardadoPublicacion {
   id_usuario: number;
@@ -28,7 +27,7 @@ function normalizarGuardados(data: GuardadosResponse["data"]): Publicacion[] {
 export const publicacionService = {
 
 
-    async getAll(filters?: PublicacionFilters): Promise<Publicacion[]> {
+    async getAll(filters?: PublicacionFilters): Promise<PublicacionesResult> {
 
     // Convertir el objeto de filtros a query params 
     const params = new URLSearchParams();
@@ -44,7 +43,10 @@ export const publicacionService = {
     const response = await apiClient.get<PublicacionesResponse>(`/api/publicacion?${params.toString()}`);
     
     
-    return response.data;
+    return {
+      data: response.data,
+      total: response.total ?? response.data.length,
+    };
   },
 
   async getGlobalRecommendations(tipo?: string): Promise<Publicacion[]> {
@@ -101,4 +103,14 @@ export const publicacionService = {
         await apiClient.delete(`/api/likes/${id}`);
     },
 
+    // publicaciones destacadas de usuario
+
+    async getDestacadasUsuario(id_usuario: number): Promise<Publicacion[]> {
+        const response = await apiClient.get<PublicacionesResponse>(`/api/publicacion/destacadas/user/${id_usuario}`);
+        return response.data;
+    },
+
+    async actualizarDestacadasUsuario(id_publicacion: number, destacar: boolean): Promise<void> {
+      await apiClient.patch(`/api/publicacion/${id_publicacion}/destacar`, { destacar });
+    },
 };

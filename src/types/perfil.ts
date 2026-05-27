@@ -1,6 +1,7 @@
 import type { Tag } from "./tag";
 import type { Contact } from "./comment";
 import type { UsuarioEtiquetaRel } from "../lib/tags";
+import type { Resena } from "./resena";
 
 export interface UserProfileData {
   id_usuario: number;
@@ -12,6 +13,8 @@ export interface UserProfileData {
   contacts: Contact[];
   tags?: Tag[];
   paymentMethod?: string;
+  calificacion?: number;
+  totalResenas?: number;
 }
 
 // Campos que el usuario puede editar desde el modal de perfil
@@ -31,9 +34,10 @@ export interface PerfilPublicoApi {
   nombre: string;
   descripcion: string | null;
   url_foto_perfil?: string;
-  calificacion: number | string | null;
+  calificacion: number;
   metodo_pago?: string;
   contactos?: unknown[];
   etiquetas?: UsuarioEtiquetaRel[];
+  total_resenas: number;
 }
 
