@@ -25,67 +25,6 @@ import UserResCard from "../../posts/UserResumida/UserResCard";
 
 const VISIBLE_PAGINATION_PAGES = 5;
 
-type TutorEntry = {
-    id_usuario: number;
-    nombre: string;
-    url_foto_perfil: string;
-    calificacion: number | null;
-    temas: string[];
-};
-
-function dedupePublicaciones(publicaciones: Publicacion[]): Publicacion[] {
-    const seen = new Set<number>();
-    return publicaciones.filter((p) => {
-        if (seen.has(p.id_publicacion)) return false;
-        seen.add(p.id_publicacion);
-        return true;
-    });
-}
-
-//Muestra usuario swap como nombre en lo que hay endpoint especifico para los detalles de usuario
-function resolveTutorDisplayName(pub: Publicacion): string {
-  return pub.usuario?.nombre?.trim() || "Usuario SWAP";
-}
-
-function buildTutorEntries(publicaciones: Publicacion[]): TutorEntry[] {
-    const byUserId = new Map<number, TutorEntry>();
-
-    for (const pub of publicaciones) {
-        const userId = pub.usuario?.id_usuario ?? pub.id_usuario;
-        if (!userId) continue;
-
-        const tema = pub.titulo?.trim();
-        const existing = byUserId.get(userId);
-
-        if (existing) {
-            if (tema && !existing.temas.includes(tema)) {
-                existing.temas.push(tema);
-            }
-            const apiName = pub.usuario?.nombre?.trim();
-            if (apiName) {
-                existing.nombre = apiName;
-            }
-            if (pub.usuario?.url_foto_perfil?.trim()) {
-                existing.url_foto_perfil = pub.usuario.url_foto_perfil.trim();
-            }
-            if (pub.usuario?.calificacion != null) {
-                existing.calificacion = pub.usuario.calificacion;
-            }
-            continue;
-        }
-
-        byUserId.set(userId, {
-            id_usuario: userId,
-            nombre: resolveTutorDisplayName(pub),
-            url_foto_perfil: pub.usuario?.url_foto_perfil?.trim() ?? "",
-            calificacion: pub.usuario?.calificacion ?? null,
-            temas: tema ? [tema] : [],
-        });
-    }
-
-    return Array.from(byUserId.values());
-}
-
 function toStarRating(calificacion: number | null | undefined): number {
     return Math.min(5, Math.max(0, Math.round(calificacion ?? 0)));
 }
@@ -104,6 +43,7 @@ type Props = {
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
     totalPublicaciones?: number;
+    tutores?: any[];
     currentPage?: number;
     onPageChange?: (page: number) => void;
     popularPublicaciones?: Publicacion[];
@@ -125,6 +65,7 @@ export default function PublicacionesList({
     morePublicaciones = [],
     totalPublicaciones,
     currentPage,
+    tutores = [],
     onPageChange,
     popularPublicaciones = [],
     tutoriaPublicaciones = [],
@@ -144,7 +85,7 @@ export default function PublicacionesList({
     const [internalPage, setInternalPage] = useState(1);
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [selectedTutor, setSelectedTutor] = useState<TutorEntry | null>(null);
+    const [selectedTutor, setSelectedTutor] = useState<any | null>(null);   
     const filterAnchorRef = useRef<HTMLDivElement>(null);
     const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
 
@@ -228,36 +169,12 @@ export default function PublicacionesList({
             ? tagsForAll(tTags)
             : mapPublicacionEtiquetasToTags(p.etiquetas, { name: tTags("negocio") });
 
-    const tutoriaSourcePublicaciones = useMemo(() => {
-        if (tipo !== "tutoria") return [];
-        return dedupePublicaciones([
-            ...tutoriaPublicaciones,
-            ...recentsPublicaciones,
-            ...popularPublicaciones,
-            ...morePublicaciones,
-        ]);
-    }, [
-        tipo,
-        tutoriaPublicaciones,
-        recentsPublicaciones,
-        popularPublicaciones,
-        morePublicaciones,
-    ]);
-
-    const tutorEntries = useMemo(
-        () => buildTutorEntries(tutoriaSourcePublicaciones),
-        [tutoriaSourcePublicaciones],
-    );
-
-    const tutorTags = useMemo(
-        () => (tagsForAll ? tagsForAll(tTags) : []),
-        [tagsForAll, tTags],
-    );
-
     const tutorsSectionLoading =
-        Boolean(loading.tutores) && tutoriaSourcePublicaciones.length === 0;
+        Boolean(loading.tutores) && tutores.length === 0;
 
-    const showTutorsSection = tipo === "tutoria" && tutoriaSourcePublicaciones.length > 0;
+    const showTutorsSection =
+    tipo === "tutoria" &&
+    tutores.length > 0;
 
     const navigateToTutorProfile = (userId: number) => {
         setSelectedTutor(null);
@@ -467,12 +384,12 @@ export default function PublicacionesList({
                                     <RenderError error={errors.tutores ?? errors.popular ?? errors.recents} />
                                     {tutorsSectionLoading ? (
                                         <p>{t("loadingTutores")}</p>
-                                    ) : tutorEntries.length === 0 ? (
+                                    ) : tutores.length === 0 ? (
                                         <p>{t("noTutores")}</p>
                                     ) : (
                                         <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
                                             <HorizontalCarousel showPagination={false}>
-                                                {tutorEntries.map((tutor) => (
+                                                {tutores.map((tutor) => (
                                                     <div key={tutor.id_usuario} className="h-carousel__item">
                                                         <UserResCard
                                                             userId={tutor.id_usuario}
@@ -615,8 +532,20 @@ export default function PublicacionesList({
                             ? normalizeImageUrl(selectedTutor.url_foto_perfil)
                             : undefined
                     }
-                    temas={selectedTutor.temas}
-                    tags={tutorTags}
+                    temas={
+                        selectedTutor.publicaciones?.map(
+                            (p: any) => p.titulo
+                        ) || []
+                    }
+                    tags={[
+                        ...(selectedTutor.etiquetas?.map(
+                            (e: any) => ({
+                                id: e.etiqueta.id_etiqueta,
+                                name: e.etiqueta.nombre,
+                                parentId: e.etiqueta.id_etiqueta_padre
+                            })
+                        ) || [])
+                    ]}
                     onVerCertificados={() => navigateToTutorProfile(selectedTutor.id_usuario)}
                     onVerPerfil={navigateToTutorProfile}
                 />
