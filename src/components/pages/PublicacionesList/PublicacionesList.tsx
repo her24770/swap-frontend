@@ -312,10 +312,23 @@ export default function PublicacionesList({
         );
     };
 
+    const handleDetailsClick = () => {
+    setSearchQuery("");
+    };
+
     return (
         <main className="publicaciones-list">
             <div className="publicaciones-list__header">
-                <h1 className="publicaciones-list__title">{title}</h1>
+                <div className="publicaciones-list__title-actions">
+                    <h1 className="publicaciones-list__title">{title}</h1>
+                    <button
+                    type="button"
+                    className="button button--small"
+                    onClick={handleDetailsClick}
+                    >
+                        Recomendados para ti
+                    </button>
+                </div>
                 <div className="publicaciones-list__search-actions" ref={filterAnchorRef}>
                     <SearchBar
                         value={searchQuery}
