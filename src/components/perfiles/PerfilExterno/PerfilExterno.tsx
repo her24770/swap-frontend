@@ -11,11 +11,15 @@ import { getPerfilPublico } from "../../../services/perfilService";
 import { PerspectivaInternaProvider } from "../../../context/PerspectivaInternaContext";
 import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
+import { UserProfileHeaderSkeleton } from "../../users/UserCard/UserProfileHeader/UserProfileHeadearSkeleton/UserProfileHeaderSkeleton";
+import {
+  PerfilModeToggleSkeleton,
+  VistaTutorSectionsSkeleton,
+  VistaVendedorSectionsSkeleton,
+} from "../perfilLoading";
+import "../../../app/[locale]/perfil/PerfilConsumidorPage.css";
+
 type PerfilExternoMode = "vendedor" | "tutor";
-import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
-import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
-import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
-import PostCard from "../../posts/PostCard/PostCard";
 
 interface PerfilExternoProps {
   userId: number;
@@ -61,65 +65,83 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
         return <p className="perfil-page__loading">{error}</p>;
     }
 
-    if (!user) {
-        return <p className="perfil-page__loading">{t("loading")}</p>;
-    }
-
-
     return (
         <PerspectivaInternaProvider
         isOwnProfile={false}
         profileView="externo"
         activeProfileMode={mode}
         >
-        <UserProfileHeader user={user} />
+        {!user ? (
+            <>
+                <UserProfileHeaderSkeleton />
+                <PerfilModeToggleSkeleton count={2} />
+                <hr className="perfil-page__divider" />
+                {initialMode === "tutor" ? (
+                    <VistaTutorSectionsSkeleton />
+                ) : (
+                    <VistaVendedorSectionsSkeleton />
+                )}
+            </>
+        ) : (
+            <>
+                <UserProfileHeader user={user} />
 
-        <div className="perfil-page__mode-toggle">
-            {modes.map(({ key, label }) => (
-            <button
-                key={key}
-                type="button"
-                className={`perfil-page__mode-btn${
-                mode === key ? " perfil-page__mode-btn--active" : ""
-                }`}
-                onClick={() => setMode(key)}
-            >
-                {label}
-            </button>
-            ))}
-        </div>
+                <div className="perfil-page__mode-toolbar">
+                    <div
+                        className="perfil-page__mode-toggle"
+                        role="tablist"
+                        aria-label="Profile mode"
+                    >
+                        {modes.map(({ key, label }) => (
+                            <button
+                                key={key}
+                                type="button"
+                                role="tab"
+                                aria-selected={mode === key}
+                                className={`perfil-page__mode-btn${
+                                    mode === key ? " perfil-page__mode-btn--active" : ""
+                                }`}
+                                onClick={() => setMode(key)}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
 
-        <hr className="perfil-page__divider" />
+                <hr className="perfil-page__divider" />
 
-        {mode === "vendedor" && (
-            <VistaVendedor
-            userId={userId}
-            userName={user.name}
-            userRating={user.rating}
-            userImageUrl={user.imageUrl}
-            />
+                {mode === "vendedor" && (
+                    <VistaVendedor
+                        userId={userId}
+                        userName={user.name}
+                        userRating={user.rating}
+                        userImageUrl={user.imageUrl}
+                    />
+                )}
+                {mode === "tutor" && (
+                    <VistaTutor
+                        userId={userId}
+                        userName={user.name}
+                        userRating={user.rating}
+                        userImageUrl={user.imageUrl}
+                    />
+                )}
+
+                <hr className="perfil-page__divider" />
+
+                <section className="perfil-page__section">
+                    <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
+                    <CommentSection
+                        targetName={user.name}
+                        idReceptor={user.id_usuario}
+                        comments={ResenasUsuario}
+                        onSuccessSubmit={refetchResenas}
+                        onCancel={() => {}}
+                    />
+                </section>
+            </>
         )}
-        {mode === "tutor" && (
-            <VistaTutor
-            userId={userId}
-            userName={user.name}
-            userRating={user.rating}
-            userImageUrl={user.imageUrl}
-            />
-        )}
-
-        <hr className="perfil-page__divider" />
-
-        <section className="perfil-page__section">
-            <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
-            <CommentSection
-                targetName={user.name}
-                idReceptor={user.id_usuario} 
-                comments={ResenasUsuario} 
-                onSuccessSubmit={refetchResenas}
-                onCancel={() => {}}
-            />
-        </section>
         </PerspectivaInternaProvider>
     );
 }

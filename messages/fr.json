@@ -36,6 +36,7 @@
 		"brand": "SWAP",
 		"search": {
 			"placeholder": "Rechercher...",
+			"searching": "Recherche...",
 			"filterAria": "Filtrer les publications",
 			"closeFiltersAria": "Fermer les filtres"
 		},

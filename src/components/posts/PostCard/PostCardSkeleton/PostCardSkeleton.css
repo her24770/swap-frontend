@@ -1,0 +1,88 @@
+/* Espejo de postcard*/
+.pcs {
+  max-width: 400px;
+  background-color: var(--swap-primary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: var(--radius-xl, 12px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.pcs__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 16px 12px;
+}
+
+.pcs__tags { display: flex; gap: 6px; }
+
+.pcs__tag {
+  width: 64px;
+  height: 22px;
+  border-radius: 999px;
+}
+
+.pcs__actions { display: flex; gap: 6px; margin-left: auto; }
+
+.pcs__action-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm, 4px);
+}
+
+.pcs__media { padding: 0 1rem; }
+
+.pcs__image {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+}
+
+.pcs__content {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.pcs__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pcs__title { height: 1rem; width: 58%; }
+.pcs__price { height: 1rem; width: 22%; }
+
+.pcs__line        { height: 0.875em; width: 100%; }
+.pcs__line--mid   { width: 82%; }
+.pcs__line--short { width: 58%; }
+
+
+.pcs__footer {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pcs__like {
+  width: 44px;
+  height: 24px;
+  border-radius: 6px;
+}
+
+.pcs__footer-actions { display: flex; gap: 6px; margin-left: auto; }
+
+.pcs__footer-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm, 4px);
+}

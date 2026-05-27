@@ -24,6 +24,7 @@ import type { Anuncio } from "../../../types/anuncio";
 import { useServices } from "../../../services/context/ServiceContext";
 import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
 import type { TipoPublicacion } from "../../../schemas/zodSchemas";
+import { PerfilAdBannerSkeleton, PerfilPostCarouselSkeleton } from "../perfilLoading";
 
 interface CatalogPost {
   id: number;
@@ -234,7 +235,7 @@ export default function VistaVendedor({
         </div>
 
         {anunciosLoading && (
-          <p className="perfil-page__coming-soon">Cargando anuncios de SWAP...</p>
+          <PerfilAdBannerSkeleton showActions={canCreatePublication} />
         )}
 
         {anunciosError && (
@@ -259,7 +260,7 @@ export default function VistaVendedor({
                   onDeleteClick={() => handleEliminarAnuncio(ad.id_anuncio)}
                 />
               </div>
-            ))} 
+            ))}
           </AnunciosCarousel>
         )}
       </section>
@@ -283,7 +284,7 @@ export default function VistaVendedor({
           )}
         </div>
 
-        {loading && <p className="perfil-page__coming-soon">Cargando publicaciones...</p>}
+        {loading && <PerfilPostCarouselSkeleton count={4} />}
         {error && <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>{error}</p>}
 
         {!loading && !error && catalogMaterial.length === 0 && (
@@ -357,7 +358,7 @@ export default function VistaVendedor({
           )}
         </div>
 
-        {loading && <p className="perfil-page__coming-soon">Cargando publicaciones...</p>}
+        {loading && <PerfilPostCarouselSkeleton count={4} />}
         {error && <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>{error}</p>}
 
         {!loading && !error && catalogNegocio.length === 0 && (

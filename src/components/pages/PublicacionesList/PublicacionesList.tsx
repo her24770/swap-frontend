@@ -15,7 +15,7 @@ import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import { normalizeImageUrl } from "../../../lib/imageUrl";
 import type { Publicacion, FiltroPublicacionBody, FiltroTutorBody, TutorFiltrado } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
-import type {Anuncio} from "../../../types/anuncio";
+import type { Anuncio } from "../../../types/anuncio";
 import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
 import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
@@ -24,7 +24,10 @@ import { useServices } from "../../../services/context/ServiceContext";
 import "../../ui/Button/Button.css";
 import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
-
+import { SkeletonHorizontalCarousel } from "../../ui/HorizontalCarousel/SkeletonHorizontalCarousel/SkeletonHorizontalCarousel";
+import { PublicacionesGridSkeleton } from "./PublicacionesGridSkeleton";
+import { UserResCardSkeleton } from "../../posts/UserResumida/UserResCardSkeleton/UserResCardSkeleton";
+import { AdBannerSkeleton } from "../../perfiles/Vendedor/AdBanner/AdBannerSkeleton/AdBannerSkeleton";
 
 const VISIBLE_PAGINATION_PAGES = 5;
 
@@ -50,7 +53,6 @@ type Props = {
     currentPage?: number;
     onPageChange?: (page: number) => void;
     popularPublicaciones?: Publicacion[];
-    /** Optional extra tutoria publications for the tutors carousel (merged with recents/popular/more when tipo is tutoria). */
     tutoriaPublicaciones?: Publicacion[];
     loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean; popular?: boolean; tutores?: boolean };
     errors: { recents?: any; recommended?: any; more?: any; ads?: any; popular?: any; tutores?: any };
@@ -72,7 +74,6 @@ export default function PublicacionesList({
     tutores = [],
     onPageChange,
     popularPublicaciones = [],
-    tutoriaPublicaciones = [],
     loading,
     errors,
     itemsPerPage = 12,
@@ -81,10 +82,10 @@ export default function PublicacionesList({
     Ads = [],
     showPersonalizedRecommendationsButton = false,
 }: Props) {
-    const t = useTranslations('seccion');
-    const tEmpty = useTranslations('common.empty');
-    const tTags = useTranslations('common.tags');
-    const tSearch = useTranslations('common.search');
+    const t = useTranslations("seccion");
+    const tEmpty = useTranslations("common.empty");
+    const tTags = useTranslations("common.tags");
+    const tSearch = useTranslations("common.search");
     const router = useRouter();
     const pathname = stripLocalePrefix(usePathname());
     const isDescubreRoute = pathname === "/" || pathname === "/descubre";
@@ -93,12 +94,10 @@ export default function PublicacionesList({
     const { publicacion: service } = useServices();
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
-
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [selectedTutor, setSelectedTutor] = useState<any | null>(null);   
+    const [selectedTutor, setSelectedTutor] = useState<any | null>(null);
     const filterAnchorRef = useRef<HTMLDivElement>(null);
     const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
-
     const [filteredResults, setFilteredResults] = useState<Publicacion[] | null>(null);
     const [filteredTutores, setFilteredTutores] = useState<TutorFiltrado[] | null>(null);
     const [filterLoading, setFilterLoading] = useState(false);
@@ -106,16 +105,13 @@ export default function PublicacionesList({
 
     useEffect(() => {
         if (!isFilterOpen) return;
-
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === "Escape") setIsFilterOpen(false);
         };
-
         const handleClickOutside = (e: MouseEvent) => {
             if (filterAnchorRef.current?.contains(e.target as Node)) return;
             setIsFilterOpen(false);
         };
-
         document.addEventListener("keydown", handleEscape);
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -125,13 +121,7 @@ export default function PublicacionesList({
     }, [isFilterOpen]);
 
     const { results: searchResults, loading: searchLoading } = useBusquedaSemantica(searchQuery, tipo);
-
-    const {
-        selectedPublicacion,
-        loadingDetalle,
-        handleDetallesClick,
-        handleClose,
-    } = useDetallePublicacion();
+    const { selectedPublicacion, loadingDetalle, handleDetallesClick, handleClose } = useDetallePublicacion();
 
     const handleCardClick = (p: Publicacion) => {
         handleDetallesClick(p);
@@ -147,38 +137,35 @@ export default function PublicacionesList({
         : showingFiltered
             ? filteredResults!
             : morePublicaciones;
+
     const usesServerPagination = !showingSearchResults && !showingFiltered && totalPublicaciones !== undefined;
     const totalItems = usesServerPagination ? totalPublicaciones : mainSectionData.length;
     const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
     const activeCurrentPage = showingSearchResults || currentPage === undefined ? internalPage : currentPage;
     const safeCurrentPage = Math.min(activeCurrentPage, pageCount);
+
     const visibleGridData = useMemo(() => {
         if (usesServerPagination) return mainSectionData;
-
         const startIndex = (safeCurrentPage - 1) * itemsPerPage;
         return mainSectionData.slice(startIndex, startIndex + itemsPerPage);
     }, [mainSectionData, safeCurrentPage, itemsPerPage, usesServerPagination]);
+
     const paginationPages = useMemo(() => {
         const visiblePages = Math.min(VISIBLE_PAGINATION_PAGES, pageCount);
         const halfWindow = Math.floor(visiblePages / 2);
         let startPage = safeCurrentPage - halfWindow;
         let endPage = startPage + visiblePages - 1;
-
         if (startPage < 1) {
             startPage = 1;
             endPage = visiblePages;
         }
-
         if (endPage > pageCount) {
             endPage = pageCount;
             startPage = Math.max(1, endPage - visiblePages + 1);
         }
-
-        return Array.from(
-            { length: endPage - startPage + 1 },
-            (_, index) => startPage + index
-        );
+        return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
     }, [pageCount, safeCurrentPage]);
+
     const hasPagination = totalItems > itemsPerPage;
 
     useEffect(() => {
@@ -190,89 +177,90 @@ export default function PublicacionesList({
             ? tagsForAll(tTags)
             : mapPublicacionEtiquetasToTags(p.etiquetas, { name: tTags("negocio") });
 
-    const tutorsSectionLoading =
-        Boolean(loading.tutores) && tutores.length === 0;
-
-    const showTutorsSection =
-    tipo === "tutoria" &&
-    tutores.length > 0;
+    const tutorsSectionLoading = Boolean(loading.tutores) && tutores.length === 0;
+    const showTutorsSection = tipo === "tutoria" && (tutores.length > 0 || tutorsSectionLoading);
+    const showAdsSection = Ads.length > 0 || Boolean(loading.ads);
+    const showRecommendedSection = Boolean(loading.recommended) || recommendedPublicaciones.length > 0;
+    const showPopularSection = Boolean(loading.popular) || popularPublicaciones.length > 0;
+    const showRecentsSection = Boolean(loading.recents) || recentsPublicaciones.length > 0;
+    const isMoreGridLoading = Boolean(loading.more) && visibleGridData.length === 0;
+    const isSearchLoading = showingSearchResults && searchLoading;
 
     const navigateToTutorProfile = (userId: number) => {
         setSelectedTutor(null);
         router.push(`/perfil/${userId}?modo=tutor`);
     };
 
-    const RenderError = ({ error }: { error: any }) => (
-        error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null
+    const RenderError = ({ error }: { error: any }) =>
+        error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null;
+
+    const findEtiquetaId = useCallback(
+        (nombre: string) =>
+            etiquetas.find((e) => e.nombre.toLowerCase() === nombre.toLowerCase())?.id_etiqueta,
+        [etiquetas],
     );
 
-    const findEtiquetaId = useCallback((nombre: string) => {
-        return etiquetas.find(e => e.nombre.toLowerCase() === nombre.toLowerCase())?.id_etiqueta;
-    }, [etiquetas]);
+    const handleAplicarFiltros = useCallback(
+        async (values: FiltroValues) => {
+            if (!tipo) return;
+            setIsFilterOpen(false);
+            setActiveFilters(values);
+            setFilterLoading(true);
+            const etiquetasIds = [...values.etiquetas];
+            if (tipo === "negocio" && values.tipoNegocio?.length === 1) {
+                const id = findEtiquetaId(values.tipoNegocio[0] === "producto" ? "Producto" : "Servicio");
+                if (id) etiquetasIds.push(id);
+            }
+            if (tipo === "material" && values.tipoMaterial?.length === 1) {
+                const id = findEtiquetaId(values.tipoMaterial[0] === "compra" ? "Compra" : "Alquiler");
+                if (id) etiquetasIds.push(id);
+            }
+            if (tipo === "tutoria") {
+                const tutorBody: FiltroTutorBody = {
+                    etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
+                    precio_min: values.precioMin > 0 ? values.precioMin : undefined,
+                    precio_max: values.precioMax < 200 ? values.precioMax : undefined,
+                    calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
+                    calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
+                    dias: values.dias && values.dias.length > 0 ? values.dias : undefined,
+                    hora_inicio: values.horaDesde !== "07:00" ? values.horaDesde : undefined,
+                    hora_final: values.horaHasta !== "20:00" ? values.horaHasta : undefined,
+                    limit: 100,
+                };
+                try {
+                    const result = await service.getFiltradasTutorias(tutorBody);
+                    setFilteredTutores(result);
+                } catch {
+                    setFilteredTutores([]);
+                } finally {
+                    setFilterLoading(false);
+                }
+                return;
+            }
 
-    const handleAplicarFiltros = useCallback(async (values: FiltroValues) => {
-        if (!tipo) return;
-        setIsFilterOpen(false);
-        setActiveFilters(values);
-        setFilterLoading(true);
-
-        const etiquetasIds = [...values.etiquetas];
-
-        if (tipo === "negocio" && values.tipoNegocio?.length === 1) {
-            const id = findEtiquetaId(values.tipoNegocio[0] === "producto" ? "Producto" : "Servicio");
-            if (id) etiquetasIds.push(id);
-        }
-        if (tipo === "material" && values.tipoMaterial?.length === 1) {
-            const id = findEtiquetaId(values.tipoMaterial[0] === "compra" ? "Compra" : "Alquiler");
-            if (id) etiquetasIds.push(id);
-        }
-        if (tipo === "tutoria") {
-            // Para tutorías el endpoint es distinto — devuelve tutores
-            const tutorBody: FiltroTutorBody = {
+            const body: FiltroPublicacionBody = {
+                tipo,
                 etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
                 precio_min: values.precioMin > 0 ? values.precioMin : undefined,
-                precio_max: values.precioMax < 200 ? values.precioMax : undefined,
+                precio_max: values.precioMax < 1000 ? values.precioMax : undefined,
                 calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
                 calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
-                dias: values.dias && values.dias.length > 0 ? values.dias : undefined,
-                hora_inicio: values.horaDesde !== "07:00" ? values.horaDesde : undefined,
-                hora_final: values.horaHasta !== "20:00" ? values.horaHasta : undefined,
                 limit: 100,
             };
             try {
-                const result = await service.getFiltradasTutorias(tutorBody);
-                setFilteredTutores(result);
+                const result =
+                    tipo === "negocio"
+                        ? await service.getFiltradasNegocios(body)
+                        : await service.getFiltradasMateriales(body);
+                setFilteredResults(result);
             } catch {
-                setFilteredTutores([]);
+                setFilteredResults([]);
             } finally {
                 setFilterLoading(false);
             }
-            return;
-        }
-
-        const precioMaxDefault = 1000;
-
-        const body: FiltroPublicacionBody = {
-            tipo,
-            etiquetas: etiquetasIds.length > 0 ? etiquetasIds : undefined,
-            precio_min: values.precioMin > 0 ? values.precioMin : undefined,
-            precio_max: values.precioMax < precioMaxDefault ? values.precioMax : undefined,
-            calificacion_min: values.calificacionMin > 0 ? values.calificacionMin : undefined,
-            calificacion_max: values.calificacionMax < 5 ? values.calificacionMax : undefined,
-            limit: 100,
-        };
-
-        try {
-            let result: Publicacion[];
-            if (tipo === "negocio") result = await service.getFiltradasNegocios(body);
-            else result = await service.getFiltradasMateriales(body);
-            setFilteredResults(result);
-        } catch {
-            setFilteredResults([]);
-        } finally {
-            setFilterLoading(false);
-        }
-    }, [tipo, etiquetas, findEtiquetaId, service]);
+        },
+        [tipo, findEtiquetaId, service],
+    );
 
     const handleLimpiarFiltros = useCallback(() => {
         setFilteredResults(null);
@@ -282,9 +270,7 @@ export default function PublicacionesList({
 
     const renderPagination = (label: string) => {
         if (!hasPagination) return null;
-
         const setPage = showingSearchResults || !onPageChange ? setInternalPage : onPageChange;
-
         return (
             <div className="publicaciones-list__pagination" aria-label={label}>
                 <button
@@ -320,12 +306,33 @@ export default function PublicacionesList({
         );
     };
 
-    const handleDetailsClick = () => {
-    setSearchQuery("");
+    const renderPostCard = (p: Publicacion) => (
+        <PostCard
+            key={p.id_publicacion}
+            publicacionId={p.id_publicacion}
+            tags={mapTags(p)}
+            title={p.titulo}
+            price={parseFloat(p.precio)}
+            description={p.descripcion}
+            images={p.imagenes.map((img) => img.url_imagen)}
+            estado={p.estado}
+            onDetallesClick={() => handleCardClick(p)}
+            initialLikeado={p.likeado ?? false}
+            initialLikes={p.me_gusta}
+        />
+    );
+
+    const handlePersonalizedRecommendationsClick = () => {
+        setSearchQuery("");
+        setFilteredResults(null);
+        setFilteredTutores(null);
+        setActiveFilters(null);
+        setInternalPage(1);
     };
 
+
     return (
-        <main className="publicaciones-list">
+        <div className="publicaciones-list">
             <div className="publicaciones-list__header">
                 <div className="publicaciones-list__title-actions">
                     <h1 className="publicaciones-list__title">{title}</h1>
@@ -333,7 +340,7 @@ export default function PublicacionesList({
                         <button
                             type="button"
                             className="button button--small"
-                            onClick={handleDetailsClick}
+                            onClick={handlePersonalizedRecommendationsClick}
                         >
                             Recomendados para ti
                         </button>
@@ -376,68 +383,60 @@ export default function PublicacionesList({
                     )}
                 </div>
             </div>
+
             <div className="publicaciones-list__content">
-                    {/* Estado de carga global */}
-                    {(loading.global && !showingSearchResults && !showingFiltered) && morePublicaciones.length === 0 && (
-                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-                    )}
-                    {showingSearchResults && searchLoading && (
-                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-                    )}
-                    {(showingFiltered || showingFilteredTutores) && filterLoading && (
-                        <div className="publicaciones-list__state"><p>{t("loading")}</p></div>
-                    )}
-
-                    {showingSearchResults && !searchLoading && searchResults.length === 0 && (
-                        <div className="publicaciones-list__empty">
-                            <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
-                        </div>
-                    )}
-
-                    {showingFiltered && !filterLoading && filteredResults!.length === 0 && (
+                {!showingSearchResults &&
+                    !showingFiltered &&
+                    !showingFilteredTutores &&
+                    !loading.global &&
+                    morePublicaciones.length === 0 &&
+                    !showRecommendedSection &&
+                    !showPopularSection &&
+                    !showRecentsSection &&
+                    !showAdsSection && (
                         <div className="publicaciones-list__empty">
                             <p>{tEmpty("description")}</p>
                         </div>
                     )}
 
-                    {showingFilteredTutores && !filterLoading && filteredTutores!.length === 0 && (
-                        <div className="publicaciones-list__empty">
-                            <p>{tEmpty("description")}</p>
-                        </div>
-                    )}
-
-                    {!showingSearchResults && !showingFiltered && !showingFilteredTutores && !loading.global && morePublicaciones.length === 0 && (
-                        <div className="publicaciones-list__empty">
-                            <p>{tEmpty("description")}</p>
-                        </div>
-                    )}
-
-                    {showingSearchResults ? (
-                        /* RESULTADOS DE BÚSQUEDA */
-                        <section className="publicaciones-list__search-results">
-                            <h2 className="publicaciones-list__section-title">Resultados ({searchResults.length})</h2>
-                            <div className="publicaciones-list__grid">
-                                {searchResults.map(p => (
-                                    <PostCard
-                                        key={p.id_publicacion}
-                                        publicacionId={p.id_publicacion}
-                                        tags={mapTags(p)}
-                                        title={p.titulo}
-                                        price={parseFloat(p.precio)}
-                                        description={p.descripcion}
-                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                        estado={p.estado}
-                                        onDetallesClick={() => handleCardClick(p)}
-                                        initialLikeado={p.likeado ?? false}
-                                        initialLikes={p.me_gusta}
-                                    />
-                                ))}
+                {showingSearchResults ? (
+                    <section className="publicaciones-list__search-results">
+                        <h2 className="publicaciones-list__section-title">
+                            {isSearchLoading
+                                ? tSearch("searching")
+                                : `Resultados (${searchResults.length})`}
+                        </h2>
+                        {isSearchLoading ? (
+                            <PublicacionesGridSkeleton count={itemsPerPage} />
+                        ) : searchResults.length === 0 ? (
+                            <div className="publicaciones-list__empty">
+                                <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
                             </div>
-                        </section>
-                    ) : showingFilteredTutores ? (
-                        /* TUTORES FILTRADOS */
-                        <section className="publicaciones-list__search-results">
-                            <h2 className="publicaciones-list__section-title">Resultados ({filteredTutores!.length})</h2>
+                        ) : (
+                            <>
+                                <div className="publicaciones-list__grid">
+                                    {visibleGridData.map(renderPostCard)}
+                                </div>
+                                {renderPagination("Paginación de resultados")}
+                            </>
+                        )}
+                    </section>
+                ) : showingFilteredTutores ? (
+                    <section className="publicaciones-list__search-results">
+                        <h2 className="publicaciones-list__section-title">
+                            {filterLoading
+                                ? tSearch("searching")
+                                : `Resultados (${filteredTutores!.length})`}
+                        </h2>
+                        {filterLoading ? (
+                            <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
+                                <SkeletonHorizontalCarousel count={4} renderItem={() => <UserResCardSkeleton />} />
+                            </div>
+                        ) : filteredTutores!.length === 0 ? (
+                            <div className="publicaciones-list__empty">
+                                <p>{tEmpty("description")}</p>
+                            </div>
+                        ) : (
                             <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
                                 <HorizontalCarousel showPagination={false}>
                                     {filteredTutores!.map((tutor) => (
@@ -446,213 +445,185 @@ export default function PublicacionesList({
                                                 userId={tutor.id_usuario}
                                                 userName={tutor.nombre}
                                                 userRating={toVisualStarRating(tutor.calificacion)}
-                                                userImageUrl={tutor.url_foto_perfil ? normalizeImageUrl(tutor.url_foto_perfil) : undefined}
+                                                userImageUrl={
+                                                    tutor.url_foto_perfil
+                                                        ? normalizeImageUrl(tutor.url_foto_perfil)
+                                                        : undefined
+                                                }
                                                 onDetallesClick={() => setSelectedTutor(tutor)}
                                             />
                                         </div>
                                     ))}
                                 </HorizontalCarousel>
                             </div>
-                        </section>
-                    ) : showingFiltered ? (
-                        /* RESULTADOS FILTRADOS (negocios/materiales) */
-                        <section className="publicaciones-list__search-results">
-                            <h2 className="publicaciones-list__section-title">Resultados ({filteredResults!.length})</h2>
-                            <div className="publicaciones-list__grid">
-                                {visibleGridData.map(p => (
-                                    <PostCard
-                                        key={p.id_publicacion}
-                                        publicacionId={p.id_publicacion}
-                                        tags={mapTags(p)}
-                                        title={p.titulo}
-                                        price={parseFloat(p.precio)}
-                                        description={p.descripcion}
-                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                        estado={p.estado}
-                                        onDetallesClick={() => handleCardClick(p)}
-                                        initialLikeado={p.likeado ?? false}
-                                        initialLikes={p.me_gusta}
-                                    />
-                                ))}
+                        )}
+                    </section>
+                ) : showingFiltered ? (
+                    <section className="publicaciones-list__search-results">
+                        <h2 className="publicaciones-list__section-title">
+                            {filterLoading
+                                ? tSearch("searching")
+                                : `Resultados (${filteredResults!.length})`}
+                        </h2>
+                        {filterLoading ? (
+                            <PublicacionesGridSkeleton count={itemsPerPage} />
+                        ) : filteredResults!.length === 0 ? (
+                            <div className="publicaciones-list__empty">
+                                <p>{tEmpty("description")}</p>
                             </div>
-                            {renderPagination("Paginación de resultados filtrados")}
-                        </section>
-                    ) : (
-                        <div className="publicaciones-list__sections">
-        
-                        {/* SECCIÓN ADS si el arreglo no está vacío */}
-                        {Ads.length > 0 && (    
-                        
-                        <section className="publicaciones-list__section">
-                            <h2 className="publicaciones-list__section-title">{t('ads')}</h2>
-                            <RenderError error={errors.ads} />
-                            {loading.ads ? <p>Cargando anuncios...</p> : (
-                                <div className="publicaciones-list__carousel-wrap">
-                                    <AnunciosCarousel>
-                                        {Ads.map((ad, index) => (
-                                        <div key={index} className="h-carousel__item">
-                                            <AdBanner
-                                                imageUrl={ad.imagen_url}
-                                                title={ad.titulo}
-                                                description={ad.descripcion}
-                                            />
-                                        </div>
-                                        ))} 
-                                    </AnunciosCarousel>
-                                </div>
-                            )}
-                        </section>
-                        )}
-
-
-                        {/* SECCIÓN RECOMENDADOS */}
-                        {recommendedPublicaciones.length > 0 &&(
-                            <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('recomendado')}</h2>
-                                <RenderError error={errors.recommended} />
-                                {loading.recommended ? <p>Buscando sugerencias...</p> : (
-                                    <div className="publicaciones-list__carousel-wrap">
-                                        <HorizontalCarousel showPagination={false}>
-                                            {recommendedPublicaciones.map(p => (
-                                                <div key={p.id_publicacion} className="h-carousel__item">
-                                                    <PostCard
-                                                        publicacionId={p.id_publicacion}
-                                                        tags={mapTags(p)}
-                                                        title={p.titulo}
-                                                        price={parseFloat(p.precio)}
-                                                        description={p.descripcion}
-                                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                                        estado={p.estado}
-                                                        onDetallesClick={() => handleCardClick(p)}
-                                                        initialLikeado={p.likeado ?? false}      
-                                                        initialLikes={p.me_gusta} 
-                                                    />
-                                                </div>
-                                            ))}
-                                        </HorizontalCarousel>
-                                    </div>
-                                )}
-                            </section>
-                        )}
-
-                        {/* SECCIÓN POPULARES */}
-                        {popularPublicaciones.length > 0 && (
-                            <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title">{t('populares')}</h2>
-                                <RenderError error={errors.popular} />
-                                {loading.popular ? <p>Buscando sugerencias...</p> : (
-                                    <div className="publicaciones-list__carousel-wrap">
-                                        <HorizontalCarousel showPagination={false}>
-                                            {popularPublicaciones.map(p => (
-                                                <div key={p.id_publicacion} className="h-carousel__item">
-                                                    <PostCard
-                                                        publicacionId={p.id_publicacion}
-                                                        tags={mapTags(p)}
-                                                        title={p.titulo}
-                                                        price={parseFloat(p.precio)}
-                                                        description={p.descripcion}
-                                                        images={p.imagenes.map((img) => img.url_imagen)}
-                                                        estado={p.estado}
-                                                        onDetallesClick={() => handleCardClick(p)}
-                                                    />
-                                                </div>
-                                            ))}
-                                        </HorizontalCarousel>
-                                    </div>
-                                )}
-                            </section>
-                        )}
-
-                            {/* SECCIÓN TUTORES */}
-                            {showTutorsSection && (
-                                <section className="publicaciones-list__section">
-                                    <h2 className="publicaciones-list__section-title">{t("tutores")}</h2>
-                                    <RenderError error={errors.tutores ?? errors.popular ?? errors.recents} />
-                                    {tutorsSectionLoading ? (
-                                        <p>{t("loadingTutores")}</p>
-                                    ) : tutores.length === 0 ? (
-                                        <p>{t("noTutores")}</p>
-                                    ) : (
-                                        <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
-                                            <HorizontalCarousel showPagination={false}>
-                                                {tutores.map((tutor) => (
-                                                    <div key={tutor.id_usuario} className="h-carousel__item">
-                                                        <UserResCard
-                                                            userId={tutor.id_usuario}
-                                                            userName={tutor.nombre}
-                                                            userRating={toVisualStarRating(tutor.calificacion)}
-                                                            userImageUrl={
-                                                                tutor.url_foto_perfil
-                                                                    ? normalizeImageUrl(tutor.url_foto_perfil)
-                                                                    : undefined
-                                                            }
-                                                            onDetallesClick={() => setSelectedTutor(tutor)}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </HorizontalCarousel>
-                                        </div>
-                                    )}
-                                </section>
-                            )}
-
-                            {/* SECCIÓN RECIENTES */}
-                            { recentsPublicaciones.length > 0 && (
-                                <section className="publicaciones-list__section">
-                                    <h2 className="publicaciones-list__section-title">{t('reciente')}</h2>
-                                    <RenderError error={errors.recents} />
-                                    {loading.recents ? <p>Cargando recientes...</p> : (
-                                        <div className="publicaciones-list__carousel-wrap">
-                                            <HorizontalCarousel showPagination={false}>
-                                                {recentsPublicaciones.map(p => (
-                                                    <div key={p.id_publicacion} className="h-carousel__item">
-                                                        <PostCard
-                                                            publicacionId={p.id_publicacion}
-                                                            tags={mapTags(p)}
-                                                            title={p.titulo}
-                                                            price={parseFloat(p.precio)}
-                                                            description={p.descripcion}
-                                                            images={p.imagenes.map((img) => img.url_imagen)}
-                                                            estado={p.estado}
-                                                            onDetallesClick={() => handleCardClick(p)}
-                                                        />
-                                                    </div>
-                                                ))}
-                                            </HorizontalCarousel>
-                                        </div>
-                                    )}
-                                </section>
-                            )}
-
-
-                            {/* EXPLORA MÁS */}
-                            <section className="publicaciones-list__section">
-                                <h2 className="publicaciones-list__section-title"> {t('explorar')}</h2>
-                                <RenderError error={errors.more} />
+                        ) : (
+                            <>
                                 <div className="publicaciones-list__grid">
-                                    {visibleGridData.map(p => (
-                                        <PostCard
-                                            key={p.id_publicacion}
-                                            publicacionId={p.id_publicacion}
-                                            tags={mapTags(p)}
-                                            title={p.titulo}
-                                            price={parseFloat(p.precio)}
-                                            description={p.descripcion}
-                                            images={p.imagenes.map((img) => img.url_imagen)}
-                                            estado={p.estado}
-                                            onDetallesClick={() => handleCardClick(p)}
-                                            initialLikeado={p.likeado ?? false}
-                                            initialLikes={p.me_gusta}
-                                        />
-                                    ))}
+                                    {visibleGridData.map(renderPostCard)}
                                 </div>
-                              {renderPagination("Paginación de publicaciones")}
+                                {renderPagination("Paginación de resultados filtrados")}
+                            </>
+                        )}
+                    </section>
+                ) : (
+                    <div className="publicaciones-list__sections">
+                        {showAdsSection && (
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t("ads")}</h2>
+                                <RenderError error={errors.ads} />
+                                {loading.ads ? (
+                                    <AdBannerSkeleton />
+                                ) : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <AnunciosCarousel>
+                                            {Ads.map((ad, index) => (
+                                                <div key={index} className="h-carousel__item">
+                                                    <AdBanner
+                                                        imageUrl={ad.imagen_url}
+                                                        title={ad.titulo}
+                                                        description={ad.descripcion}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </AnunciosCarousel>
+                                    </div>
+                                )}
                             </section>
-                        </div>
-                    )}
+                        )}
+
+                        {showRecommendedSection && (
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t("recomendado")}</h2>
+                                <RenderError error={errors.recommended} />
+                                {loading.recommended ? (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <SkeletonHorizontalCarousel count={4} />
+                                    </div>
+                                ) : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {recommendedPublicaciones.map((p) => (
+                                                <div key={p.id_publicacion} className="h-carousel__item">
+                                                    {renderPostCard(p)}
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+                        )}
+
+                        {showPopularSection && (
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t("populares")}</h2>
+                                <RenderError error={errors.popular} />
+                                {loading.popular ? (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <SkeletonHorizontalCarousel count={4} />
+                                    </div>
+                                ) : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {popularPublicaciones.map((p) => (
+                                                <div key={p.id_publicacion} className="h-carousel__item">
+                                                    {renderPostCard(p)}
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+                        )}
+
+                        {showTutorsSection && (
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t("tutores")}</h2>
+                                <RenderError error={errors.tutores ?? errors.popular ?? errors.recents} />
+                                {tutorsSectionLoading ? (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <SkeletonHorizontalCarousel count={4} renderItem={() => <UserResCardSkeleton />} />
+                                    </div>
+                                ) : tutores.length === 0 ? (
+                                    <p>{t("noTutores")}</p>
+                                ) : (
+                                    <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {tutores.map((tutor) => (
+                                                <div key={tutor.id_usuario} className="h-carousel__item">
+                                                    <UserResCard
+                                                        userId={tutor.id_usuario}
+                                                        userName={tutor.nombre}
+                                                        userRating={toVisualStarRating(tutor.calificacion)}
+                                                        userImageUrl={
+                                                            tutor.url_foto_perfil
+                                                                ? normalizeImageUrl(tutor.url_foto_perfil)
+                                                                : undefined
+                                                        }
+                                                        onDetallesClick={() => setSelectedTutor(tutor)}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+                        )}
+
+                        {showRecentsSection && (
+                            <section className="publicaciones-list__section">
+                                <h2 className="publicaciones-list__section-title">{t("reciente")}</h2>
+                                <RenderError error={errors.recents} />
+                                {loading.recents ? (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <SkeletonHorizontalCarousel count={4} />
+                                    </div>
+                                ) : (
+                                    <div className="publicaciones-list__carousel-wrap">
+                                        <HorizontalCarousel showPagination={false}>
+                                            {recentsPublicaciones.map((p) => (
+                                                <div key={p.id_publicacion} className="h-carousel__item">
+                                                    {renderPostCard(p)}
+                                                </div>
+                                            ))}
+                                        </HorizontalCarousel>
+                                    </div>
+                                )}
+                            </section>
+                        )}
+
+                        <section className="publicaciones-list__section">
+                            <h2 className="publicaciones-list__section-title">{t("explorar")}</h2>
+                            <RenderError error={errors.more} />
+                            {isMoreGridLoading ? (
+                                <PublicacionesGridSkeleton count={itemsPerPage} />
+                            ) : (
+                                <>
+                                    <div className="publicaciones-list__grid">
+                                        {visibleGridData.map(renderPostCard)}
+                                    </div>
+                                    {renderPagination("Paginación de publicaciones")}
+                                </>
+                            )}
+                        </section>
+                    </div>
+                )}
             </div>
 
-            {/* Renderizacion del modal de detalles*/}
             {selectedPublicacion && (
                 <DetallePublicacion
                     isOpen={true}
@@ -662,11 +633,10 @@ export default function PublicacionesList({
                     price={parseFloat(selectedPublicacion.precio)}
                     description={selectedPublicacion.descripcion}
                     imageUrl={selectedPublicacion.imagenes[0]?.url_imagen ?? ""}
-                    images={selectedPublicacion.imagenes.map(img => img.url_imagen)}
+                    images={selectedPublicacion.imagenes.map((img) => img.url_imagen)}
                     tags={mapPublicacionEtiquetasToTags(selectedPublicacion.etiquetas, {
                         name: selectedPublicacion.tipoPerfil?.tipo_perfil ?? tTags("negocio"),
                     })}
-                    
                     likes={selectedPublicacion.me_gusta}
                     publicacionId={selectedPublicacion.id_publicacion}
                     sellerName={loadingDetalle ? t("loading") : (selectedPublicacion.usuario.nombre ?? "Usuario SWAP")}
@@ -695,24 +665,18 @@ export default function PublicacionesList({
                             ? normalizeImageUrl(selectedTutor.url_foto_perfil)
                             : undefined
                     }
-                    temas={
-                        selectedTutor.publicaciones?.map(
-                            (p: any) => p.titulo
-                        ) || []
-                    }
+                    temas={selectedTutor.publicaciones?.map((p: any) => p.titulo) || []}
                     tags={[
-                        ...(selectedTutor.etiquetas?.map(
-                            (e: any) => ({
-                                id: e.etiqueta.id_etiqueta,
-                                name: e.etiqueta.nombre,
-                                parentId: e.etiqueta.id_etiqueta_padre
-                            })
-                        ) || [])
+                        ...(selectedTutor.etiquetas?.map((e: any) => ({
+                            id: e.etiqueta.id_etiqueta,
+                            name: e.etiqueta.nombre,
+                            parentId: e.etiqueta.id_etiqueta_padre,
+                        })) || []),
                     ]}
                     onVerCertificados={() => navigateToTutorProfile(selectedTutor.id_usuario)}
                     onVerPerfil={navigateToTutorProfile}
                 />
             )}
-        </main>
+        </div>
     );
 }

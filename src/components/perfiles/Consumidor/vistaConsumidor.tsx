@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import PostRes from "../../posts/PostResumida/PostRes";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import PublicacionesGuardadas from "./PublicacionesGuardadas/PublicacionesGuardadas";
+import { PerfilPurchasesCarouselSkeleton } from "../perfilLoading";
 import imagePath from "../../../../public/images/uvg.jpg";
 
 const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
@@ -13,7 +14,11 @@ const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
   images: [imagePath.src],
 }));
 
-export default function VistaConsumidor() {
+interface VistaConsumidorProps {
+  purchasesLoading?: boolean;
+}
+
+export default function VistaConsumidor({ purchasesLoading = false }: VistaConsumidorProps) {
   const t = useTranslations("perfil");
 
   return (
@@ -24,17 +29,21 @@ export default function VistaConsumidor() {
 
       <section className="perfil-page__section">
         <h2 className="perfil-page__section-title">{t("sections.purchases")}</h2>
-        <HorizontalCarousel>
-          {MOCK_PURCHASES.map((pub) => (
-            <div key={pub.id} className="perfil-page__purchase-item">
-              <PostRes
-                title={pub.title}
-                price={pub.price}
-                images={pub.images}
-              />
-            </div>
-          ))}
-        </HorizontalCarousel>
+        {purchasesLoading ? (
+          <PerfilPurchasesCarouselSkeleton count={4} />
+        ) : (
+          <HorizontalCarousel>
+            {MOCK_PURCHASES.map((pub) => (
+              <div key={pub.id} className="perfil-page__purchase-item">
+                <PostRes
+                  title={pub.title}
+                  price={pub.price}
+                  images={pub.images}
+                />
+              </div>
+            ))}
+          </HorizontalCarousel>
+        )}
       </section>
     </>
   );

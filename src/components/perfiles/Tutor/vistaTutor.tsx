@@ -21,6 +21,8 @@ import type { Publicacion, PublicacionesResponse } from "../../../types/publicac
 import type { Tag } from "../../../types/tag";
 import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
 import { useServices } from "../../../services/context/ServiceContext";
+import { PerfilPostCarouselSkeleton } from "../perfilLoading";
+import { HorarioSkeleton } from "./Horario/HorarioSkeleton/HorarioSkeleton";
 
 interface CatalogPost {
   id: number;
@@ -290,9 +292,7 @@ export default function VistaTutor({
           )}
         </div>
 
-        {loading && (
-          <p className="perfil-page__coming-soon">Cargando tutorías...</p>
-        )}
+        {loading && <PerfilPostCarouselSkeleton count={4} />}
 
         {error && (
           <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
@@ -457,9 +457,7 @@ export default function VistaTutor({
             </div>
           )}
         </div>
-        {horarioLoading && (
-          <p className="perfil-page__coming-soon">Cargando horario...</p>
-        )}
+        {horarioLoading && <HorarioSkeleton />}
         {horarioError && (
           <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
             {horarioError}
