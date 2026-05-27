@@ -19,6 +19,7 @@ import type { ApiResult } from "../../../types/ApiResult";
 import type { AuthResponse } from "../../../types/usuario";
 import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
+import FeaturedPublicationsCarousel from "../FeaturedPublicationsCarousel/FeaturedPublicationsCarousel";
 
 
 type PerfilMode = "consumidor" | "vendedor" | "tutor";
@@ -101,10 +102,15 @@ export default function PerfilInterno() {
         onModeChange={setMode}
       />
 
+      {(mode === "vendedor" || mode === "tutor") && (
+        <FeaturedPublicationsCarousel userId={idUsuario ?? undefined} />
+      )}
+      
       <hr className="perfil-page__divider" />
 
       {mode === "consumidor" && <VistaConsumidor />}
       {mode === "vendedor" && (
+        
         <VistaVendedor
           userName={user.name}
           userRating={0}
@@ -120,13 +126,18 @@ export default function PerfilInterno() {
       )}
       <hr className="perfil-page__divider" />
 
-      <CommentSection
-        targetName={user.name}
-        idReceptor={user.id_usuario} 
-        comments={ResenasUsuario} 
-        onSuccessSubmit={refetchResenas}
-        onCancel={() => {}}
-      />
+      {mode !== "consumidor" && (
+        <>
+          <hr className="perfil-page__divider" />
+          <CommentSection
+            targetName={user.name}
+            idReceptor={user.id_usuario} 
+            comments={ResenasUsuario || []} 
+            onSuccessSubmit={refetchResenas}
+            onCancel={() => {}}
+          />
+        </>
+      )}
     </PerspectivaInternaProvider>
   );
 }

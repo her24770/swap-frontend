@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Pencil, Save, SquarePlus, X} from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
@@ -19,6 +19,8 @@ import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublica
 import type { DiaHorario, EspacioHorario, EstadoHorario } from "../../../types/horario";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
+import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
+import { useServices } from "../../../services/context/ServiceContext";
 
 interface CatalogPost {
   id: number;
@@ -51,6 +53,12 @@ export default function VistaTutor({
   const idUsuario = userId ?? authUserId;
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
   const estadosTutoria = useEstados("tutoria");
+  const { publicacion: publicacionService } = useServices();
+  const { data: publicacionesDestacadas, refetch: refetchDestacadas } = usePublicacionesDestacadas(idUsuario);
+  const publicacionesDestacadasIds = useMemo(
+    () => new Set(publicacionesDestacadas.map((pub) => pub.id_publicacion)),
+    [publicacionesDestacadas]
+  );
 
   const [catalogTutorias, setCatalogTutorias] = useState<CatalogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -165,6 +173,25 @@ export default function VistaTutor({
       );
     });
   }, []);
+  const handleToggleDestacado = useCallback(async (pub: CatalogPost) => {
+    const destacar = !publicacionesDestacadasIds.has(pub.id);
+
+    try {
+      await publicacionService.actualizarDestacadasUsuario(pub.id, destacar);
+      agregarNotificacion({
+        tipo: "success",
+        mensaje: destacar ? "La tutoría fue destacada." : "La tutoría ya no está destacada.",
+      });
+      await refetchDestacadas();
+
+    } catch (err) {
+      const apiError = err as ApiError;
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: apiError.message || "No fue posible actualizar el destacado.",
+      });
+    }
+  }, [agregarNotificacion, publicacionesDestacadasIds, publicacionService, refetchDestacadas]);
 
   useEffect(() => {
     fetchPublicaciones();
@@ -296,6 +323,8 @@ export default function VistaTutor({
                   onPinChange={(newPinned) =>
                     handlePinChange(pub.id, newPinned)
                   }
+                  isDestacado={publicacionesDestacadasIds.has(pub.id)}
+                  onToggleDestacado={() => void handleToggleDestacado(pub)}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
