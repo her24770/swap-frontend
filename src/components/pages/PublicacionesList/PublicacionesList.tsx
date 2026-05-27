@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "next/navigation";
+import { stripLocalePrefix } from "../../../i18n/pathname";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
@@ -12,7 +13,6 @@ import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/
 import DetalleUsuario from "../../../components/ui/Modal/DetalleUsuario/DetalleUsuario";
 import { mapPublicacionEtiquetasToTags } from "../../../lib/tags";
 import { normalizeImageUrl } from "../../../lib/imageUrl";
-import { stripLocalePrefix } from "../../../i18n/pathname";
 import type { Publicacion, FiltroPublicacionBody, FiltroTutorBody, TutorFiltrado } from "../../../types/publicacion";
 import { Tag } from "../../../types/tag";
 import type { Anuncio } from "../../../types/anuncio";
@@ -329,6 +329,7 @@ export default function PublicacionesList({
         setActiveFilters(null);
         setInternalPage(1);
     };
+
 
     return (
         <div className="publicaciones-list">

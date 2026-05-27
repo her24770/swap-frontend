@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import Cropper from "react-easy-crop";
+import type { Area } from "react-easy-crop";
 import getCroppedImg from "../../../../../utils/cropImage";
 import "./ImageCropper.css";
 import "../../../Button/Button.css";
@@ -8,16 +9,20 @@ interface ImageCropperProps {
   imageSrc: string;
   onCropComplete: (croppedFile: File) => void;
   onCancel: () => void;
+  aspect?: number;
+  cropShape?: "rect" | "round";
 }
 
 export default function ImageCropper({
   imageSrc,
   onCropComplete,
   onCancel,
+  aspect = 1,
+  cropShape = "round",
 }: ImageCropperProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const onCropChange = useCallback((crop: { x: number; y: number }) => {
     setCrop(crop);
@@ -28,8 +33,8 @@ export default function ImageCropper({
   }, []);
 
   const onCropCompleteHandler = useCallback(
-    (_croppedArea: any, croppedAreaPixels: any) => {
-      setCroppedAreaPixels(croppedAreaPixels);
+    (_croppedArea: Area, nextCroppedAreaPixels: Area) => {
+      setCroppedAreaPixels(nextCroppedAreaPixels);
     },
     []
   );
@@ -54,8 +59,8 @@ export default function ImageCropper({
             image={imageSrc}
             crop={crop}
             zoom={zoom}
-            aspect={1}
-            cropShape="round"
+            aspect={aspect}
+            cropShape={cropShape}
             showGrid={false}
             onCropChange={onCropChange}
             onCropComplete={onCropCompleteHandler}

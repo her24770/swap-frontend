@@ -314,3 +314,9 @@
   min-height: 0;
   background-color: var(--swap-primary-background);
 }
+.publicaciones-list__title-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
