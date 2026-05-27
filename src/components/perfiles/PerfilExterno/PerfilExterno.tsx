@@ -16,7 +16,6 @@ import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContex
 import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import PostCard from "../../posts/PostCard/PostCard";
-import FeaturedPublicationsCarousel from "../FeaturedPublicationsCarousel/FeaturedPublicationsCarousel";
 
 interface PerfilExternoProps {
   userId: number;
@@ -89,8 +88,6 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
             </button>
             ))}
         </div>
-
-        <FeaturedPublicationsCarousel userId={userId} />
 
         <hr className="perfil-page__divider" />
 

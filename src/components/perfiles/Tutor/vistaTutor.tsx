@@ -323,8 +323,6 @@ export default function VistaTutor({
                   onPinChange={(newPinned) =>
                     handlePinChange(pub.id, newPinned)
                   }
-                  isDestacado={publicacionesDestacadasIds.has(pub.id)}
-                  onToggleDestacado={() => void handleToggleDestacado(pub)}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);

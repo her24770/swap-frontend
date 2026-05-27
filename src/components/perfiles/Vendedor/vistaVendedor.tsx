@@ -210,25 +210,7 @@ export default function VistaVendedor({
     },
     []
   );
-  const handleToggleDestacado = useCallback(async (pub: CatalogPost) => {
-    const destacar = !publicacionesDestacadasIds.has(pub.id);
-
-    try {
-      await publicacionService.actualizarDestacadasUsuario(pub.id, destacar);
-      agregarNotificacion({
-        tipo: "success",
-        mensaje: destacar ? "La publicación fue destacada." : "La publicación ya no está destacada.",
-      });
-      await refetchDestacadas();
-    } catch (err) {
-      const apiError = err as ApiError;
-      agregarNotificacion({
-        tipo: "error",
-        mensaje: apiError.message || "No fue posible actualizar el destacado.",
-      });
-    }
-  }, [agregarNotificacion, publicacionesDestacadasIds, publicacionService, refetchDestacadas]);
-
+  
   useEffect(() => {
     fetchPublicaciones();
   }, [fetchPublicaciones]);
@@ -325,8 +307,6 @@ export default function VistaVendedor({
                   onPinChange={(newPinned) =>
                     handlePinChangeMaterial(pub.id, newPinned)
                   }
-                  isDestacado={publicacionesDestacadasIds.has(pub.id)}
-                  onToggleDestacado={() => void handleToggleDestacado(pub)}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);
@@ -397,8 +377,6 @@ export default function VistaVendedor({
                   onPinChange={(newPinned) =>
                     handlePinChangeNegocio(pub.id, newPinned)
                   }
-                  isDestacado={publicacionesDestacadasIds.has(pub.id)}
-                  onToggleDestacado={() => void handleToggleDestacado(pub)}
                   onEditClick={() => {
                     setPostEditando(pub);
                     setEditOpen(true);

@@ -68,15 +68,6 @@
   color: var(--swap-primary-color, #10b981);
 }
 
-.post-card__feature-button:hover {
-  transform: scale(1.1);
-  color: #f59e0b;
-}
-
-.post-card__feature-button--featured {
-  color: #f59e0b;
-}
-
 .post-card__delete-button:hover {
   transform: scale(1.1);
   color: var(--swap-danger-color, #ef4444);
