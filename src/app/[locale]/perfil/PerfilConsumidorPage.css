@@ -85,6 +85,18 @@
   border-right: 1px solid var(--swap-primary-border-color);
 }
 
+.perfil-page__mode-btn-skeleton {
+  flex: 1;
+  min-height: 2.75rem;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid var(--swap-primary-border-color);
+}
+
+.perfil-page__mode-btn-skeleton:last-child {
+  border-right: none;
+}
+
 /* ── Section ─────────────────────────────────────────────────────────────── */
 
 .perfil-page__section {
@@ -104,7 +116,20 @@
   margin: 0;
 }
 
+.perfil-page__section-title-skeleton,
+.perfil-page__catalog-bar-title-skeleton {
+  width: 12rem;
+  max-width: 60%;
+  height: 1.25rem;
+  border-radius: 0.375rem;
+}
+
 .perfil-page .h-carousel__item {
+  width: clamp(15rem, calc(100vw - 7rem), 20rem);
+}
+
+.perfil-page__carousel-wrap .carousel-skeleton .perfil-page__purchase-item {
+  flex: 0 0 clamp(15rem, calc(100vw - 7rem), 20rem);
   width: clamp(15rem, calc(100vw - 7rem), 20rem);
 }
 

@@ -10,6 +10,8 @@ import { useGuardados } from "../../../../hooks/useGuardados";
 import { useInfiniteVisibleItems } from "../../../../hooks/useInfiniteVisibleItems";
 import { mapPublicacionEtiquetasToTags } from "../../../../lib/tags";
 import type { Publicacion } from "../../../../types/publicacion";
+import { PerfilPostCarouselSkeleton } from "../../perfilLoading";
+import { PublicacionesGridSkeleton } from "../../../pages/PublicacionesList/PublicacionesGridSkeleton";
 import "./PublicacionesGuardadas.css";
 
 type PublicacionesGuardadasVariant = "carousel" | "grid";
@@ -71,9 +73,9 @@ export default function PublicacionesGuardadas({
         <h2 className="perfil-page__section-title">{sectionTitle}</h2>
       )}
 
-      {loading && (
-        <p className="perfil-page__coming-soon">Cargando publicaciones guardadas...</p>
-      )}
+      {loading && variant === "carousel" && <PerfilPostCarouselSkeleton count={4} />}
+
+      {loading && variant === "grid" && <PublicacionesGridSkeleton count={itemsPerPage} />}
 
       {!loading && guardados.length === 0 && (
         <p className="perfil-page__coming-soon">Aún no tienes publicaciones guardadas.</p>

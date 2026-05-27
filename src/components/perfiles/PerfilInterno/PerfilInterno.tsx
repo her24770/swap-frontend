@@ -19,6 +19,8 @@ import type { ApiResult } from "../../../types/ApiResult";
 import type { AuthResponse } from "../../../types/usuario";
 import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
+import { UserProfileHeaderSkeleton } from "../../users/UserCard/UserProfileHeader/UserProfileHeadearSkeleton/UserProfileHeaderSkeleton";
+import { PerfilModeToggleSkeleton } from "../perfilLoading";
 import "../../../app/[locale]/perfil/PerfilConsumidorPage.css";
 
 
@@ -60,7 +62,6 @@ export default function PerfilInterno() {
   }, [idUsuario, login]);
 
   if (error) return <p className="perfil-page__loading">{error}</p>;
-  if (!user) return <p className="perfil-page__loading">{t("loading")}</p>;
 
   const MODES: { key: PerfilMode; label: string }[] = [
     { key: "consumidor", label: t("mode.consumer") },
@@ -74,66 +75,76 @@ export default function PerfilInterno() {
       profileView="interno"
       activeProfileMode={mode}
     >
-      <UserProfileHeader
-        user={user}
-        onSave={async (updated) => {
-          setUser((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  name: updated.name ?? prev.name,
-                  description: updated.description ?? prev.description,
-                  imageUrl: updated.imageUrl ?? prev.imageUrl,
-                  contacts: updated.contacts
-                    ? updated.contacts.map((c: any) => ({
-                        platform: c.tipo_contacto,
-                        url: c.valor,
-                      }))
-                    : prev.contacts,
-                }
-              : prev
-          );
-        }}
-      />
-
-      <div className="perfil-page__mode-toolbar">
-        <PerfilModeToggle
-          mode={mode}
-          modes={MODES}
-          onModeChange={setMode}
-        />
-      </div>
-
-      <hr className="perfil-page__divider" />
-
-      {mode === "consumidor" && <VistaConsumidor />}
-      {mode === "vendedor" && (
-        
-        <VistaVendedor
-          userName={user.name}
-          userRating={0}
-          userImageUrl={user.imageUrl}
-        />
-      )}
-      {mode === "tutor" && (
-        <VistaTutor
-          userName={user.name}
-          userRating={0}
-          userImageUrl={user.imageUrl}
-        />
-      )}
-      <hr className="perfil-page__divider" />
-
-      {mode !== "consumidor" && (
+      {!user ? (
         <>
+          <UserProfileHeaderSkeleton />
+          <PerfilModeToggleSkeleton count={3} />
           <hr className="perfil-page__divider" />
-          <CommentSection
-            targetName={user.name}
-            idReceptor={user.id_usuario} 
-            comments={ResenasUsuario || []} 
-            onSuccessSubmit={refetchResenas}
-            onCancel={() => {}}
+          <VistaConsumidor purchasesLoading />
+        </>
+      ) : (
+        <>
+          <UserProfileHeader
+            user={user}
+            onSave={async (updated) => {
+              setUser((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      name: updated.name ?? prev.name,
+                      description: updated.description ?? prev.description,
+                      imageUrl: updated.imageUrl ?? prev.imageUrl,
+                      contacts: updated.contacts
+                        ? updated.contacts.map((c: any) => ({
+                            platform: c.tipo_contacto,
+                            url: c.valor,
+                          }))
+                        : prev.contacts,
+                    }
+                  : prev
+              );
+            }}
           />
+
+          <div className="perfil-page__mode-toolbar">
+            <PerfilModeToggle
+              mode={mode}
+              modes={MODES}
+              onModeChange={setMode}
+            />
+          </div>
+
+          <hr className="perfil-page__divider" />
+
+          {mode === "consumidor" && <VistaConsumidor />}
+          {mode === "vendedor" && (
+            <VistaVendedor
+              userName={user.name}
+              userRating={0}
+              userImageUrl={user.imageUrl}
+            />
+          )}
+          {mode === "tutor" && (
+            <VistaTutor
+              userName={user.name}
+              userRating={0}
+              userImageUrl={user.imageUrl}
+            />
+          )}
+          <hr className="perfil-page__divider" />
+
+          {mode !== "consumidor" && (
+            <>
+              <hr className="perfil-page__divider" />
+              <CommentSection
+                targetName={user.name}
+                idReceptor={user.id_usuario}
+                comments={ResenasUsuario || []}
+                onSuccessSubmit={refetchResenas}
+                onCancel={() => {}}
+              />
+            </>
+          )}
         </>
       )}
     </PerspectivaInternaProvider>

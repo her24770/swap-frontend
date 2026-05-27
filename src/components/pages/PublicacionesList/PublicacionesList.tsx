@@ -486,9 +486,7 @@ export default function PublicacionesList({
                                 <h2 className="publicaciones-list__section-title">{t("ads")}</h2>
                                 <RenderError error={errors.ads} />
                                 {loading.ads ? (
-                                    <div className="publicaciones-list__carousel-wrap">
-                                        <SkeletonHorizontalCarousel count={3} renderItem={() => <AdBannerSkeleton />} />
-                                    </div>
+                                    <AdBannerSkeleton />
                                 ) : (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <AnunciosCarousel>

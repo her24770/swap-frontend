@@ -1,0 +1,70 @@
+.horario-sk {
+  background-color: var(--swap-primary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.horario-sk__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.horario-sk__title {
+  height: 1rem;
+  width: 140px;
+}
+
+.horario-sk__legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.horario-sk__legend-item {
+  height: 20px;
+  width: 72px;
+  border-radius: 4px;
+}
+
+.horario-sk__scroll { overflow-x: auto; }
+
+.horario-sk__grid {
+  display: grid;
+  grid-template-columns: 3rem repeat(7, 1fr);
+  gap: 3px;
+  min-width: 560px;
+}
+
+.horario-sk__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0.25rem;
+}
+
+.horario-sk__cell--header {
+  padding: 0.375rem 0.25rem;
+}
+
+.horario-sk__day {
+  height: 0.6875em;
+  width: 70%;
+}
+
+.horario-sk__hour {
+  height: 0.6875em;
+  width: 2.2rem;
+}
+
+.horario-sk__slot {
+  height: 2rem;
+  width: 100%;
+  border-radius: 0.3125rem;
+}
