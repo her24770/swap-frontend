@@ -347,7 +347,18 @@
 			"disponible": "Available",
 			"reservado": "Reserved",
 			"vendido": "Sold",
-			"inactivo": "Inactive"
+			"inactivo": "Inactive",
+			"1": "Available",
+			"2": "Read",
+			"3": "Reserved",
+			"4": "Sold",
+			"5": "Sent",
+			"6": "Pending",
+			"7": "Active",
+			"8": "Inactive",
+			"9": "Cancelled",
+			"10": "Completed"
+
 		}
 	},
 	"comments": {
