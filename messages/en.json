@@ -293,7 +293,8 @@
 			"catalogNegocio": "Your catalog Business",
 			"schedule": "Schedule",
 			"ads": "Ads",
-			"comments": "Comments & reviews"
+			"comments": "Comments & reviews",
+			"featured": "Featured Posts"
 		},
 		"actions": {
 			"newPublication": "New post",
@@ -306,6 +307,7 @@
 			"createPublicationAria": "Create post",
 			"editPublicationAria": "Edit post"
 		}
+
 	},
 	"vendedor": {
 		"loading": "Loading profile...",

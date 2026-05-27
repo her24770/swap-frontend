@@ -293,7 +293,9 @@
 			"catalogNegocio": "Tu Catálogo de Negocio",
 			"schedule": "Tu Horario",
 			"ads": "Anuncios",
-			"comments": "Comentarios y Reseñas"
+			"comments": "Comentarios y Reseñas",
+			"featured": "Publicaciones Destacadas"
+
 		},
 		"actions": {
 			"newPublication": "Nueva publicación",

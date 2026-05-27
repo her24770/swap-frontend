@@ -290,7 +290,8 @@
 			"purchases": "Achats",
 			"catalog": "Votre catalogue",
 			"ads": "Annonces",
-			"comments": "Commentaires et avis"
+			"comments": "Commentaires et avis",
+			"featured": "Publications en vedette"
 		},
 		"actions": {
 			"newPublication": "Nouvelle publication",
