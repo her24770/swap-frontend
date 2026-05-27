@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
@@ -7,14 +8,14 @@ import { TAG_TUTORIA } from "../../../lib/tags";
 import "../seccion.css";
 
 const ITEMS_PER_PAGE = 12;
-const PUBLICACIONES_FETCH_LIMIT = 100;
 
 export default function TutoriasPage() {
   const t = useTranslations('tutorias');
   const tTags = useTranslations('common.tags');
+  const [morePage, setMorePage] = useState(1);
 
-  const { data: moreData, loading: moreLoading, error: moreError } = 
-    usePublicaciones({ tipo: "tutoria", all: true, limit: PUBLICACIONES_FETCH_LIMIT });
+  const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } =
+    usePublicaciones({ tipo: "tutoria", all: true, limit: ITEMS_PER_PAGE, page: morePage });
   
   const { data: recentsData, loading: recentsLoading, error: recentsError } = 
     usePublicaciones({ tipo: "tutoria", limit: ITEMS_PER_PAGE, sort: "fecha" });
@@ -47,6 +48,9 @@ export default function TutoriasPage() {
         recentsPublicaciones={recentsData || []}
         popularPublicaciones={popularData || []}
         morePublicaciones={moreData || []}
+        totalPublicaciones={moreTotal}
+        currentPage={morePage}
+        onPageChange={setMorePage}
         loading={loadingStates}
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
