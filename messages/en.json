@@ -293,19 +293,24 @@
 			"catalogNegocio": "Your catalog Business",
 			"schedule": "Schedule",
 			"ads": "Ads",
-			"comments": "Comments & reviews"
+			"comments": "Comments & reviews",
+			"featured": "Featured Posts"
 		},
 		"actions": {
 			"newPublication": "New post",
 			"changeAd": "Change ad", 
-			"createAd": "Create ad",
+			"createAd": "New ad",
 			"editAd": "Edit ad",
-			"editSchedule": "Edit Schedule"
+			"editSchedule": "Edit Schedule",
+			"newPostMaterial": "New material",
+			"newPostNegocio": "New business",
+			"newPostTutoria": "New tutoring"
 		},
 		"modal": {
 			"createPublicationAria": "Create post",
 			"editPublicationAria": "Edit post"
 		}
+
 	},
 	"vendedor": {
 		"loading": "Loading profile...",

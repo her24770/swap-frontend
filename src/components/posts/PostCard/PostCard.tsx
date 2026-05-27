@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2 } from "lucide-react";
+import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2} from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
@@ -39,6 +39,7 @@ interface PostCardProps {
   initialLikes?: number;
   isPinned?: boolean;
   onPinChange?: (newPinned: boolean) => void;
+  categorias?: number[];
 }
 
 export default function PostCard({
@@ -269,6 +270,7 @@ export default function PostCard({
               <SquarePen size={24} strokeWidth={2} />
             </button>
           )}
+          
           {canEditCards && onDeleteClick && (
             <button
               type="button"
@@ -280,6 +282,7 @@ export default function PostCard({
               <Trash2 size={24} strokeWidth={2} />
             </button>
           )}
+
         </div>
       </header>
 

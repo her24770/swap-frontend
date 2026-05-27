@@ -13,7 +13,7 @@
   white-space: nowrap;
   line-height: 1.4;
   border: 1px solid transparent;
-  transition: filter 0.15s ease, transform 0.15s ease;
+  transition: filter 1.5s ease, transform 1.5s ease, max-width 1s ease-in-out;
   cursor: default;
   user-select: none;
 }
@@ -55,4 +55,17 @@
 .tag-badge--lg {
   font-size: 0.75rem;
   padding: 0.25rem 0.8rem;
+  display: inline-block; 
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle; 
+  text-align: center;
+}
+
+.tag-badge--lg:hover {
+  max-width: 500px; 
+  transition: max-width 0.25s ease-in-out;
+
 }

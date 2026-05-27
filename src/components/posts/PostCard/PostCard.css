@@ -49,6 +49,7 @@
 }
 
 .post-card__edit-button,
+.post-card__feature-button,
 .post-card__delete-button {
   background: transparent;
   border: none;

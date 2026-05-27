@@ -293,14 +293,19 @@
 			"catalogNegocio": "Tu Catálogo de Negocio",
 			"schedule": "Tu Horario",
 			"ads": "Anuncios",
-			"comments": "Comentarios y Reseñas"
+			"comments": "Comentarios y Reseñas",
+			"featured": "Publicaciones Destacadas"
+
 		},
 		"actions": {
 			"newPublication": "Nueva publicación",
 			"changeAd": "Cambiar anuncio",
-			"createAd": "Crear anuncio",
+			"createAd": "Nuevo anuncio",
 			"editAd": "Editar anuncio",
-			"editSchedule": "Editar Horario"
+			"editSchedule": "Editar Horario",
+			"newPostMaterial": "Nuevo material",
+			"newPostNegocio": "Nuevo negocio",
+			"newPostTutoria": "Nueva tutoría"
 		},
 		"modal": {
 			"createPublicationAria": "Crear publicación",

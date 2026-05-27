@@ -118,7 +118,7 @@ export default function UserProfileHeader({
 
         <div className="user-profile-header__avatar-col">
           <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
-          <UserRating score={user.rating} totalReviews={user.totalReviews} />
+          <UserRating score={user.calificacion ?? 0} totalReviews={user.totalResenas ?? 0} />
             <button
               type="button"
               className="certificacion-btn"

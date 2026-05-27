@@ -59,7 +59,9 @@ export interface UseFormCrearPublicacionReturn {
 }
 
 
-export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
+export function useFormCrearPublicacion(
+  defaultTipoPublicacion: TipoPublicacion = "material"
+): UseFormCrearPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,7 +73,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn {
       titulo: "",
       descripcion: "",
       precio: "",
-      tipo_publicacion: "material",
+      tipo_publicacion: defaultTipoPublicacion,
       categorias: [],
       imagenes: [],
       destacado: false,

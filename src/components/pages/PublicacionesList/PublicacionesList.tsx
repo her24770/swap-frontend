@@ -111,7 +111,7 @@ type Props = {
     itemsPerPage?: number;
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
-    Ads: Anuncio[];
+    Ads?: Anuncio[];
 };
 
 export default function PublicacionesList({

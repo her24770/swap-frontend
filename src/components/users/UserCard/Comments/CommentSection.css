@@ -8,6 +8,7 @@
 .comment-section__form-col {
   flex: 1;
   min-width: 0;
+  width: 100%;
 }
 
 .comment-section__list-col {
