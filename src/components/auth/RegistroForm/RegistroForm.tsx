@@ -99,6 +99,16 @@ export default function RegistroForm() {
   const onSubmit = async (data: RegistroFormData) => {
     try {
       setServerError(null);
+      // validate etiquetas count
+      const count = data.etiquetas?.length ?? 0;
+      if (count < 3) {
+        setServerError(t('tagsCountMin') || 'Selecciona al menos 3 etiquetas.');
+        return;
+      }
+      if (count > 20) {
+        setServerError(t('tagsCountMax') || 'No puedes seleccionar más de 20 etiquetas.');
+        return;
+      }
       const carnet = extractCarnetFromEmail(data.email_institucional);
       if (!carnet) {
         setServerError(t('emailInvalid'));
