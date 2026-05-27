@@ -7,6 +7,7 @@ import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
+import UserTagsModal from "../UserTagsModal/UserTagsModal";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
@@ -31,9 +32,11 @@ export default function UserProfileHeader({
   const t = useTranslations('profileHeader');
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [tagsModalOpen, setTagsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
+  const [displayTags, setDisplayTags] = useState<Tag[]>(user.tags ?? []);
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
   const [showCerts, setShowCerts] = useState(false);
   const toast = useToast();
@@ -54,6 +57,10 @@ export default function UserProfileHeader({
   useEffect(() => {
     fetchCertificaciones();
   }, [fetchCertificaciones]);
+
+  useEffect(() => {
+    setDisplayTags(user.tags ?? []);
+  }, [user.tags]);
 
 
   const initialModalContacts = useMemo(
@@ -112,6 +119,10 @@ export default function UserProfileHeader({
     }
   };
 
+  const handleTagsSaved = (tags: Tag[]) => {
+    setDisplayTags(tags);
+  };
+
   return (
     <>
       <div className="user-profile-header">
@@ -142,6 +153,19 @@ export default function UserProfileHeader({
                 <Pencil size={12} />
                 {t('actions.editProfile')}
               </button>
+              
+            )}
+
+            {/* {Botón para administrar las etiquetas del usuario} */}
+            {canEditProfile && (
+              <button
+                type="button"
+                className="etiquetas-btn"
+                onClick={() => setTagsModalOpen(true)}
+              >
+                <Pencil size={12} strokeWidth={1.8} aria-hidden />
+                {t('actions.editTags')}
+              </button>
             )}
           </div>
 
@@ -163,9 +187,9 @@ export default function UserProfileHeader({
         </div>
 
         <div className="user-profile-header__side-col">
-          {user.tags && user.tags.length > 0 && (
+          {displayTags.length > 0 && (
             <div className="user-profile-header__tags">
-              {user.tags.map((tag) => (
+              {displayTags.map((tag) => (
                 <TagBadge key={tag.id} tag={tag} size="lg" />
               ))}
             </div>
@@ -201,6 +225,16 @@ export default function UserProfileHeader({
           onSubmit={handleSave}
           onCancel={() => setModalOpen(false)}
           isSaving={isSaving}
+        />
+      )}
+
+      {canEditProfile && tagsModalOpen && (
+        <UserTagsModal
+          isOpen={tagsModalOpen}
+          userId={user.id_usuario}
+          currentTags={displayTags}
+          onClose={() => setTagsModalOpen(false)}
+          onSaved={handleTagsSaved}
         />
       )}
     </>
