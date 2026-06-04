@@ -5,6 +5,9 @@ import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
+import { FloatingButton } from "../../ui/Button/FloatingButton/FloatingButton";
+import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
+import "../../ui/Modal/Modal.css";
 import "./layout.css";
 
 interface LayoutProps {
@@ -13,6 +16,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [crearOpen, setCrearOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
@@ -52,12 +56,36 @@ export default function Layout({ children }: LayoutProps) {
       <div className="layout__body">
         {/* Sidebar solo visible en rutas no auth */}
         {!isAuthRoute && <Sidebar ref={sidebarRef} isOpen={sidebarOpen} />}
-        
+
         {/* Main content con clase condicional */}
         <main className={isAuthRoute ? "layout__main--auth" : "layout__main"}>
           {children}
         </main>
       </div>
+
+      {!isAuthRoute && (
+        <div className="layout__fab-wrapper">
+          <FloatingButton onClick={() => setCrearOpen(true)} ariaLabel="Crear publicación" />
+        </div>
+      )}
+
+      {crearOpen && (
+        <div className="modal-overlay" onClick={() => setCrearOpen(false)}>
+          <div
+            className="layout__crear-pub-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Crear publicación"
+          >
+            <CrearPublicacionForm
+              mode="crear"
+              onCancel={() => setCrearOpen(false)}
+              onSuccess={() => setCrearOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

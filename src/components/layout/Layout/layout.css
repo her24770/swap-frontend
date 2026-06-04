@@ -29,3 +29,19 @@
   justify-content: center;
   align-items: center;
 }
+
+.layout__fab-wrapper {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+.layout__crear-pub-modal {
+  background-color: var(--swap-primary-background);
+  border-radius: 1rem;
+  width: min(90vw, 560px);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
