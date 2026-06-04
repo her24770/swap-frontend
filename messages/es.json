@@ -188,7 +188,8 @@
 		"submitting": "Ingresando...",
 		"footer": {
 			"noAccount": "No tienes una cuenta?",
-			"register": "Regístrate aquí"
+			"register": "Regístrate aquí",
+			"createAccount": "Crear cuenta"
 		},
 		"toast": {
 			"welcomeBack": "¡Bienvenido de nuevo!",

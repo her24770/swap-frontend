@@ -79,7 +79,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
             <Menu size={28} strokeWidth={2} />
           </button>
         )}
-        <Link href="/" className="navbar__logo-link" aria-label="Ir a descubre">
+        <Link href="/" className="navbar__logo-link" aria-label="Ir a descubre" title="Ir a descubre">
           <LogoCompleto className="navbar__logo"/>
         </Link>
       </div>
@@ -94,6 +94,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
               }}
               aria-label="Abrir configuraciones"
               type="button"
+              title="Configuraciones"
               className="navbar__menu-btn"
             >
               <Settings size={25} strokeWidth={2} />
@@ -108,6 +109,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                 aria-label="Abrir notificaciones"
                 aria-expanded={notifOpen}
                 type="button"
+                title="Notificaciones"
                 className="navbar__menu-btn navbar__menu-btn--bell"
               >
                 <Bell size={25} strokeWidth={2} />
@@ -141,6 +143,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
               <button
                 aria-label={t('ariaUserProfile')}
                 type="button"
+                title= "Perfil"
                 onClick={() => {
                   setNotifOpen(false);
                   setProfileOpen((prev) => !prev);
@@ -155,6 +158,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                   <Link
                     href="/perfil"
                     onClick={() => setProfileOpen(false)}
+                    title={t('viewProfile')}
                     className="navbar__dropdown-item"
                   >
                     <UserCircle2 size={16} className="navbar__dropdown-icon" />
@@ -163,6 +167,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                   <div className="navbar__dropdown-divider" />
                   <button
                     type="button"
+                    title="Cerrar sesión"
                     onClick={logout}
                     className="navbar__dropdown-item navbar__dropdown-item--danger"
                   >

@@ -1,0 +1,32 @@
+.fab {
+  display: flex;
+  height: 3.5rem;
+  width: 3.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--swap-primary-color);
+  color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.fab:hover {
+  transform: scale(1.05);
+  background-color: #035a3e;
+}
+
+.fab:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px #ffffff, 0 0 0 6px #10b981, 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.fab__icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}

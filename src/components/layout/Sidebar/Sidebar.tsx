@@ -37,6 +37,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen 
               <Link
                 key={href}
                 href={href}
+                title={label}
                 className={`sidebar__link ${isActive ? "sidebar__link--active" : ""}`}
               >
                 <span className="sidebar__icon">

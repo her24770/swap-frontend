@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import Link from "next/link";
 import { useRouter } from "../../../i18n/routing";
@@ -134,12 +134,13 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <p className="login-form__footer">
-        {t('footer.noAccount')}{" "}
-        <Link href="/registro" className="login-form__register-link">
-          {t('footer.register')}
-        </Link>
-      </p>
+      <div className="login-form__divider">
+        <span>{t("footer.noAccount")}</span>
+      </div>
+      <Link href="/registro" className="login-form__register-btn">
+        <UserPlus size={15} strokeWidth={1.8} aria-hidden />
+        {t("footer.createAccount")}
+      </Link>
     </div>
   );
 }

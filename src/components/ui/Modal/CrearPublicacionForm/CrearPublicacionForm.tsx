@@ -9,7 +9,7 @@ import { useEstados } from "../../../../hooks/useEstados";
 import ImageCropper from "../ActualizarPerfil/SubirImagen/ImageCropper";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
-import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion } from "../../../../schemas/zodSchemas";
+import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion, TIPOS_PUBLICACION } from "../../../../schemas/zodSchemas";
 import { UseFormReturn } from "react-hook-form";
 
 type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
@@ -21,7 +21,7 @@ interface BasePublicacionFormProps {
 
 interface CrearPublicacionFormProps extends BasePublicacionFormProps {
   mode: "crear";
-  tipoPublicacion: TipoPublicacion;
+  tipoPublicacion?: TipoPublicacion;
 }
 
 interface EditarPublicacionFormProps extends BasePublicacionFormProps {
@@ -40,9 +40,11 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
   const { onSuccess } = props;
   const isEditing = props.mode === "editar";
+  const tipoPublicacionProp = !isEditing ? (props as CrearPublicacionFormProps).tipoPublicacion : undefined;
   const tipoPublicacionSeleccionada = isEditing
     ? ((props as EditarPublicacionFormProps).defaultValues?.tipo_publicacion ?? "material")
-    : props.tipoPublicacion;
+    : (tipoPublicacionProp ?? "material");
+  const showTipoSelector = !isEditing && !tipoPublicacionProp;
   const createHook = useFormCrearPublicacion(tipoPublicacionSeleccionada);
   const editHook = useFormEditarPublicacion(
     isEditing ? props.publicacionId : 0,
@@ -112,10 +114,11 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
         ? t("fields.categoryTriggerOne")
         : t("fields.categoryTriggerMany", { count: selectedCategorias.length });
 
+  const watchedTipo = (watch("tipo_publicacion") as TipoPublicacion | undefined) ?? tipoPublicacionSeleccionada;
   const tipoPublicacionLabel =
-    tipoPublicacionSeleccionada === "material"
+    watchedTipo === "material"
       ? tTags("material")
-      : tipoPublicacionSeleccionada === "tutoria"
+      : watchedTipo === "tutoria"
         ? tTags("tutoria")
         : tTags("negocio");
 
@@ -234,9 +237,24 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
           {/* Tipo de publicación */}
           <div className="crear-publicacion__field">
             <label className="crear-publicacion__label">{t("fields.type")}</label>
-            <div className="crear-publicacion__readonly-value" aria-readonly="true">
-              {tipoPublicacionLabel}
-            </div>
+            {showTipoSelector ? (
+              <div className="crear-publicacion__tipo-selector">
+                {TIPOS_PUBLICACION.map((tipo) => (
+                  <button
+                    key={tipo}
+                    type="button"
+                    className={`crear-publicacion__tipo-btn${watchedTipo === tipo ? " crear-publicacion__tipo-btn--active" : ""}`}
+                    onClick={() => setValue("tipo_publicacion", tipo, { shouldValidate: true })}
+                  >
+                    {tipo === "material" ? tTags("material") : tipo === "tutoria" ? tTags("tutoria") : tTags("negocio")}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="crear-publicacion__readonly-value" aria-readonly="true">
+                {tipoPublicacionLabel}
+              </div>
+            )}
           </div>
 
           {/* Categorías */}
