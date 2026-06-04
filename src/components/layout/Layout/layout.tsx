@@ -65,7 +65,12 @@ export default function Layout({ children }: LayoutProps) {
 
       {!isAuthRoute && (
         <div className="layout__fab-wrapper">
-          <FloatingButton onClick={() => setCrearOpen(true)} ariaLabel="Crear publicación" />
+          <FloatingButton
+          onClick={() => {
+            if (!document.querySelector(".modal-overlay")) setCrearOpen(true);
+          }}
+          ariaLabel="Crear publicación"
+        />
         </div>
       )}
 

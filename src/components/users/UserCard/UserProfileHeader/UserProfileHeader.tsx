@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { Pencil, CreditCard, FileText } from "lucide-react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { Pencil, CreditCard, FileText, Camera, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
@@ -16,6 +16,7 @@ import type { Tag } from "../../../../types/tag";
 import type { Certificacion } from "../../../../types/certificacion";
 import { useToast } from "../../../../hooks/useToast";
 import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
+import { useUIStore } from "../../../../store/uiStore";
 import { contactosToUpsertBody, reemplazarContactosUsuario } from "../../../../lib/contactosUsuario";
 import "./UserProfileHeader.css";
 import Certificaciones from "../../../users/Certificaciones/Certificaciones";
@@ -41,8 +42,45 @@ export default function UserProfileHeader({
   const [showCerts, setShowCerts] = useState(false);
   const toast = useToast();
   const { canEditProfile } = usePerspectivaInterna();
+  const { mostrarConfirm } = useUIStore();
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingFoto, setIsUploadingFoto] = useState(false);
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      toast.error("Formato no válido. Usa JPG, PNG o WebP.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("La imagen supera el límite de 5 MB.");
+      return;
+    }
+
+    mostrarConfirm({
+      titulo: "Cambiar foto de perfil",
+      mensaje: "¿Deseas actualizar tu foto de perfil?",
+      onConfirm: async () => {
+        try {
+          setIsUploadingFoto(true);
+          const urlFoto = await imagenService.uploadFotoPerfil(user.id_usuario, file);
+          await apiClient.patch(`/api/user/${user.id_usuario}`, { url_foto_perfil: urlFoto });
+          setDisplayImageUrl(`${urlFoto}?t=${Date.now()}`);
+          toast.success("Foto de perfil actualizada exitosamente.");
+        } catch (err: any) {
+          toast.error(err.message || "No fue posible actualizar la foto de perfil.");
+        } finally {
+          setIsUploadingFoto(false);
+        }
+      },
+    });
+  };
 
   const fetchCertificaciones = useCallback(async () => {
     if (!user.id_usuario) return;
@@ -128,7 +166,31 @@ export default function UserProfileHeader({
       <div className="user-profile-header">
 
         <div className="user-profile-header__avatar-col">
-          <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
+          <div className="user-profile-header__avatar-wrapper">
+            <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
+            {canEditProfile && (
+              <>
+                <div
+                  className="user-profile-header__photo-overlay"
+                  onClick={() => !isUploadingFoto && photoInputRef.current?.click()}
+                  role="button"
+                  aria-label="Cambiar foto de perfil"
+                >
+                  {isUploadingFoto
+                    ? <Loader2 size={28} className="user-profile-header__upload-spinner" />
+                    : <Camera size={28} />
+                  }
+                </div>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden
+                  onChange={handlePhotoUpload}
+                />
+              </>
+            )}
+          </div>
           <UserRating score={user.calificacion ?? 0} totalReviews={user.totalResenas ?? 0} />
             <button
               type="button"
