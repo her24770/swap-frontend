@@ -141,7 +141,7 @@ export default function PublicacionesList({
     const usesServerPagination = !showingSearchResults && !showingFiltered && totalPublicaciones !== undefined;
     const totalItems = usesServerPagination ? totalPublicaciones : mainSectionData.length;
     const pageCount = Math.max(1, Math.ceil(totalItems / itemsPerPage));
-    const activeCurrentPage = showingSearchResults || currentPage === undefined ? internalPage : currentPage;
+    const activeCurrentPage = showingSearchResults || showingFiltered || currentPage === undefined ? internalPage : currentPage;
     const safeCurrentPage = Math.min(activeCurrentPage, pageCount);
 
     const visibleGridData = useMemo(() => {
@@ -170,7 +170,7 @@ export default function PublicacionesList({
 
     useEffect(() => {
         setInternalPage(1);
-    }, [searchQuery, itemsPerPage]);
+    }, [searchQuery, itemsPerPage, filteredResults]);
 
     const mapTags = (p: Publicacion) =>
         tagsForAll
@@ -270,7 +270,7 @@ export default function PublicacionesList({
 
     const renderPagination = (label: string) => {
         if (!hasPagination) return null;
-        const setPage = showingSearchResults || !onPageChange ? setInternalPage : onPageChange;
+        const setPage = showingSearchResults || showingFiltered || !onPageChange ? setInternalPage : onPageChange;
         return (
             <div className="publicaciones-list__pagination" aria-label={label}>
                 <button

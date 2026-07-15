@@ -1,4 +1,5 @@
 import React from "react";
+import "./CarouselIndicator.css";
 
 interface CarouselIndicatorProps {
   dotsCount: number;

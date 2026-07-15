@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import CarouselButton from "./CarouselButton";
-import CarouselIndicator from "./CarouselIndicator";
+import CarouselButton from "../CarouselButton/CarouselButton";
+import CarouselIndicator from "../CarouselIndicator/CarouselIndicator";
 import "./HorizontalCarousel.css";
 
 interface HorizontalCarouselProps {

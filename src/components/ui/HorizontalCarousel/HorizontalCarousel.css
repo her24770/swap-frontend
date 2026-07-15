@@ -19,7 +19,9 @@
   padding: 0.5rem var(--h-carousel-arrow-gutter);
   scrollbar-width: none;
   box-sizing: border-box;
+  justify-content: safe center;
 }
+
 
 .h-carousel__track::-webkit-scrollbar {
   display: none;
@@ -34,86 +36,7 @@
   z-index: 1;
 }
 
-.h-carousel__btn {
-  display: flex;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10; /* Asegura que flote por encima de las cartas */
-  width: var(--h-carousel-arrow-size);
-  height: var(--h-carousel-arrow-size);
-  border-radius: 9999px; /* Botones circulares originales */
-  background-color: var(--swap-primary-background, #ffffff);
-  border: 1px solid var(--swap-primary-border-color, #e5e7eb);
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* Sombra flotante */
-  color: var(--swap-primary-text-color, #1f2937);
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  font-size: 1rem;
-}
 
-.h-carousel__btn:hover:not(:disabled) {
-  border-color: var(--swap-primary-color, #7c3aed);
-  color: var(--swap-primary-color, #7c3aed);
-  background-color: var(--swap-primary-background, #ffffff);
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-  z-index: 50;
-}
-
-.h-carousel__btn:active:not(:disabled) {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.h-carousel__btn:disabled {
-  background-color: var(--swap-secondary-background, #f3f4f6);
-  border-color: var(--swap-primary-border-color, #e5e7eb);
-  color: var(--swap-tertiary-text-color, #9ca3af);
-  opacity: 0.55;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: translateY(-50%) scale(0.95);
-}
-
-.h-carousel__btn--prev,
-.h-carousel__btn--left {
-  left: var(--h-carousel-arrow-offset);
-}
-
-.h-carousel__btn--next,
-.h-carousel__btn--right {
-  right: var(--h-carousel-arrow-offset);
-}
-
-
-.h-carousel__dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
-  user-select: none;
-}
-
-.h-carousel__dot {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 9999px;
-  border: 1.5px solid var(--swap-primary-color, #7c3aed);
-  background-color: transparent;
-  cursor: pointer;
-  padding: 0;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.h-carousel__dot--active {
-  background-color: var(--swap-primary-color, #7c3aed);
-  transform: scale(1.2);
-}
 
 @media (min-width: 640px) {
   .h-carousel {

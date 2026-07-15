@@ -1,5 +1,6 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import "./CarouselButton.css";
 
 interface CarouselButtonProps {
   direction: "left" | "right";
