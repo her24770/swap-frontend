@@ -4,52 +4,9 @@
   position: relative;
   width: 100%;
   overflow: visible;
-  --h-carousel-arrow-size: 2rem;
+  --h-carousel-arrow-size: 2.25rem;
   --h-carousel-arrow-offset: 0.25rem;
   --h-carousel-arrow-gutter: 2.5rem;
-}
-
-.h-carousel__topbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
-  min-height: 2rem;
-}
-
-.h-carousel__page {
-  font-family: var(--swap-font-textos);
-  font-size: 0.75rem;
-  color: var(--swap-tertiary-text-color);
-}
-
-.h-carousel__page-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  min-height: 2rem;
-  padding: 0 0.75rem;
-  border: 1px solid var(--swap-primary-border-color);
-  border-radius: 0.5rem;
-  background-color: var(--swap-primary-background);
-  color: var(--swap-primary-text-color);
-  font-family: var(--swap-font-textos);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
-}
-
-.h-carousel__page-btn:hover:not(:disabled) {
-  border-color: var(--swap-primary-color);
-  color: var(--swap-primary-color);
-}
-
-.h-carousel__page-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
 }
 
 .h-carousel__track {
@@ -82,25 +39,42 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 2;
+  z-index: 10; /* Asegura que flote por encima de las cartas */
   width: var(--h-carousel-arrow-size);
   height: var(--h-carousel-arrow-size);
-  border-radius: 9999px;
-  background-color: var(--swap-primary-background);
-  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 9999px; /* Botones circulares originales */
+  background-color: var(--swap-primary-background, #ffffff);
+  border: 1px solid var(--swap-primary-border-color, #e5e7eb);
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  color: var(--swap-primary-text-color);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* Sombra flotante */
+  color: var(--swap-primary-text-color, #1f2937);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   font-size: 1rem;
 }
 
-.h-carousel__btn:hover {
-  border-color: var(--swap-primary-color);
-  color: var(--swap-primary-color);
+.h-carousel__btn:hover:not(:disabled) {
+  border-color: var(--swap-primary-color, #7c3aed);
+  color: var(--swap-primary-color, #7c3aed);
+  background-color: var(--swap-primary-background, #ffffff);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
   z-index: 50;
+}
+
+.h-carousel__btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.h-carousel__btn:disabled {
+  background-color: var(--swap-secondary-background, #f3f4f6);
+  border-color: var(--swap-primary-border-color, #e5e7eb);
+  color: var(--swap-tertiary-text-color, #9ca3af);
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: translateY(-50%) scale(0.95);
 }
 
 .h-carousel__btn--prev {
@@ -111,9 +85,39 @@
   right: var(--h-carousel-arrow-offset);
 }
 
+.h-carousel__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  user-select: none;
+}
+
+.h-carousel__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--swap-primary-color, #7c3aed);
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.h-carousel__dot--active {
+  background-color: var(--swap-primary-color, #7c3aed);
+  transform: scale(1.2);
+}
+
 @media (min-width: 640px) {
   .h-carousel {
     --h-carousel-arrow-offset: -1rem;
     --h-carousel-arrow-gutter: 0rem;
   }
 }
+
+
+
