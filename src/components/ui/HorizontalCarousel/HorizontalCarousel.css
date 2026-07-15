@@ -77,13 +77,16 @@
   transform: translateY(-50%) scale(0.95);
 }
 
-.h-carousel__btn--prev {
+.h-carousel__btn--prev,
+.h-carousel__btn--left {
   left: var(--h-carousel-arrow-offset);
 }
 
-.h-carousel__btn--next {
+.h-carousel__btn--next,
+.h-carousel__btn--right {
   right: var(--h-carousel-arrow-offset);
 }
+
 
 .h-carousel__dots {
   display: flex;
