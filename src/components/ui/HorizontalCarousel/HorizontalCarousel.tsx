@@ -22,8 +22,7 @@ export default function HorizontalCarousel({
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
-
-  const totalItems = React.Children.count(children);
+  const [dotsCount, setDotsCount] = useState(0);
 
   const updateScrollState = () => {
     const track = trackRef.current;
@@ -33,20 +32,28 @@ export default function HorizontalCarousel({
     const sWidth = track.scrollWidth;
     const cWidth = track.clientWidth;
 
-    const tolerance = 8; // Margen de píxeles para manejar redondeos de decimales
+    const tolerance = 8;
     setIsAtStart(sLeft <= tolerance);
     setIsAtEnd(sLeft + cWidth >= sWidth - tolerance);
 
     const firstChild = track.firstElementChild;
     let step = 240;
     if (firstChild) {
-      const styles = window.getComputedStyle(track);
-      const gap = parseFloat(styles.gap) || 0;
-      step = firstChild.getBoundingClientRect().width + gap;
+      const rectWidth = firstChild.getBoundingClientRect().width;
+      if (rectWidth > 0) {
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.gap) || 0;
+        step = rectWidth + gap;
+      }
     }
 
+    // Cantidad real de posiciones de desplazamiento posibles (movimientos)
+    const maxActiveIndex = Math.max(0, Math.ceil((sWidth - cWidth) / step));
+    const calculatedDotsCount = maxActiveIndex + 1;
+    setDotsCount(calculatedDotsCount);
+
     const currentIndex = Math.min(
-      totalItems - 1,
+      calculatedDotsCount - 1,
       Math.max(0, Math.round(sLeft / step))
     );
     setActiveItemIndex(currentIndex);
@@ -85,9 +92,12 @@ export default function HorizontalCarousel({
     const firstChild = track.firstElementChild;
     let step = 240;
     if (firstChild) {
-      const styles = window.getComputedStyle(track);
-      const gap = parseFloat(styles.gap) || 0;
-      step = firstChild.getBoundingClientRect().width + gap;
+      const rectWidth = firstChild.getBoundingClientRect().width;
+      if (rectWidth > 0) {
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.gap) || 0;
+        step = rectWidth + gap;
+      }
     }
 
     const scrollAmount = dir === "right" ? step : -step;
@@ -101,9 +111,12 @@ export default function HorizontalCarousel({
     const firstChild = track.firstElementChild;
     let step = 240;
     if (firstChild) {
-      const styles = window.getComputedStyle(track);
-      const gap = parseFloat(styles.gap) || 0;
-      step = firstChild.getBoundingClientRect().width + gap;
+      const rectWidth = firstChild.getBoundingClientRect().width;
+      if (rectWidth > 0) {
+        const styles = window.getComputedStyle(track);
+        const gap = parseFloat(styles.gap) || 0;
+        step = rectWidth + gap;
+      }
     }
 
     track.scrollTo({
@@ -133,13 +146,12 @@ export default function HorizontalCarousel({
       />
 
       <CarouselIndicator
-        totalItems={totalItems}
+        dotsCount={dotsCount}
         activeItemIndex={activeItemIndex}
         onDotClick={handleDotClick}
       />
     </div>
   );
 }
-
 
 

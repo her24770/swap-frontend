@@ -1,21 +1,21 @@
 import React from "react";
 
 interface CarouselIndicatorProps {
-  totalItems: number;
+  dotsCount: number;
   activeItemIndex: number;
   onDotClick: (index: number) => void;
 }
 
 export default function CarouselIndicator({
-  totalItems,
+  dotsCount,
   activeItemIndex,
   onDotClick,
 }: CarouselIndicatorProps) {
-  if (totalItems <= 1) return null;
+  if (dotsCount <= 1) return null;
 
   return (
     <div className="h-carousel__dots">
-      {Array.from({ length: totalItems }).map((_, index) => (
+      {Array.from({ length: dotsCount }).map((_, index) => (
         <button
           key={index}
           className={`h-carousel__dot ${
