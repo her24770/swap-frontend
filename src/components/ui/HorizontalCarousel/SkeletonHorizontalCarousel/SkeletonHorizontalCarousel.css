@@ -4,7 +4,9 @@
   overflow: hidden;
   padding: 0.5rem 0;
   width: 100%;
+  justify-content: safe center;
 }
+
 
 .publicaciones-list .carousel-skeleton .h-carousel__item {
   flex: 0 0 auto;

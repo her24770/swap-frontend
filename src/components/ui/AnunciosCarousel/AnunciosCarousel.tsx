@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import CarouselButton from "../CarouselButton/CarouselButton";
+import CarouselIndicator from "../CarouselIndicator/CarouselIndicator";
 import "./AnunciosCarousel.css";
 
 interface AnunciosCarouselProps {
@@ -12,37 +13,91 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const items = React.Children.toArray(children);
 
+  const [isAtStart, setIsAtStart] = useState(true);
+  const [isAtEnd, setIsAtEnd] = useState(false);
+  const [activeItemIndex, setActiveItemIndex] = useState(0);
+  const [dotsCount, setDotsCount] = useState(0);
+
   // Si no hay elementos, no renderizamos nada
   if (items.length === 0) return null;
 
+  const updateScrollState = () => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const sLeft = track.scrollLeft;
+    const sWidth = track.scrollWidth;
+    const cWidth = track.clientWidth;
+
+    const tolerance = 8;
+    setIsAtStart(sLeft <= tolerance);
+    setIsAtEnd(sLeft + cWidth >= sWidth - tolerance);
+
+    // En el carrusel de anuncios, cada anuncio ocupa el 100% del contenedor
+    const step = cWidth || 1;
+    const maxActiveIndex = Math.max(0, Math.ceil((sWidth - cWidth) / step));
+    const calculatedDotsCount = maxActiveIndex + 1;
+    setDotsCount(calculatedDotsCount);
+
+    const currentIndex = Math.min(
+      calculatedDotsCount - 1,
+      Math.max(0, Math.round(sLeft / step))
+    );
+    setActiveItemIndex(currentIndex);
+  };
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const handleUpdate = () => {
+      requestAnimationFrame(updateScrollState);
+    };
+
+    handleUpdate();
+
+    track.addEventListener("scroll", handleUpdate, { passive: true });
+    window.addEventListener("resize", handleUpdate);
+
+    const observer = new MutationObserver(handleUpdate);
+    observer.observe(track, { childList: true, subtree: true });
+
+    return () => {
+      track.removeEventListener("scroll", handleUpdate);
+      window.removeEventListener("resize", handleUpdate);
+      observer.disconnect();
+    };
+  }, [children]);
+
   const scroll = (dir: "left" | "right") => {
-    if (!trackRef.current) return;
+    const track = trackRef.current;
+    if (!track) return;
 
-    // Detecta dinámicamente el ancho visible actual del contenedor
-    const containerWidth = trackRef.current.clientWidth;
-    
-    // Desplaza aproximadamente el 80% del contenedor para un movimiento fluido
-    const scrollAmount = dir === "right" ? containerWidth * 0.8 : -containerWidth * 0.8;
+    const step = track.clientWidth;
+    const scrollAmount = dir === "right" ? step : -step;
+    track.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
 
-    trackRef.current.scrollBy({
-      left: scrollAmount,
+  const handleDotClick = (index: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const step = track.clientWidth;
+    track.scrollTo({
+      left: index * step,
       behavior: "smooth",
     });
   };
 
   return (
     <div className="a-carousel">
-      {/* Botón Izquierdo */}
-      <button
-        className="a-carousel__btn a-carousel__btn--prev"
+      <CarouselButton
+        direction="left"
         onClick={() => scroll("left")}
-        type="button"
-        aria-label="Anterior"
-      >
-        <ChevronLeft size={20} />
-      </button>
+        disabled={isAtStart}
+        ariaLabel="Anuncio anterior"
+      />
 
-      {/* Track que contiene todos los elementos de forma nativa */}
       <div className="a-carousel__track" ref={trackRef}>
         {items.map((item, index) => (
           <div className="a-carousel__item" key={index}>
@@ -51,15 +106,18 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
         ))}
       </div>
 
-      {/* Botón Derecho */}
-      <button
-        className="a-carousel__btn a-carousel__btn--next"
+      <CarouselButton
+        direction="right"
         onClick={() => scroll("right")}
-        type="button"
-        aria-label="Siguiente"
-      >
-        <ChevronRight size={20} />
-      </button>
+        disabled={isAtEnd}
+        ariaLabel="Siguiente anuncio"
+      />
+
+      <CarouselIndicator
+        dotsCount={dotsCount}
+        activeItemIndex={activeItemIndex}
+        onDotClick={handleDotClick}
+      />
     </div>
   );
 }

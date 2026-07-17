@@ -125,15 +125,11 @@
 }
 
 .publicaciones-list__carousel-wrap {
-  display: flex;
-  gap: var(--card-gap);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+  display: block;
+  width: 100%;
   overflow: visible;
-  scrollbar-width: none; 
 }
 
-.publicaciones-list__carousel-wrap::-webkit-scrollbar { display: none; }
 
 .publicaciones-list .h-carousel__item {
   scroll-snap-align: start; 
