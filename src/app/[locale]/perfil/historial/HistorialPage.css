@@ -1,0 +1,27 @@
+.historial-page {
+  gap: 1.5rem;
+}
+
+.historial-page__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.historial-page__title {
+  margin: 0;
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-titulos);
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  font-weight: 700;
+}
+
+.historial-page__back-link {
+  text-decoration: none;
+  min-height: 2.25rem;
+}
+
+.historial-page .historial-acuerdos__header {
+  display: none;
+}

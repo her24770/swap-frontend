@@ -1,18 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import PostRes from "../../posts/PostResumida/PostRes";
-import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import PublicacionesGuardadas from "./PublicacionesGuardadas/PublicacionesGuardadas";
+import HistorialAcuerdos from "./HistorialAcuerdos/HistorialAcuerdos";
+import { useAuthStore } from "../../../store/authStore";
 import { PerfilPurchasesCarouselSkeleton } from "../perfilLoading";
-import imagePath from "../../../../public/images/uvg.jpg";
-
-const MOCK_PURCHASES = Array.from({ length: 8 }, (_, i) => ({
-  id: i + 1,
-  title: "Assembler",
-  price: 100,
-  images: [imagePath.src],
-}));
 
 interface VistaConsumidorProps {
   purchasesLoading?: boolean;
@@ -20,6 +12,7 @@ interface VistaConsumidorProps {
 
 export default function VistaConsumidor({ purchasesLoading = false }: VistaConsumidorProps) {
   const t = useTranslations("perfil");
+  const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
 
   return (
     <>
@@ -27,24 +20,43 @@ export default function VistaConsumidor({ purchasesLoading = false }: VistaConsu
 
       <hr className="perfil-page__divider" />
 
-      <section className="perfil-page__section">
-        <h2 className="perfil-page__section-title">{t("sections.purchases")}</h2>
-        {purchasesLoading ? (
-          <PerfilPurchasesCarouselSkeleton count={4} />
-        ) : (
-          <HorizontalCarousel>
-            {MOCK_PURCHASES.map((pub) => (
-              <div key={pub.id} className="perfil-page__purchase-item">
-                <PostRes
-                  title={pub.title}
-                  price={pub.price}
-                  images={pub.images}
-                />
-              </div>
-            ))}
-          </HorizontalCarousel>
-        )}
-      </section>
+      {purchasesLoading ? (
+        <>
+          <section className="perfil-page__section">
+            <h2 className="perfil-page__section-title">{t("sections.purchases")}</h2>
+            <PerfilPurchasesCarouselSkeleton count={4} />
+          </section>
+
+          <hr className="perfil-page__divider" />
+
+          <section className="perfil-page__section">
+            <h2 className="perfil-page__section-title">{t("sections.tutoringHistory")}</h2>
+            <PerfilPurchasesCarouselSkeleton count={4} />
+          </section>
+        </>
+      ) : (
+        <>
+          <HistorialAcuerdos
+            idUsuario={idUsuario}
+            tipo="producto"
+            title={t("sections.purchases")}
+            emptyMessage={t("history.emptyProducts")}
+            showViewAllButton
+            viewAllHref="/perfil/historial?tipo=producto"
+          />
+
+          <hr className="perfil-page__divider" />
+
+          <HistorialAcuerdos
+            idUsuario={idUsuario}
+            tipo="tutoria"
+            title={t("sections.tutoringHistory")}
+            emptyMessage={t("history.emptyTutoring")}
+            showViewAllButton
+            viewAllHref="/perfil/historial?tipo=tutoria"
+          />
+        </>
+      )}
     </>
   );
 }

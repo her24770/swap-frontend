@@ -292,6 +292,7 @@
 		"sections": {
 			"saved": "Tus Guardados",
 			"purchases": "Tus Compras",
+			"tutoringHistory": "Tutorías tomadas",
 			"catalog": "Tu Catálogo",
 			"catalogMaterial": "Tu Catálogo de Material",
 			"catalogNegocio": "Tu Catálogo de Negocio",
@@ -300,6 +301,18 @@
 			"comments": "Comentarios y Reseñas",
 			"featured": "Publicaciones Destacadas"
 
+		},
+		"history": {
+			"emptyProducts": "Aún no tienes productos comprados.",
+			"emptyTutoring": "Aún no tienes tutorías tomadas.",
+			"error": "No fue posible cargar tu historial.",
+			"unknownUser": "Usuario de SWAP",
+			"provider": "Proveedor",
+			"date": "Fecha",
+			"place": "Lugar",
+			"viewAll": "Ver todo",
+			"details": "Detalles",
+			"backToProfile": "Volver al perfil"
 		},
 		"actions": {
 			"newPublication": "Nueva publicación",
