@@ -22,6 +22,10 @@
   min-height: 2.25rem;
 }
 
+.historial-page__tools {
+  width: min(100%, 32rem);
+}
+
 .historial-page .historial-acuerdos__header {
   display: none;
 }

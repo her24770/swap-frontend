@@ -1,6 +1,7 @@
 import type { ImagenPublicacion } from "./publicacion";
 
-export type TipoHistorialAcuerdo = "producto" | "tutoria";
+export type TipoHistorialAcuerdo = "producto" | "material" | "negocio" | "tutoria";
+export type TipoCompraHistorial = "producto" | "material" | "negocio";
 
 export interface AcuerdoHistorial {
   id_acuerdo: number;

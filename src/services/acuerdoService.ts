@@ -8,6 +8,7 @@ import type {
 interface HistorialUsuarioOptions {
   page?: number;
   limit?: number;
+  q?: string;
 }
 
 export const acuerdoService = {
@@ -19,6 +20,7 @@ export const acuerdoService = {
     const params = new URLSearchParams({ tipo });
     if (options.page) params.set("page", options.page.toString());
     if (options.limit) params.set("limit", options.limit.toString());
+    if (options.q?.trim()) params.set("q", options.q.trim());
 
     const response = await apiClient.get<AcuerdosHistorialResponse>(
       `/api/acuerdo/user/${idUsuario}?${params.toString()}`

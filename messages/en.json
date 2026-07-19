@@ -311,7 +311,14 @@
 			"place": "Place",
 			"viewAll": "View all",
 			"details": "Details",
-			"backToProfile": "Back to profile"
+			"backToProfile": "Back to profile",
+			"searchPlaceholder": "Search history...",
+			"filters": {
+				"aria": "Filter purchases",
+				"all": "All",
+				"materials": "Materials",
+				"businesses": "Businesses"
+			}
 		},
 		"actions": {
 			"newPublication": "New post",

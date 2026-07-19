@@ -5,11 +5,12 @@ import { CalendarDays, ChevronLeft, ChevronRight, MapPin, UserRound } from "luci
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "../../../../i18n/routing";
 import { acuerdoService } from "../../../../services/acuerdoService";
-import type { AcuerdoHistorial, TipoHistorialAcuerdo } from "../../../../types/acuerdo";
-import { PerfilPurchasesCarouselSkeleton } from "../../perfilLoading";
+import type { AcuerdoHistorial, TipoCompraHistorial, TipoHistorialAcuerdo } from "../../../../types/acuerdo";
 import PostImage from "../../../posts/PostCard/PostImage/PostImage";
 import HorizontalCarousel from "../../../ui/HorizontalCarousel/HorizontalCarousel";
 import DetallePublicacion from "../../../ui/Modal/DetallePuclicacion/DetallePublicacion";
+import CompraFilterTabs from "./CompraFilterTabs";
+import { Skeleton } from "../../../ui/Skeleton/Skeleton";
 import "../../../ui/Button/Button.css";
 import "../../../pages/PublicacionesList/PublicacionesList.css";
 import "./HistorialAcuerdos.css";
@@ -24,6 +25,10 @@ interface HistorialAcuerdosProps {
   itemsPerPage?: number;
   showViewAllButton?: boolean;
   viewAllHref?: string;
+  showCompraFilter?: boolean;
+  compraFilter?: TipoCompraHistorial;
+  onCompraFilterChange?: (filter: TipoCompraHistorial) => void;
+  searchQuery?: string;
 }
 
 const DEFAULT_PROFILE_LIMIT = 10;
@@ -40,6 +45,10 @@ export default function HistorialAcuerdos({
   itemsPerPage,
   showViewAllButton = false,
   viewAllHref,
+  showCompraFilter = false,
+  compraFilter = "producto",
+  onCompraFilterChange,
+  searchQuery = "",
 }: HistorialAcuerdosProps) {
   const t = useTranslations("perfil.history");
   const locale = useLocale();
@@ -50,6 +59,7 @@ export default function HistorialAcuerdos({
   const [loading, setLoading] = useState(Boolean(idUsuario));
   const [error, setError] = useState<string | null>(null);
   const limit = itemsPerPage ?? (variant === "carousel" ? DEFAULT_PROFILE_LIMIT : DEFAULT_ITEMS_PER_PAGE);
+  const requestTipo = tipo === "producto" ? compraFilter : tipo;
   const pageCount = Math.max(1, Math.ceil(total / limit));
   const safeCurrentPage = Math.min(currentPage, pageCount);
   const hasPagination = variant === "grid" && total > limit;
@@ -67,7 +77,7 @@ export default function HistorialAcuerdos({
     setError(null);
 
     acuerdoService
-      .getHistorialUsuario(idUsuario, tipo, { page: currentPage, limit })
+      .getHistorialUsuario(idUsuario, requestTipo, { page: currentPage, limit, q: searchQuery })
       .then((result) => {
         if (!isMounted) return;
         setAcuerdos(result.data);
@@ -83,7 +93,7 @@ export default function HistorialAcuerdos({
     return () => {
       isMounted = false;
     };
-  }, [idUsuario, tipo, currentPage, limit, t]);
+  }, [idUsuario, requestTipo, currentPage, limit, searchQuery, t]);
 
   return (
     <section className={`perfil-page__section historial-acuerdos historial-acuerdos--${variant}`}>
@@ -97,7 +107,14 @@ export default function HistorialAcuerdos({
         )}
       </div>
 
-      {loading && <PerfilPurchasesCarouselSkeleton count={4} />}
+      {showCompraFilter && (
+        <CompraFilterTabs
+          value={compraFilter}
+          onChange={onCompraFilterChange}
+        />
+      )}
+
+      {loading && <HistorialAcuerdosSkeleton variant={variant} count={variant === "grid" ? 8 : 4} />}
 
       {!loading && error && (
         <p className="perfil-page__coming-soon">{error}</p>
@@ -137,6 +154,8 @@ export default function HistorialAcuerdos({
                 currentPage={safeCurrentPage}
                 pageCount={pageCount}
                 tipo={tipo}
+                compraFilter={compraFilter}
+                searchQuery={searchQuery}
               />
             )}
           </>
@@ -174,10 +193,14 @@ function HistorialPagination({
   currentPage,
   pageCount,
   tipo,
+  compraFilter,
+  searchQuery,
 }: {
   currentPage: number;
   pageCount: number;
   tipo: TipoHistorialAcuerdo;
+  compraFilter: TipoCompraHistorial;
+  searchQuery: string;
 }) {
   const visiblePages = Math.min(VISIBLE_PAGINATION_PAGES, pageCount);
   const halfWindow = Math.floor(visiblePages / 2);
@@ -192,7 +215,12 @@ function HistorialPagination({
     startPage = Math.max(1, endPage - visiblePages + 1);
   }
   const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-  const pageHref = (page: number) => `/perfil/historial?tipo=${tipo}&page=${page}`;
+  const pageHref = (page: number) => {
+    const params = new URLSearchParams({ tipo, page: page.toString() });
+    if (tipo === "producto") params.set("compraTipo", compraFilter);
+    if (searchQuery.trim()) params.set("q", searchQuery.trim());
+    return `/perfil/historial?${params.toString()}`;
+  };
 
   return (
     <div className="publicaciones-list__pagination" aria-label="Paginacion de historial">
@@ -223,6 +251,58 @@ function HistorialPagination({
         <ChevronRight size={16} aria-hidden />
       </Link>
     </div>
+  );
+}
+
+function HistorialAcuerdosSkeleton({
+  variant,
+  count,
+}: {
+  variant: "carousel" | "grid";
+  count: number;
+}) {
+  const items = Array.from({ length: count });
+
+  if (variant === "carousel") {
+    return (
+      <HorizontalCarousel>
+        {items.map((_, index) => (
+          <div key={index} className="h-carousel__item historial-acuerdos__item">
+            <HistorialAcuerdoCardSkeleton />
+          </div>
+        ))}
+      </HorizontalCarousel>
+    );
+  }
+
+  return (
+    <div className="historial-acuerdos__grid" aria-busy="true" aria-label="Cargando historial">
+      {items.map((_, index) => (
+        <HistorialAcuerdoCardSkeleton key={index} />
+      ))}
+    </div>
+  );
+}
+
+function HistorialAcuerdoCardSkeleton() {
+  return (
+    <article className="historial-card historial-card--skeleton">
+      <Skeleton className="historial-card__media" />
+      <div className="historial-card__body">
+        <div className="historial-card__header">
+          <Skeleton variant="text" className="historial-card__title-skeleton" />
+          <Skeleton variant="text" className="historial-card__price-skeleton" />
+        </div>
+        <div className="historial-card__meta">
+          <Skeleton variant="text" className="historial-card__meta-skeleton" />
+          <Skeleton variant="text" className="historial-card__meta-skeleton" />
+          <Skeleton variant="text" className="historial-card__meta-skeleton" />
+        </div>
+        <div className="historial-card__footer">
+          <Skeleton className="historial-card__details-skeleton" />
+        </div>
+      </div>
+    </article>
   );
 }
 

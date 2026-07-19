@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import PublicacionesGuardadas from "./PublicacionesGuardadas/PublicacionesGuardadas";
 import HistorialAcuerdos from "./HistorialAcuerdos/HistorialAcuerdos";
 import { useAuthStore } from "../../../store/authStore";
 import { PerfilPurchasesCarouselSkeleton } from "../perfilLoading";
+import type { TipoCompraHistorial } from "../../../types/acuerdo";
 
 interface VistaConsumidorProps {
   purchasesLoading?: boolean;
@@ -13,6 +15,7 @@ interface VistaConsumidorProps {
 export default function VistaConsumidor({ purchasesLoading = false }: VistaConsumidorProps) {
   const t = useTranslations("perfil");
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
+  const [compraFilter, setCompraFilter] = useState<TipoCompraHistorial>("producto");
 
   return (
     <>
@@ -42,7 +45,10 @@ export default function VistaConsumidor({ purchasesLoading = false }: VistaConsu
             title={t("sections.purchases")}
             emptyMessage={t("history.emptyProducts")}
             showViewAllButton
-            viewAllHref="/perfil/historial?tipo=producto"
+            viewAllHref={`/perfil/historial?tipo=producto&compraTipo=${compraFilter}`}
+            showCompraFilter
+            compraFilter={compraFilter}
+            onCompraFilterChange={setCompraFilter}
           />
 
           <hr className="perfil-page__divider" />

@@ -312,7 +312,14 @@
 			"place": "Lugar",
 			"viewAll": "Ver todo",
 			"details": "Detalles",
-			"backToProfile": "Volver al perfil"
+			"backToProfile": "Volver al perfil",
+			"searchPlaceholder": "Buscar en el historial...",
+			"filters": {
+				"aria": "Filtrar compras",
+				"all": "Todos",
+				"materials": "Materiales",
+				"businesses": "Negocios"
+			}
 		},
 		"actions": {
 			"newPublication": "Nueva publicación",

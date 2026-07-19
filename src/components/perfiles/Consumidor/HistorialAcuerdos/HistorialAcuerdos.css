@@ -21,6 +21,48 @@
   gap: 1rem;
 }
 
+.historial-acuerdos__filters {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 2.25rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--swap-secondary-background);
+}
+
+.historial-acuerdos__filter-btn {
+  min-width: 6rem;
+  padding: 0.45rem 0.75rem;
+  border: 0;
+  border-right: 1px solid var(--swap-primary-border-color);
+  background: transparent;
+  color: var(--swap-primary-text-color);
+  cursor: pointer;
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.historial-acuerdos__filter-btn:last-child {
+  border-right: 0;
+}
+
+.historial-acuerdos__filter-btn:hover {
+  color: var(--swap-primary-color);
+}
+
+.historial-acuerdos__filter-btn--active {
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+}
+
+.historial-acuerdos__filter-btn--active:hover {
+  color: var(--swap-secondary-text-color);
+}
+
 .historial-acuerdos__pagination-link--disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -58,6 +100,10 @@
   height: 7rem;
   border-radius: 0.5rem;
   overflow: hidden;
+}
+
+.historial-card--skeleton .historial-card__media {
+  border-radius: 0.5rem;
 }
 
 .historial-card__body {
@@ -110,6 +156,28 @@
 
 .historial-card__details-btn {
   gap: 0.25rem;
+}
+
+.historial-card__title-skeleton {
+  width: min(9rem, 70%);
+  height: 1.1rem;
+}
+
+.historial-card__price-skeleton {
+  width: 3.5rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.historial-card__meta-skeleton {
+  width: min(10rem, 85%);
+  height: 0.85rem;
+}
+
+.historial-card__details-skeleton {
+  width: 5.5rem;
+  height: 2rem;
+  border-radius: 0.5rem;
 }
 
 .historial-card__meta-row {
