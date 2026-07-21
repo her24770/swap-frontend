@@ -292,6 +292,7 @@
 		"sections": {
 			"saved": "Saved",
 			"purchases": "Purchases",
+			"tutoringHistory": "Tutoring history",
 			"catalog": "Your catalog",
 			"catalogMaterial": "Your catalog Material",
 			"catalogNegocio": "Your catalog Business",
@@ -299,6 +300,25 @@
 			"ads": "Ads",
 			"comments": "Comments & reviews",
 			"featured": "Featured Posts"
+		},
+		"history": {
+			"emptyProducts": "You have not bought any products yet.",
+			"emptyTutoring": "You have not taken any tutoring sessions yet.",
+			"error": "Could not load your history.",
+			"unknownUser": "SWAP user",
+			"provider": "Provider",
+			"date": "Date",
+			"place": "Place",
+			"viewAll": "View all",
+			"details": "Details",
+			"backToProfile": "Back to profile",
+			"searchPlaceholder": "Search history...",
+			"filters": {
+				"aria": "Filter purchases",
+				"all": "All",
+				"materials": "Materials",
+				"businesses": "Businesses"
+			}
 		},
 		"actions": {
 			"newPublication": "New post",

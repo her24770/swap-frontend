@@ -292,10 +292,30 @@
 		"sections": {
 			"saved": "Enregistrés",
 			"purchases": "Achats",
+			"tutoringHistory": "Tutorats suivis",
 			"catalog": "Votre catalogue",
 			"ads": "Annonces",
 			"comments": "Commentaires et avis",
 			"featured": "Publications en vedette"
+		},
+		"history": {
+			"emptyProducts": "Vous n'avez pas encore acheté de produits.",
+			"emptyTutoring": "Vous n'avez pas encore suivi de tutorat.",
+			"error": "Impossible de charger votre historique.",
+			"unknownUser": "Utilisateur SWAP",
+			"provider": "Prestataire",
+			"date": "Date",
+			"place": "Lieu",
+			"viewAll": "Tout voir",
+			"details": "Détails",
+			"backToProfile": "Retour au profil",
+			"searchPlaceholder": "Rechercher dans l'historique...",
+			"filters": {
+				"aria": "Filtrer les achats",
+				"all": "Tous",
+				"materials": "Matériels",
+				"businesses": "Commerces"
+			}
 		},
 		"actions": {
 			"newPublication": "Nouvelle publication",

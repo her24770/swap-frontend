@@ -72,12 +72,15 @@
 }
 
 .perfil-page__mode-btn:hover {
-  background-color: var(--swap-secondary-background);
-  color: var(--swap-primary-text-color);
+  color: var(--swap-primary-color);
 }
 
 .perfil-page__mode-btn--active {
   background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+}
+
+.perfil-page__mode-btn--active:hover {
   color: var(--swap-secondary-text-color);
 }
 

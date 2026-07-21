@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { X, Bookmark, Loader2, ChevronRight } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
 import { useGuardados } from "../../../../hooks/useGuardados";
@@ -60,6 +61,7 @@ interface PostModalProps {
   onSellerClick?: (sellerId: number) => void;
   onToggleSave?: () => void;
   isSaved?: boolean;
+  showActions?: boolean;
 }
 
 export default function DetallePublicacion({
@@ -85,6 +87,7 @@ export default function DetallePublicacion({
   onSellerClick,
   onToggleSave,
   isSaved = false,
+  showActions = true,
   estado,
   estadosDisponibles = [],
   onEstadoChange,
@@ -118,7 +121,7 @@ export default function DetallePublicacion({
     }
   };
 
-  return (
+  const modal = (
     <div className="modal-overlay" onClick={onClose}>
       <div className="post-modal" onClick={(e) => e.stopPropagation()}>
 
@@ -201,35 +204,37 @@ export default function DetallePublicacion({
         {/* ── Descripción ── */}
         <p className="post-modal__description">{description}</p>
 
-        <div className="post-modal__actions">
-          {type === "venta" && (
-            <button
-              type="button"
-              className="button button--medium button--full-width"
-              onClick={onAcordarCompra}
-            >
-              {t('actions.acordar')} <ChevronRight size={16} />
-            </button>
-          )}
-          {type === "tutoria" && (
-            <>
-              <button
-                type="button"
-                className="button button--medium button--warning button--full-width"
-                onClick={onVerCertificados}
-              >
-                {t('actions.certificado')}
-              </button>
+        {showActions && (
+          <div className="post-modal__actions">
+            {type === "venta" && (
               <button
                 type="button"
                 className="button button--medium button--full-width"
-                onClick={onSolicitarTutoria}
+                onClick={onAcordarCompra}
               >
-                Solicitar Tutoría <ChevronRight size={16} />
+                {t('actions.acordar')} <ChevronRight size={16} />
               </button>
-            </>
-          )}
-        </div>
+            )}
+            {type === "tutoria" && (
+              <>
+                <button
+                  type="button"
+                  className="button button--medium button--warning button--full-width"
+                  onClick={onVerCertificados}
+                >
+                  {t('actions.certificado')}
+                </button>
+                <button
+                  type="button"
+                  className="button button--medium button--full-width"
+                  onClick={onSolicitarTutoria}
+                >
+                  Solicitar Tutoría <ChevronRight size={16} />
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
         <div className="post-modal__likes">
           <button
@@ -250,4 +255,8 @@ export default function DetallePublicacion({
       </div>
     </div>
   );
+
+  if (typeof document === "undefined") return modal;
+
+  return createPortal(modal, document.body);
 }
