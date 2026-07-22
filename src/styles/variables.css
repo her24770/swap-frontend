@@ -8,6 +8,9 @@
   /*Components Colors*/
   --swap-primary-color: #007329;
   --swap-secondary-color: #F8FAFC;
+  
+  --swap-hover-color: rgba(9, 105, 46, 0.33);
+  --swap-active-color: rgba(6, 107, 45, 0.12);
 
   /*Text Colors*/
   --swap-primary-text-color: #000000;
@@ -18,8 +21,10 @@
   --swap-primary-border-color: #9FAAC0;
 
     /* Danger */
-  --swap-danger-color: #dc2626;
+  --swap-danger-color: #c90f0f;
   --swap-danger-background: #fef2f2;
+
+  --swap-success-color: #06ab43;
 
   /* Colores para las tags de padres e hijas */
   --swap-tag-padre-bg: #2596be;
@@ -41,6 +46,9 @@
   --swap-primary-color: #118a3f;
   --swap-secondary-color: #1E293B;
 
+  --swap-hover-color: rgba(36, 161, 84, 0.33);
+  --swap-active-color: rgba(53, 188, 105, 0.33);
+
   /*Text Colors*/
   --swap-primary-text-color: #F8FAFC;
   --swap-secondary-text-color: #ebebeb;
@@ -52,6 +60,8 @@
     /* Danger */
   --swap-danger-color: #EF4444;
   --swap-danger-background: #450A0A;
+
+  --swap-success-color: #06ab43;
 
   /* Colores para las tags de padres e hijas */
   --swap-tag-padre-bg: #2596be;
