@@ -5,25 +5,51 @@ import "./AcuerdoBanner.css";
 
 interface AcuerdoBannerProps {
   acuerdo?: AcuerdoHistorial | null;
+  esPropuestaPendiente?: boolean;
+  esPropuestaEnviada?: boolean;
   onDetalles?: () => void;
   onCrear?: () => void;
 }
 
-export default function AcuerdoBanner({ acuerdo, onDetalles, onCrear }: AcuerdoBannerProps) {
+export default function AcuerdoBanner({
+  acuerdo,
+  esPropuestaPendiente = false,
+  esPropuestaEnviada = false,
+  onDetalles,
+  onCrear,
+}: AcuerdoBannerProps) {
   const imagenPrincipal = acuerdo?.publicacion.imagenes[0]?.url_imagen;
 
   if (!acuerdo) {
     return (
       <div className="acuerdo-banner acuerdo-banner--empty">
         <span className="acuerdo-banner__create-label">Sin acuerdo acordado</span>
-        <button
-          type="button"
-          className="acuerdo-banner__btn-create"
-          onClick={onCrear}
-        >
-          + Crear acuerdo
-        </button>
+        {onCrear && (
+          <button
+            type="button"
+            className="acuerdo-banner__btn-create"
+            onClick={onCrear}
+          >
+            + Crear acuerdo
+          </button>
+        )}
       </div>
+    );
+  }
+
+  if (esPropuestaPendiente || esPropuestaEnviada) {
+    return (
+      <button
+        type="button"
+        className={`acuerdo-banner acuerdo-banner--proposal${esPropuestaEnviada ? " acuerdo-banner--proposal-sent" : ""}`}
+        onClick={onDetalles}
+      >
+        <span className="acuerdo-banner__proposal-text">
+          {esPropuestaPendiente
+            ? "Tienes una propuesta de acuerdo"
+            : "Tu propuesta de acuerdo esta pendiente"}
+        </span>
+      </button>
     );
   }
 

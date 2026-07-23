@@ -6,6 +6,41 @@
   border-top: 1px solid var(--swap-primary-border-color);
   background-color: var(--swap-primary-background);
   flex-shrink: 0;
+  position: relative;
+}
+
+.chat-input__emoji-picker {
+  position: relative;
+}
+
+.chat-input__emoji-menu {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.5rem;
+  width: 13rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.9rem;
+  background-color: var(--swap-primary-background);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+}
+
+.chat-input__emoji-item {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.chat-input__emoji-item:hover {
+  background-color: var(--swap-secondary-background);
 }
 
 .chat-input__field {
@@ -42,6 +77,10 @@
   cursor: pointer;
   flex-shrink: 0;
   transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.chat-input__file-input {
+  display: none;
 }
 
 .chat-input__icon-btn:hover {

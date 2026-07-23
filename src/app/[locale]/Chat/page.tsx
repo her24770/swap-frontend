@@ -7,6 +7,8 @@ import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, TabMensajes } from "../../../types/chat";
 import "./ChatPage.css";
 
+const USUARIO_ACTUAL_ID = 1;
+
 const MOCK_CONVERSACIONES: ConversacionPreview[] = [
   {
     id_conversacion: 1,
@@ -149,7 +151,44 @@ const MOCK_ACUERDOS: Record<number, AcuerdoHistorial | null> = {
       estado: "activo",
     },
   },
-  2: null,
+  2: {
+    id_acuerdo: 5,
+    id_usuario: 18,
+    id_publicacion: 67,
+    fecha_entrega: "2026-07-24 14:30",
+    lugar_entrega: "Centro comercial Miraflores",
+    observaciones: "Puedo llevarlo en su caja original.",
+    id_conversacion: 2,
+    estado: 2,
+    publicacion: {
+      id_publicacion: 67,
+      titulo: "Teclado mecanico Red Switch",
+      descripcion: "Teclado mecanico full size con iluminacion RGB.",
+      precio: "240.00",
+      estado: 1,
+      tipo_publicacion: 1,
+      me_gusta: 19,
+      fecha_publicacion: "2026-07-19",
+      id_usuario: 18,
+      imagenes: [
+        {
+          id_imagen: 5,
+          url_imagen: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&q=80",
+          id_publicacion: 67,
+        },
+      ],
+      usuario: {
+        id_usuario: 18,
+        nombre: "Carlos Mendez",
+        url_foto_perfil: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80",
+        calificacion: 4.7,
+      },
+    },
+    estadoRel: {
+      id_estado: 2,
+      estado: "pendiente",
+    },
+  },
   3: {
     id_acuerdo: 2,
     id_usuario: 1,
@@ -194,20 +233,63 @@ const MOCK_ACUERDOS: Record<number, AcuerdoHistorial | null> = {
   },
 };
 
+function crearNuevaPropuesta(acuerdo: AcuerdoHistorial): AcuerdoHistorial {
+  return {
+    ...acuerdo,
+    id_acuerdo: Date.now(),
+    id_usuario: USUARIO_ACTUAL_ID,
+    fecha_entrega: "2026-07-24 16:30",
+    lugar_entrega: "Edificio T3, entrada principal",
+    observaciones: "Nueva propuesta enviada por ti.",
+    estado: 2,
+    estadoRel: {
+      id_estado: 2,
+      estado: "pendiente",
+    },
+  };
+}
+
+function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
+  if (!fechaUltimoMensaje) return -1;
+  if (fechaUltimoMensaje === "Ahora") return Number.MAX_SAFE_INTEGER;
+
+  const coincidenciaHora = fechaUltimoMensaje.match(/^(\d{1,2}):(\d{2})$/);
+  if (!coincidenciaHora) return -1;
+
+  const horas = Number(coincidenciaHora[1]);
+  const minutos = Number(coincidenciaHora[2]);
+  return (horas * 60) + minutos;
+}
+
 export default function ChatPage() {
   const [tab, setTab] = useState<TabMensajes>("todas");
   const [selectedId, setSelectedId] = useState<number | null>(1);
   const [mostrarChatMovil, setMostrarChatMovil] = useState(false);
+  const [conversacionesState, setConversacionesState] =
+    useState<ConversacionPreview[]>(MOCK_CONVERSACIONES);
+  const [acuerdosState, setAcuerdosState] =
+    useState<Record<number, AcuerdoHistorial | null>>(MOCK_ACUERDOS);
   const [mensajesPorConversacion, setMensajesPorConversacion] =
     useState<Record<number, Mensaje[]>>(MOCK_MENSAJES);
 
   const conversaciones = useMemo(() => {
-    if (tab === "todas") return MOCK_CONVERSACIONES;
+    const conversacionesFiltradas = tab === "todas"
+      ? conversacionesState
+      : conversacionesState.filter(
+        (conversacion) => CONVERSACION_TAB[conversacion.id_conversacion] === tab,
+      );
 
-    return MOCK_CONVERSACIONES.filter(
-      (conversacion) => CONVERSACION_TAB[conversacion.id_conversacion] === tab,
-    );
-  }, [tab]);
+    return [...conversacionesFiltradas].sort((a, b) => {
+      const prioridadSolicitudA = a.esSolicitud ? 1 : 0;
+      const prioridadSolicitudB = b.esSolicitud ? 1 : 0;
+
+      if (prioridadSolicitudA !== prioridadSolicitudB) {
+        return prioridadSolicitudB - prioridadSolicitudA;
+      }
+
+      return obtenerPesoRecencia(b.fecha_ultimo_mensaje) - obtenerPesoRecencia(a.fecha_ultimo_mensaje);
+    });
+  }, [conversacionesState, tab]);
 
   const selected =
     conversaciones.find((conversacion) => conversacion.id_conversacion === selectedId)
@@ -219,7 +301,7 @@ export default function ChatPage() {
     : [];
 
   const acuerdo = selected
-    ? MOCK_ACUERDOS[selected.id_conversacion] ?? null
+    ? acuerdosState[selected.id_conversacion] ?? null
     : null;
 
   const handleEnviar = (texto: string) => {
@@ -241,6 +323,119 @@ export default function ChatPage() {
       ...prev,
       [selected.id_conversacion]: [...(prev[selected.id_conversacion] ?? []), nuevoMensaje],
     }));
+    setConversacionesState((prev) => prev.map((conversacion) => (
+      conversacion.id_conversacion === selected.id_conversacion
+        ? {
+          ...conversacion,
+          preview: texto,
+          fecha_ultimo_mensaje: nuevoMensaje.fecha_enviado,
+        }
+        : conversacion
+    )));
+  };
+
+  const handleEnviarImagen = (archivo: File) => {
+    if (!selected) return;
+
+    const nuevoMensaje: Mensaje = {
+      id_mensaje: Date.now(),
+      id_conversacion: selected.id_conversacion,
+      id_emisor: 1,
+      mensaje: `Imagen adjunta: ${archivo.name}`,
+      estado_mensaje: 1,
+      fecha_enviado: new Date().toLocaleTimeString("es-GT", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    setMensajesPorConversacion((prev) => ({
+      ...prev,
+      [selected.id_conversacion]: [...(prev[selected.id_conversacion] ?? []), nuevoMensaje],
+    }));
+    setConversacionesState((prev) => prev.map((conversacion) => (
+      conversacion.id_conversacion === selected.id_conversacion
+        ? {
+          ...conversacion,
+          preview: `Imagen: ${archivo.name}`,
+          fecha_ultimo_mensaje: nuevoMensaje.fecha_enviado,
+        }
+        : conversacion
+    )));
+  };
+
+  const handleConfirmar = (id: number) => {
+    setConversacionesState((prev) => prev.map((conversacion) => (
+      conversacion.id_conversacion === id
+        ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? "Ahora" }
+        : conversacion
+    )));
+  };
+
+  const handleEliminar = (id: number) => {
+    setConversacionesState((prev) => prev.filter((conversacion) => conversacion.id_conversacion !== id));
+    setMensajesPorConversacion((prev) => {
+      const actualizado = { ...prev };
+      delete actualizado[id];
+      return actualizado;
+    });
+    if (selectedId === id) {
+      setSelectedId(null);
+      setMostrarChatMovil(false);
+    }
+  };
+
+  const handleAceptarAcuerdo = (idConversacion: number) => {
+    setAcuerdosState((prev) => {
+      const actual = prev[idConversacion];
+      if (!actual) return prev;
+
+      return {
+        ...prev,
+        [idConversacion]: {
+          ...actual,
+          estado: 1,
+          estadoRel: {
+            id_estado: 1,
+            estado: "activo",
+          },
+        },
+      };
+    });
+    setConversacionesState((prev) => prev.map((conversacion) => (
+      conversacion.id_conversacion === idConversacion
+        ? { ...conversacion, preview: "Acuerdo aceptado." }
+        : conversacion
+    )));
+  };
+
+  const handleRechazarAcuerdo = (idConversacion: number) => {
+    setAcuerdosState((prev) => ({
+      ...prev,
+      [idConversacion]: null,
+    }));
+    setConversacionesState((prev) => prev.map((conversacion) => (
+      conversacion.id_conversacion === idConversacion
+        ? { ...conversacion, preview: "Propuesta de acuerdo rechazada." }
+        : conversacion
+    )));
+  };
+
+  const handleEnviarNuevaPropuesta = (idConversacion: number) => {
+    setAcuerdosState((prev) => {
+      const actual = prev[idConversacion];
+      if (!actual) return prev;
+
+      return {
+        ...prev,
+        [idConversacion]: crearNuevaPropuesta(actual),
+      };
+    });
+    setConversacionesState((prev) => prev.map((conversacion) => (
+      conversacion.id_conversacion === idConversacion
+        ? { ...conversacion, preview: "Enviaste una nueva propuesta de acuerdo." }
+        : conversacion
+    )));
   };
 
   return (
@@ -254,8 +449,8 @@ export default function ChatPage() {
           setSelectedId(conversacion.id_conversacion);
           setMostrarChatMovil(true);
         }}
-        onConfirmar={(id) => console.log("confirmar", id)}
-        onEliminar={(id) => console.log("eliminar", id)}
+        onConfirmar={handleConfirmar}
+        onEliminar={handleEliminar}
       />
 
       {selected ? (
@@ -264,6 +459,10 @@ export default function ChatPage() {
           mensajes={mensajes}
           acuerdo={acuerdo}
           onEnviar={handleEnviar}
+          onEnviarImagen={handleEnviarImagen}
+          onAceptarAcuerdo={() => selected && handleAceptarAcuerdo(selected.id_conversacion)}
+          onRechazarAcuerdo={() => selected && handleRechazarAcuerdo(selected.id_conversacion)}
+          onEnviarNuevaPropuesta={() => selected && handleEnviarNuevaPropuesta(selected.id_conversacion)}
           onCrearEncuentro={() => console.log("crear acuerdo")}
           onVolver={() => setMostrarChatMovil(false)}
         />

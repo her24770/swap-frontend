@@ -16,6 +16,10 @@ interface ChatprincipalProps {
   mensajes: Mensaje[];
   acuerdo?: AcuerdoHistorial | null;
   onEnviar: (texto: string) => void;
+  onEnviarImagen?: (archivo: File) => void;
+  onAceptarAcuerdo?: () => void;
+  onRechazarAcuerdo?: () => void;
+  onEnviarNuevaPropuesta?: () => void;
   onCrearEncuentro?: () => void;
   onVolver?: () => void;
 }
@@ -25,12 +29,29 @@ export default function Chatprincipal({
   mensajes,
   acuerdo,
   onEnviar,
+  onEnviarImagen,
+  onAceptarAcuerdo,
+  onRechazarAcuerdo,
+  onEnviarNuevaPropuesta,
   onCrearEncuentro,
   onVolver,
 }: ChatprincipalProps) {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [panel, setPanel] = useState<TipoPanel>(null);
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
+  const puedeGestionarAcuerdos = !conversacion.esSolicitud;
+  const esPropuestaPendiente = Boolean(
+    acuerdo
+    && acuerdo.estadoRel?.estado === "pendiente"
+    && idUsuarioActual != null
+    && acuerdo.id_usuario !== idUsuarioActual,
+  );
+  const esPropuestaEnviada = Boolean(
+    acuerdo
+    && acuerdo.estadoRel?.estado === "pendiente"
+    && idUsuarioActual != null
+    && acuerdo.id_usuario === idUsuarioActual,
+  );
 
   return (
     <div className="chat-principal">
@@ -72,18 +93,20 @@ export default function Chatprincipal({
                 className="chat-principal__dropdown-item"
                 onClick={() => setMenuAbierto(false)}
               >
-                Ver publicacion
+                Historial de acuerdos
               </button>
-              <button
-                type="button"
-                className="chat-principal__dropdown-item"
-                onClick={() => {
-                  setMenuAbierto(false);
-                  onCrearEncuentro?.();
-                }}
-              >
-                Crear acuerdo
-              </button>
+              {puedeGestionarAcuerdos && (
+                <button
+                  type="button"
+                  className="chat-principal__dropdown-item"
+                  onClick={() => {
+                    setMenuAbierto(false);
+                    onCrearEncuentro?.();
+                  }}
+                >
+                  Crear acuerdo
+                </button>
+              )}
               <button
                 type="button"
                 className="chat-principal__dropdown-item chat-principal__dropdown-item--danger"
@@ -98,8 +121,10 @@ export default function Chatprincipal({
 
       <AcuerdoBanner
         acuerdo={acuerdo}
+        esPropuestaPendiente={esPropuestaPendiente}
+        esPropuestaEnviada={esPropuestaEnviada}
         onDetalles={() => setPanel(panel === "acuerdo" ? null : "acuerdo")}
-        onCrear={onCrearEncuentro}
+        onCrear={puedeGestionarAcuerdos ? onCrearEncuentro : undefined}
       />
 
       <div className="chat-principal__body">
@@ -129,12 +154,54 @@ export default function Chatprincipal({
                   <p>{acuerdo.observaciones}</p>
                 </div>
               )}
+              {esPropuestaPendiente && (
+                <div className="chat-principal__acuerdo-actions">
+                  <button
+                    type="button"
+                    className="chat-principal__action-btn chat-principal__action-btn--accept"
+                    onClick={() => {
+                      onAceptarAcuerdo?.();
+                      setPanel(null);
+                    }}
+                  >
+                    Aceptar
+                  </button>
+                  <button
+                    type="button"
+                    className="chat-principal__action-btn chat-principal__action-btn--ghost"
+                    onClick={() => {
+                      if (puedeGestionarAcuerdos) {
+                        onEnviarNuevaPropuesta?.();
+                      }
+                      setPanel(null);
+                    }}
+                    disabled={!puedeGestionarAcuerdos}
+                  >
+                    Enviar una nueva
+                  </button>
+                  <button
+                    type="button"
+                    className="chat-principal__action-btn chat-principal__action-btn--danger"
+                    onClick={() => {
+                      onRechazarAcuerdo?.();
+                      setPanel(null);
+                    }}
+                  >
+                    Rechazar
+                  </button>
+                </div>
+              )}
+              {esPropuestaEnviada && (
+                <p className="chat-principal__acuerdo-status">
+                  Tu propuesta de acuerdo esta pendiente de respuesta.
+                </p>
+              )}
             </div>
           </ChatPanel>
         )}
       </div>
 
-      <ChatInput onEnviar={onEnviar} />
+      <ChatInput onEnviar={onEnviar} onEnviarImagen={onEnviarImagen} />
     </div>
   );
 }

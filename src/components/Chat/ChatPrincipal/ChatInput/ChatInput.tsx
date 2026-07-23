@@ -1,27 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Smile, Paperclip, Send } from "lucide-react";
 import "./ChatInput.css";
 
 interface ChatInputProps {
   onEnviar: (texto: string) => void;
+  onEnviarImagen?: (archivo: File) => void;
 }
 
-export default function ChatInput({ onEnviar }: ChatInputProps) {
+const EMOJIS = ["😀", "😂", "😍", "🥳", "🤔", "😭", "👍", "👌", "❤️", "👏"];
+
+export default function ChatInput({ onEnviar, onEnviarImagen }: ChatInputProps) {
   const [texto, setTexto] = useState("");
+  const [mostrarEmojis, setMostrarEmojis] = useState(false);
 
   const handleEnviar = () => {
     if (!texto.trim()) return;
     onEnviar(texto.trim());
     setTexto("");
+    setMostrarEmojis(false);
   };
 
   return (
     <div className="chat-input">
-      <button type="button" className="chat-input__icon-btn" aria-label="Emoji">
-        <Smile size={18} />
-      </button>
+      <div className="chat-input__emoji-picker">
+        <button
+          type="button"
+          className="chat-input__icon-btn"
+          aria-label="Emoji"
+          aria-expanded={mostrarEmojis}
+          onClick={() => setMostrarEmojis((prev) => !prev)}
+        >
+          <Smile size={18} />
+        </button>
+        {mostrarEmojis && (
+          <div className="chat-input__emoji-menu">
+            {EMOJIS.map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                className="chat-input__emoji-item"
+                onClick={() => {
+                  setTexto((prev) => `${prev}${emoji}`);
+                  setMostrarEmojis(false);
+                }}
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <input
         type="text"
         className="chat-input__field"

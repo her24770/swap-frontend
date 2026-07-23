@@ -8,6 +8,32 @@
   flex-shrink: 0;
 }
 
+.acuerdo-banner--proposal {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.7rem 1rem;
+  background-color: #fef3c7;
+  border: none;
+  border-bottom: 1px solid #f5d267;
+  cursor: pointer;
+}
+
+.acuerdo-banner--proposal-sent {
+  background-color: #e0f2fe;
+  border-bottom-color: #93c5fd;
+}
+
+.acuerdo-banner__proposal-text {
+  font-size: 0.8125rem;
+  font-family: var(--swap-font-textos);
+  font-weight: 600;
+  color: #92400e;
+}
+
+.acuerdo-banner--proposal-sent .acuerdo-banner__proposal-text {
+  color: #1d4ed8;
+}
+
 .acuerdo-banner--empty {
   background-color: var(--swap-secondary-background);
   justify-content: space-between;
