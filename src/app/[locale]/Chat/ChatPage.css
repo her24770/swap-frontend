@@ -18,6 +18,7 @@
 @media (max-width: 768px) {
   .mensajes-page {
     position: relative;
+    min-height: 100dvh;
   }
 
   .mensajes-page > .chat-sidebar,
@@ -39,5 +40,15 @@
   .mensajes-page.mensajes-page--chat-open > .chat-principal,
   .mensajes-page.mensajes-page--chat-open > .mensajes-page__empty {
     display: flex;
+  }
+
+  .mensajes-page.mensajes-page--chat-open > .chat-principal,
+  .mensajes-page.mensajes-page--chat-open > .mensajes-page__empty {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    z-index: 30;
+    background-color: var(--swap-primary-background);
   }
 }
