@@ -1,0 +1,108 @@
+.acuerdo-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--swap-tertiary-background);
+  border-bottom: 1px solid var(--swap-primary-border-color);
+  flex-shrink: 0;
+}
+
+.acuerdo-banner--empty {
+  background-color: var(--swap-secondary-background);
+  justify-content: space-between;
+}
+
+.acuerdo-banner__create-label {
+  font-size: 0.8125rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-tertiary-text-color);
+  font-style: italic;
+}
+
+.acuerdo-banner__btn-create {
+  padding: 0.375rem 0.875rem;
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--swap-font-textos);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.acuerdo-banner__btn-create:hover { opacity: 0.9; }
+
+.acuerdo-banner__img {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--swap-primary-border-color);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acuerdo-banner__img-placeholder {
+  font-size: 1.25rem;
+}
+
+.acuerdo-banner__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.acuerdo-banner__label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.acuerdo-banner__name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--swap-font-subtitulos);
+  color: var(--swap-primary-text-color);
+}
+
+.acuerdo-banner__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.6875rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-primary-color);
+}
+
+.acuerdo-banner__meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.acuerdo-banner__btn {
+  padding: 0.375rem 0.875rem;
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: var(--swap-font-textos);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+
+.acuerdo-banner__btn:hover { opacity: 0.9; }
