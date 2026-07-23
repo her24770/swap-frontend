@@ -25,9 +25,11 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
         result = response.data;
         setTotal(response.total);
       }
-      setData(result);
+      setData(Array.isArray(result) ? result : []);
     } catch (err: any) {
       console.error(err);
+      setData([]);
+      setTotal(0);
       setError(err.message || "Error al cargar publicaciones");
     } finally {
       setLoading(false);
