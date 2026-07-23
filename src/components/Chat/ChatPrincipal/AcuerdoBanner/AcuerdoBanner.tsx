@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { MapPin, Calendar, Box} from "lucide-react";
+import { useTranslations } from "next-intl";
+import { MapPin, Calendar, Box } from "lucide-react";
 import type { AcuerdoHistorial } from "../../../../types/acuerdo";
 import "./AcuerdoBanner.css";
 
@@ -18,19 +19,20 @@ export default function AcuerdoBanner({
   onDetalles,
   onCrear,
 }: AcuerdoBannerProps) {
+  const t = useTranslations("chat.banner");
   const imagenPrincipal = acuerdo?.publicacion.imagenes[0]?.url_imagen;
 
   if (!acuerdo) {
     return (
       <div className="acuerdo-banner acuerdo-banner--empty">
-        <span className="acuerdo-banner__create-label">Sin acuerdo acordado</span>
+        <span className="acuerdo-banner__create-label">{t("noAgreement")}</span>
         {onCrear && (
           <button
             type="button"
             className="acuerdo-banner__btn-create"
             onClick={onCrear}
           >
-            + Crear acuerdo
+            {t("createAgreement")}
           </button>
         )}
       </div>
@@ -46,8 +48,8 @@ export default function AcuerdoBanner({
       >
         <span className="acuerdo-banner__proposal-text">
           {esPropuestaPendiente
-            ? "Tienes una propuesta de acuerdo"
-            : "Tu propuesta de acuerdo esta pendiente"}
+            ? t("pendingProposalReceived")
+            : t("pendingProposalSent")}
         </span>
       </button>
     );
@@ -56,17 +58,30 @@ export default function AcuerdoBanner({
   return (
     <div className="acuerdo-banner">
       <div className="acuerdo-banner__img">
-        {imagenPrincipal
-          ? <Image src={imagenPrincipal} alt={acuerdo.publicacion.titulo} fill style={{ objectFit: "cover" }} unoptimized />
-          : <span className="acuerdo-banner__img-placeholder"><Box size={24} /></span>
-        }
+        {imagenPrincipal ? (
+          <Image
+            src={imagenPrincipal}
+            alt={acuerdo.publicacion.titulo}
+            fill
+            style={{ objectFit: "cover" }}
+            unoptimized
+          />
+        ) : (
+          <span className="acuerdo-banner__img-placeholder">
+            <Box size={24} />
+          </span>
+        )}
       </div>
       <div className="acuerdo-banner__info">
-        <span className="acuerdo-banner__label">Próximo acuerdo</span>
+        <span className="acuerdo-banner__label">{t("nextAgreement")}</span>
         <span className="acuerdo-banner__name">{acuerdo.publicacion.titulo}</span>
         <div className="acuerdo-banner__meta">
-          <span><MapPin size={11} /> {acuerdo.lugar_entrega}</span>
-          <span><Calendar size={11} /> {acuerdo.fecha_entrega}</span>
+          <span>
+            <MapPin size={11} /> {acuerdo.lugar_entrega}
+          </span>
+          <span>
+            <Calendar size={11} /> {acuerdo.fecha_entrega}
+          </span>
         </div>
       </div>
       <button
@@ -74,7 +89,7 @@ export default function AcuerdoBanner({
         className="acuerdo-banner__btn"
         onClick={onDetalles}
       >
-        Detalles
+        {t("details")}
       </button>
     </div>
   );

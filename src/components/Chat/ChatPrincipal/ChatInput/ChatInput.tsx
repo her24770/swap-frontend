@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Smile, Paperclip, Send } from "lucide-react";
 import "./ChatInput.css";
 
@@ -12,6 +13,7 @@ interface ChatInputProps {
 const EMOJIS = ["😀", "😂", "😍", "🥳", "🤔", "😭", "👍", "👌", "❤️", "👏"];
 
 export default function ChatInput({ onEnviar, onEnviarImagen }: ChatInputProps) {
+  const t = useTranslations("chat.input");
   const [texto, setTexto] = useState("");
   const [mostrarEmojis, setMostrarEmojis] = useState(false);
 
@@ -28,7 +30,7 @@ export default function ChatInput({ onEnviar, onEnviarImagen }: ChatInputProps) 
         <button
           type="button"
           className="chat-input__icon-btn"
-          aria-label="Emoji"
+          aria-label={t("emoji")}
           aria-expanded={mostrarEmojis}
           onClick={() => setMostrarEmojis((prev) => !prev)}
         >
@@ -55,18 +57,18 @@ export default function ChatInput({ onEnviar, onEnviarImagen }: ChatInputProps) 
       <input
         type="text"
         className="chat-input__field"
-        placeholder="Escribe un mensaje"
+        placeholder={t("placeholder")}
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleEnviar()}
       />
-      <button type="button" className="chat-input__icon-btn" aria-label="Adjuntar">
+      <button type="button" className="chat-input__icon-btn" aria-label={t("attach")}>
         <Paperclip size={18} />
       </button>
       <button
         type="button"
         className="chat-input__icon-btn chat-input__icon-btn--send"
-        aria-label="Enviar"
+        aria-label={t("send")}
         onClick={handleEnviar}
         disabled={!texto.trim()}
       >

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Calendar, ChevronLeft, MapPin, MoreVertical, UserCircle2 } from "lucide-react";
 import AcuerdoBanner from "./AcuerdoBanner/AcuerdoBanner";
 import ChatPanel from "../ChatPanel/ChatPanel";
@@ -36,6 +37,7 @@ export default function Chatprincipal({
   onCrearEncuentro,
   onVolver,
 }: ChatprincipalProps) {
+  const t = useTranslations("chat");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [panel, setPanel] = useState<TipoPanel>(null);
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
@@ -61,7 +63,7 @@ export default function Chatprincipal({
             <button
               type="button"
               className="chat-principal__back-btn"
-              aria-label="Volver a conversaciones"
+              aria-label={t("header.back")}
               onClick={onVolver}
             >
               <ChevronLeft size={18} />
@@ -80,7 +82,7 @@ export default function Chatprincipal({
           <button
             type="button"
             className="chat-principal__menu-btn"
-            aria-label="Opciones"
+            aria-label={t("header.options")}
             aria-expanded={menuAbierto}
             onClick={() => setMenuAbierto((prev) => !prev)}
           >
@@ -93,7 +95,7 @@ export default function Chatprincipal({
                 className="chat-principal__dropdown-item"
                 onClick={() => setMenuAbierto(false)}
               >
-                Historial de acuerdos
+                {t("menu.agreementHistory")}
               </button>
               {puedeGestionarAcuerdos && (
                 <button
@@ -104,7 +106,7 @@ export default function Chatprincipal({
                     onCrearEncuentro?.();
                   }}
                 >
-                  Crear acuerdo
+                  {t("menu.createAgreement")}
                 </button>
               )}
               <button
@@ -112,7 +114,7 @@ export default function Chatprincipal({
                 className="chat-principal__dropdown-item chat-principal__dropdown-item--danger"
                 onClick={() => setMenuAbierto(false)}
               >
-                Reportar
+                {t("menu.report")}
               </button>
             </div>
           )}
@@ -150,7 +152,7 @@ export default function Chatprincipal({
               </div>
               {acuerdo.observaciones && (
                 <div className="chat-principal__acuerdo-notes">
-                  <strong>Observaciones</strong>
+                  <strong>{t("agreement.notes")}</strong>
                   <p>{acuerdo.observaciones}</p>
                 </div>
               )}
@@ -164,7 +166,7 @@ export default function Chatprincipal({
                       setPanel(null);
                     }}
                   >
-                    Aceptar
+                    {t("agreement.accept")}
                   </button>
                   <button
                     type="button"
@@ -177,7 +179,7 @@ export default function Chatprincipal({
                     }}
                     disabled={!puedeGestionarAcuerdos}
                   >
-                    Enviar una nueva
+                    {t("agreement.sendNew")}
                   </button>
                   <button
                     type="button"
@@ -187,13 +189,13 @@ export default function Chatprincipal({
                       setPanel(null);
                     }}
                   >
-                    Rechazar
+                    {t("agreement.reject")}
                   </button>
                 </div>
               )}
               {esPropuestaEnviada && (
                 <p className="chat-principal__acuerdo-status">
-                  Tu propuesta de acuerdo esta pendiente de respuesta.
+                  {t("agreement.pendingResponse")}
                 </p>
               )}
             </div>

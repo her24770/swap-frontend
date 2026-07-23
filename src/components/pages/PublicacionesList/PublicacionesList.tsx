@@ -282,7 +282,7 @@ export default function PublicacionesList({
                 <button
                     className="publicaciones-list__pagination-btn publicaciones-list__pagination-btn--arrow"
                     type="button"
-                    aria-label="Página anterior"
+                    aria-label={t("pagination.previous")}
                     disabled={safeCurrentPage === 1}
                     onClick={() => setPage(Math.max(safeCurrentPage - 1, 1))}
                 >
@@ -302,7 +302,7 @@ export default function PublicacionesList({
                 <button
                     className="publicaciones-list__pagination-btn publicaciones-list__pagination-btn--arrow"
                     type="button"
-                    aria-label="Página siguiente"
+                    aria-label={t("pagination.next")}
                     disabled={safeCurrentPage === pageCount}
                     onClick={() => setPage(Math.min(safeCurrentPage + 1, pageCount))}
                 >
@@ -348,7 +348,7 @@ export default function PublicacionesList({
                             className="button button--small"
                             onClick={handlePersonalizedRecommendationsClick}
                         >
-                            Recomendados para ti
+                            {t("personalizedRecommendationsButton")}
                         </button>
                     )}
                 </div>
@@ -410,7 +410,7 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">
                             {isSearchLoading
                                 ? tSearch("searching")
-                                : `Resultados (${searchResults.length})`}
+                                : t("resultsTitle", { count: searchResults.length })}
                         </h2>
                         {isSearchLoading ? (
                             <PublicacionesGridSkeleton count={itemsPerPage} />
@@ -423,7 +423,7 @@ export default function PublicacionesList({
                                 <div className="publicaciones-list__grid">
                                     {visibleGridData.map(renderPostCard)}
                                 </div>
-                                {renderPagination("Paginación de resultados")}
+                                {renderPagination(t("pagination.results"))}
                             </>
                         )}
                     </section>
@@ -432,7 +432,7 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">
                             {filterLoading
                                 ? tSearch("searching")
-                                : `Resultados (${filteredTutores!.length})`}
+                                : t("resultsTitle", { count: filteredTutores!.length })}
                         </h2>
                         {filterLoading ? (
                             <div className="publicaciones-list__carousel-wrap publicaciones-list__carousel-wrap--tutors">
@@ -469,7 +469,7 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">
                             {filterLoading
                                 ? tSearch("searching")
-                                : `Resultados (${filteredResults!.length})`}
+                                : t("resultsTitle", { count: filteredResults!.length })}
                         </h2>
                         {filterLoading ? (
                             <PublicacionesGridSkeleton count={itemsPerPage} />
@@ -482,7 +482,7 @@ export default function PublicacionesList({
                                 <div className="publicaciones-list__grid">
                                     {visibleGridData.map(renderPostCard)}
                                 </div>
-                                {renderPagination("Paginación de resultados filtrados")}
+                                {renderPagination(t("pagination.filteredResults"))}
                             </>
                         )}
                     </section>
@@ -622,7 +622,7 @@ export default function PublicacionesList({
                                     <div className="publicaciones-list__grid">
                                         {visibleGridData.map(renderPostCard)}
                                     </div>
-                                    {renderPagination("Paginación de publicaciones")}
+                                    {renderPagination(t("pagination.posts"))}
                                 </>
                             )}
                         </section>

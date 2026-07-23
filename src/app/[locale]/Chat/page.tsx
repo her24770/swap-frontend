@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import ChatPrincipal from "../../../components/Chat/ChatPrincipal/ChatPrincipal";
 import ChatSidebar from "../../../components/Chat/ChatSidebar/chatsidebar";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
@@ -47,7 +48,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 12,
       mensaje: "Hola, puedo entregartelo hoy despues de clases.",
       estado_mensaje: 1,
-      fecha_enviado: "09:00",
+      fecha_enviado: "2026-07-23T09:00:00",
     },
     {
       id_mensaje: 102,
@@ -55,7 +56,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 1,
       mensaje: "Perfecto, me queda bien a las 5.",
       estado_mensaje: 1,
-      fecha_enviado: "09:08",
+      fecha_enviado: "2026-07-23T09:08:00",
     },
     {
       id_mensaje: 103,
@@ -63,7 +64,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 12,
       mensaje: "Te confirmo la entrega para manana.",
       estado_mensaje: 1,
-      fecha_enviado: "09:15",
+      fecha_enviado: "2026-07-23T09:15:00",
     },
   ],
   2: [
@@ -73,7 +74,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 18,
       mensaje: "Hola, aun tienes disponible el teclado?",
       estado_mensaje: 1,
-      fecha_enviado: "11:20",
+      fecha_enviado: "2026-07-22T11:20:00",
     },
     {
       id_mensaje: 202,
@@ -81,7 +82,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 18,
       mensaje: "Sigo interesado en la publicacion.",
       estado_mensaje: 1,
-      fecha_enviado: "11:24",
+      fecha_enviado: "2026-07-22T11:24:00",
     },
   ],
   3: [
@@ -91,7 +92,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 1,
       mensaje: "Llego en diez minutos.",
       estado_mensaje: 1,
-      fecha_enviado: "18:31",
+      fecha_enviado: "2026-07-21T18:31:00",
     },
     {
       id_mensaje: 302,
@@ -99,7 +100,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 27,
       mensaje: "Buenisimo, estoy frente a biblioteca.",
       estado_mensaje: 1,
-      fecha_enviado: "18:35",
+      fecha_enviado: "2026-07-23T18:35:00",
     },
     {
       id_mensaje: 303,
@@ -107,7 +108,7 @@ const MOCK_MENSAJES: Record<number, Mensaje[]> = {
       id_emisor: 27,
       mensaje: "Nos vemos hoy en el campus central.",
       estado_mensaje: 1,
-      fecha_enviado: "18:40",
+      fecha_enviado: "2026-07-23T18:40:00",
     },
   ],
 };
@@ -251,7 +252,6 @@ function crearNuevaPropuesta(acuerdo: AcuerdoHistorial): AcuerdoHistorial {
 
 function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
   if (!fechaUltimoMensaje) return -1;
-  if (fechaUltimoMensaje === "Ahora") return Number.MAX_SAFE_INTEGER;
 
   const coincidenciaHora = fechaUltimoMensaje.match(/^(\d{1,2}):(\d{2})$/);
   if (!coincidenciaHora) return -1;
@@ -262,6 +262,7 @@ function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
 }
 
 export default function ChatPage() {
+  const t = useTranslations("chat");
   const [tab, setTab] = useState<TabMensajes>("todas");
   const [selectedId, setSelectedId] = useState<number | null>(1);
   const [mostrarChatMovil, setMostrarChatMovil] = useState(false);
@@ -304,6 +305,24 @@ export default function ChatPage() {
     ? acuerdosState[selected.id_conversacion] ?? null
     : null;
 
+  const obtenerHoraActual = () =>
+    new Date().toLocaleTimeString("es-GT", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+  const obtenerFechaHoraActual = () => {
+    const ahora = new Date();
+    const year = ahora.getFullYear();
+    const month = String(ahora.getMonth() + 1).padStart(2, "0");
+    const day = String(ahora.getDate()).padStart(2, "0");
+    const hour = String(ahora.getHours()).padStart(2, "0");
+    const minute = String(ahora.getMinutes()).padStart(2, "0");
+    const second = String(ahora.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+  };
+
   const handleEnviar = (texto: string) => {
     if (!selected) return;
 
@@ -313,10 +332,7 @@ export default function ChatPage() {
       id_emisor: 1,
       mensaje: texto,
       estado_mensaje: 1,
-      fecha_enviado: new Date().toLocaleTimeString("es-GT", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      fecha_enviado: obtenerFechaHoraActual(),
     };
 
     setMensajesPorConversacion((prev) => ({
@@ -341,12 +357,9 @@ export default function ChatPage() {
       id_mensaje: Date.now(),
       id_conversacion: selected.id_conversacion,
       id_emisor: 1,
-      mensaje: `Imagen adjunta: ${archivo.name}`,
+      mensaje: `${t("system.attachedImageMessage")} ${archivo.name}`,
       estado_mensaje: 1,
-      fecha_enviado: new Date().toLocaleTimeString("es-GT", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      fecha_enviado: obtenerFechaHoraActual(),
     };
 
     setMensajesPorConversacion((prev) => ({
@@ -357,7 +370,7 @@ export default function ChatPage() {
       conversacion.id_conversacion === selected.id_conversacion
         ? {
           ...conversacion,
-          preview: `Imagen: ${archivo.name}`,
+          preview: `${t("system.imagePreview")} ${archivo.name}`,
           fecha_ultimo_mensaje: nuevoMensaje.fecha_enviado,
         }
         : conversacion
@@ -367,7 +380,7 @@ export default function ChatPage() {
   const handleConfirmar = (id: number) => {
     setConversacionesState((prev) => prev.map((conversacion) => (
       conversacion.id_conversacion === id
-        ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? "Ahora" }
+        ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
         : conversacion
     )));
   };
@@ -404,7 +417,7 @@ export default function ChatPage() {
     });
     setConversacionesState((prev) => prev.map((conversacion) => (
       conversacion.id_conversacion === idConversacion
-        ? { ...conversacion, preview: "Acuerdo aceptado." }
+        ? { ...conversacion, preview: t("system.agreementAccepted") }
         : conversacion
     )));
   };
@@ -416,7 +429,7 @@ export default function ChatPage() {
     }));
     setConversacionesState((prev) => prev.map((conversacion) => (
       conversacion.id_conversacion === idConversacion
-        ? { ...conversacion, preview: "Propuesta de acuerdo rechazada." }
+        ? { ...conversacion, preview: t("system.agreementRejected") }
         : conversacion
     )));
   };
@@ -433,7 +446,7 @@ export default function ChatPage() {
     });
     setConversacionesState((prev) => prev.map((conversacion) => (
       conversacion.id_conversacion === idConversacion
-        ? { ...conversacion, preview: "Enviaste una nueva propuesta de acuerdo." }
+        ? { ...conversacion, preview: t("system.newAgreementProposalSent") }
         : conversacion
     )));
   };
@@ -468,7 +481,7 @@ export default function ChatPage() {
         />
       ) : (
         <div className="mensajes-page__empty">
-          Selecciona una conversacion
+          {t("empty.selectConversation")}
         </div>
       )}
     </div>

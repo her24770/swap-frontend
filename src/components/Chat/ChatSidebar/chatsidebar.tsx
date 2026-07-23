@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { UserCircle2 } from "lucide-react";
 import type { ConversacionPreview, TabMensajes } from "../../../types/chat";
 import "./chatsidebar.css";
@@ -14,25 +15,26 @@ interface ChatSidebarProps {
   onEliminar?: (id: number) => void;
 }
 
-const TABS: { key: TabMensajes; label: string }[] = [
-  { key: "todas",   label: "Todas"   },
-  { key: "ventas",  label: "Ventas"  },
-  { key: "compras", label: "Compras" },
-];
-
 export default function ChatSidebar({
   conversaciones, selectedId, tab,
   onTabChange, onSelect, onConfirmar, onEliminar,
 }: ChatSidebarProps) {
+  const t = useTranslations("chat.sidebar");
+  const tabs: { key: TabMensajes; label: string }[] = [
+    { key: "todas", label: t("tabs.all") },
+    { key: "ventas", label: t("tabs.sales") },
+    { key: "compras", label: t("tabs.purchases") },
+  ];
+
   return (
     <aside className="chat-sidebar">
       <div className="chat-sidebar__head">
-        <h1 className="chat-sidebar__title">Mensajes</h1>
-        <p className="chat-sidebar__sub">Conversaciones activas</p>
+        <h1 className="chat-sidebar__title">{t("title")}</h1>
+        <p className="chat-sidebar__sub">{t("subtitle")}</p>
       </div>
 
       <div className="chat-sidebar__tabs">
-        {TABS.map(({ key, label }) => (
+        {tabs.map(({ key, label }) => (
           <button
             key={key}
             type="button"
@@ -69,14 +71,14 @@ export default function ChatSidebar({
                       className="chat-sidebar__btn chat-sidebar__btn--confirmar"
                       onClick={(e) => { e.stopPropagation(); onConfirmar?.(conv.id_conversacion); }}
                     >
-                      Confirmar
+                      {t("confirm")}
                     </button>
                     <button
                       type="button"
                       className="chat-sidebar__btn chat-sidebar__btn--eliminar"
                       onClick={(e) => { e.stopPropagation(); onEliminar?.(conv.id_conversacion); }}
                     >
-                      Eliminar
+                      {t("delete")}
                     </button>
                   </div>
                 )}
