@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { UserCircle2 } from "lucide-react";
 import type { ConversacionPreview, TabMensajes } from "../../../types/chat";
 import "./chatsidebar.css";
+import SearchContactsBar from "../../ui/SearchContactsBar/SearchContactsBar";
 
 interface ChatSidebarProps {
   conversaciones: ConversacionPreview[];
@@ -47,6 +48,8 @@ export default function ChatSidebar({
       </div>
 
       <div className="chat-sidebar__list">
+        <SearchContactsBar />
+
         {conversaciones.map((conv) => (
           <div
             key={conv.id_conversacion}

@@ -1,0 +1,77 @@
+.search-contacts-bar {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.search-bar--with-filter {
+  max-width: 32rem;
+}
+
+.search-bar__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 9999px;
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-primary-text-color);
+  background-color: var(--swap-secondary-background);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.search-bar--with-filter .search-bar__input {
+  padding-right: 3rem;
+}
+
+.search-bar__input:focus {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 115, 41, 0.15);
+}
+
+.search-bar__input::placeholder {
+  color: var(--swap-tertiary-text-color);
+}
+
+.search-bar__filter-btn {
+  position: absolute;
+  right: 0.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--swap-tertiary-text-color);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.search-bar__filter-btn:hover {
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-color);
+}
+
+.search-bar__filter-btn--open,
+.search-bar__filter-btn--active {
+  background-color: var(--swap-primary-color);
+  color: #ffffff;
+}
+
+.search-bar__filter-btn--open:hover,
+.search-bar__filter-btn--active:hover {
+  background-color: var(--swap-primary-color);
+  color: #ffffff;
+}
