@@ -1,5 +1,6 @@
 import { apiClient } from "../lib/apiClient";
 import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse, FiltroTutorBody, FiltroTutorApiResponse, TutorFiltrado } from "../types/publicacion";
+import type { ApiError } from "../lib/apiClient";
 
 interface GuardadoPublicacion {
   id_usuario: number;
@@ -22,6 +23,15 @@ function normalizarGuardados(data: GuardadosResponse["data"]): Publicacion[] {
 
     return item;
   });
+}
+
+function isNotFoundError(error: unknown): error is ApiError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    (error as ApiError).status === 404
+  );
 }
 
 export const publicacionService = {
@@ -50,28 +60,33 @@ export const publicacionService = {
   },
 
   async getGlobalRecommendations(tipo?: string): Promise<Publicacion[]> {
-    
-    const response = await apiClient.get<PublicacionesResponse>(
-      tipo ? `/api/recomendacion/globales/${tipo}` : `/api/recomendacion/globales/`
-    );
-    if(response.data.length === 0){
-      return [];
-    }
+    try {
+      const response = await apiClient.get<PublicacionesResponse>(
+        tipo ? `/api/recomendacion/globales/${tipo}` : `/api/recomendacion/globales/`
+      );
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (error) {
+      if (isNotFoundError(error)) {
+        return [];
+      }
 
-    return response.data;
+      throw error;
+    }
   },
 
   async getPersonalizedRecommendations(): Promise<Publicacion[]> {
+    try {
+      const response = await apiClient.get<PublicacionesResponse>(
+        "/api/recomendacion/personalizadas"
+      );
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (error) {
+      if (isNotFoundError(error)) {
+        return [];
+      }
 
-    const response = await apiClient.get<PublicacionesResponse>(
-      "/api/recomendacion/personalizadas"
-    );
-
-    if (response.data.length === 0) {
-      return [];
+      throw error;
     }
-
-    return response.data;
   },
 
   async getById(id: number): Promise<PublicacionDetalle> {

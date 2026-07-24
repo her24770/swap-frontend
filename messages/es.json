@@ -17,6 +17,7 @@
 			"tutorias": "Tutorías",
 			"materiales": "Materiales",
 			"negocios": "Negocios",
+			"mensajes": "Mensajes",
 			"guardados": "Guardados"
 		},
 		"settings":{
@@ -171,6 +172,15 @@
 		"ads" : "Anuncios",
 		"populares": "Publicaciones Populares",
 		"tutores": "Tutores",
+		"personalizedRecommendationsButton": "Recomendados para ti",
+		"resultsTitle": "Resultados ({count})",
+		"pagination": {
+			"previous": "Página anterior",
+			"next": "Página siguiente",
+			"results": "Paginación de resultados",
+			"filteredResults": "Paginación de resultados filtrados",
+			"posts": "Paginación de publicaciones"
+		},
 		"loadingTutores": "Cargando tutores...",
 		"tutorFallbackName": "Tutor SWAP",
 		"noTutores": "No hay tutores para mostrar todavía.",
@@ -532,6 +542,72 @@
 			"create": "Agregar certificación",
 			"saveChanges": "Guardar cambios",
 			"saving": "Guardando..."
+		}
+	},
+	"chat": {
+		"empty": {
+			"selectConversation": "Selecciona una conversación"
+		},
+		"header": {
+			"back": "Volver a conversaciones",
+			"options": "Opciones"
+		},
+		"menu": {
+			"agreementHistory": "Historial de acuerdos",
+			"createAgreement": "Crear acuerdo",
+			"report": "Reportar"
+		},
+		"agreement": {
+			"notes": "Observaciones",
+			"accept": "Aceptar",
+			"sendNew": "Enviar una nueva",
+			"reject": "Rechazar",
+			"pendingResponse": "Tu propuesta de acuerdo está pendiente de respuesta."
+		},
+		"banner": {
+			"noAgreement": "Sin acuerdo acordado",
+			"createAgreement": "+ Crear acuerdo",
+			"pendingProposalReceived": "Tienes una propuesta de acuerdo",
+			"pendingProposalSent": "Tu propuesta de acuerdo está pendiente",
+			"nextAgreement": "Próximo acuerdo",
+			"details": "Detalles"
+		},
+		"input": {
+			"emoji": "Emoji",
+			"placeholder": "Escribe un mensaje",
+			"attach": "Adjuntar",
+			"send": "Enviar"
+		},
+		"messages": {
+			"today": "HOY",
+			"yesterday": "AYER",
+			"avatarAlt": "avatar"
+		},
+		"panel": {
+			"close": "Cerrar panel",
+			"titles": {
+				"agreement": "Detalle del acuerdo",
+				"post": "Publicación",
+				"options": "Opciones"
+			}
+		},
+		"sidebar": {
+			"title": "Mensajes",
+			"subtitle": "Conversaciones activas",
+			"confirm": "Confirmar",
+			"delete": "Eliminar",
+			"tabs": {
+				"all": "Todas",
+				"sales": "Ventas",
+				"purchases": "Compras"
+			}
+		},
+		"system": {
+			"attachedImageMessage": "Imagen adjunta:",
+			"imagePreview": "Imagen:",
+			"agreementAccepted": "Acuerdo aceptado.",
+			"agreementRejected": "Propuesta de acuerdo rechazada.",
+			"newAgreementProposalSent": "Enviaste una nueva propuesta de acuerdo."
 		}
 	}
 }

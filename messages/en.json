@@ -17,6 +17,7 @@
 			"tutorias": "Tutoring",
 			"materiales": "Materials",
 			"negocios": "Businesses",
+			"mensajes": "Messages",
 			"guardados": "Saved"
 		},
 		"settings":{
@@ -172,6 +173,15 @@
 		"error_loading_section": "Couldn't load this section",
 		"populares": "Popular Posts",
 		"tutores": "Tutors",
+		"personalizedRecommendationsButton": "Recommended for you",
+		"resultsTitle": "Results ({count})",
+		"pagination": {
+			"previous": "Previous page",
+			"next": "Next page",
+			"results": "Results pagination",
+			"filteredResults": "Filtered results pagination",
+			"posts": "Posts pagination"
+		},
 		"loadingTutores": "Loading tutors...",
 		"tutorFallbackName": "SWAP Tutor",
 		"noTutores": "No tutors to show yet."
@@ -526,6 +536,72 @@
 			"create": "Add certification",
 			"saveChanges": "Save changes",
 			"saving": "Saving..."
+		}
+	},
+	"chat": {
+		"empty": {
+			"selectConversation": "Select a conversation"
+		},
+		"header": {
+			"back": "Back to conversations",
+			"options": "Options"
+		},
+		"menu": {
+			"agreementHistory": "Agreement history",
+			"createAgreement": "Create agreement",
+			"report": "Report"
+		},
+		"agreement": {
+			"notes": "Notes",
+			"accept": "Accept",
+			"sendNew": "Send a new one",
+			"reject": "Reject",
+			"pendingResponse": "Your agreement proposal is pending a response."
+		},
+		"banner": {
+			"noAgreement": "No agreement set",
+			"createAgreement": "+ Create agreement",
+			"pendingProposalReceived": "You have an agreement proposal",
+			"pendingProposalSent": "Your agreement proposal is pending",
+			"nextAgreement": "Next agreement",
+			"details": "Details"
+		},
+		"input": {
+			"emoji": "Emoji",
+			"placeholder": "Type a message",
+			"attach": "Attach",
+			"send": "Send"
+		},
+		"messages": {
+			"today": "TODAY",
+			"yesterday": "YESTERDAY",
+			"avatarAlt": "avatar"
+		},
+		"panel": {
+			"close": "Close panel",
+			"titles": {
+				"agreement": "Agreement details",
+				"post": "Post",
+				"options": "Options"
+			}
+		},
+		"sidebar": {
+			"title": "Messages",
+			"subtitle": "Active conversations",
+			"confirm": "Confirm",
+			"delete": "Delete",
+			"tabs": {
+				"all": "All",
+				"sales": "Sales",
+				"purchases": "Purchases"
+			}
+		},
+		"system": {
+			"attachedImageMessage": "Attached image:",
+			"imagePreview": "Image:",
+			"agreementAccepted": "Agreement accepted.",
+			"agreementRejected": "Agreement proposal rejected.",
+			"newAgreementProposalSent": "You sent a new agreement proposal."
 		}
 	}
 }

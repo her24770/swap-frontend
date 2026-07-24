@@ -17,6 +17,7 @@
 			"tutorias": "Tutorat",
 			"materiales": "Matériels",
 			"negocios": "Commerces",
+			"mensajes": "Messages",
 			"guardados": "Enregistrés"
 		},
 		"settings":{
@@ -171,6 +172,15 @@
 		"ads" : "Publicités",
 		"populares": "Publications Populaires",
 		"tutores": "Tuteurs",
+		"personalizedRecommendationsButton": "Recommandés pour vous",
+		"resultsTitle": "Résultats ({count})",
+		"pagination": {
+			"previous": "Page précédente",
+			"next": "Page suivante",
+			"results": "Pagination des résultats",
+			"filteredResults": "Pagination des résultats filtrés",
+			"posts": "Pagination des publications"
+		},
 		"loadingTutores": "Chargement des tuteurs...",
 		"tutorFallbackName": "Tuteur SWAP",
 		"noTutores": "Aucun tuteur à afficher pour le moment.",
@@ -521,6 +531,72 @@
 			"create": "Ajouter la certification",
 			"saveChanges": "Enregistrer les modifications",
 			"saving": "Enregistrement..."
+		}
+	},
+	"chat": {
+		"empty": {
+			"selectConversation": "Sélectionnez une conversation"
+		},
+		"header": {
+			"back": "Retour aux conversations",
+			"options": "Options"
+		},
+		"menu": {
+			"agreementHistory": "Historique des accords",
+			"createAgreement": "Créer un accord",
+			"report": "Signaler"
+		},
+		"agreement": {
+			"notes": "Observations",
+			"accept": "Accepter",
+			"sendNew": "Envoyer une nouvelle",
+			"reject": "Refuser",
+			"pendingResponse": "Votre proposition d'accord est en attente de réponse."
+		},
+		"banner": {
+			"noAgreement": "Aucun accord défini",
+			"createAgreement": "+ Créer un accord",
+			"pendingProposalReceived": "Vous avez une proposition d'accord",
+			"pendingProposalSent": "Votre proposition d'accord est en attente",
+			"nextAgreement": "Prochain accord",
+			"details": "Détails"
+		},
+		"input": {
+			"emoji": "Emoji",
+			"placeholder": "Écrivez un message",
+			"attach": "Joindre",
+			"send": "Envoyer"
+		},
+		"messages": {
+			"today": "AUJOURD'HUI",
+			"yesterday": "HIER",
+			"avatarAlt": "avatar"
+		},
+		"panel": {
+			"close": "Fermer le panneau",
+			"titles": {
+				"agreement": "Détail de l'accord",
+				"post": "Publication",
+				"options": "Options"
+			}
+		},
+		"sidebar": {
+			"title": "Messages",
+			"subtitle": "Conversations actives",
+			"confirm": "Confirmer",
+			"delete": "Supprimer",
+			"tabs": {
+				"all": "Toutes",
+				"sales": "Ventes",
+				"purchases": "Achats"
+			}
+		},
+		"system": {
+			"attachedImageMessage": "Image jointe :",
+			"imagePreview": "Image :",
+			"agreementAccepted": "Accord accepté.",
+			"agreementRejected": "Proposition d'accord rejetée.",
+			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord."
 		}
 	}
 }
