@@ -11,13 +11,13 @@ export default function SearchContactsBar() {
 
     return (
         <div className="search-contacts-bar">
-        <div className="search-bar__field">
+        <div className="search-contacts-bar__field">
             <input
             type="text"
             className="search-contacts-bar__input"
             placeholder={t("placeholder")}
             />
-            <Search size={18} className="search-bar__icon" />
+            <Search size={18} className="search-contacts-bar__icon" />
         </div>
         </div>
     );
