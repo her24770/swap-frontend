@@ -361,6 +361,10 @@
 			"certificado": "Voir les certificats",
 			"viewProfile": "Voir le profil"
 		},
+		"save": {
+			"addAria": "Enregistrer la publication",
+			"removeAria": "Retirer des favoris"
+		},
 		"tutorTopicsLabel": "Thèmes de tutorat",
 		"aria": {
 			"uploadImage": "Téléverser une image"
@@ -561,6 +565,10 @@
 			"nextAgreement": "Prochain accord",
 			"details": "Détails"
 		},
+		"post": {
+			"about": "À propos de cette publication",
+			"viewPost": "Voir la publication"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Écrivez un message",
@@ -598,5 +606,19 @@
 			"agreementRejected": "Proposition d'accord rejetée.",
 			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Envoyer un message à {name}",
+		"close": "Fermer",
+		"back": "Retour",
+		"requestTutoring": "Convenir d'un tutorat",
+		"suggestionsLabel": "Suggestions",
+		"selectSuggestion": "Sélectionnez un message suggéré",
+		"messageLabel": "Écrivez votre message",
+		"placeholder": "Écrivez quelque chose...",
+		"hint": "Ne partagez pas d'informations sensibles",
+		"cancel": "Annuler",
+		"send": "Envoyer",
+		"sending": "Envoi..."
 	}
 }

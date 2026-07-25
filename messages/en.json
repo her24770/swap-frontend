@@ -365,6 +365,10 @@
 			"certificado": "View certificates",
 			"viewProfile": "View profile"
 		},
+		"save": {
+			"addAria": "Save post",
+			"removeAria": "Remove from saved"
+		},
 		"tutorTopicsLabel": "Tutoring topics",
 		"aria": {
 			"uploadImage": "Upload image"
@@ -566,6 +570,10 @@
 			"nextAgreement": "Next agreement",
 			"details": "Details"
 		},
+		"post": {
+			"about": "About this post",
+			"viewPost": "View post"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Type a message",
@@ -603,5 +611,19 @@
 			"agreementRejected": "Agreement proposal rejected.",
 			"newAgreementProposalSent": "You sent a new agreement proposal."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Send message to {name}",
+		"close": "Close",
+		"back": "Back",
+		"requestTutoring": "Arrange tutoring",
+		"suggestionsLabel": "Suggestions",
+		"selectSuggestion": "Select a suggested message",
+		"messageLabel": "Write your message",
+		"placeholder": "Write something...",
+		"hint": "Do not share sensitive information",
+		"cancel": "Cancel",
+		"send": "Send",
+		"sending": "Sending..."
 	}
 }

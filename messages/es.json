@@ -365,6 +365,10 @@
 			"certificado": "Ver certificados",
 			"viewProfile": "Ver perfil"
 		},
+		"save": {
+			"addAria": "Guardar publicación",
+			"removeAria": "Eliminar de guardados"
+		},
 		"tutorTopicsLabel": "Temas de tutorías",
 		"aria": {
 			"uploadImage": "Subir imagen"
@@ -572,6 +576,10 @@
 			"nextAgreement": "Próximo acuerdo",
 			"details": "Detalles"
 		},
+		"post": {
+			"about": "Sobre esta publicación",
+			"viewPost": "Ver publicación"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Escribe un mensaje",
@@ -609,5 +617,19 @@
 			"agreementRejected": "Propuesta de acuerdo rechazada.",
 			"newAgreementProposalSent": "Enviaste una nueva propuesta de acuerdo."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Enviar mensaje a {name}",
+		"close": "Cerrar",
+		"back": "Volver",
+		"requestTutoring": "Acordar tutoría",
+		"suggestionsLabel": "Sugerencias",
+		"selectSuggestion": "Selecciona un mensaje sugerido",
+		"messageLabel": "Escribe tu mensaje",
+		"placeholder": "Escribe algo...",
+		"hint": "No compartas información sensible",
+		"cancel": "Cancelar",
+		"send": "Enviar",
+		"sending": "Enviando..."
 	}
 }
