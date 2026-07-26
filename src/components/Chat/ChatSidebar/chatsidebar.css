@@ -120,6 +120,13 @@
   min-width: 0;
 }
 
+.chat-sidebar__top-row-right {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
 .chat-sidebar__name {
   font-size: 0.8125rem;
   font-weight: 500;
