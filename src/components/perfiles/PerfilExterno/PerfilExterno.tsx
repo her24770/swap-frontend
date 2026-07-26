@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfileHeader";
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
+import MiniChatWidget from "../../Chat/MiniChatWidget/MiniChatWidget";
+import EnviarMensajeButton from "./EnviarMensajeButton/EnviarMensajeButton";
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
 import { getPerfilPublico } from "../../../services/perfilService";
@@ -66,6 +68,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
     }
 
     return (
+        <>
         <PerspectivaInternaProvider
         isOwnProfile={false}
         profileView="externo"
@@ -86,7 +89,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
             <>
                 <UserProfileHeader user={user} />
 
-                <div className="perfil-page__mode-toolbar">
+                <div className="perfil-page__mode-toolbar perfil-page__mode-toolbar--with-action">
                     <div
                         className="perfil-page__mode-toggle"
                         role="tablist"
@@ -107,6 +110,12 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                             </button>
                         ))}
                     </div>
+
+                    <EnviarMensajeButton
+                        userId={user.id_usuario}
+                        userName={user.name}
+                        userImageUrl={user.imageUrl}
+                    />
                 </div>
 
                 <hr className="perfil-page__divider" />
@@ -143,5 +152,14 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
             </>
         )}
         </PerspectivaInternaProvider>
+
+        {user && (
+            <MiniChatWidget
+                idUsuario={user.id_usuario}
+                nombre={user.name}
+                avatarUrl={user.imageUrl}
+            />
+        )}
+        </>
     );
 }

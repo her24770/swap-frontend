@@ -304,103 +304,34 @@ export default function ChatPage() {
     const postType = searchParams.get("postType");
     const message = searchParams.get("message");
 
+    // postId es opcional: permite iniciar una conversacion directa con un
+    // usuario (p.ej. desde su perfil) sin que este ligada a una publicacion.
     if (
       compose !== "1"
       || !recipient
       || !sellerId
-      || !postId
       || !message
     ) {
       return;
     }
 
-    const publicacion: PublicacionChatResumen = {
-      id: Number(postId),
-      titulo: postTitle || recipient,
-      precio: postPrice ? parseFloat(postPrice) : 0,
-      descripcion: postDescription || undefined,
-      imagenUrl: postImageUrl || undefined,
-      tipo: (postType as PublicacionChatResumen["tipo"]) || "venta",
-    };
-
-    const syntheticConversationId = Number(`9${postId}`);
-    const senderId = USUARIO_ACTUAL_ID;
-    const timestamp = new Date().toISOString();
-    const hora = new Date().toLocaleTimeString("es-GT", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    setConversacionesState((prev) => {
-      const nextConversation: ConversacionPreview = {
-        id_conversacion: syntheticConversationId,
-        nombre: recipient,
-        preview: message,
-        fecha_ultimo_mensaje: hora,
-        avatarUrl: postImageUrl || undefined,
-        publicacion,
-      };
-
-      const existingIndex = prev.findIndex((item) => item.id_conversacion === syntheticConversationId);
-      if (existingIndex >= 0) {
-        const updated = [...prev];
-        updated[existingIndex] = nextConversation;
-        return updated;
+    const publicacion: PublicacionChatResumen | undefined = postId
+      ? {
+        id: Number(postId),
+        titulo: postTitle || recipient,
+        precio: postPrice ? parseFloat(postPrice) : 0,
+        descripcion: postDescription || undefined,
+        imagenUrl: postImageUrl || undefined,
+        tipo: (postType as PublicacionChatResumen["tipo"]) || "venta",
       }
+      : undefined;
 
-      return [nextConversation, ...prev];
-    });
-
-    setMensajesPorConversacion((prev) => ({
-      ...prev,
-      [syntheticConversationId]: [
-        {
-          id_mensaje: syntheticConversationId,
-          id_conversacion: syntheticConversationId,
-          id_emisor: senderId,
-          mensaje: message,
-          estado_mensaje: 1,
-          fecha_enviado: timestamp,
-        },
-      ],
-    }));
-
-    setSelectedId(syntheticConversationId);
-    setMostrarChatMovil(true);
-  }, [searchParams]);
-
-  useEffect(() => {
-    const compose = searchParams.get("compose");
-    const recipient = searchParams.get("recipient");
-    const sellerId = searchParams.get("sellerId");
-    const postId = searchParams.get("postId");
-    const postTitle = searchParams.get("postTitle");
-    const postPrice = searchParams.get("postPrice");
-    const postDescription = searchParams.get("postDescription");
-    const postImageUrl = searchParams.get("postImageUrl");
-    const postType = searchParams.get("postType");
-    const message = searchParams.get("message");
-
-    if (
-      compose !== "1"
-      || !recipient
-      || !sellerId
-      || !postId
-      || !message
-    ) {
-      return;
-    }
-
-    const publicacion: PublicacionChatResumen = {
-      id: Number(postId),
-      titulo: postTitle || recipient,
-      precio: postPrice ? parseFloat(postPrice) : 0,
-      descripcion: postDescription || undefined,
-      imagenUrl: postImageUrl || undefined,
-      tipo: (postType as PublicacionChatResumen["tipo"]) || "venta",
-    };
-
-    const syntheticConversationId = Number(`9${postId}`);
+    // Conversacion ligada a una publicacion: id sintetico por publicacion.
+    // Conversacion directa (sin publicacion): id sintetico por usuario,
+    // con un prefijo distinto para no colisionar con los ids basados en post.
+    const syntheticConversationId = postId
+      ? Number(`9${postId}`)
+      : Number(`8${sellerId}`);
     const senderId = USUARIO_ACTUAL_ID;
     const timestamp = new Date().toISOString();
     const hora = new Date().toLocaleTimeString("es-GT", {
