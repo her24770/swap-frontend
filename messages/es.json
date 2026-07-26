@@ -659,7 +659,18 @@
 			"titles": {
 				"agreement": "Detalle del acuerdo",
 				"post": "Publicación",
-				"options": "Opciones"
+				"options": "Opciones",
+				"history": "Historial de acuerdos"
+			}
+		},
+		"history": {
+			"empty": "Aún no hay acuerdos con este usuario.",
+			"error": "No fue posible cargar el historial de acuerdos.",
+			"unknownUser": "Usuario de SWAP",
+			"groups": {
+				"pendiente": "Pendientes",
+				"activo": "En curso",
+				"completado": "Cumplidos"
 			}
 		},
 		"sidebar": {

@@ -653,7 +653,18 @@
 			"titles": {
 				"agreement": "Agreement details",
 				"post": "Post",
-				"options": "Options"
+				"options": "Options",
+				"history": "Agreement history"
+			}
+		},
+		"history": {
+			"empty": "There are no agreements with this user yet.",
+			"error": "Couldn't load the agreement history.",
+			"unknownUser": "SWAP user",
+			"groups": {
+				"pendiente": "Pending",
+				"activo": "Ongoing",
+				"completado": "Completed"
 			}
 		},
 		"sidebar": {

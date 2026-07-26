@@ -1,5 +1,5 @@
 export type TabMensajes = "todas" | "ventas" | "compras";
-export type TipoPanel = "acuerdo" | "publicacion" | "opciones" | null;
+export type TipoPanel = "acuerdo" | "publicacion" | "opciones" | "historial" | null;
 
 export interface EstadoChat {
   id_estado: number;

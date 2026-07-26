@@ -648,7 +648,18 @@
 			"titles": {
 				"agreement": "Détail de l'accord",
 				"post": "Publication",
-				"options": "Options"
+				"options": "Options",
+				"history": "Historique des accords"
+			}
+		},
+		"history": {
+			"empty": "Il n'y a pas encore d'accords avec cet utilisateur.",
+			"error": "Impossible de charger l'historique des accords.",
+			"unknownUser": "Utilisateur SWAP",
+			"groups": {
+				"pendiente": "En attente",
+				"activo": "En cours",
+				"completado": "Terminés"
 			}
 		},
 		"sidebar": {
