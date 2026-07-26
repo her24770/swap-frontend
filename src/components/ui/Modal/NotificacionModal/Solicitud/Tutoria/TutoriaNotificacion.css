@@ -1,0 +1,123 @@
+.tutoria-notificacion {
+  padding: 0.875rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.75rem;
+  background: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+}
+
+.tutoria-notificacion__header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.tutoria-notificacion__avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--swap-tertiary-background);
+  color: var(--swap-primary-color);
+}
+
+.tutoria-notificacion__header h3,
+.tutoria-notificacion__header p {
+  margin: 0;
+}
+
+.tutoria-notificacion__header h3 {
+  margin-top: 0.1rem;
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.875rem;
+}
+
+.tutoria-notificacion__header div > p:last-child:not(.tutoria-notificacion__eyebrow) {
+  margin-top: 0.15rem;
+  color: var(--swap-tertiary-text-color);
+  font-size: 0.75rem;
+}
+
+.tutoria-notificacion__eyebrow {
+  color: var(--swap-primary-color);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tutoria-notificacion__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 0.875rem 0;
+  padding: 0.75rem;
+  border-radius: 0.625rem;
+  background: var(--swap-secondary-background);
+}
+
+.tutoria-notificacion__details div {
+  min-width: 0;
+}
+
+.tutoria-notificacion__details dt {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.2rem;
+  color: var(--swap-tertiary-text-color);
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.tutoria-notificacion__details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--swap-primary-text-color);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.tutoria-notificacion__topic {
+  grid-column: 1 / -1;
+}
+
+.tutoria-notificacion__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.tutoria-notificacion__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 2.25rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tutoria-notificacion__button--accept {
+  background: var(--swap-primary-color);
+  color: white;
+}
+
+.tutoria-notificacion__button--reject {
+  border-color: var(--swap-danger-color);
+  background: transparent;
+  color: var(--swap-danger-color);
+}
+
+.tutoria-notificacion__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

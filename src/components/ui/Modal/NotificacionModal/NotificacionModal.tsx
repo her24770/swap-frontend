@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import { Bell, X, CheckCheck } from "lucide-react";
 import Notificacion from "./Notificacion/Notificacion";
 import type { NotificacionData } from "./Notificacion/Notificacion";
+import TarjetaNotificacionSolicitud from "./Solicitud/Tutoria/TutoriaNotificacion";
+import type { SolicitudTutoriaNotificacion } from "./Solicitud/Tutoria/TutoriaNotificacion";
 import "./NotificacionModal.css";
 
 interface NotificacionModalProps {
@@ -12,9 +14,12 @@ interface NotificacionModalProps {
   onClose: () => void;
   anchorRef?: React.RefObject<HTMLElement | null>;
   notificaciones: NotificacionData[];
+  solicitudesTutoria?: SolicitudTutoriaNotificacion[];
   onDismiss: (id: number) => void;
   onMarcarTodasLeidas?: () => void;
   onMarcarLeida?: (id: number) => void;
+  onAceptarSolicitud?: (id: number) => void;
+  onRechazarSolicitud?: (id: number) => void;
 }
 
 type PanelPosition = {
@@ -27,9 +32,12 @@ export default function NotificacionModal({
   onClose,
   anchorRef,
   notificaciones,
+  solicitudesTutoria = [],
   onDismiss,
   onMarcarTodasLeidas,
   onMarcarLeida,
+  onAceptarSolicitud,
+  onRechazarSolicitud,
 }: NotificacionModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -132,13 +140,21 @@ export default function NotificacionModal({
       )}
 
       <div className="notif-modal__body">
-        {notificaciones.length === 0 ? (
+        {notificaciones.length === 0 && solicitudesTutoria.length === 0 ? (
           <div className="notif-modal__empty">
             <Bell size={56} strokeWidth={1} className="notif-modal__empty-icon" />
             <p className="notif-modal__empty-title">Aquí encontrarás tus notificaciones</p>
           </div>
         ) : (
           <div className="notif-modal__list">
+            {solicitudesTutoria.map((solicitud) => (
+              <TarjetaNotificacionSolicitud
+                key={`tutoria-${solicitud.id}`}
+                solicitud={solicitud}
+                onAceptar={onAceptarSolicitud}
+                onRechazar={onRechazarSolicitud}
+              />
+            ))}
             {notificaciones.map((n) => (
               <Notificacion
                 key={n.id}
