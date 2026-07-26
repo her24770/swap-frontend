@@ -478,6 +478,68 @@
 			"currentImageAlt": "Imagen actual"
 		}
 	},
+	"solicitudAcuerdoModal": {
+		"title": "Solicitar acuerdo",
+		"triggerButton": "Solicitar acuerdo",
+		"fields": {
+			"objeto": "Objeto",
+			"costo": "Costo",
+			"lugar": "Lugar de entrega",
+			"lugarPlaceholder": "Ej. Plaza Ceibal, UVG",
+			"fecha": "Fecha",
+			"hora": "Hora",
+			"detalles": "Detalles",
+			"detallesPlaceholder": "Agrega detalles del acuerdo"
+		},
+		"errors": {
+			"required": "Este campo es obligatorio",
+			"pastDate": "La fecha y hora deben ser futuras"
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"send": "Enviar solicitud",
+			"sending": "Enviando..."
+		},
+		"exito": "Solicitud de acuerdo enviada",
+		"errorGenerico": "No se pudo enviar la solicitud. Intenta de nuevo."
+	},
+	"accionesAcuerdo": {
+		"aceptar": "Aceptar",
+		"aceptando": "Aceptando...",
+		"rechazar": "Rechazar",
+		"rechazando": "Rechazando...",
+		"confirmRechazar": {
+			"title": "Rechazar solicitud",
+			"message": "¿Seguro que deseas rechazar esta solicitud de acuerdo?"
+		}
+	},
+	"acuerdoPendienteBadge": {
+		"label": "Acuerdo pendiente"
+	},
+	"recordatorioAcuerdo": {
+		"title": "Acuerdo agendado",
+		"overdue": "Vencido",
+		"marcarCompletado": "Marcar como completado",
+		"completando": "Completando..."
+	},
+	"solicitudConversacionBanner": {
+		"texto": "Esta persona quiere iniciar una conversación contigo",
+		"aceptar": "Aceptar",
+		"aceptando": "Aceptando...",
+		"bloquear": "Bloquear",
+		"bloqueando": "Bloqueando...",
+		"errorGenerico": "No se pudo procesar la solicitud. Intenta de nuevo.",
+		"confirmBloquear": {
+			"title": "Bloquear conversación",
+			"message": "¿Seguro que deseas bloquear esta solicitud de conversación?"
+		}
+	},
+	"seccionAcuerdosConversacion": {
+		"cargando": "Cargando acuerdos...",
+		"error": "No se pudieron cargar los acuerdos de esta conversación",
+		"solicitudPendiente": "Solicitud de acuerdo por {objeto}",
+		"errorAccion": "No se pudo procesar la acción. Intenta de nuevo."
+	},
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
 		"titleCreate": "Crear Publicación",
@@ -566,7 +628,8 @@
 			"accept": "Aceptar",
 			"sendNew": "Enviar una nueva",
 			"reject": "Rechazar",
-			"pendingResponse": "Tu propuesta de acuerdo está pendiente de respuesta."
+			"pendingResponse": "Tu propuesta de acuerdo está pendiente de respuesta.",
+			"markCompleted": "Marcar como completado"
 		},
 		"banner": {
 			"noAgreement": "Sin acuerdo acordado",
@@ -615,7 +678,10 @@
 			"imagePreview": "Imagen:",
 			"agreementAccepted": "Acuerdo aceptado.",
 			"agreementRejected": "Propuesta de acuerdo rechazada.",
-			"newAgreementProposalSent": "Enviaste una nueva propuesta de acuerdo."
+			"newAgreementProposalSent": "Enviaste una nueva propuesta de acuerdo.",
+			"agreementCompleted": "Acuerdo marcado como completado.",
+			"agreementActionError": "No se pudo procesar la acción. Intenta de nuevo.",
+			"noPublicationForAgreement": "Esta conversación aún no tiene una publicación asociada para crear un acuerdo."
 		}
 	},
 	"sendMessageModal": {

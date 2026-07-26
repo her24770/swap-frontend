@@ -474,6 +474,68 @@
 			"currentImageAlt": "Image actuelle"
 		}
 	},
+	"solicitudAcuerdoModal": {
+		"title": "Demander un accord",
+		"triggerButton": "Demander un accord",
+		"fields": {
+			"objeto": "Objet",
+			"costo": "Coût",
+			"lugar": "Lieu de livraison",
+			"lugarPlaceholder": "Ex. Plaza Ceibal, UVG",
+			"fecha": "Date",
+			"hora": "Heure",
+			"detalles": "Détails",
+			"detallesPlaceholder": "Ajoutez des détails sur l'accord"
+		},
+		"errors": {
+			"required": "Ce champ est obligatoire",
+			"pastDate": "La date et l'heure doivent être futures"
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"send": "Envoyer la demande",
+			"sending": "Envoi..."
+		},
+		"exito": "Demande d'accord envoyée",
+		"errorGenerico": "Impossible d'envoyer la demande. Réessayez."
+	},
+	"accionesAcuerdo": {
+		"aceptar": "Accepter",
+		"aceptando": "Acceptation...",
+		"rechazar": "Refuser",
+		"rechazando": "Refus...",
+		"confirmRechazar": {
+			"title": "Refuser la demande",
+			"message": "Êtes-vous sûr de vouloir refuser cette demande d'accord ?"
+		}
+	},
+	"acuerdoPendienteBadge": {
+		"label": "Accord en attente"
+	},
+	"recordatorioAcuerdo": {
+		"title": "Accord programmé",
+		"overdue": "En retard",
+		"marcarCompletado": "Marquer comme terminé",
+		"completando": "Finalisation..."
+	},
+	"solicitudConversacionBanner": {
+		"texto": "Cette personne souhaite démarrer une conversation avec vous",
+		"aceptar": "Accepter",
+		"aceptando": "Acceptation...",
+		"bloquear": "Bloquer",
+		"bloqueando": "Blocage...",
+		"errorGenerico": "Impossible de traiter la demande. Réessayez.",
+		"confirmBloquear": {
+			"title": "Bloquer la conversation",
+			"message": "Êtes-vous sûr de vouloir bloquer cette demande de conversation ?"
+		}
+	},
+	"seccionAcuerdosConversacion": {
+		"cargando": "Chargement des accords...",
+		"error": "Impossible de charger les accords de cette conversation",
+		"solicitudPendiente": "Demande d'accord pour {objeto}",
+		"errorAccion": "Impossible de traiter l'action. Réessayez."
+	},
 	"loading": "Chargement des publications...",
 	"publicacionForm": {
 		"titleCreate": "Créer une publication",
@@ -555,7 +617,8 @@
 			"accept": "Accepter",
 			"sendNew": "Envoyer une nouvelle",
 			"reject": "Refuser",
-			"pendingResponse": "Votre proposition d'accord est en attente de réponse."
+			"pendingResponse": "Votre proposition d'accord est en attente de réponse.",
+			"markCompleted": "Marquer comme terminé"
 		},
 		"banner": {
 			"noAgreement": "Aucun accord défini",
@@ -604,7 +667,10 @@
 			"imagePreview": "Image :",
 			"agreementAccepted": "Accord accepté.",
 			"agreementRejected": "Proposition d'accord rejetée.",
-			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord."
+			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord.",
+			"agreementCompleted": "Accord marqué comme terminé.",
+			"agreementActionError": "Impossible de traiter l'action. Réessayez.",
+			"noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord."
 		}
 	},
 	"sendMessageModal": {

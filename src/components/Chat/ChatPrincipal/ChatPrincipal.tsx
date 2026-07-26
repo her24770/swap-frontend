@@ -22,6 +22,7 @@ interface ChatprincipalProps {
   onRechazarAcuerdo?: () => void;
   onEnviarNuevaPropuesta?: () => void;
   onCrearEncuentro?: () => void;
+  onCompletarAcuerdo?: () => void;
   onVolver?: () => void;
 }
 
@@ -35,6 +36,7 @@ export default function Chatprincipal({
   onRechazarAcuerdo,
   onEnviarNuevaPropuesta,
   onCrearEncuentro,
+  onCompletarAcuerdo,
   onVolver,
 }: ChatprincipalProps) {
   const t = useTranslations("chat");
@@ -54,6 +56,7 @@ export default function Chatprincipal({
     && idUsuarioActual != null
     && acuerdo.id_usuario === idUsuarioActual,
   );
+  const esAcuerdoActivo = Boolean(acuerdo && acuerdo.estadoRel?.estado === "activo");
 
   return (
     <div className="chat-principal">
@@ -198,6 +201,20 @@ export default function Chatprincipal({
                 <p className="chat-principal__acuerdo-status">
                   {t("agreement.pendingResponse")}
                 </p>
+              )}
+              {esAcuerdoActivo && (
+                <div className="chat-principal__acuerdo-actions">
+                  <button
+                    type="button"
+                    className="chat-principal__action-btn chat-principal__action-btn--accept"
+                    onClick={() => {
+                      onCompletarAcuerdo?.();
+                      setPanel(null);
+                    }}
+                  >
+                    {t("agreement.markCompleted")}
+                  </button>
+                </div>
               )}
             </div>
           </ChatPanel>
