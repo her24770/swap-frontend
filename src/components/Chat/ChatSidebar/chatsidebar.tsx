@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { UserCircle2 } from "lucide-react";
 import type { ConversacionPreview, TabMensajes } from "../../../types/chat";
+import AcuerdoPendienteBadge from "../../conversaciones/AcuerdoPendienteBadge/AcuerdoPendienteBadge";
 import "./chatsidebar.css";
 import SearchContactsBar from "../../ui/SearchContactsBar/SearchContactsBar";
 
@@ -14,11 +15,14 @@ interface ChatSidebarProps {
   onSelect: (conv: ConversacionPreview) => void;
   onConfirmar?: (id: number) => void;
   onEliminar?: (id: number) => void;
+  /** id_conversacion -> cantidad de acuerdos pendientes de respuesta */
+  acuerdosPendientesPorConversacion?: Record<number, number>;
 }
 
 export default function ChatSidebar({
   conversaciones, selectedId, tab,
   onTabChange, onSelect, onConfirmar, onEliminar,
+  acuerdosPendientesPorConversacion = {},
 }: ChatSidebarProps) {
   const t = useTranslations("chat.sidebar");
   const tabs: { key: TabMensajes; label: string }[] = [
@@ -67,24 +71,29 @@ export default function ChatSidebar({
             <div className="chat-sidebar__info">
               <div className="chat-sidebar__top-row">
                 <span className="chat-sidebar__name">{conv.nombre}</span>
-                {conv.esSolicitud && (
-                  <div className="chat-sidebar__btns">
-                    <button
-                      type="button"
-                      className="chat-sidebar__btn chat-sidebar__btn--confirmar"
-                      onClick={(e) => { e.stopPropagation(); onConfirmar?.(conv.id_conversacion); }}
-                    >
-                      {t("confirm")}
-                    </button>
-                    <button
-                      type="button"
-                      className="chat-sidebar__btn chat-sidebar__btn--eliminar"
-                      onClick={(e) => { e.stopPropagation(); onEliminar?.(conv.id_conversacion); }}
-                    >
-                      {t("delete")}
-                    </button>
-                  </div>
-                )}
+                <div className="chat-sidebar__top-row-right">
+                  <AcuerdoPendienteBadge
+                    cantidad={acuerdosPendientesPorConversacion[conv.id_conversacion] ?? 0}
+                  />
+                  {conv.esSolicitud && (
+                    <div className="chat-sidebar__btns">
+                      <button
+                        type="button"
+                        className="chat-sidebar__btn chat-sidebar__btn--confirmar"
+                        onClick={(e) => { e.stopPropagation(); onConfirmar?.(conv.id_conversacion); }}
+                      >
+                        {t("confirm")}
+                      </button>
+                      <button
+                        type="button"
+                        className="chat-sidebar__btn chat-sidebar__btn--eliminar"
+                        onClick={(e) => { e.stopPropagation(); onEliminar?.(conv.id_conversacion); }}
+                      >
+                        {t("delete")}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
               <span className="chat-sidebar__preview">{conv.preview}</span>
             </div>

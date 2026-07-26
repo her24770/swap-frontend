@@ -1,9 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import ChatPrincipal from "../../../components/Chat/ChatPrincipal/ChatPrincipal";
 import ChatSidebar from "../../../components/Chat/ChatSidebar/chatsidebar";
+import SolicitudAcuerdoModal, {
+  type SolicitudAcuerdoFormData,
+} from "../../../components/ui/Modal/SolicitudAcuerdo/SolicitudAcuerdoModal";
+import { acuerdoService } from "../../../services/acuerdoService";
+import { conversacionService } from "../../../services/conversacionService";
+import { useEstados } from "../../../hooks/useEstados";
+import { useUIStore } from "../../../store/uiStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, TabMensajes } from "../../../types/chat";
 import "./ChatPage.css";
@@ -234,22 +241,6 @@ const MOCK_ACUERDOS: Record<number, AcuerdoHistorial | null> = {
   },
 };
 
-function crearNuevaPropuesta(acuerdo: AcuerdoHistorial): AcuerdoHistorial {
-  return {
-    ...acuerdo,
-    id_acuerdo: Date.now(),
-    id_usuario: USUARIO_ACTUAL_ID,
-    fecha_entrega: "2026-07-24 16:30",
-    lugar_entrega: "Edificio T3, entrada principal",
-    observaciones: "Nueva propuesta enviada por ti.",
-    estado: 2,
-    estadoRel: {
-      id_estado: 2,
-      estado: "pendiente",
-    },
-  };
-}
-
 function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
   if (!fechaUltimoMensaje) return -1;
 
@@ -263,15 +254,41 @@ function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
 
 export default function ChatPage() {
   const t = useTranslations("chat");
+  const { agregarNotificacion } = useUIStore();
+  const estadosConversacion = useEstados("publicacion"); // trae "activo" e "inactivo"
   const [tab, setTab] = useState<TabMensajes>("todas");
   const [selectedId, setSelectedId] = useState<number | null>(1);
   const [mostrarChatMovil, setMostrarChatMovil] = useState(false);
   const [conversacionesState, setConversacionesState] =
     useState<ConversacionPreview[]>(MOCK_CONVERSACIONES);
-  const [acuerdosState, setAcuerdosState] =
-    useState<Record<number, AcuerdoHistorial | null>>(MOCK_ACUERDOS);
+  // Acuerdos reales por conversacion (ST-H22-4): id_conversacion -> lista de acuerdos
+  const [acuerdosPorConversacion, setAcuerdosPorConversacion] =
+    useState<Record<number, AcuerdoHistorial[]>>({});
   const [mensajesPorConversacion, setMensajesPorConversacion] =
     useState<Record<number, Mensaje[]>>(MOCK_MENSAJES);
+  const [modalSolicitudAbierto, setModalSolicitudAbierto] = useState(false);
+  const [enviandoSolicitud, setEnviandoSolicitud] = useState(false);
+
+  // Trae los acuerdos reales de una conversacion (GET /api/acuerdo/conversacion/:id, ST-H44-3)
+  const cargarAcuerdosDeConversacion = useCallback(async (idConversacion: number) => {
+    try {
+      const data = await acuerdoService.getPorConversacion(idConversacion);
+      setAcuerdosPorConversacion((prev) => ({ ...prev, [idConversacion]: data }));
+    } catch {
+      // Conversacion sin acuerdos todavia (o el id de conversacion aun no existe en el
+      // backend real, ya que el listado de conversaciones sigue siendo de prueba).
+      setAcuerdosPorConversacion((prev) => ({ ...prev, [idConversacion]: [] }));
+    }
+  }, []);
+
+  // Carga los acuerdos de todas las conversaciones visibles, para poder mostrar
+  // el badge de "acuerdo pendiente" (ST-H22-2) en la lista del chat.
+  useEffect(() => {
+    conversacionesState.forEach((conversacion) => {
+      cargarAcuerdosDeConversacion(conversacion.id_conversacion);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversacionesState.map((c) => c.id_conversacion).join(","), cargarAcuerdosDeConversacion]);
 
   const conversaciones = useMemo(() => {
     const conversacionesFiltradas = tab === "todas"
@@ -292,6 +309,14 @@ export default function ChatPage() {
     });
   }, [conversacionesState, tab]);
 
+  const acuerdosPendientesPorConversacion = useMemo(() => {
+    const mapa: Record<number, number> = {};
+    for (const [id, acuerdos] of Object.entries(acuerdosPorConversacion)) {
+      mapa[Number(id)] = acuerdos.filter((a) => a.estadoRel?.estado === "pendiente").length;
+    }
+    return mapa;
+  }, [acuerdosPorConversacion]);
+
   const selected =
     conversaciones.find((conversacion) => conversacion.id_conversacion === selectedId)
     ?? conversaciones[0]
@@ -301,9 +326,15 @@ export default function ChatPage() {
     ? mensajesPorConversacion[selected.id_conversacion] ?? []
     : [];
 
-  const acuerdo = selected
-    ? acuerdosState[selected.id_conversacion] ?? null
-    : null;
+  const acuerdosSeleccionados = selected
+    ? acuerdosPorConversacion[selected.id_conversacion] ?? []
+    : [];
+
+  // Para el banner: prioriza el acuerdo activo; si no hay, el pendiente mas reciente
+  const acuerdo =
+    acuerdosSeleccionados.find((a) => a.estadoRel?.estado === "activo")
+    ?? acuerdosSeleccionados.find((a) => a.estadoRel?.estado === "pendiente")
+    ?? null;
 
   const obtenerHoraActual = () =>
     new Date().toLocaleTimeString("es-GT", {
@@ -377,78 +408,132 @@ export default function ChatPage() {
     )));
   };
 
-  const handleConfirmar = (id: number) => {
-    setConversacionesState((prev) => prev.map((conversacion) => (
-      conversacion.id_conversacion === id
-        ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
-        : conversacion
-    )));
+  // Acepta o bloquea una solicitud de conversacion (PUT /api/conversacion/:id/estado, ST-H44-4/ST-H44-11)
+  const handleConfirmar = async (id: number) => {
+    const idEstadoActivo = estadosConversacion.find((e) => e.estado === "activo")?.id_estado;
+    if (!idEstadoActivo) return;
+    try {
+      await conversacionService.actualizarEstado(id, idEstadoActivo);
+      setConversacionesState((prev) => prev.map((conversacion) => (
+        conversacion.id_conversacion === id
+          ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
+          : conversacion
+      )));
+    } catch (err) {
+      const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
+      agregarNotificacion({ tipo: "error", mensaje });
+    }
   };
 
-  const handleEliminar = (id: number) => {
-    setConversacionesState((prev) => prev.filter((conversacion) => conversacion.id_conversacion !== id));
-    setMensajesPorConversacion((prev) => {
-      const actualizado = { ...prev };
-      delete actualizado[id];
-      return actualizado;
-    });
-    if (selectedId === id) {
-      setSelectedId(null);
-      setMostrarChatMovil(false);
+  const handleEliminar = async (id: number) => {
+    const idEstadoInactivo = estadosConversacion.find((e) => e.estado === "inactivo")?.id_estado;
+    if (!idEstadoInactivo) return;
+    try {
+      await conversacionService.actualizarEstado(id, idEstadoInactivo);
+      setConversacionesState((prev) => prev.filter((conversacion) => conversacion.id_conversacion !== id));
+      setMensajesPorConversacion((prev) => {
+        const actualizado = { ...prev };
+        delete actualizado[id];
+        return actualizado;
+      });
+      if (selectedId === id) {
+        setSelectedId(null);
+        setMostrarChatMovil(false);
+      }
+    } catch (err) {
+      const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
+      agregarNotificacion({ tipo: "error", mensaje });
+    }
+  };
+
+  // Responde una solicitud de acuerdo pendiente contra PUT /api/acuerdo/:id (ST-H36-6)
+  const responderAcuerdo = async (
+    idConversacion: number,
+    idAcuerdo: number,
+    estado: "activo" | "cancelado" | "completado"
+  ) => {
+    try {
+      await acuerdoService.actualizarEstado(idAcuerdo, estado);
+      await cargarAcuerdosDeConversacion(idConversacion);
+
+      const mensajeSistema =
+        estado === "activo" ? t("system.agreementAccepted")
+        : estado === "cancelado" ? t("system.agreementRejected")
+        : t("system.agreementCompleted");
+
+      setConversacionesState((prev) => prev.map((conversacion) => (
+        conversacion.id_conversacion === idConversacion
+          ? { ...conversacion, preview: mensajeSistema }
+          : conversacion
+      )));
+    } catch (err) {
+      const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
+      agregarNotificacion({ tipo: "error", mensaje });
     }
   };
 
   const handleAceptarAcuerdo = (idConversacion: number) => {
-    setAcuerdosState((prev) => {
-      const actual = prev[idConversacion];
-      if (!actual) return prev;
-
-      return {
-        ...prev,
-        [idConversacion]: {
-          ...actual,
-          estado: 1,
-          estadoRel: {
-            id_estado: 1,
-            estado: "activo",
-          },
-        },
-      };
-    });
-    setConversacionesState((prev) => prev.map((conversacion) => (
-      conversacion.id_conversacion === idConversacion
-        ? { ...conversacion, preview: t("system.agreementAccepted") }
-        : conversacion
-    )));
+    const acuerdoPendiente = (acuerdosPorConversacion[idConversacion] ?? [])
+      .find((a) => a.estadoRel?.estado === "pendiente");
+    if (!acuerdoPendiente) return;
+    responderAcuerdo(idConversacion, acuerdoPendiente.id_acuerdo, "activo");
   };
 
   const handleRechazarAcuerdo = (idConversacion: number) => {
-    setAcuerdosState((prev) => ({
-      ...prev,
-      [idConversacion]: null,
-    }));
-    setConversacionesState((prev) => prev.map((conversacion) => (
-      conversacion.id_conversacion === idConversacion
-        ? { ...conversacion, preview: t("system.agreementRejected") }
-        : conversacion
-    )));
+    const acuerdoPendiente = (acuerdosPorConversacion[idConversacion] ?? [])
+      .find((a) => a.estadoRel?.estado === "pendiente");
+    if (!acuerdoPendiente) return;
+    responderAcuerdo(idConversacion, acuerdoPendiente.id_acuerdo, "cancelado");
   };
 
-  const handleEnviarNuevaPropuesta = (idConversacion: number) => {
-    setAcuerdosState((prev) => {
-      const actual = prev[idConversacion];
-      if (!actual) return prev;
+  // Crea una nueva solicitud de acuerdo (POST /api/acuerdo/:idPublicacion, ST-H36-6).
+  // Reutiliza la publicacion del acuerdo mas reciente de la conversacion como
+  // "objeto" del acuerdo, ya que la conversacion en si no guarda una publicacion
+  // asociada (una misma conversacion puede tener varias solicitudes en el tiempo).
+  const handleEnviarSolicitud = async (data: SolicitudAcuerdoFormData) => {
+    if (!selected) return;
+    setEnviandoSolicitud(true);
+    try {
+      await acuerdoService.crearSolicitud(data.id_publicacion, {
+        fecha_entrega: data.fecha_entrega,
+        lugar_entrega: data.lugar_entrega,
+        observaciones: data.observaciones,
+        id_conversacion: selected.id_conversacion,
+      });
+      setModalSolicitudAbierto(false);
+      await cargarAcuerdosDeConversacion(selected.id_conversacion);
+      setConversacionesState((prev) => prev.map((conversacion) => (
+        conversacion.id_conversacion === selected.id_conversacion
+          ? { ...conversacion, preview: t("system.newAgreementProposalSent") }
+          : conversacion
+      )));
+    } catch (err) {
+      const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
+      agregarNotificacion({ tipo: "error", mensaje });
+    } finally {
+      setEnviandoSolicitud(false);
+    }
+  };
 
-      return {
-        ...prev,
-        [idConversacion]: crearNuevaPropuesta(actual),
-      };
-    });
-    setConversacionesState((prev) => prev.map((conversacion) => (
-      conversacion.id_conversacion === idConversacion
-        ? { ...conversacion, preview: t("system.newAgreementProposalSent") }
-        : conversacion
-    )));
+  const publicacionParaNuevaSolicitud = useMemo(() => {
+    const ultimoAcuerdo = acuerdosSeleccionados[0];
+    if (!ultimoAcuerdo) return null;
+    return {
+      id_publicacion: ultimoAcuerdo.publicacion.id_publicacion,
+      titulo: ultimoAcuerdo.publicacion.titulo,
+      precio: ultimoAcuerdo.publicacion.precio,
+    };
+  }, [acuerdosSeleccionados]);
+
+  const handleAbrirCrearEncuentro = () => {
+    if (!publicacionParaNuevaSolicitud) {
+      // No hay publicacion asociada a esta conversacion todavia: sin un
+      // selector de publicacion (fuera del alcance de este sprint) no
+      // podemos saber sobre que publicacion crear el acuerdo.
+      agregarNotificacion({ tipo: "info", mensaje: t("system.noPublicationForAgreement") });
+      return;
+    }
+    setModalSolicitudAbierto(true);
   };
 
   return (
@@ -464,6 +549,7 @@ export default function ChatPage() {
         }}
         onConfirmar={handleConfirmar}
         onEliminar={handleEliminar}
+        acuerdosPendientesPorConversacion={acuerdosPendientesPorConversacion}
       />
 
       {selected ? (
@@ -475,14 +561,25 @@ export default function ChatPage() {
           onEnviarImagen={handleEnviarImagen}
           onAceptarAcuerdo={() => selected && handleAceptarAcuerdo(selected.id_conversacion)}
           onRechazarAcuerdo={() => selected && handleRechazarAcuerdo(selected.id_conversacion)}
-          onEnviarNuevaPropuesta={() => selected && handleEnviarNuevaPropuesta(selected.id_conversacion)}
-          onCrearEncuentro={() => console.log("crear acuerdo")}
+          onCompletarAcuerdo={() => acuerdo && selected && responderAcuerdo(selected.id_conversacion, acuerdo.id_acuerdo, "completado")}
+          onEnviarNuevaPropuesta={handleAbrirCrearEncuentro}
+          onCrearEncuentro={handleAbrirCrearEncuentro}
           onVolver={() => setMostrarChatMovil(false)}
         />
       ) : (
         <div className="mensajes-page__empty">
           {t("empty.selectConversation")}
         </div>
+      )}
+
+      {modalSolicitudAbierto && publicacionParaNuevaSolicitud && (
+        <SolicitudAcuerdoModal
+          isOpen={modalSolicitudAbierto}
+          publicacion={publicacionParaNuevaSolicitud}
+          onClose={() => setModalSolicitudAbierto(false)}
+          onSubmit={handleEnviarSolicitud}
+          isSaving={enviandoSolicitud}
+        />
       )}
     </div>
   );

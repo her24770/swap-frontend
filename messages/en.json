@@ -475,6 +475,68 @@
 			"currentImageAlt": "Current image"
 		}
 	},
+	"solicitudAcuerdoModal": {
+		"title": "Request agreement",
+		"triggerButton": "Request agreement",
+		"fields": {
+			"objeto": "Item",
+			"costo": "Cost",
+			"lugar": "Delivery place",
+			"lugarPlaceholder": "E.g. Plaza Ceibal, UVG",
+			"fecha": "Date",
+			"hora": "Time",
+			"detalles": "Details",
+			"detallesPlaceholder": "Add details about the agreement"
+		},
+		"errors": {
+			"required": "This field is required",
+			"pastDate": "Date and time must be in the future"
+		},
+		"actions": {
+			"cancel": "Cancel",
+			"send": "Send request",
+			"sending": "Sending..."
+		},
+		"exito": "Agreement request sent",
+		"errorGenerico": "Couldn't send the request. Please try again."
+	},
+	"accionesAcuerdo": {
+		"aceptar": "Accept",
+		"aceptando": "Accepting...",
+		"rechazar": "Reject",
+		"rechazando": "Rejecting...",
+		"confirmRechazar": {
+			"title": "Reject request",
+			"message": "Are you sure you want to reject this agreement request?"
+		}
+	},
+	"acuerdoPendienteBadge": {
+		"label": "Pending agreement"
+	},
+	"recordatorioAcuerdo": {
+		"title": "Scheduled agreement",
+		"overdue": "Overdue",
+		"marcarCompletado": "Mark as completed",
+		"completando": "Completing..."
+	},
+	"solicitudConversacionBanner": {
+		"texto": "This person wants to start a conversation with you",
+		"aceptar": "Accept",
+		"aceptando": "Accepting...",
+		"bloquear": "Block",
+		"bloqueando": "Blocking...",
+		"errorGenerico": "Couldn't process the request. Please try again.",
+		"confirmBloquear": {
+			"title": "Block conversation",
+			"message": "Are you sure you want to block this conversation request?"
+		}
+	},
+	"seccionAcuerdosConversacion": {
+		"cargando": "Loading agreements...",
+		"error": "Couldn't load the agreements for this conversation",
+		"solicitudPendiente": "Agreement request for {objeto}",
+		"errorAccion": "Couldn't process the action. Please try again."
+	},
 	"loading": "Loading publications...",
 	"publicacionForm": {
 		"titleCreate": "Create post",
@@ -556,7 +618,8 @@
 			"accept": "Accept",
 			"sendNew": "Send a new one",
 			"reject": "Reject",
-			"pendingResponse": "Your agreement proposal is pending a response."
+			"pendingResponse": "Your agreement proposal is pending a response.",
+			"markCompleted": "Mark as completed"
 		},
 		"banner": {
 			"noAgreement": "No agreement set",
@@ -601,7 +664,10 @@
 			"imagePreview": "Image:",
 			"agreementAccepted": "Agreement accepted.",
 			"agreementRejected": "Agreement proposal rejected.",
-			"newAgreementProposalSent": "You sent a new agreement proposal."
+			"newAgreementProposalSent": "You sent a new agreement proposal.",
+			"agreementCompleted": "Agreement marked as completed.",
+			"agreementActionError": "Couldn't process the action. Please try again.",
+			"noPublicationForAgreement": "This conversation doesn't have an associated listing to create an agreement yet."
 		}
 	}
 }
