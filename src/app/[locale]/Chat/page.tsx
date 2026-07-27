@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import ChatPrincipal from "../../../components/Chat/ChatPrincipal/ChatPrincipal";
 import ChatSidebar from "../../../components/Chat/ChatSidebar/chatsidebar";
 import SolicitudAcuerdoModal, {
@@ -14,7 +15,7 @@ import { useSocket, unirseAConversacion, enviarMensajePorSocket } from "../../..
 import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
-import type { ConversacionPreview, Mensaje, TabMensajes } from "../../../types/chat";
+import type { ConversacionPreview, Mensaje, PublicacionChatResumen, TabMensajes } from "../../../types/chat";
 import "./ChatPage.css";
 
 // NOTA: no hay (todavia) una regla real de negocio para distinguir conversaciones
@@ -37,6 +38,9 @@ export default function ChatPage() {
   const { agregarNotificacion } = useUIStore();
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
   const socket = useSocket();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   // "conversacion" trae "activo", "inactivo" y "pendiente" (necesarios para
   // aceptar/bloquear solicitudes y para saber si una conversacion es una solicitud).
   const estadosConversacion = useEstados("conversacion");
@@ -86,6 +90,73 @@ export default function ChatPage() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversacionesState.map((c) => c.id_conversacion).join(","), cargarAcuerdosDeConversacion]);
+
+  // Atiende el "Contactar"/"Enviar mensaje" que llega desde el perfil de otro
+  // usuario como query params (?compose=1&sellerId=X&message=...). En vez de
+  // fabricar una conversacion sintetica solo en memoria, llama al backend real
+  // (POST /api/conversacion, SWAP-337/SWAP-339): crea la conversacion si no
+  // existe (o la reutiliza) y guarda el mensaje de verdad.
+  useEffect(() => {
+    const compose = searchParams.get("compose");
+    const sellerId = searchParams.get("sellerId");
+    const message = searchParams.get("message");
+
+    // postId es opcional: permite iniciar una conversacion directa con un
+    // usuario (p.ej. desde su perfil) sin que este ligada a una publicacion.
+    if (compose !== "1" || !sellerId || !message || !idUsuarioActual) {
+      return;
+    }
+
+    const postId = searchParams.get("postId");
+    const postTitle = searchParams.get("postTitle");
+    const postPrice = searchParams.get("postPrice");
+    const postDescription = searchParams.get("postDescription");
+    const postImageUrl = searchParams.get("postImageUrl");
+    const postType = searchParams.get("postType");
+    const recipient = searchParams.get("recipient");
+
+    const publicacion: PublicacionChatResumen | undefined = postId
+      ? {
+        id: Number(postId),
+        titulo: postTitle || recipient || "",
+        precio: postPrice ? parseFloat(postPrice) : 0,
+        descripcion: postDescription || undefined,
+        imagenUrl: postImageUrl || undefined,
+        tipo: (postType as PublicacionChatResumen["tipo"]) || "venta",
+      }
+      : undefined;
+
+    conversacionService.iniciarConversacion(Number(sellerId), message, idEstadoPendiente)
+      .then(({ conversacion }) => {
+        const conversacionConPublicacion = publicacion
+          ? { ...conversacion, publicacion }
+          : conversacion;
+
+        setConversacionesState((prev) => {
+          const existingIndex = prev.findIndex(
+            (item) => item.id_conversacion === conversacion.id_conversacion
+          );
+          if (existingIndex >= 0) {
+            const updated = [...prev];
+            updated[existingIndex] = conversacionConPublicacion;
+            return updated;
+          }
+          return [conversacionConPublicacion, ...prev];
+        });
+
+        setSelectedId(conversacion.id_conversacion);
+        setMostrarChatMovil(true);
+
+        // Limpia los query params para que un refresh no vuelva a enviar el mensaje.
+        router.replace(pathname);
+      })
+      .catch((err) => {
+        const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
+        agregarNotificacion({ tipo: "error", mensaje });
+        router.replace(pathname);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, idUsuarioActual, idEstadoPendiente]);
 
   const conversaciones = useMemo(() => {
     // Los tabs "ventas"/"compras" no filtran todavia: no hay una regla real de

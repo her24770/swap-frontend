@@ -12,6 +12,66 @@
   gap: 1rem;
   scrollbar-width: thin;
   scrollbar-color: var(--swap-primary-border-color) transparent;
+  transition: max-width 0.25s ease, height 0.25s ease;
+}
+
+.post-modal--expanded {
+  max-width: 58rem;
+  height: min(42rem, 90vh);
+}
+
+.post-modal__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.post-modal--expanded .post-modal__body {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+.post-modal__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.post-modal--expanded .post-modal__detail {
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 0.25rem;
+}
+
+.post-modal__message-panel {
+  min-width: 0;
+  display: flex;
+  animation: post-modal-message-in 0.2s ease;
+}
+
+.post-modal--expanded .post-modal__message-panel {
+  min-height: 0;
+}
+
+@keyframes post-modal-message-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 40rem) {
+  .post-modal--expanded .post-modal__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .post-modal::-webkit-scrollbar {
@@ -28,7 +88,7 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: transparent;
+  background: var(--swap-primary-background);
   border: none;
   cursor: pointer;
   color: var(--swap-tertiary-text-color);

@@ -158,7 +158,31 @@
 		"empty": {
 			"title": "No hay tutorías disponibles",
 			"description": "Aún no hay tutorías estudiantiles publicadas."
+		},
+		"solicitud": "Solicitud de Tutoría",
+		"fecha": "Fecha de tutoría",
+		"hora": "Hora de tutoría",
+		"modalidad": "Modalidad",
+		"lugar": "Lugar",
+		"tema": "Tema",
+		"rechazar": "Rechazar",
+		"aceptar": "Aceptar",
+		"formulario":{
+			"nuevaSolicitud": "Nueva solicitud de tutoría",
+			"titulo": "Solicitud de tutoría",
+			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
+			"fecha": "Fecha",
+			"hora": "Hora",
+			"modalidad": "Modalidad",
+			"lugar": "Lugar",
+			"tema": "Tema",
+			"enviarSolicitud": "Enviar solicitud",
+			"placeholderTema": "Describe el tema de la tutoría",
+			"placeholderLugar": "Ej. Plaza Paiz, UVG"	
+
 		}
+
+		
 	},
 	"descubre": {
 		"title": "Descubre",
@@ -364,6 +388,10 @@
 			"acordar": "Acordar Compra",
 			"certificado": "Ver certificados",
 			"viewProfile": "Ver perfil"
+		},
+		"save": {
+			"addAria": "Guardar publicación",
+			"removeAria": "Eliminar de guardados"
 		},
 		"tutorTopicsLabel": "Temas de tutorías",
 		"aria": {
@@ -635,6 +663,10 @@
 			"nextAgreement": "Próximo acuerdo",
 			"details": "Detalles"
 		},
+		"post": {
+			"about": "Sobre esta publicación",
+			"viewPost": "Ver publicación"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Escribe un mensaje",
@@ -651,7 +683,18 @@
 			"titles": {
 				"agreement": "Detalle del acuerdo",
 				"post": "Publicación",
-				"options": "Opciones"
+				"options": "Opciones",
+				"history": "Historial de acuerdos"
+			}
+		},
+		"history": {
+			"empty": "Aún no hay acuerdos con este usuario.",
+			"error": "No fue posible cargar el historial de acuerdos.",
+			"unknownUser": "Usuario de SWAP",
+			"groups": {
+				"pendiente": "Pendientes",
+				"activo": "En curso",
+				"completado": "Cumplidos"
 			}
 		},
 		"sidebar": {
@@ -675,5 +718,19 @@
 			"agreementActionError": "No se pudo procesar la acción. Intenta de nuevo.",
 			"noPublicationForAgreement": "Esta conversación aún no tiene una publicación asociada para crear un acuerdo."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Enviar mensaje a {name}",
+		"close": "Cerrar",
+		"back": "Volver",
+		"requestTutoring": "Acordar tutoría",
+		"suggestionsLabel": "Sugerencias",
+		"selectSuggestion": "Selecciona un mensaje sugerido",
+		"messageLabel": "Escribe tu mensaje",
+		"placeholder": "Escribe algo...",
+		"hint": "No compartas información sensible",
+		"cancel": "Cancelar",
+		"send": "Enviar",
+		"sending": "Enviando..."
 	}
 }

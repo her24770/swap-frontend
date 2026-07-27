@@ -13,6 +13,7 @@ import NotificacionModal from "../../ui/Modal/NotificacionModal/NotificacionModa
 import type { NotificacionData } from "../../ui/Modal/NotificacionModal/Notificacion/Notificacion";
 import { notificacionService, mapNotificacion, type NotificacionApi } from "../../../services/notificacionService";
 import { useSocket } from "../../../hooks/useSocket";
+import { MOCK_SOLICITUDES_TUTORIA } from "../../../mocks/solicitudesTutoria";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -34,6 +35,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [notificaciones, setNotificaciones] = useState<NotificacionData[]>([]);
   const socket = useSocket();
+  const [solicitudesTutoria, setSolicitudesTutoria] = useState(MOCK_SOLICITUDES_TUTORIA);
 
   useEffect(() => {
     if (!notifOpen) return;
@@ -61,7 +63,8 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
 
-  const unreadCount = notificaciones.filter((n) => !n.leida).length;
+  const unreadCount =
+    notificaciones.filter((n) => !n.leida).length + solicitudesTutoria.length;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -143,8 +146,15 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                 onClose={() => setNotifOpen(false)}
                 anchorRef={bellRef}
                 notificaciones={notificaciones}
+                solicitudesTutoria={solicitudesTutoria}
                 onDismiss={(id) =>
                   setNotificaciones((prev) => prev.filter((n) => n.id !== id))
+                }
+                onAceptarSolicitud={(id) =>
+                  setSolicitudesTutoria((prev) => prev.filter((solicitud) => solicitud.id !== id))
+                }
+                onRechazarSolicitud={(id) =>
+                  setSolicitudesTutoria((prev) => prev.filter((solicitud) => solicitud.id !== id))
                 }
                 onMarcarLeida={(id) => {
                   setNotificaciones((prev) =>

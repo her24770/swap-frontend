@@ -158,6 +158,28 @@
 		"empty": {
 			"title": "No tutoring sessions available",
 			"description": "There are no student tutoring sessions posted yet."
+		},
+		"solicitud": "Tutoring request",
+		"fecha": "Tutoring date",
+		"hora": "Tutoring time",
+		"modalidad": "Tutoring format",
+		"lugar": "Location",
+		"tema": "Topic",
+		"rechazar": "Reject",
+		"aceptar": "Accept",
+		"formulario":{
+			"nuevaSolicitud": "New tutoring request",
+			"titulo": "Tutoring request",
+			"descripcion": "Please complete the form to request tutoring.",
+			"fecha": "Date",
+			"hora": "Time",
+			"modalidad": "Format",
+			"lugar": "Location",
+			"tema": "Topic",
+			"enviarSolicitud": "Send request",
+			"placeholderTema": "Describe the topic of the tutoring session",
+			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
+
 		}
 	},
 	"descubre": {
@@ -364,6 +386,10 @@
 			"acordar": "Agree on purchase",
 			"certificado": "View certificates",
 			"viewProfile": "View profile"
+		},
+		"save": {
+			"addAria": "Save post",
+			"removeAria": "Remove from saved"
 		},
 		"tutorTopicsLabel": "Tutoring topics",
 		"aria": {
@@ -629,6 +655,10 @@
 			"nextAgreement": "Next agreement",
 			"details": "Details"
 		},
+		"post": {
+			"about": "About this post",
+			"viewPost": "View post"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Type a message",
@@ -645,7 +675,18 @@
 			"titles": {
 				"agreement": "Agreement details",
 				"post": "Post",
-				"options": "Options"
+				"options": "Options",
+				"history": "Agreement history"
+			}
+		},
+		"history": {
+			"empty": "There are no agreements with this user yet.",
+			"error": "Couldn't load the agreement history.",
+			"unknownUser": "SWAP user",
+			"groups": {
+				"pendiente": "Pending",
+				"activo": "Ongoing",
+				"completado": "Completed"
 			}
 		},
 		"sidebar": {
@@ -669,5 +710,19 @@
 			"agreementActionError": "Couldn't process the action. Please try again.",
 			"noPublicationForAgreement": "This conversation doesn't have an associated listing to create an agreement yet."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Send message to {name}",
+		"close": "Close",
+		"back": "Back",
+		"requestTutoring": "Arrange tutoring",
+		"suggestionsLabel": "Suggestions",
+		"selectSuggestion": "Select a suggested message",
+		"messageLabel": "Write your message",
+		"placeholder": "Write something...",
+		"hint": "Do not share sensitive information",
+		"cancel": "Cancel",
+		"send": "Send",
+		"sending": "Sending..."
 	}
 }

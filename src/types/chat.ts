@@ -1,5 +1,5 @@
 export type TabMensajes = "todas" | "ventas" | "compras";
-export type TipoPanel = "acuerdo" | "publicacion" | "opciones" | null;
+export type TipoPanel = "acuerdo" | "publicacion" | "opciones" | "historial" | null;
 
 export interface EstadoChat {
   id_estado: number;
@@ -49,6 +49,15 @@ export interface Conversacion {
   ultimo_mensaje?: Mensaje | null;
 }
 
+export interface PublicacionChatResumen {
+  id: number;
+  titulo: string;
+  precio: number;
+  descripcion?: string;
+  imagenUrl?: string;
+  tipo: "venta" | "tutoria" | "negocio" | "material";
+}
+
 export interface ConversacionPreview {
   id_conversacion: number;
   nombre: string;
@@ -57,4 +66,5 @@ export interface ConversacionPreview {
   ultimo_mensaje?: Mensaje | null;
   esSolicitud?: boolean;
   avatarUrl?: string | null;
+  publicacion?: PublicacionChatResumen;
 }

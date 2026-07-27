@@ -17,6 +17,7 @@ export default function ChatPanel({ tipo, onClose, children }: ChatPanelProps) {
     acuerdo: t("titles.agreement"),
     publicacion: t("titles.post"),
     opciones: t("titles.options"),
+    historial: t("titles.history"),
   };
 
   return (
