@@ -387,6 +387,10 @@
 			"certificado": "View certificates",
 			"viewProfile": "View profile"
 		},
+		"save": {
+			"addAria": "Save post",
+			"removeAria": "Remove from saved"
+		},
 		"tutorTopicsLabel": "Tutoring topics",
 		"aria": {
 			"uploadImage": "Upload image"
@@ -651,6 +655,10 @@
 			"nextAgreement": "Next agreement",
 			"details": "Details"
 		},
+		"post": {
+			"about": "About this post",
+			"viewPost": "View post"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Type a message",
@@ -667,7 +675,18 @@
 			"titles": {
 				"agreement": "Agreement details",
 				"post": "Post",
-				"options": "Options"
+				"options": "Options",
+				"history": "Agreement history"
+			}
+		},
+		"history": {
+			"empty": "There are no agreements with this user yet.",
+			"error": "Couldn't load the agreement history.",
+			"unknownUser": "SWAP user",
+			"groups": {
+				"pendiente": "Pending",
+				"activo": "Ongoing",
+				"completado": "Completed"
 			}
 		},
 		"sidebar": {
@@ -691,5 +710,19 @@
 			"agreementActionError": "Couldn't process the action. Please try again.",
 			"noPublicationForAgreement": "This conversation doesn't have an associated listing to create an agreement yet."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Send message to {name}",
+		"close": "Close",
+		"back": "Back",
+		"requestTutoring": "Arrange tutoring",
+		"suggestionsLabel": "Suggestions",
+		"selectSuggestion": "Select a suggested message",
+		"messageLabel": "Write your message",
+		"placeholder": "Write something...",
+		"hint": "Do not share sensitive information",
+		"cancel": "Cancel",
+		"send": "Send",
+		"sending": "Sending..."
 	}
 }

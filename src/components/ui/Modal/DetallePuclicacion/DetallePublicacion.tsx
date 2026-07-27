@@ -1,14 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import { X, Bookmark, Loader2, ChevronRight } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
+import { useAuthStore } from "../../../../store/authStore";
 import { useGuardados } from "../../../../hooks/useGuardados";
 import EstadoTag from "../../../posts/PostCard/EstadoTag/EstadoTag";
 import type { EstadoOpcion } from "../../../../hooks/useEstados";
 import CarruselImagen from "./CarruselImagen/CarruselImagen";
+import EnviarMensajePanel, { TipoPublicacionMensaje } from "../EnviarMensaje/EnviarMensaje";
 import "../../Button/Button.css";
 import "../Modal.css";
 import "./DetallePublicacion.css";
@@ -95,16 +99,30 @@ export default function DetallePublicacion({
   onEstadoChange,
 }: PostModalProps) {
   const t = useTranslations("posts");
+  const tSend = useTranslations("sendMessageModal");
+  const locale = useLocale();
+  const router = useRouter();
   const guardados = useGuardados();
+  const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
   const [saving, setSaving] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [solicitudTutoriaAbierta, setSolicitudTutoriaAbierta] = useState(false);
 
   if (!isOpen) return null;
+
+  const esPropiaPublicacion = Boolean(
+    idUsuarioActual != null && sellerId != null && sellerId === idUsuarioActual,
+  );
 
   const carouselImages = buildCarouselImageUrls(imagenes, images, imageUrl);
 
   const MAX_STARS = 5;
   const guardada = publicacionId ? guardados.isSaved(publicacionId) : isSaved;
+  const normalizedImageUrl = useMemo(
+    () => carouselImages[0] ?? normalizeImageUrl(imageUrl ?? ""),
+    [carouselImages, imageUrl],
+  );
 
   const handleToggleSave = async () => {
     if (saving) return;
@@ -124,100 +142,171 @@ export default function DetallePublicacion({
     }
   };
 
+  const handleOpenMessageModal = (callback?: () => void) => {
+    if (esPropiaPublicacion) return;
+    callback?.();
+    setIsMessageModalOpen(true);
+  };
+
+  const handleSendMessage = (mensaje: string) => {
+    if (!sellerId || !publicacionId || esPropiaPublicacion) return;
+
+    setIsSendingMessage(true);
+
+    const params = new URLSearchParams({
+      compose: "1",
+      recipient: sellerName,
+      sellerId: String(sellerId),
+      postId: String(publicacionId),
+      postTitle: title,
+      postPrice: String(price),
+      postDescription: description,
+      postImageUrl: normalizedImageUrl,
+      postType: type,
+      message: mensaje,
+    });
+
+    setIsMessageModalOpen(false);
+    onClose();
+    router.push(`/${locale}/Chat?${params.toString()}`);
+  };
+
+  const expandido = isMessageModalOpen && Boolean(sellerId && publicacionId);
+
   const modal = (
     <>
     <div className="modal-overlay" onClick={onClose}>
-      <div className="post-modal" onClick={(e) => e.stopPropagation()}>
-
+      <div
+        className={`post-modal${expandido ? " post-modal--expanded" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           type="button"
           className="post-modal__close"
           onClick={onClose}
-          aria-label="Cerrar"
+          aria-label={tSend("close")}
         >
           <X size={20} />
         </button>
 
-        {/* ── Vendedor + estado ── */}
-        <div className="post-modal__top">
-          <button
-            type="button"
-            className={`post-modal__seller${onSellerClick && sellerId ? " post-modal__seller--clickable" : ""}`}
-            onClick={() => { if (sellerId) onSellerClick?.(sellerId); }}
-            disabled={!onSellerClick || !sellerId}
-            aria-label={`Ver perfil de ${sellerName}`}
-          >
-            <div className="post-modal__seller-avatar">
-              {sellerImageUrl ? (
-                <Image
-                  src={sellerImageUrl}
-                  alt={sellerName}
-                  fill
-                  className="post-modal__seller-img"
-                  style={{ objectFit: "cover" }}
-                  unoptimized
-                />
-              ) : (
-                <UserCircle2 size={40} strokeWidth={1} className="post-modal__seller-placeholder" />
-              )}
-            </div>
-            <div className="post-modal__seller-info">
-              <span className="post-modal__seller-name">{sellerName}</span>
-              <div className="post-modal__stars">
-                {Array.from({ length: MAX_STARS }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={`post-modal__star${i < sellerRating ? " post-modal__star--filled" : ""}`}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-            </div>
-          </button>
-
-          {estado !== undefined && (
-            <div className="post-modal__estado">
-              <EstadoTag
-                estado={estado}
-                estadosDisponibles={estadosDisponibles}
-                onEstadoChange={onEstadoChange}
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="post-modal__carousel">
-          <CarruselImagen images={carouselImages} altText={title} />
-        </div>
-
-        {/* ── Tags ── */}
-        {tags.length > 0 && (
-          <div className="post-modal__tags">
-            {tags.map((tag) => (
-              <TagBadge key={tag.id} tag={tag} size="sm" />
-            ))}
-          </div>
-        )}
-
-        <div className="post-modal__price-row">
-          <h2 className="post-modal__title">{title}</h2>
-          <span className="post-modal__price">Q{price}</span>
-        </div>
-
-        {/* ── Descripción ── */}
-        <p className="post-modal__description">{description}</p>
-
-        {showActions && (
-          <div className="post-modal__actions">
-            {type === "venta" && (
+        <div className="post-modal__body">
+          <div className="post-modal__detail">
+            <div className="post-modal__top">
               <button
                 type="button"
-                className="button button--medium button--full-width"
-                onClick={onAcordarCompra}
+                className={`post-modal__seller${onSellerClick && sellerId ? " post-modal__seller--clickable" : ""}`}
+                onClick={() => { if (sellerId) onSellerClick?.(sellerId); }}
+                disabled={!onSellerClick || !sellerId}
+                aria-label={t("actions.viewProfile")}
               >
-                {t('actions.acordar')} <ChevronRight size={16} />
+                <div className="post-modal__seller-avatar">
+                  {sellerImageUrl ? (
+                    <Image
+                      src={sellerImageUrl}
+                      alt={sellerName}
+                      fill
+                      className="post-modal__seller-img"
+                      style={{ objectFit: "cover" }}
+                      unoptimized
+                    />
+                  ) : (
+                    <UserCircle2 size={40} strokeWidth={1} className="post-modal__seller-placeholder" />
+                  )}
+                </div>
+                <div className="post-modal__seller-info">
+                  <span className="post-modal__seller-name">{sellerName}</span>
+                  <div className="post-modal__stars">
+                    {Array.from({ length: MAX_STARS }).map((_, i) => (
+                      <span
+                        key={i}
+                        className={`post-modal__star${i < sellerRating ? " post-modal__star--filled" : ""}`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </button>
+
+              {estado !== undefined && (
+                <div className="post-modal__estado">
+                  <EstadoTag
+                    estado={estado}
+                    estadosDisponibles={estadosDisponibles}
+                    onEstadoChange={onEstadoChange}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="post-modal__carousel">
+              <CarruselImagen images={carouselImages} altText={title} />
+            </div>
+
+            {tags.length > 0 && (
+              <div className="post-modal__tags">
+                {tags.map((tag) => (
+                  <TagBadge key={tag.id} tag={tag} size="sm" />
+                ))}
+              </div>
+            )}
+
+            <div className="post-modal__price-row">
+              <h2 className="post-modal__title">{title}</h2>
+              <span className="post-modal__price">Q{price}</span>
+            </div>
+
+            <p className="post-modal__description">{description}</p>
+
+            {showActions && (type === "tutoria" || (type === "venta" && !esPropiaPublicacion && !expandido)) && (
+              <div className="post-modal__actions">
+                {type === "venta" && !esPropiaPublicacion && !expandido && (
+                  <button
+                    type="button"
+                    className="button button--medium button--full-width"
+                    onClick={() => handleOpenMessageModal(onAcordarCompra)}
+                  >
+                    {t("actions.acordar")} <ChevronRight size={16} />
+                  </button>
+                )}
+                {type === "tutoria" && (
+                  <>
+                    <button
+                      type="button"
+                      className="button button--medium button--warning button--full-width"
+                      onClick={onVerCertificados}
+                    >
+                      {t("actions.certificado")}
+                    </button>
+                    {!esPropiaPublicacion && !expandido && (
+                      <button
+                        type="button"
+                        className="button button--medium button--full-width"
+                        onClick={() => handleOpenMessageModal(onSolicitarTutoria)}
+                      >
+                        {tSend("requestTutoring")} <ChevronRight size={16} />
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
+            <div className="post-modal__likes">
+              <button
+                type="button"
+                className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
+                onClick={handleToggleSave}
+                aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
+                disabled={saving}
+              >
+                {saving
+                  ? <Loader2 size={18} className="post-modal__save-spinner" />
+                  : <Bookmark size={18} />
+                }
+              </button>
+              <span className="post-modal__likes-count">{likes}</span>
+            </div>
             )}
             {type === "tutoria" && (
               <>
@@ -238,24 +327,29 @@ export default function DetallePublicacion({
               </>
             )}
           </div>
-        )}
 
-        <div className="post-modal__likes">
-          <button
-            type="button"
-            className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
-            onClick={handleToggleSave}
-            aria-label={guardada ? "Eliminar de guardados" : "Guardar publicación"}
-            disabled={saving}
-          >
-            {saving
-              ? <Loader2 size={18} className="post-modal__save-spinner" />
-              : <Bookmark size={18} />
-            }
-          </button>
-          <span className="post-modal__likes-count">{likes}</span>
+          {expandido && (
+            <div className="post-modal__message-panel">
+              <EnviarMensajePanel
+                onClose={() => {
+                  setIsMessageModalOpen(false);
+                  setIsSendingMessage(false);
+                }}
+                destinatarioNombre={sellerName}
+                publicacion={{
+                  id: publicacionId!,
+                  titulo: title,
+                  precio: price,
+                  descripcion: description,
+                  imagenUrl: normalizedImageUrl,
+                  tipo: type as TipoPublicacionMensaje,
+                }}
+                onEnviar={handleSendMessage}
+                isSending={isSendingMessage}
+              />
+            </div>
+          )}
         </div>
-
       </div>
     </div>
     <ModalSolicitudTutoria

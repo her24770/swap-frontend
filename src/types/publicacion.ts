@@ -52,6 +52,15 @@ export interface PublicacionesResponse {
   total?: number;
 }
 
+export interface PublicacionesResponse_Explorar {
+  message: string;
+  data:{
+    publicaciones: Publicacion[];
+    total: number;
+  };
+  total?: number;
+}
+
 export interface PublicacionesResult {
   data: Publicacion[];
   total: number;

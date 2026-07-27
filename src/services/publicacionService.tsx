@@ -1,5 +1,5 @@
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse, FiltroTutorBody, FiltroTutorApiResponse, TutorFiltrado } from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse, FiltroTutorBody, FiltroTutorApiResponse, TutorFiltrado, PublicacionesResponse_Explorar } from "../types/publicacion";
 import type { ApiError } from "../lib/apiClient";
 
 interface GuardadoPublicacion {
@@ -50,12 +50,12 @@ export const publicacionService = {
     }
 
     // Solictud al API
-    const response = await apiClient.get<PublicacionesResponse>(`/api/publicacion?${params.toString()}`);
+    const response = await apiClient.get<PublicacionesResponse_Explorar>(`/api/publicacion?${params.toString()}`);
     
     
     return {
-      data: response.data,
-      total: response.total ?? response.data.length,
+      data: response.data.publicaciones,
+      total: response.data.total ?? response.data.publicaciones.length,
     };
   },
 

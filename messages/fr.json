@@ -383,6 +383,10 @@
 			"certificado": "Voir les certificats",
 			"viewProfile": "Voir le profil"
 		},
+		"save": {
+			"addAria": "Enregistrer la publication",
+			"removeAria": "Retirer des favoris"
+		},
 		"tutorTopicsLabel": "Thèmes de tutorat",
 		"aria": {
 			"uploadImage": "Téléverser une image"
@@ -646,6 +650,10 @@
 			"nextAgreement": "Prochain accord",
 			"details": "Détails"
 		},
+		"post": {
+			"about": "À propos de cette publication",
+			"viewPost": "Voir la publication"
+		},
 		"input": {
 			"emoji": "Emoji",
 			"placeholder": "Écrivez un message",
@@ -662,7 +670,18 @@
 			"titles": {
 				"agreement": "Détail de l'accord",
 				"post": "Publication",
-				"options": "Options"
+				"options": "Options",
+				"history": "Historique des accords"
+			}
+		},
+		"history": {
+			"empty": "Il n'y a pas encore d'accords avec cet utilisateur.",
+			"error": "Impossible de charger l'historique des accords.",
+			"unknownUser": "Utilisateur SWAP",
+			"groups": {
+				"pendiente": "En attente",
+				"activo": "En cours",
+				"completado": "Terminés"
 			}
 		},
 		"sidebar": {
@@ -686,5 +705,19 @@
 			"agreementActionError": "Impossible de traiter l'action. Réessayez.",
 			"noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord."
 		}
+	},
+	"sendMessageModal": {
+		"title": "Envoyer un message à {name}",
+		"close": "Fermer",
+		"back": "Retour",
+		"requestTutoring": "Convenir d'un tutorat",
+		"suggestionsLabel": "Suggestions",
+		"selectSuggestion": "Sélectionnez un message suggéré",
+		"messageLabel": "Écrivez votre message",
+		"placeholder": "Écrivez quelque chose...",
+		"hint": "Ne partagez pas d'informations sensibles",
+		"cancel": "Annuler",
+		"send": "Envoyer",
+		"sending": "Envoi..."
 	}
 }

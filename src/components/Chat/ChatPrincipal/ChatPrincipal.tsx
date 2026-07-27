@@ -6,6 +6,7 @@ import { Calendar, ChevronLeft, MapPin, MoreVertical, UserCircle2 } from "lucide
 import AcuerdoBanner from "./AcuerdoBanner/AcuerdoBanner";
 import ChatPanel from "../ChatPanel/ChatPanel";
 import ChatInput from "./ChatInput/ChatInput";
+import HistorialAcuerdosPanel from "./HistorialAcuerdosPanel/HistorialAcuerdosPanel";
 import MensajesBurbuja from "./MensajesBurbuja/MensajesBurbuja";
 import { useAuthStore } from "../../../store/authStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
@@ -96,7 +97,10 @@ export default function Chatprincipal({
               <button
                 type="button"
                 className="chat-principal__dropdown-item"
-                onClick={() => setMenuAbierto(false)}
+                onClick={() => {
+                  setMenuAbierto(false);
+                  setPanel(panel === "historial" ? null : "historial");
+                }}
               >
                 {t("menu.agreementHistory")}
               </button>
@@ -126,6 +130,7 @@ export default function Chatprincipal({
 
       <AcuerdoBanner
         acuerdo={acuerdo}
+        publicacion={conversacion.publicacion}
         esPropuestaPendiente={esPropuestaPendiente}
         esPropuestaEnviada={esPropuestaEnviada}
         onDetalles={() => setPanel(panel === "acuerdo" ? null : "acuerdo")}
@@ -216,6 +221,11 @@ export default function Chatprincipal({
                 </div>
               )}
             </div>
+          </ChatPanel>
+        )}
+        {panel === "historial" && (
+          <ChatPanel tipo="historial" onClose={() => setPanel(null)}>
+            <HistorialAcuerdosPanel idConversacion={conversacion.id_conversacion} />
           </ChatPanel>
         )}
       </div>

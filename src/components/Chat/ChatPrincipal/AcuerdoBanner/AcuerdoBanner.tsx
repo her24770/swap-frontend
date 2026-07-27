@@ -2,10 +2,12 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { MapPin, Calendar, Box } from "lucide-react";
 import type { AcuerdoHistorial } from "../../../../types/acuerdo";
+import type { PublicacionChatResumen } from "../../../../types/chat";
 import "./AcuerdoBanner.css";
 
 interface AcuerdoBannerProps {
   acuerdo?: AcuerdoHistorial | null;
+  publicacion?: PublicacionChatResumen;
   esPropuestaPendiente?: boolean;
   esPropuestaEnviada?: boolean;
   onDetalles?: () => void;
@@ -14,6 +16,7 @@ interface AcuerdoBannerProps {
 
 export default function AcuerdoBanner({
   acuerdo,
+  publicacion,
   esPropuestaPendiente = false,
   esPropuestaEnviada = false,
   onDetalles,
@@ -25,7 +28,31 @@ export default function AcuerdoBanner({
   if (!acuerdo) {
     return (
       <div className="acuerdo-banner acuerdo-banner--empty">
-        <span className="acuerdo-banner__create-label">{t("noAgreement")}</span>
+        {publicacion ? (
+          <>
+            <div className="acuerdo-banner__img">
+              {publicacion.imagenUrl ? (
+                <Image
+                  src={publicacion.imagenUrl}
+                  alt={publicacion.titulo}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  unoptimized
+                />
+              ) : (
+                <span className="acuerdo-banner__img-placeholder">
+                  <Box size={24} />
+                </span>
+              )}
+            </div>
+            <div className="acuerdo-banner__info">
+              <span className="acuerdo-banner__label">{t("noAgreement")}</span>
+              <span className="acuerdo-banner__name">{publicacion.titulo}</span>
+            </div>
+          </>
+        ) : (
+          <span className="acuerdo-banner__create-label">{t("noAgreement")}</span>
+        )}
         {onCrear && (
           <button
             type="button"
