@@ -11,7 +11,8 @@ import {LogoCompleto} from "../../ui/Icono/Logo";
 import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
 import NotificacionModal from "../../ui/Modal/NotificacionModal/NotificacionModal";
 import type { NotificacionData } from "../../ui/Modal/NotificacionModal/Notificacion/Notificacion";
-import { notificacionService } from "../../../services/notificacionService";
+import { notificacionService, mapNotificacion, type NotificacionApi } from "../../../services/notificacionService";
+import { useSocket } from "../../../hooks/useSocket";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -32,6 +33,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const bellRef = useRef<HTMLButtonElement>(null);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notificaciones, setNotificaciones] = useState<NotificacionData[]>([]);
+  const socket = useSocket();
 
   useEffect(() => {
     if (!notifOpen) return;
@@ -39,6 +41,22 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
       .then(setNotificaciones)
       .catch(() => {});
   }, [notifOpen]);
+
+  // Notificaciones en tiempo real (SWAP-334): el backend emite "notificacion:nueva"
+  // cuando llega un mensaje nuevo (ver crearMensajeYNotificar en el backend).
+  useEffect(() => {
+    function alRecibirNotificacion(notificacion: NotificacionApi) {
+      setNotificaciones((prev) => {
+        if (prev.some((n) => n.id === notificacion.id_notificacion)) return prev;
+        return [mapNotificacion(notificacion), ...prev];
+      });
+    }
+
+    socket.on("notificacion:nueva", alRecibirNotificacion);
+    return () => {
+      socket.off("notificacion:nueva", alRecibirNotificacion);
+    };
+  }, [socket]);
 
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
@@ -128,14 +146,17 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                 onDismiss={(id) =>
                   setNotificaciones((prev) => prev.filter((n) => n.id !== id))
                 }
-                onMarcarLeida={(id) =>
+                onMarcarLeida={(id) => {
                   setNotificaciones((prev) =>
                     prev.map((n) => (n.id === id ? { ...n, leida: true } : n)),
-                  )
-                }
-                onMarcarTodasLeidas={() =>
-                  setNotificaciones((prev) => prev.map((n) => ({ ...n, leida: true })))
-                }
+                  );
+                  notificacionService.marcarLeida(id).catch(() => {});
+                }}
+                onMarcarTodasLeidas={() => {
+                  const idsNoLeidas = notificaciones.filter((n) => !n.leida).map((n) => n.id);
+                  setNotificaciones((prev) => prev.map((n) => ({ ...n, leida: true })));
+                  notificacionService.marcarVariasLeidas(idsNoLeidas).catch(() => {});
+                }}
               />
             </div>
 

@@ -10,237 +10,17 @@ import SolicitudAcuerdoModal, {
 import { acuerdoService } from "../../../services/acuerdoService";
 import { conversacionService } from "../../../services/conversacionService";
 import { useEstados } from "../../../hooks/useEstados";
+import { useSocket, unirseAConversacion, enviarMensajePorSocket } from "../../../hooks/useSocket";
+import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, TabMensajes } from "../../../types/chat";
 import "./ChatPage.css";
 
-const USUARIO_ACTUAL_ID = 1;
-
-const MOCK_CONVERSACIONES: ConversacionPreview[] = [
-  {
-    id_conversacion: 1,
-    nombre: "Andrea Lopez",
-    preview: "Te confirmo la entrega para manana.",
-    fecha_ultimo_mensaje: "09:15",
-    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80",
-  },
-  {
-    id_conversacion: 2,
-    nombre: "Carlos Mendez",
-    preview: "Sigo interesado en la publicacion.",
-    esSolicitud: true,
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80",
-  },
-  {
-    id_conversacion: 3,
-    nombre: "Maria Jose",
-    preview: "Nos vemos hoy en el campus central.",
-    fecha_ultimo_mensaje: "18:40",
-    avatarUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80",
-  },
-];
-
-const CONVERSACION_TAB: Record<number, Exclude<TabMensajes, "todas">> = {
-  1: "compras",
-  2: "ventas",
-  3: "ventas",
-};
-
-const MOCK_MENSAJES: Record<number, Mensaje[]> = {
-  1: [
-    {
-      id_mensaje: 101,
-      id_conversacion: 1,
-      id_emisor: 12,
-      mensaje: "Hola, puedo entregartelo hoy despues de clases.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-23T09:00:00",
-    },
-    {
-      id_mensaje: 102,
-      id_conversacion: 1,
-      id_emisor: 1,
-      mensaje: "Perfecto, me queda bien a las 5.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-23T09:08:00",
-    },
-    {
-      id_mensaje: 103,
-      id_conversacion: 1,
-      id_emisor: 12,
-      mensaje: "Te confirmo la entrega para manana.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-23T09:15:00",
-    },
-  ],
-  2: [
-    {
-      id_mensaje: 201,
-      id_conversacion: 2,
-      id_emisor: 18,
-      mensaje: "Hola, aun tienes disponible el teclado?",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-22T11:20:00",
-    },
-    {
-      id_mensaje: 202,
-      id_conversacion: 2,
-      id_emisor: 18,
-      mensaje: "Sigo interesado en la publicacion.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-22T11:24:00",
-    },
-  ],
-  3: [
-    {
-      id_mensaje: 301,
-      id_conversacion: 3,
-      id_emisor: 1,
-      mensaje: "Llego en diez minutos.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-21T18:31:00",
-    },
-    {
-      id_mensaje: 302,
-      id_conversacion: 3,
-      id_emisor: 27,
-      mensaje: "Buenisimo, estoy frente a biblioteca.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-23T18:35:00",
-    },
-    {
-      id_mensaje: 303,
-      id_conversacion: 3,
-      id_emisor: 27,
-      mensaje: "Nos vemos hoy en el campus central.",
-      estado_mensaje: 1,
-      fecha_enviado: "2026-07-23T18:40:00",
-    },
-  ],
-};
-
-const MOCK_ACUERDOS: Record<number, AcuerdoHistorial | null> = {
-  1: {
-    id_acuerdo: 1,
-    id_usuario: 1,
-    id_publicacion: 44,
-    fecha_entrega: "2026-07-24 17:00",
-    lugar_entrega: "Plaza Paiz Roosevelt",
-    observaciones: "Llevar cambio exacto.",
-    id_conversacion: 1,
-    estado: 1,
-    publicacion: {
-      id_publicacion: 44,
-      titulo: "Lampara LED de escritorio",
-      descripcion: "Lampara recargable con tres niveles de brillo.",
-      precio: "85.00",
-      estado: 1,
-      tipo_publicacion: 1,
-      me_gusta: 12,
-      fecha_publicacion: "2026-07-20",
-      id_usuario: 12,
-      imagenes: [
-        {
-          id_imagen: 1,
-          url_imagen: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
-          id_publicacion: 44,
-        },
-      ],
-      usuario: {
-        id_usuario: 12,
-        nombre: "Andrea Lopez",
-        url_foto_perfil: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&q=80",
-        calificacion: 4.8,
-      },
-    },
-    estadoRel: {
-      id_estado: 1,
-      estado: "activo",
-    },
-  },
-  2: {
-    id_acuerdo: 5,
-    id_usuario: 18,
-    id_publicacion: 67,
-    fecha_entrega: "2026-07-24 14:30",
-    lugar_entrega: "Centro comercial Miraflores",
-    observaciones: "Puedo llevarlo en su caja original.",
-    id_conversacion: 2,
-    estado: 2,
-    publicacion: {
-      id_publicacion: 67,
-      titulo: "Teclado mecanico Red Switch",
-      descripcion: "Teclado mecanico full size con iluminacion RGB.",
-      precio: "240.00",
-      estado: 1,
-      tipo_publicacion: 1,
-      me_gusta: 19,
-      fecha_publicacion: "2026-07-19",
-      id_usuario: 18,
-      imagenes: [
-        {
-          id_imagen: 5,
-          url_imagen: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=800&q=80",
-          id_publicacion: 67,
-        },
-      ],
-      usuario: {
-        id_usuario: 18,
-        nombre: "Carlos Mendez",
-        url_foto_perfil: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&q=80",
-        calificacion: 4.7,
-      },
-    },
-    estadoRel: {
-      id_estado: 2,
-      estado: "pendiente",
-    },
-  },
-  3: {
-    id_acuerdo: 2,
-    id_usuario: 1,
-    id_publicacion: 91,
-    fecha_entrega: "2026-07-23 19:00",
-    lugar_entrega: "Campus central, biblioteca",
-    observaciones: "Avisar al llegar.",
-    id_conversacion: 3,
-    estado: 1,
-    publicacion: {
-      id_publicacion: 91,
-      titulo: "Apuntes de Calculo II",
-      descripcion: "Resumen completo con ejercicios resueltos.",
-      precio: "25.00",
-      estado: 1,
-      tipo_publicacion: 2,
-      me_gusta: 8,
-      fecha_publicacion: "2026-07-18",
-      id_usuario: 27,
-      imagenes: [
-        {
-          id_imagen: 2,
-          url_imagen: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80",
-          id_publicacion: 91,
-        },
-      ],
-      tipoPerfil: {
-        id_tipo_perfil: 1,
-        tipo_perfil: "venta",
-      },
-      usuario: {
-        id_usuario: 27,
-        nombre: "Maria Jose",
-        url_foto_perfil: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&q=80",
-        calificacion: 4.6,
-      },
-    },
-    estadoRel: {
-      id_estado: 1,
-      estado: "activo",
-    },
-  },
-};
-
+// NOTA: no hay (todavia) una regla real de negocio para distinguir conversaciones
+// de "ventas" vs "compras" (ningun ticket del sprint la define), asi que los tabs
+// "ventas"/"compras" quedan sin filtrar (muestran lo mismo que "todas") hasta que
+// se defina esa regla, en vez de mostrar listas vacias con datos reales.
 function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
   if (!fechaUltimoMensaje) return -1;
 
@@ -255,19 +35,37 @@ function obtenerPesoRecencia(fechaUltimoMensaje?: string): number {
 export default function ChatPage() {
   const t = useTranslations("chat");
   const { agregarNotificacion } = useUIStore();
-  const estadosConversacion = useEstados("publicacion"); // trae "activo" e "inactivo"
+  const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
+  const socket = useSocket();
+  // "conversacion" trae "activo", "inactivo" y "pendiente" (necesarios para
+  // aceptar/bloquear solicitudes y para saber si una conversacion es una solicitud).
+  const estadosConversacion = useEstados("conversacion");
+  const idEstadoPendiente = estadosConversacion.find((e) => e.estado === "pendiente")?.id_estado;
   const [tab, setTab] = useState<TabMensajes>("todas");
-  const [selectedId, setSelectedId] = useState<number | null>(1);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [mostrarChatMovil, setMostrarChatMovil] = useState(false);
   const [conversacionesState, setConversacionesState] =
-    useState<ConversacionPreview[]>(MOCK_CONVERSACIONES);
+    useState<ConversacionPreview[]>([]);
   // Acuerdos reales por conversacion (ST-H22-4): id_conversacion -> lista de acuerdos
   const [acuerdosPorConversacion, setAcuerdosPorConversacion] =
     useState<Record<number, AcuerdoHistorial[]>>({});
   const [mensajesPorConversacion, setMensajesPorConversacion] =
-    useState<Record<number, Mensaje[]>>(MOCK_MENSAJES);
+    useState<Record<number, Mensaje[]>>({});
   const [modalSolicitudAbierto, setModalSolicitudAbierto] = useState(false);
   const [enviandoSolicitud, setEnviandoSolicitud] = useState(false);
+
+  // Carga el listado real de conversaciones del usuario (GET /api/conversacion/conversaciones,
+  // ST-H44-1/SWAP-338). Espera a que los estados esten disponibles para poder marcar
+  // correctamente cuales son "solicitud" (esSolicitud depende de idEstadoPendiente).
+  useEffect(() => {
+    if (!idUsuarioActual || estadosConversacion.length === 0) return;
+    conversacionService.listar(idEstadoPendiente)
+      .then(setConversacionesState)
+      .catch(() => {
+        agregarNotificacion({ tipo: "error", mensaje: t("system.agreementActionError") });
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idUsuarioActual, estadosConversacion.length, idEstadoPendiente]);
 
   // Trae los acuerdos reales de una conversacion (GET /api/acuerdo/conversacion/:id, ST-H44-3)
   const cargarAcuerdosDeConversacion = useCallback(async (idConversacion: number) => {
@@ -275,8 +73,7 @@ export default function ChatPage() {
       const data = await acuerdoService.getPorConversacion(idConversacion);
       setAcuerdosPorConversacion((prev) => ({ ...prev, [idConversacion]: data }));
     } catch {
-      // Conversacion sin acuerdos todavia (o el id de conversacion aun no existe en el
-      // backend real, ya que el listado de conversaciones sigue siendo de prueba).
+      // Conversacion sin acuerdos todavia.
       setAcuerdosPorConversacion((prev) => ({ ...prev, [idConversacion]: [] }));
     }
   }, []);
@@ -291,11 +88,9 @@ export default function ChatPage() {
   }, [conversacionesState.map((c) => c.id_conversacion).join(","), cargarAcuerdosDeConversacion]);
 
   const conversaciones = useMemo(() => {
-    const conversacionesFiltradas = tab === "todas"
-      ? conversacionesState
-      : conversacionesState.filter(
-        (conversacion) => CONVERSACION_TAB[conversacion.id_conversacion] === tab,
-      );
+    // Los tabs "ventas"/"compras" no filtran todavia: no hay una regla real de
+    // negocio para derivarlos de los datos de conversacion (ver nota arriba).
+    const conversacionesFiltradas = conversacionesState;
 
     return [...conversacionesFiltradas].sort((a, b) => {
       const prioridadSolicitudA = a.esSolicitud ? 1 : 0;
@@ -321,6 +116,61 @@ export default function ChatPage() {
     conversaciones.find((conversacion) => conversacion.id_conversacion === selectedId)
     ?? conversaciones[0]
     ?? null;
+
+  // Carga el historial real de mensajes de la conversacion seleccionada
+  // (GET /api/conversacion/:id/mensajes, ST-H44-2/ST-H44-9/SWAP-336/SWAP-338)
+  // y se une a la sala de socket de esa conversacion (SWAP-332).
+  useEffect(() => {
+    if (!selected) return;
+    let cancelado = false;
+    conversacionService.obtenerMensajes(selected.id_conversacion)
+      .then((mensajesConversacion) => {
+        if (cancelado) return;
+        setMensajesPorConversacion((prev) => ({
+          ...prev,
+          [selected.id_conversacion]: mensajesConversacion,
+        }));
+      })
+      .catch(() => {});
+    unirseAConversacion(socket, selected.id_conversacion).catch(() => {});
+    return () => {
+      cancelado = true;
+    };
+  }, [selected?.id_conversacion, socket]);
+
+  // Escucha "mensaje:nuevo" para todas las conversaciones (SWAP-333): actualiza el
+  // historial de la conversacion correspondiente y el preview en el sidebar, sin
+  // necesidad de refrescar. El propio emisor tambien recibe este evento (esta unido
+  // a la sala), asi que es la unica fuente de verdad: no se hace append local optimista.
+  useEffect(() => {
+    function alRecibirMensaje(mensajeNuevo: Mensaje) {
+      setMensajesPorConversacion((prev) => {
+        const actuales = prev[mensajeNuevo.id_conversacion] ?? [];
+        if (actuales.some((m) => m.id_mensaje === mensajeNuevo.id_mensaje)) return prev;
+        return {
+          ...prev,
+          [mensajeNuevo.id_conversacion]: [...actuales, mensajeNuevo],
+        };
+      });
+      setConversacionesState((prev) => prev.map((conversacion) => (
+        conversacion.id_conversacion === mensajeNuevo.id_conversacion
+          ? {
+            ...conversacion,
+            preview: mensajeNuevo.mensaje,
+            fecha_ultimo_mensaje: new Date(mensajeNuevo.fecha_enviado).toLocaleTimeString("es-GT", {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          }
+          : conversacion
+      )));
+    }
+
+    socket.on("mensaje:nuevo", alRecibirMensaje);
+    return () => {
+      socket.off("mensaje:nuevo", alRecibirMensaje);
+    };
+  }, [socket]);
 
   const mensajes = selected
     ? mensajesPorConversacion[selected.id_conversacion] ?? []
@@ -354,40 +204,28 @@ export default function ChatPage() {
     return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
   };
 
-  const handleEnviar = (texto: string) => {
-    if (!selected) return;
+  // Envia el mensaje por socket (SWAP-333); el propio "mensaje:nuevo" que
+  // devuelve el backend (listener de arriba) es el que actualiza el estado,
+  // no un append local optimista.
+  const handleEnviar = async (texto: string) => {
+    if (!selected || !idUsuarioActual) return;
 
-    const nuevoMensaje: Mensaje = {
-      id_mensaje: Date.now(),
-      id_conversacion: selected.id_conversacion,
-      id_emisor: 1,
-      mensaje: texto,
-      estado_mensaje: 1,
-      fecha_enviado: obtenerFechaHoraActual(),
-    };
-
-    setMensajesPorConversacion((prev) => ({
-      ...prev,
-      [selected.id_conversacion]: [...(prev[selected.id_conversacion] ?? []), nuevoMensaje],
-    }));
-    setConversacionesState((prev) => prev.map((conversacion) => (
-      conversacion.id_conversacion === selected.id_conversacion
-        ? {
-          ...conversacion,
-          preview: texto,
-          fecha_ultimo_mensaje: nuevoMensaje.fecha_enviado,
-        }
-        : conversacion
-    )));
+    const respuesta = await enviarMensajePorSocket(socket, selected.id_conversacion, texto);
+    if (!respuesta.success) {
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: respuesta.message ?? t("system.agreementActionError"),
+      });
+    }
   };
 
   const handleEnviarImagen = (archivo: File) => {
-    if (!selected) return;
+    if (!selected || !idUsuarioActual) return;
 
     const nuevoMensaje: Mensaje = {
       id_mensaje: Date.now(),
       id_conversacion: selected.id_conversacion,
-      id_emisor: 1,
+      id_emisor: idUsuarioActual,
       mensaje: `${t("system.attachedImageMessage")} ${archivo.name}`,
       estado_mensaje: 1,
       fecha_enviado: obtenerFechaHoraActual(),
