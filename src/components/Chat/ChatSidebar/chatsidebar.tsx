@@ -1,11 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { UserCircle2 } from "lucide-react";
 import type { ConversacionPreview, TabMensajes } from "../../../types/chat";
 import AcuerdoPendienteBadge from "../../conversaciones/AcuerdoPendienteBadge/AcuerdoPendienteBadge";
 import "./chatsidebar.css";
 import SearchContactsBar from "../../ui/SearchContactsBar/SearchContactsBar";
+
+const normalizeSearch = (value: string) =>
+  value.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 interface ChatSidebarProps {
   conversaciones: ConversacionPreview[];
@@ -25,11 +29,17 @@ export default function ChatSidebar({
   acuerdosPendientesPorConversacion = {},
 }: ChatSidebarProps) {
   const t = useTranslations("chat.sidebar");
+  const [search, setSearch] = useState("");
   const tabs: { key: TabMensajes; label: string }[] = [
     { key: "todas", label: t("tabs.all") },
     { key: "ventas", label: t("tabs.sales") },
     { key: "compras", label: t("tabs.purchases") },
   ];
+  const query = normalizeSearch(search.trim());
+  const filteredConversations = query
+    ? conversaciones.filter(({ nombre, preview }) =>
+        normalizeSearch(`${nombre} ${preview}`).includes(query))
+    : conversaciones;
 
   return (
     <aside className="chat-sidebar">
@@ -52,9 +62,9 @@ export default function ChatSidebar({
       </div>
 
       <div className="chat-sidebar__list">
-        <SearchContactsBar />
+        <SearchContactsBar onSearch={setSearch} />
 
-        {conversaciones.map((conv) => (
+        {filteredConversations.map((conv) => (
           <div
             key={conv.id_conversacion}
             className={`chat-sidebar__item${selectedId === conv.id_conversacion ? " chat-sidebar__item--active" : ""}`}
