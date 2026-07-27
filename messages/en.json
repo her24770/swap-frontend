@@ -158,6 +158,28 @@
 		"empty": {
 			"title": "No tutoring sessions available",
 			"description": "There are no student tutoring sessions posted yet."
+		},
+		"solicitud": "Tutoring request",
+		"fecha": "Tutoring date",
+		"hora": "Tutoring time",
+		"modalidad": "Tutoring format",
+		"lugar": "Location",
+		"tema": "Topic",
+		"rechazar": "Reject",
+		"aceptar": "Accept",
+		"formulario":{
+			"nuevaSolicitud": "New tutoring request",
+			"titulo": "Tutoring request",
+			"descripcion": "Please complete the form to request tutoring.",
+			"fecha": "Date",
+			"hora": "Time",
+			"modalidad": "Format",
+			"lugar": "Location",
+			"tema": "Topic",
+			"enviarSolicitud": "Send request",
+			"placeholderTema": "Describe the topic of the tutoring session",
+			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
+
 		}
 	},
 	"descubre": {

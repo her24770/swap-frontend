@@ -158,7 +158,31 @@
 		"empty": {
 			"title": "No hay tutorías disponibles",
 			"description": "Aún no hay tutorías estudiantiles publicadas."
+		},
+		"solicitud": "Solicitud de Tutoría",
+		"fecha": "Fecha de tutoría",
+		"hora": "Hora de tutoría",
+		"modalidad": "Modalidad",
+		"lugar": "Lugar",
+		"tema": "Tema",
+		"rechazar": "Rechazar",
+		"aceptar": "Aceptar",
+		"formulario":{
+			"nuevaSolicitud": "Nueva solicitud de tutoría",
+			"titulo": "Solicitud de tutoría",
+			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
+			"fecha": "Fecha",
+			"hora": "Hora",
+			"modalidad": "Modalidad",
+			"lugar": "Lugar",
+			"tema": "Tema",
+			"enviarSolicitud": "Enviar solicitud",
+			"placeholderTema": "Describe el tema de la tutoría",
+			"placeholderLugar": "Ej. Plaza Paiz, UVG"	
+
 		}
+
+		
 	},
 	"descubre": {
 		"title": "Descubre",

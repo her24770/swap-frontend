@@ -158,6 +158,28 @@
 		"empty": {
 			"title": "Aucune séance de tutorat disponible",
 			"description": "Aucun tutorat étudiant n'a encore été publié."
+		},
+		"solicitud": "Demande de tutorat",
+		"fecha": "Date de tutorat",
+		"hora": "Heure de tutorat",
+		"modalidad": "Format de tutorat",
+		"lugar": "Lieu",
+		"tema": "Sujet",
+		"rechazar": "Refuser",
+		"aceptar": "Accepter",
+		"formulario":{
+			"nuevaSolicitud": "Nouvelle demande de tutorat",
+			"titulo": "Demande de tutorat",
+			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
+			"fecha": "Date",
+			"hora": "Heure",
+			"modalidad": "Format",
+			"lugar": "Lieu",
+			"tema": "Sujet",
+			"enviarSolicitud": "Envoyer la demande",
+			"placeholderTema": "Décrivez le sujet de la séance de tutorat",
+			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
+
 		}
 	},
 	"descubre": {

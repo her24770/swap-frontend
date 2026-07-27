@@ -20,6 +20,9 @@ import TagBadge from "../../TagBadge/TagBadge";
 import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
+import { useTranslations } from "next-intl";
+import ModalSolicitudTutoria from "../Solicitud/Tutoria/SolicitudTutoriaModal"
+import { wait } from "@testing-library/user-event/dist/cjs/utils/index.js";
 
 export type DetallePublicacionType = "venta" | "tutoria";
 
@@ -104,6 +107,7 @@ export default function DetallePublicacion({
   const [saving, setSaving] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [solicitudTutoriaAbierta, setSolicitudTutoriaAbierta] = useState(false);
 
   if (!isOpen) return null;
 
@@ -170,6 +174,7 @@ export default function DetallePublicacion({
   const expandido = isMessageModalOpen && Boolean(sellerId && publicacionId);
 
   const modal = (
+    <>
     <div className="modal-overlay" onClick={onClose}>
       <div
         className={`post-modal${expandido ? " post-modal--expanded" : ""}`}
@@ -302,6 +307,25 @@ export default function DetallePublicacion({
               </button>
               <span className="post-modal__likes-count">{likes}</span>
             </div>
+            )}
+            {type === "tutoria" && (
+              <>
+                <button
+                  type="button"
+                  className="button button--medium button--warning button--full-width"
+                  onClick={onVerCertificados}
+                >
+                  {t('actions.certificado')}
+                </button>
+                <button
+                  type="button"
+                  className="button button--medium button--full-width"
+                  onClick={() => setSolicitudTutoriaAbierta(true)}
+                >
+                  Solicitar Tutoría <ChevronRight size={16} />
+                </button>
+              </>
+            )}
           </div>
 
           {expandido && (
@@ -328,6 +352,13 @@ export default function DetallePublicacion({
         </div>
       </div>
     </div>
+    <ModalSolicitudTutoria
+      isOpen={solicitudTutoriaAbierta}
+      tituloTutoria={title}
+      onClose={() => setSolicitudTutoriaAbierta(false)}
+      onSubmit={() => setSolicitudTutoriaAbierta(false)}
+    />
+    </>
   );
 
   if (typeof document === "undefined") return modal;
