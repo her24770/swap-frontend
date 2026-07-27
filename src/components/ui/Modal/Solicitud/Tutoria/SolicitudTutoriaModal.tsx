@@ -39,7 +39,7 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & CustomFieldPr
 interface ModalSolicitudTutoriaProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: SolicitudTutoriaFormData) => void | Promise<void>;
+  onSubmit?: (data: SolicitudTutoriaFormData) => boolean | void | Promise<boolean | void>;
   tituloTutoria?: string;
 }
 
@@ -152,8 +152,7 @@ export default function ModalSolicitudTutoria({
           noValidate
           className="solicitud-tutoria__form"
           onSubmit={handleSubmit(async (data) => {
-            await onSubmit?.(data);
-            handleClose();
+            if (await onSubmit?.(data) !== false) handleClose();
           })}
         >
           <div className="solicitud-tutoria__schedule">

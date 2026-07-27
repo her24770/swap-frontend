@@ -15,9 +15,9 @@ interface HistorialAcuerdosPanelProps {
   idConversacion: number;
 }
 
-type GrupoEstado = "pendiente" | "activo" | "completado";
+type GrupoEstado = "pendiente" | "activo" | "cancelado" | "completado";
 
-const ORDEN_GRUPOS: GrupoEstado[] = ["pendiente", "activo", "completado"];
+const ORDEN_GRUPOS: GrupoEstado[] = ["pendiente", "activo", "cancelado", "completado"];
 
 export default function HistorialAcuerdosPanel({ idConversacion }: HistorialAcuerdosPanelProps) {
   const t = useTranslations("chat.history");

@@ -15,6 +15,10 @@
   box-shadow: 0 1.5rem 4rem rgba(15, 23, 42, 0.2);
 }
 
+.solicitud-tutoria::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
 .solicitud-tutoria__header {
   display: flex;
   align-items: flex-start;

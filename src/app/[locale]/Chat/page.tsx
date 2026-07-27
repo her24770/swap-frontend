@@ -14,6 +14,7 @@ import { useEstados } from "../../../hooks/useEstados";
 import { useUIStore } from "../../../store/uiStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, PublicacionChatResumen, TabMensajes } from "../../../types/chat";
+import type { SolicitudTutoriaFormData } from "../../../schemas/zodSchemas";
 import "./ChatPage.css";
 
 const USUARIO_ACTUAL_ID = 1;
@@ -602,6 +603,37 @@ export default function ChatPage() {
     }
   };
 
+  const handleEnviarSolicitudTutoria = async (data: SolicitudTutoriaFormData) => {
+    if (!selected) return false;
+    const acuerdoTutoria = acuerdosSeleccionados.find(
+      (item) => item.publicacion.tipoPerfil?.tipo_perfil === "tutoria"
+    );
+    const idPublicacion = selected.publicacion?.tipo === "tutoria"
+      ? selected.publicacion.id
+      : acuerdoTutoria?.id_publicacion;
+    if (!idPublicacion) return false;
+
+    try {
+      await acuerdoService.crearSolicitud(idPublicacion, {
+        fecha_entrega: new Date(`${data.fecha}T${data.hora}`).toISOString(),
+        lugar_entrega: data.lugar,
+        observaciones: data.tema,
+        id_conversacion: selected.id_conversacion,
+      });
+      await cargarAcuerdosDeConversacion(selected.id_conversacion);
+      setConversacionesState((prev) => prev.map((conversacion) => (
+        conversacion.id_conversacion === selected.id_conversacion
+          ? { ...conversacion, preview: t("system.newTutoringRequestSent") }
+          : conversacion
+      )));
+      return true;
+    } catch (err) {
+      const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
+      agregarNotificacion({ tipo: "error", mensaje });
+      return false;
+    }
+  };
+
   const publicacionParaNuevaSolicitud = useMemo(() => {
     const ultimoAcuerdo = acuerdosSeleccionados[0];
     if (!ultimoAcuerdo) return null;
@@ -651,6 +683,7 @@ export default function ChatPage() {
           onCompletarAcuerdo={() => acuerdo && selected && responderAcuerdo(selected.id_conversacion, acuerdo.id_acuerdo, "completado")}
           onEnviarNuevaPropuesta={handleAbrirCrearEncuentro}
           onCrearEncuentro={handleAbrirCrearEncuentro}
+          onEnviarSolicitudTutoria={handleEnviarSolicitudTutoria}
           onVolver={() => setMostrarChatMovil(false)}
         />
       ) : (

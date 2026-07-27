@@ -11,7 +11,9 @@ import MensajesBurbuja from "./MensajesBurbuja/MensajesBurbuja";
 import { useAuthStore } from "../../../store/authStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, TipoPanel } from "../../../types/chat";
+import type { SolicitudTutoriaFormData } from "../../../schemas/zodSchemas";
 import "./ChatPrincipal.css";
+import ModalSolicitudTutoria from "../../ui/Modal/Solicitud/Tutoria/SolicitudTutoriaModal";
 
 interface ChatprincipalProps {
   conversacion: ConversacionPreview;
@@ -24,6 +26,9 @@ interface ChatprincipalProps {
   onEnviarNuevaPropuesta?: () => void;
   onCrearEncuentro?: () => void;
   onCompletarAcuerdo?: () => void;
+  onEnviarSolicitudTutoria?: (
+    data: SolicitudTutoriaFormData
+  ) => boolean | void | Promise<boolean | void>;
   onVolver?: () => void;
 }
 
@@ -38,13 +43,17 @@ export default function Chatprincipal({
   onEnviarNuevaPropuesta,
   onCrearEncuentro,
   onCompletarAcuerdo,
+  onEnviarSolicitudTutoria,
   onVolver,
 }: ChatprincipalProps) {
   const t = useTranslations("chat");
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [panel, setPanel] = useState<TipoPanel>(null);
+  const [solicitudAbierta, setSolicitudAbierta] = useState(false);
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
   const puedeGestionarAcuerdos = !conversacion.esSolicitud;
+  const esConversacionTutoria = conversacion.publicacion?.tipo === "tutoria"
+    || acuerdo?.publicacion.tipoPerfil?.tipo_perfil === "tutoria";
   const esPropuestaPendiente = Boolean(
     acuerdo
     && acuerdo.estadoRel?.estado === "pendiente"
@@ -102,9 +111,9 @@ export default function Chatprincipal({
                   setPanel(panel === "historial" ? null : "historial");
                 }}
               >
-                {t("menu.agreementHistory")}
+                {t(esConversacionTutoria ? "menu.tutoringHistory" : "menu.agreementHistory")}
               </button>
-              {puedeGestionarAcuerdos && (
+              {puedeGestionarAcuerdos && !esConversacionTutoria && (
                 <button
                   type="button"
                   className="chat-principal__dropdown-item"
@@ -116,6 +125,19 @@ export default function Chatprincipal({
                   {t("menu.createAgreement")}
                 </button>
               )}
+              {puedeGestionarAcuerdos && esConversacionTutoria && (
+                <button
+                  type="button"
+                  className="chat-principal__dropdown-item"
+                  onClick={() => {
+                    setMenuAbierto(false);
+                    setSolicitudAbierta(true);
+                  }}
+                >
+                  {t("menu.tutoringRequest")}
+                </button>
+              )}
+
               <button
                 type="button"
                 className="chat-principal__dropdown-item chat-principal__dropdown-item--danger"
@@ -231,6 +253,12 @@ export default function Chatprincipal({
       </div>
 
       <ChatInput onEnviar={onEnviar} onEnviarImagen={onEnviarImagen} />
+      <ModalSolicitudTutoria
+        isOpen={solicitudAbierta}
+        onClose={() => setSolicitudAbierta(false)}
+        onSubmit={onEnviarSolicitudTutoria}
+        tituloTutoria={conversacion.publicacion?.titulo ?? acuerdo?.publicacion.titulo}
+      />
     </div>
   );
 }

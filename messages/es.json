@@ -171,12 +171,14 @@
 			"nuevaSolicitud": "Nueva solicitud de tutoría",
 			"titulo": "Solicitud de tutoría",
 			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
+			"cerrarModal": "Cerrar solicitud de tutoría",
 			"fecha": "Fecha",
 			"hora": "Hora",
 			"modalidad": "Modalidad",
 			"lugar": "Lugar",
 			"tema": "Tema",
 			"enviarSolicitud": "Enviar solicitud",
+			"enviando": "Enviando...",
 			"placeholderTema": "Describe el tema de la tutoría",
 			"placeholderLugar": "Ej. Plaza Paiz, UVG"	
 
@@ -644,6 +646,8 @@
 		},
 		"menu": {
 			"agreementHistory": "Historial de acuerdos",
+			"tutoringHistory": "Historial de tutorías",
+			"tutoringRequest": "Solicitar tutoría",
 			"createAgreement": "Crear acuerdo",
 			"report": "Reportar"
 		},
@@ -693,7 +697,8 @@
 			"unknownUser": "Usuario de SWAP",
 			"groups": {
 				"pendiente": "Pendientes",
-				"activo": "En curso",
+				"activo": "Aceptadas",
+				"cancelado": "Rechazadas",
 				"completado": "Cumplidos"
 			}
 		},
@@ -716,6 +721,7 @@
 			"newAgreementProposalSent": "Enviaste una nueva propuesta de acuerdo.",
 			"agreementCompleted": "Acuerdo marcado como completado.",
 			"agreementActionError": "No se pudo procesar la acción. Intenta de nuevo.",
+			"newTutoringRequestSent": "Solicitud de tutoría enviada.",
 			"noPublicationForAgreement": "Esta conversación aún no tiene una publicación asociada para crear un acuerdo."
 		}
 	},

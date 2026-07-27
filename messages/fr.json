@@ -171,12 +171,14 @@
 			"nuevaSolicitud": "Nouvelle demande de tutorat",
 			"titulo": "Demande de tutorat",
 			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
+			"cerrarModal": "Fermer la demande de tutorat",
 			"fecha": "Date",
 			"hora": "Heure",
 			"modalidad": "Format",
 			"lugar": "Lieu",
 			"tema": "Sujet",
 			"enviarSolicitud": "Envoyer la demande",
+			"enviando": "Envoi...",
 			"placeholderTema": "Décrivez le sujet de la séance de tutorat",
 			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
 
@@ -631,6 +633,8 @@
 		},
 		"menu": {
 			"agreementHistory": "Historique des accords",
+			"tutoringHistory": "Historique des tutorats",
+			"tutoringRequest": "Demander un tutorat",
 			"createAgreement": "Créer un accord",
 			"report": "Signaler"
 		},
@@ -680,7 +684,8 @@
 			"unknownUser": "Utilisateur SWAP",
 			"groups": {
 				"pendiente": "En attente",
-				"activo": "En cours",
+				"activo": "Acceptées",
+				"cancelado": "Refusées",
 				"completado": "Terminés"
 			}
 		},
@@ -703,6 +708,7 @@
 			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord.",
 			"agreementCompleted": "Accord marqué comme terminé.",
 			"agreementActionError": "Impossible de traiter l'action. Réessayez.",
+			"newTutoringRequestSent": "Demande de tutorat envoyée.",
 			"noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord."
 		}
 	},

@@ -171,12 +171,14 @@
 			"nuevaSolicitud": "New tutoring request",
 			"titulo": "Tutoring request",
 			"descripcion": "Please complete the form to request tutoring.",
+			"cerrarModal": "Close tutoring request",
 			"fecha": "Date",
 			"hora": "Time",
 			"modalidad": "Format",
 			"lugar": "Location",
 			"tema": "Topic",
 			"enviarSolicitud": "Send request",
+			"enviando": "Sending...",
 			"placeholderTema": "Describe the topic of the tutoring session",
 			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
 
@@ -636,6 +638,8 @@
 		},
 		"menu": {
 			"agreementHistory": "Agreement history",
+			"tutoringHistory": "Tutoring history",
+			"tutoringRequest": "Request tutoring",
 			"createAgreement": "Create agreement",
 			"report": "Report"
 		},
@@ -685,7 +689,8 @@
 			"unknownUser": "SWAP user",
 			"groups": {
 				"pendiente": "Pending",
-				"activo": "Ongoing",
+				"activo": "Accepted",
+				"cancelado": "Rejected",
 				"completado": "Completed"
 			}
 		},
@@ -708,6 +713,7 @@
 			"newAgreementProposalSent": "You sent a new agreement proposal.",
 			"agreementCompleted": "Agreement marked as completed.",
 			"agreementActionError": "Couldn't process the action. Please try again.",
+			"newTutoringRequestSent": "Tutoring request sent.",
 			"noPublicationForAgreement": "This conversation doesn't have an associated listing to create an agreement yet."
 		}
 	},
