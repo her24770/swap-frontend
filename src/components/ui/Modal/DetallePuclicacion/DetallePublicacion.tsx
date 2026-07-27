@@ -17,6 +17,8 @@ import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
 import { useTranslations } from "next-intl";
+import ModalSolicitudTutoria from "../Solicitud/Tutoria/SolicitudTutoriaModal"
+import { wait } from "@testing-library/user-event/dist/cjs/utils/index.js";
 
 export type DetallePublicacionType = "venta" | "tutoria";
 
@@ -95,6 +97,7 @@ export default function DetallePublicacion({
   const t = useTranslations("posts");
   const guardados = useGuardados();
   const [saving, setSaving] = useState(false);
+  const [solicitudTutoriaAbierta, setSolicitudTutoriaAbierta] = useState(false);
 
   if (!isOpen) return null;
 
@@ -122,6 +125,7 @@ export default function DetallePublicacion({
   };
 
   const modal = (
+    <>
     <div className="modal-overlay" onClick={onClose}>
       <div className="post-modal" onClick={(e) => e.stopPropagation()}>
 
@@ -227,7 +231,7 @@ export default function DetallePublicacion({
                 <button
                   type="button"
                   className="button button--medium button--full-width"
-                  onClick={onSolicitarTutoria}
+                  onClick={() => setSolicitudTutoriaAbierta(true)}
                 >
                   Solicitar Tutoría <ChevronRight size={16} />
                 </button>
@@ -254,6 +258,13 @@ export default function DetallePublicacion({
 
       </div>
     </div>
+    <ModalSolicitudTutoria
+      isOpen={solicitudTutoriaAbierta}
+      tituloTutoria={title}
+      onClose={() => setSolicitudTutoriaAbierta(false)}
+      onSubmit={() => setSolicitudTutoriaAbierta(false)}
+    />
+    </>
   );
 
   if (typeof document === "undefined") return modal;

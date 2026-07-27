@@ -254,6 +254,29 @@ export const schemaHorario = z.object({
   }
 );
 
+// ─── Solicitud de tutoría ────────────────────────────────────────────────────
+
+export const schemaSolicitudTutoria = z.object({
+  fecha: z
+    .string()
+    .min(1, "La fecha es obligatoria.")
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha no es válida."),
+  hora: z
+    .string()
+    .min(1, "La hora es obligatoria.")
+    .regex(/^\d{2}:\d{2}$/, "La hora no es válida."),
+  lugar: z
+    .string()
+    .trim()
+    .min(3, "El lugar o enlace debe tener al menos 3 caracteres.")
+    .max(255, "El lugar o enlace no puede superar 255 caracteres."),
+  tema: z
+    .string()
+    .trim()
+    .min(10, "El tema debe tener al menos 10 caracteres.")
+    .max(500, "El tema no puede superar 500 caracteres."),
+});
+
 // ─── Tipos inferidos ──────────────────────────────────────────────────────────
 
 export type RegistroFormData = z.infer<typeof schemaRegistro>;
@@ -262,6 +285,7 @@ export type CrearPublicacionFormData = z.infer<typeof schemaCrearPublicacion>;
 export type EditarPublicacionFormData = z.infer<typeof schemaEditarPublicacion>;
 export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
+export type SolicitudTutoriaFormData = z.infer<typeof schemaSolicitudTutoria>;
 export type CertificacionFormData = z.infer<typeof schemaCertificacion>;
 export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
 
