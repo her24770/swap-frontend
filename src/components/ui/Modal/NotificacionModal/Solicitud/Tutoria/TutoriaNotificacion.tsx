@@ -72,7 +72,7 @@ export default function TarjetaNotificacionSolicitud({
   onAceptar,
   onRechazar,
 }: TarjetaNotificacionSolicitudProps) {
-  const t = useTranslations("Tutoria");
+  const t = useTranslations("tutorias");
 
   return (
     <article className="tutoria-notificacion">
@@ -81,7 +81,7 @@ export default function TarjetaNotificacionSolicitud({
           <UserCircle2 size={24} />
         </span>
         <div>
-          <p className="tutoria-notificacion__eyebrow">{t("solicitudTutoriaEyebrow")}</p>
+          <p className="tutoria-notificacion__eyebrow">{t("solicitud")}</p>
           <h3>{solicitud.alumno}</h3>
           {solicitud.tutoria && <p>{solicitud.tutoria}</p>}
         </div>

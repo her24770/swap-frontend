@@ -89,7 +89,7 @@ export default function ModalSolicitudTutoria({
   onSubmit,
   tituloTutoria,
 }: ModalSolicitudTutoriaProps) {
-  const t = useTranslations("Tutoria");
+  const t = useTranslations("tutorias.formulario");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
 
@@ -135,7 +135,7 @@ export default function ModalSolicitudTutoria({
         <header className="solicitud-tutoria__header">
           <div>
             <p className="solicitud-tutoria__eyebrow">{t("nuevaSolicitud")}</p>
-            <h2 id={titleId}>{t("solicitarTutoria")}</h2>
+            <h2 id={titleId}>{t("titulo")}</h2>
             {tituloTutoria && <p>{tituloTutoria}</p>}
           </div>
           <button
@@ -175,7 +175,7 @@ export default function ModalSolicitudTutoria({
           
           <FormInput
             type="text"
-            label={t("lugarEnlace")}
+            label={t("lugar")}
             icon={MapPin}
             placeholder={t("placeholderLugar")}
             error={errors.lugar?.message}
