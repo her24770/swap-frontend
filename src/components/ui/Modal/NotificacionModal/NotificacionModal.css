@@ -74,6 +74,58 @@
   color: var(--swap-primary-text-color);
 }
 
+/* ── Toggle notificaciones / solicitudes ─────────────────────────────────── */
+
+.notif-modal__tabs {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--swap-primary-border-color);
+  padding: 0 0.5rem;
+}
+
+.notif-modal__tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.625rem 0.375rem;
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--swap-tertiary-text-color);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.notif-modal__tab:hover {
+  color: var(--swap-primary-text-color);
+}
+
+.notif-modal__tab--active {
+  color: var(--swap-primary-color);
+  border-bottom-color: var(--swap-primary-color);
+  font-weight: 600;
+}
+
+.notif-modal__tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.3rem;
+  border-radius: 9999px;
+  background-color: var(--swap-primary-color);
+  color: var(--swap-primary-background);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
 /* ── Badge no leídas ─────────────────────────────────────────────────────── */
 
 .notif-modal__unread-count {
