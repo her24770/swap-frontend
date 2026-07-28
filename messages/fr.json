@@ -20,11 +20,11 @@
 			"mensajes": "Messages",
 			"guardados": "Enregistrés"
 		},
-		"settings":{
-			"settings" : "Paramètres de l'application",
-			"theme" : "Thème",
-			"themeDesc" : "Basculer entre le mode clair et sombre",
-			"language" : "Langue",
+		"settings": {
+			"settings": "Paramètres de l'application",
+			"theme": "Thème",
+			"themeDesc": "Basculer entre le mode clair et sombre",
+			"language": "Langue",
 			"languageDesc": "Sélectionnez votre langue préférée"
 		}
 	},
@@ -167,7 +167,7 @@
 		"tema": "Sujet",
 		"rechazar": "Refuser",
 		"aceptar": "Accepter",
-		"formulario":{
+		"formulario": {
 			"nuevaSolicitud": "Nouvelle demande de tutorat",
 			"titulo": "Demande de tutorat",
 			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
@@ -178,8 +178,7 @@
 			"tema": "Sujet",
 			"enviarSolicitud": "Envoyer la demande",
 			"placeholderTema": "Décrivez le sujet de la séance de tutorat",
-			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
-
+			"placeholderLugar": "E.g. Plaza Paiz, UVG"
 		}
 	},
 	"descubre": {
@@ -187,11 +186,11 @@
 		"placeholderTitle": "Découvrir",
 		"placeholderDescription": "Page de découverte des publications — À venir"
 	},
-	"seccion":{
+	"seccion": {
 		"reciente": "Publication récente",
-		"recomendado" : "Publication recommandée", 
-		"explorar" : "Explorer plus",
-		"ads" : "Publicités",
+		"recomendado": "Publication recommandée",
+		"explorar": "Explorer plus",
+		"ads": "Publicités",
 		"populares": "Publications Populaires",
 		"tutores": "Tuteurs",
 		"personalizedRecommendationsButton": "Recommandés pour vous",
@@ -352,7 +351,7 @@
 		"actions": {
 			"newPublication": "Nouvelle publication",
 			"changeAd": "Changer l'annonce",
-			"createAd":"Nouvelle annonce",
+			"createAd": "Nouvelle annonce",
 			"editAd": "Edit ad",
 			"editSchedule": "Modifier l'horaire",
 			"newPostMaterial": "Nouveau matériel",
@@ -407,7 +406,7 @@
 			"3": "Réservé",
 			"4": "Vendu",
 			"5": "Envoyé",
-			"6": "Payé", 
+			"6": "Payé",
 			"7": "Accepté",
 			"8": "Inactif",
 			"9": "Annulé",
@@ -637,7 +636,7 @@
 		"agreement": {
 			"notes": "Observations",
 			"accept": "Accepter",
-			"sendNew": "Envoyer une nouvelle",
+			"sendNew": "Faire une contre-offre",
 			"reject": "Refuser",
 			"pendingResponse": "Votre proposition d'accord est en attente de réponse.",
 			"markCompleted": "Marquer comme terminé"

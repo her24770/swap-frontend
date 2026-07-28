@@ -23,9 +23,17 @@ export interface SolicitudAcuerdoFormData {
   observaciones: string;
 }
 
+export interface AcuerdoInicial {
+  id_acuerdo: number;
+  fecha_entrega: string;
+  lugar_entrega: string;
+  observaciones: string;
+}
+
 interface SolicitudAcuerdoModalProps {
   isOpen?: boolean;
   publicacion: PublicacionAcuerdo;
+  acuerdoInicial?: AcuerdoInicial;
   onClose: () => void;
   onSubmit: (data: SolicitudAcuerdoFormData) => void | Promise<void>;
   isSaving?: boolean;
@@ -41,6 +49,7 @@ function getFechaMinima(): string {
 export default function SolicitudAcuerdoModal({
   isOpen = true,
   publicacion,
+  acuerdoInicial,
   onClose,
   onSubmit,
   isSaving = false,
@@ -55,14 +64,23 @@ export default function SolicitudAcuerdoModal({
 
   //Resetea el formulario cada vez que se abre
   useEffect(() => {
-    if (isOpen) {
+    if(!isOpen) return;
+    if(acuerdoInicial){
+      const fechaAcuerdo = new Date(acuerdoInicial.fecha_entrega);
+
+      setLugar(acuerdoInicial.lugar_entrega);
+      setFecha(fechaAcuerdo.toISOString().split("T")[0]);
+      setHora(fechaAcuerdo.toTimeString().slice(0, 5));
+      setDetalles(acuerdoInicial.observaciones);
+    }else {
       setLugar("");
       setFecha("");
       setHora("");
       setDetalles("");
       setErrores({});
     }
-  }, [isOpen]);
+    setErrores({});
+  }, [isOpen, acuerdoInicial]);
 
   if (!isOpen) return null;
 

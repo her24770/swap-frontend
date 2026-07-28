@@ -49,13 +49,13 @@ export default function Chatprincipal({
     acuerdo
     && acuerdo.estadoRel?.estado === "pendiente"
     && idUsuarioActual != null
-    && acuerdo.id_usuario !== idUsuarioActual,
+    && acuerdo.id_ofertante !== idUsuarioActual,
   );
   const esPropuestaEnviada = Boolean(
     acuerdo
     && acuerdo.estadoRel?.estado === "pendiente"
     && idUsuarioActual != null
-    && acuerdo.id_usuario === idUsuarioActual,
+    && acuerdo.id_ofertante === idUsuarioActual,
   );
   const esAcuerdoActivo = Boolean(acuerdo && acuerdo.estadoRel?.estado === "activo");
 

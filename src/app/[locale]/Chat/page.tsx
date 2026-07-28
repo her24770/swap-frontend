@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import ChatPrincipal from "../../../components/Chat/ChatPrincipal/ChatPrincipal";
 import ChatSidebar from "../../../components/Chat/ChatSidebar/chatsidebar";
 import SolicitudAcuerdoModal, {
+  PublicacionAcuerdo,
   type SolicitudAcuerdoFormData,
 } from "../../../components/ui/Modal/SolicitudAcuerdo/SolicitudAcuerdoModal";
 import { acuerdoService } from "../../../services/acuerdoService";
@@ -16,7 +17,9 @@ import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, PublicacionChatResumen, TabMensajes } from "../../../types/chat";
+import { useConversacionPublicacionStore } from "../../../store/conversacionPublicacionStore";
 import "./ChatPage.css";
+import { publicacionService } from "../../../services/publicacionService";
 
 // NOTA: no hay (todavia) una regla real de negocio para distinguir conversaciones
 // de "ventas" vs "compras" (ningun ticket del sprint la define), asi que los tabs
@@ -50,13 +53,20 @@ export default function ChatPage() {
   const [mostrarChatMovil, setMostrarChatMovil] = useState(false);
   const [conversacionesState, setConversacionesState] =
     useState<ConversacionPreview[]>([]);
-  // Acuerdos reales por conversacion (ST-H22-4): id_conversacion -> lista de acuerdos
-  const [acuerdosPorConversacion, setAcuerdosPorConversacion] =
+    // Acuerdos reales por conversacion (ST-H22-4): id_conversacion -> lista de acuerdos
+    const [acuerdosPorConversacion, setAcuerdosPorConversacion] =
     useState<Record<number, AcuerdoHistorial[]>>({});
   const [mensajesPorConversacion, setMensajesPorConversacion] =
     useState<Record<number, Mensaje[]>>({});
   const [modalSolicitudAbierto, setModalSolicitudAbierto] = useState(false);
   const [enviandoSolicitud, setEnviandoSolicitud] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [acuerdoEditando, setAcuerdoEditando] = useState<AcuerdoHistorial | null>(null);
+  const inicioConversacionEjecutado = useRef(false);
+  // Relacionar conversacion con publicacion con persistencia en Zustand
+  const guardarRelacion = useConversacionPublicacionStore((state) => state.guardarRelacion)
+  const obtenerPublicacion = useConversacionPublicacionStore((state) => state.obtenerPublicacion);
+  const [publicacionGuardada, setPublicacionGuardada] = useState< PublicacionAcuerdo| null>(null);
 
   // Carga el listado real de conversaciones del usuario (GET /api/conversacion/conversaciones,
   // ST-H44-1/SWAP-338). Espera a que los estados esten disponibles para poder marcar
@@ -107,6 +117,11 @@ export default function ChatPage() {
       return;
     }
 
+    if (inicioConversacionEjecutado.current) {
+      return;
+    }
+    inicioConversacionEjecutado.current = true;
+
     const postId = searchParams.get("postId");
     const postTitle = searchParams.get("postTitle");
     const postPrice = searchParams.get("postPrice");
@@ -125,12 +140,19 @@ export default function ChatPage() {
         tipo: (postType as PublicacionChatResumen["tipo"]) || "venta",
       }
       : undefined;
-
-    conversacionService.iniciarConversacion(Number(sellerId), message, idEstadoPendiente)
+      
+      conversacionService.iniciarConversacion(Number(sellerId), message, idEstadoPendiente)
       .then(({ conversacion }) => {
         const conversacionConPublicacion = publicacion
           ? { ...conversacion, publicacion }
           : conversacion;
+
+        if (publicacion) {
+          guardarRelacion(
+            conversacion.id_conversacion,
+            publicacion.id
+          );
+        }
 
         setConversacionesState((prev) => {
           const existingIndex = prev.findIndex(
@@ -148,9 +170,11 @@ export default function ChatPage() {
         setMostrarChatMovil(true);
 
         // Limpia los query params para que un refresh no vuelva a enviar el mensaje.
+        inicioConversacionEjecutado.current = false;
         router.replace(pathname);
       })
       .catch((err) => {
+        inicioConversacionEjecutado.current = false;
         const mensaje = (err as { message?: string })?.message ?? t("system.agreementActionError");
         agregarNotificacion({ tipo: "error", mensaje });
         router.replace(pathname);
@@ -403,13 +427,26 @@ export default function ChatPage() {
     if (!selected) return;
     setEnviandoSolicitud(true);
     try {
-      await acuerdoService.crearSolicitud(data.id_publicacion, {
-        fecha_entrega: data.fecha_entrega,
-        lugar_entrega: data.lugar_entrega,
-        observaciones: data.observaciones,
-        id_conversacion: selected.id_conversacion,
-      });
+      if(modoEdicion && acuerdoEditando){
+          await acuerdoService.editarSolicitud(acuerdoEditando.id_acuerdo, {
+          fecha_entrega: data.fecha_entrega,
+          lugar_entrega: data.lugar_entrega,
+          observaciones: data.observaciones,
+        });
+      } else{
+        await acuerdoService.crearSolicitud(data.id_publicacion, {
+          fecha_entrega: data.fecha_entrega,
+          lugar_entrega: data.lugar_entrega,
+          observaciones: data.observaciones,
+          id_conversacion: selected.id_conversacion,
+        });
+      }
+      
       setModalSolicitudAbierto(false);
+      setModoEdicion(false);
+      setAcuerdoEditando(null);
+      setPublicacionGuardada(null);
+
       await cargarAcuerdosDeConversacion(selected.id_conversacion);
       setConversacionesState((prev) => prev.map((conversacion) => (
         conversacion.id_conversacion === selected.id_conversacion
@@ -425,6 +462,14 @@ export default function ChatPage() {
   };
 
   const publicacionParaNuevaSolicitud = useMemo(() => {
+    if (selected?.publicacion) {
+      return {
+          id_publicacion: selected.publicacion.id,
+          titulo: selected.publicacion.titulo,
+          precio: selected.publicacion.precio,
+      };
+    }
+
     const ultimoAcuerdo = acuerdosSeleccionados[0];
     if (!ultimoAcuerdo) return null;
     return {
@@ -434,14 +479,43 @@ export default function ChatPage() {
     };
   }, [acuerdosSeleccionados]);
 
-  const handleAbrirCrearEncuentro = () => {
+  const handleAbrirCrearEncuentro = async () => {
     if (!publicacionParaNuevaSolicitud) {
+      const idPublicacion = selected
+        ? obtenerPublicacion(selected.id_conversacion)
+        : undefined;
       // No hay publicacion asociada a esta conversacion todavia: sin un
       // selector de publicacion (fuera del alcance de este sprint) no
       // podemos saber sobre que publicacion crear el acuerdo.
-      agregarNotificacion({ tipo: "info", mensaje: t("system.noPublicationForAgreement") });
-      return;
+      if(!idPublicacion){
+        agregarNotificacion({ tipo: "info", mensaje: t("system.noPublicationForAgreement") });
+        return;
+      }
+
+      try {
+        const publicacion = await publicacionService.getById(idPublicacion);
+        setPublicacionGuardada({
+          id_publicacion: publicacion.id_publicacion,
+          titulo: publicacion.titulo,
+          precio: publicacion.precio,
+        });
+      } catch {
+        agregarNotificacion({
+          tipo: "info",
+          mensaje: t("system.noPublicationForAgreement"),
+        });
+        return;
+      }
     }
+
+    if (acuerdo && acuerdo.estadoRel?.estado === "pendiente") {
+      setModoEdicion(true);
+      setAcuerdoEditando(acuerdo);
+    } else {
+      setModoEdicion(false);
+      setAcuerdoEditando(null);
+    }
+
     setModalSolicitudAbierto(true);
   };
 
@@ -481,11 +555,12 @@ export default function ChatPage() {
         </div>
       )}
 
-      {modalSolicitudAbierto && publicacionParaNuevaSolicitud && (
+      {modalSolicitudAbierto && (publicacionParaNuevaSolicitud || publicacionGuardada) && (
         <SolicitudAcuerdoModal
           isOpen={modalSolicitudAbierto}
-          publicacion={publicacionParaNuevaSolicitud}
-          onClose={() => setModalSolicitudAbierto(false)}
+          publicacion={publicacionParaNuevaSolicitud ?? publicacionGuardada!}
+          acuerdoInicial={acuerdoEditando}
+          onClose={() => {setModalSolicitudAbierto(false); setModoEdicion(false); setAcuerdoEditando(null); setPublicacionGuardada(null)}}
           onSubmit={handleEnviarSolicitud}
           isSaving={enviandoSolicitud}
         />

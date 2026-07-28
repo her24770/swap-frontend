@@ -6,6 +6,7 @@ export type TipoCompraHistorial = "producto" | "material" | "negocio";
 export interface AcuerdoHistorial {
   id_acuerdo: number;
   id_usuario: number;
+  id_ofertante: number;
   id_publicacion: number;
   fecha_entrega: string;
   lugar_entrega: string;
