@@ -57,6 +57,8 @@ export default function ChatPage() {
     useState<Record<number, Mensaje[]>>({});
   const [modalSolicitudAbierto, setModalSolicitudAbierto] = useState(false);
   const [enviandoSolicitud, setEnviandoSolicitud] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [acuerdoEditando, setAcuerdoEditando] = useState<AcuerdoHistorial | null>(null);
 
   // Carga el listado real de conversaciones del usuario (GET /api/conversacion/conversaciones,
   // ST-H44-1/SWAP-338). Espera a que los estados esten disponibles para poder marcar
@@ -403,13 +405,25 @@ export default function ChatPage() {
     if (!selected) return;
     setEnviandoSolicitud(true);
     try {
-      await acuerdoService.crearSolicitud(data.id_publicacion, {
-        fecha_entrega: data.fecha_entrega,
-        lugar_entrega: data.lugar_entrega,
-        observaciones: data.observaciones,
-        id_conversacion: selected.id_conversacion,
-      });
+      if(modoEdicion && acuerdoEditando){
+          await acuerdoService.editarSolicitud(acuerdoEditando.id_acuerdo, {
+          fecha_entrega: data.fecha_entrega,
+          lugar_entrega: data.lugar_entrega,
+          observaciones: data.observaciones,
+        });
+      } else{
+        await acuerdoService.crearSolicitud(data.id_publicacion, {
+          fecha_entrega: data.fecha_entrega,
+          lugar_entrega: data.lugar_entrega,
+          observaciones: data.observaciones,
+          id_conversacion: selected.id_conversacion,
+        });
+      }
+      
       setModalSolicitudAbierto(false);
+      setModoEdicion(false);
+      setAcuerdoEditando(null);
+
       await cargarAcuerdosDeConversacion(selected.id_conversacion);
       setConversacionesState((prev) => prev.map((conversacion) => (
         conversacion.id_conversacion === selected.id_conversacion
@@ -442,6 +456,15 @@ export default function ChatPage() {
       agregarNotificacion({ tipo: "info", mensaje: t("system.noPublicationForAgreement") });
       return;
     }
+
+    if (acuerdo && acuerdo.estadoRel?.estado === "pendiente") {
+      setModoEdicion(true);
+      setAcuerdoEditando(acuerdo);
+    } else {
+      setModoEdicion(false);
+      setAcuerdoEditando(null);
+    }
+
     setModalSolicitudAbierto(true);
   };
 
@@ -485,7 +508,8 @@ export default function ChatPage() {
         <SolicitudAcuerdoModal
           isOpen={modalSolicitudAbierto}
           publicacion={publicacionParaNuevaSolicitud}
-          onClose={() => setModalSolicitudAbierto(false)}
+          acuerdoInicial={acuerdoEditando}
+          onClose={() => {setModalSolicitudAbierto(false); setModoEdicion(false); setAcuerdoEditando(null)}}
           onSubmit={handleEnviarSolicitud}
           isSaving={enviandoSolicitud}
         />
