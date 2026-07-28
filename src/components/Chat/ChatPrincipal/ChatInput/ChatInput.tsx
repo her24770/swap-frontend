@@ -2,17 +2,16 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Smile, Paperclip, Send } from "lucide-react";
+import { Smile, Send } from "lucide-react";
 import "./ChatInput.css";
 
 interface ChatInputProps {
   onEnviar: (texto: string) => void;
-  onEnviarImagen?: (archivo: File) => void;
 }
 
 const EMOJIS = ["😀", "😂", "😍", "🥳", "🤔", "😭", "👍", "👌", "❤️", "👏"];
 
-export default function ChatInput({ onEnviar, onEnviarImagen }: ChatInputProps) {
+export default function ChatInput({ onEnviar }: ChatInputProps) {
   const t = useTranslations("chat.input");
   const [texto, setTexto] = useState("");
   const [mostrarEmojis, setMostrarEmojis] = useState(false);
@@ -62,9 +61,6 @@ export default function ChatInput({ onEnviar, onEnviarImagen }: ChatInputProps) 
         onChange={(e) => setTexto(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleEnviar()}
       />
-      <button type="button" className="chat-input__icon-btn" aria-label={t("attach")}>
-        <Paperclip size={18} />
-      </button>
       <button
         type="button"
         className="chat-input__icon-btn chat-input__icon-btn--send"
