@@ -1,9 +1,9 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { Menu, UserCircle2, LogOut, Settings, Bell } from "lucide-react";
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
@@ -23,12 +23,14 @@ interface NavbarProps {
 
 export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const t = useTranslations('layout.navbar');
+  const locale = useLocale();
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifWrapperRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const { logout } = useAuth();
 
   const bellRef = useRef<HTMLButtonElement>(null);
@@ -161,6 +163,10 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                     prev.map((n) => (n.id === id ? { ...n, leida: true } : n)),
                   );
                   notificacionService.marcarLeida(id).catch(() => {});
+                }}
+                onAbrirChat={() => {
+                  setNotifOpen(false);
+                  router.push(`/${locale}/Chat`);
                 }}
                 onMarcarTodasLeidas={() => {
                   const idsNoLeidas = notificaciones.filter((n) => !n.leida).map((n) => n.id);

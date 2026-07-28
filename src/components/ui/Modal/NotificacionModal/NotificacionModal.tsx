@@ -18,6 +18,7 @@ interface NotificacionModalProps {
   onDismiss: (id: number) => void;
   onMarcarTodasLeidas?: () => void;
   onMarcarLeida?: (id: number) => void;
+  onAbrirChat?: (id: number) => void;
   onAceptarSolicitud?: (id: number) => void;
   onRechazarSolicitud?: (id: number) => void;
 }
@@ -36,6 +37,7 @@ export default function NotificacionModal({
   onDismiss,
   onMarcarTodasLeidas,
   onMarcarLeida,
+  onAbrirChat,
   onAceptarSolicitud,
   onRechazarSolicitud,
 }: NotificacionModalProps) {
@@ -161,6 +163,7 @@ export default function NotificacionModal({
                 notificacion={n}
                 onDismiss={onDismiss}
                 onMarcarLeida={onMarcarLeida}
+                onAbrirChat={onAbrirChat}
               />
             ))}
           </div>

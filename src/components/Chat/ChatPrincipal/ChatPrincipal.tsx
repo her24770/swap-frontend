@@ -230,7 +230,7 @@ export default function Chatprincipal({
         )}
       </div>
 
-      <ChatInput onEnviar={onEnviar} onEnviarImagen={onEnviarImagen} />
+      <ChatInput onEnviar={onEnviar} />
     </div>
   );
 }
