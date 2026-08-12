@@ -1,14 +1,24 @@
-import {Star } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Flag, Star } from "lucide-react";
+import ReporteModal from "../../../../ui/Modal/Reporte/ReporteModal";
+import { useAuthStore } from "../../../../../store/authStore";
 import "./CommentCard.css";
 
 interface CommentCardProps {
+  commentId: number;
+  authorId?: number;
   authorName: string;
   timeAgo: string;
   rating: number;
   comment: string;
 }
 
-export default function CommentCard({ authorName, timeAgo, rating, comment }: CommentCardProps) {
+export default function CommentCard({ commentId, authorId, authorName, timeAgo, rating, comment }: CommentCardProps) {
+  const [reporteAbierto, setReporteAbierto] = useState(false);
+  const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
+  const esComentarioPropio = Boolean(idUsuarioActual != null && authorId != null && idUsuarioActual === authorId);
   const initials = authorName
     .split(" ")
     .map((n) => n[0])
@@ -38,6 +48,25 @@ export default function CommentCard({ authorName, timeAgo, rating, comment }: Co
         </div>
       </div>
       <p className="comment-item__text">"{comment}"</p>
+      {!esComentarioPropio && (
+        <>
+          <button
+            type="button"
+            className="comment-item__report"
+            onClick={() => setReporteAbierto(true)}
+            aria-label="Reportar comentario"
+          >
+            <Flag size={14} />
+            Reportar
+          </button>
+          <ReporteModal
+            isOpen={reporteAbierto}
+            tipoObjetivo="comentario"
+            idObjetivo={commentId}
+            onClose={() => setReporteAbierto(false)}
+          />
+        </>
+      )}
     </article>
   );
 }

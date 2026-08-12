@@ -11,6 +11,7 @@ export interface Resena {
 
 
 export interface EmisorResena {
+    id_usuario: number;
     nombre: string;
     url_foto_perfil: string;
 }

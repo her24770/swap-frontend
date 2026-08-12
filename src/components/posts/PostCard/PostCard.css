@@ -162,7 +162,8 @@
 
 /* ── Guardar button ─────────────────────────────────────────────────────────── */
 
-.post-card__save-button {
+.post-card__save-button,
+.post-card__report-button {
   width: 2rem;
   height: 2rem;
   padding: 0;
@@ -177,7 +178,8 @@
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.post-card__save-button:hover {
+.post-card__save-button:hover,
+.post-card__report-button:hover {
   transform: scale(1.1);
   color: var(--swap-primary-color, #10b981);
 }

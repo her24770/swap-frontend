@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2} from "lucide-react";
+import { Bookmark, Camera, ChevronRight, Flag, Heart, Loader2, Pin, PinOff, SquarePen, Trash2} from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
+import ReporteModal from "../../ui/Modal/Reporte/ReporteModal";
 import { imagenService } from "../../../services/imagenService";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
 import { useGuardados } from "../../../hooks/useGuardados";
@@ -75,6 +76,7 @@ export default function PostCard({
   const [isSaving, setIsSaving] = useState(false);
   const [isPinning, setIsPinning] = useState(false);
   const [pinned, setPinned] = useState(isPinned);
+  const [reportePublicacionAbierto, setReportePublicacionAbierto] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const guardada = isSaved ?? (publicacionId !== undefined && guardados.isSaved(publicacionId));
@@ -350,6 +352,19 @@ export default function PostCard({
               </button>
             )}
 
+            {/* Report button */}
+            {publicacionId !== undefined && (
+              <button
+                type="button"
+                className="post-card__report-button"
+                onClick={() => setReportePublicacionAbierto(true)}
+                aria-label="Reportar publicación"
+                title="Reportar publicación"
+              >
+                <Flag size={20} strokeWidth={2} />
+              </button>
+            )}
+
             {/* Save button */}
             {publicacionId !== undefined && (
               <button
@@ -370,6 +385,14 @@ export default function PostCard({
           </div>
         </footer>
       </div>
+      {publicacionId !== undefined && (
+        <ReporteModal
+          isOpen={reportePublicacionAbierto}
+          tipoObjetivo="publicacion"
+          idObjetivo={publicacionId}
+          onClose={() => setReportePublicacionAbierto(false)}
+        />
+      )}
     </article>
   );
 }

@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Camera, ChevronRight, Loader2 } from "lucide-react";
+import { Camera, ChevronRight, Flag, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { imagenService } from "../../../services/imagenService";
 import { useUIStore } from "../../../store/uiStore";
+import ReporteModal from "../../ui/Modal/Reporte/ReporteModal";
 import "../../ui/Button/Button.css";
 import "./PostRes.css";
 import PostImage from "../PostCard/PostImage/PostImage";
@@ -22,6 +23,7 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
 
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
+  const [reportePublicacionAbierto, setReportePublicacionAbierto] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -128,8 +130,27 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
           >
             {t("actions.details")} <ChevronRight size={14} />
           </button>
+          {publicacionId !== undefined && (
+            <button
+              type="button"
+              className="post-res-card__report-button"
+              onClick={() => setReportePublicacionAbierto(true)}
+              aria-label="Reportar publicación"
+              title="Reportar publicación"
+            >
+              <Flag size={18} strokeWidth={2} />
+            </button>
+          )}
         </div>
       </div>
+      {publicacionId !== undefined && (
+        <ReporteModal
+          isOpen={reportePublicacionAbierto}
+          tipoObjetivo="publicacion"
+          idObjetivo={publicacionId}
+          onClose={() => setReportePublicacionAbierto(false)}
+        />
+      )}
     </article>
   );
 }
