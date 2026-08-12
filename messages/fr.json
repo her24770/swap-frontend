@@ -415,6 +415,12 @@
 	},
 	"comments": {
 		"empty": "Pas encore de commentaires.",
+		"actions": {
+			"edit": "Modifier le commentaire",
+			"delete": "Supprimer le commentaire",
+			"editPrompt": "Modifiez votre commentaire :",
+			"deleteConfirm": "Voulez-vous vraiment supprimer ce commentaire ?"
+		},
 		"form": {
 			"starsAria": "{count} étoiles",
 			"placeholder": "Laissez un commentaire à {name}",
