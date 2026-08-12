@@ -99,27 +99,5 @@
 
 .post-res-card__footer {
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 0.375rem;
-}
-
-.post-res-card__report-button {
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--swap-primary-text-color, #000);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm, 4px);
-  cursor: pointer;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.post-res-card__report-button:hover {
-  transform: scale(1.1);
-  color: var(--swap-primary-color, #10b981);
 }
