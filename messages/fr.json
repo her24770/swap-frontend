@@ -419,7 +419,8 @@
 			"starsAria": "{count} étoiles",
 			"placeholder": "Laissez un commentaire à {name}",
 			"sendAnonymous": "Envoyer anonymement"
-		}
+		},
+		"title": "Commentaires et avis"
 	},
 	"profileHeader": {
 		"toast": {

@@ -397,7 +397,6 @@ export default function VistaVendedor({
         )}
       </section>
 
-      <hr className="perfil-page__divider" />
 
       {/* Modal crear publicación */}
       {canCreatePublication && crearOpen && (
