@@ -5,6 +5,7 @@ import CommentCard from "./CommentCard/CommentCard";
 import CommentForm from "./CommentForm/CommentForm";
 import "./CommentSection.css";
 import type { Resena} from "../../../../types/resena";
+import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
 
 
 interface CommentSectionProps {
@@ -22,36 +23,44 @@ export default function CommentSection({
   onSuccessSubmit, 
   onCancel 
 }: CommentSectionProps) {
+
   const t = useTranslations('comments');
+  const { isOwnProfile } = usePerspectivaInterna();
 
   return (
-    <div className="comment-section">
-      {/* Formulario izquierda */}
-      <div className="comment-section__form-col">
-        <CommentForm
-          targetName={targetName}
-          idReceptor={idReceptor} 
-          onSuccess={onSuccessSubmit} 
-          onCancel={onCancel}
-        />
-      </div>
-
-      <div className="comment-section__list-col">
-        <div className="comment-section__list">
-          {comments.map((c) => (
-            <CommentCard
-              key={c.id_resena}
-              authorName={c.emisor.nombre}
-              timeAgo={c.fecha_resena}
-              rating={c.calificacion}
-              comment={c.contenido}
+    <>
+      <h2 className="perfil-page__catalog-bar-title">{t("title")}</h2>
+      <div className="comment-section">
+        
+        {/* Mueve la condición aquí para no renderizar la columna en el DOM */}
+        {!isOwnProfile && (
+          <div className="comment-section__form-col">
+            <CommentForm
+              targetName={targetName}
+              idReceptor={idReceptor} 
+              onSuccess={onSuccessSubmit} 
+              onCancel={onCancel}
             />
-          ))}
-          {comments.length === 0 && (
-            <p className="comment-section__empty">{t('empty')}</p>
-          )}
+          </div>
+        )}
+
+        <div className="comment-section__list-col">
+          <div className="comment-section__list">
+            {comments.map((c) => (
+              <CommentCard
+                key={c.id_resena}
+                authorName={c.emisor.nombre}
+                timeAgo={c.fecha_resena}
+                rating={c.calificacion}
+                comment={c.contenido}
+              />
+            ))}
+            {comments.length === 0 && (
+              <p className="comment-section__empty">{t('empty')}</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

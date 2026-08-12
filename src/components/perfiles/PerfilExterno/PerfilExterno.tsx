@@ -140,7 +140,6 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                 <hr className="perfil-page__divider" />
 
                 <section className="perfil-page__section">
-                    <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
                     <CommentSection
                         targetName={user.name}
                         idReceptor={user.id_usuario}

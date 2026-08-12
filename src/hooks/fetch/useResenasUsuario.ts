@@ -20,18 +20,16 @@ export function useResenas(idUsuario: number, tipoResena: string) {
         setLoading(true);
         setError(null);
         
-        // Consumimos directamente tu método del servicio de frontend
         const result = await service.obtenerResenasUsuario(idUsuario, tipoResena);
         setData(result);
         } catch (err: any) {
-        console.error("Error en useResenas:", err);
+        console.error("Error al obtener reseñas del usuario:", err);
         setError(err.message || "Error al cargar las reseñas del estudiante");
         } finally {
         setLoading(false);
         }
     }, [idUsuario, tipoResena, service]);
 
-    // Hook de efecto que reacciona si cambia el usuario o el rol del perfil
     useEffect(() => {
         fetchResenas();
     }, [idUsuario, tipoResena, fetchResenas]);
@@ -40,6 +38,6 @@ export function useResenas(idUsuario: number, tipoResena: string) {
         data, 
         loading, 
         error, 
-        refetch: fetchResenas // Permite al componente forzar una recarga manual tras guardar un comentario
+        refetch: fetchResenas 
     };
 }
