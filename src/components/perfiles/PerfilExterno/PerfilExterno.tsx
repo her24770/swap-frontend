@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Flag } from "lucide-react";
 import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfileHeader";
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
 import MiniChatWidget from "../../Chat/MiniChatWidget/MiniChatWidget";
 import EnviarMensajeButton from "./EnviarMensajeButton/EnviarMensajeButton";
+import ReporteModal from "../../ui/Modal/Reporte/ReporteModal";
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
 import { getPerfilPublico } from "../../../services/perfilService";
@@ -34,6 +36,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
     const [mode, setMode] = useState<PerfilExternoMode>(initialMode);
     const [user, setUser] = useState<UserProfileData | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
     const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, mode);
 
     const modes = useMemo(
@@ -111,11 +114,21 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         ))}
                     </div>
 
-                    <EnviarMensajeButton
-                        userId={user.id_usuario}
-                        userName={user.name}
-                        userImageUrl={user.imageUrl}
-                    />
+                    <div className="perfil-page__external-actions">
+                        <EnviarMensajeButton
+                            userId={user.id_usuario}
+                            userName={user.name}
+                            userImageUrl={user.imageUrl}
+                        />
+                        <button
+                            type="button"
+                            className="perfil-page__secondary-btn"
+                            onClick={() => setReporteUsuarioAbierto(true)}
+                        >
+                            <Flag size={16} />
+                            Reportar
+                        </button>
+                    </div>
                 </div>
 
                 <hr className="perfil-page__divider" />
@@ -154,11 +167,19 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
         </PerspectivaInternaProvider>
 
         {user && (
-            <MiniChatWidget
-                idUsuario={user.id_usuario}
-                nombre={user.name}
-                avatarUrl={user.imageUrl}
-            />
+            <>
+                <MiniChatWidget
+                    idUsuario={user.id_usuario}
+                    nombre={user.name}
+                    avatarUrl={user.imageUrl}
+                />
+                <ReporteModal
+                    isOpen={reporteUsuarioAbierto}
+                    tipoObjetivo="usuario"
+                    idObjetivo={user.id_usuario}
+                    onClose={() => setReporteUsuarioAbierto(false)}
+                />
+            </>
         )}
         </>
     );

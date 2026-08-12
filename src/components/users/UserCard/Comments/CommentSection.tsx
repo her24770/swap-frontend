@@ -41,6 +41,8 @@ export default function CommentSection({
           {comments.map((c) => (
             <CommentCard
               key={c.id_resena}
+              commentId={c.id_resena}
+              authorId={c.emisor.id_usuario}
               authorName={c.emisor.nombre}
               timeAgo={c.fecha_resena}
               rating={c.calificacion}

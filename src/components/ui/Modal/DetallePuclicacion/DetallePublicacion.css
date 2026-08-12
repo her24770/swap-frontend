@@ -277,6 +277,21 @@
   transition: color 0.15s ease;
 }
 
+.post-modal__report {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-primary-border-color);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.post-modal__report:hover {
+  color: var(--swap-primary-color);
+}
+
 .post-modal__save:hover {
   color: var(--swap-primary-color);
 }
