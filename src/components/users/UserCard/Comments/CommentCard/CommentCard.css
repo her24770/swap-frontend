@@ -15,11 +15,19 @@
   align-items: flex-start;
 }
 
+.comment-item__author-name-stars{
+  display: flex;
+  flex-direction: row;
+  }
+
 .comment-item__author {
   display: flex;
   align-items: center;
   gap: 0.625rem;
 }
+
+
+
 
 .comment-item__avatar {
   width: 2.25rem;
@@ -55,10 +63,6 @@
   color: var(--swap-tertiary-text-color);
 }
 
-.comment-item__stars {
-  display: flex;
-  gap: 0.1rem;
-}
 
 .comment-item__star {
   font-size: 1rem;
@@ -75,4 +79,32 @@
   font-size: 0.875rem;
   color: var(--swap-primary-text-color);
   line-height: 1.5;
+}
+
+.comment-item__author-name-stars {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 70rem) {
+  .comment-item__author-name-stars {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.comment-item__stars {
+  display: flex;
+  align-items: center; 
+
+}
+
+
+
+
+.comment-item__actions {
+  display: flex;
+  gap: 0rem;
+
 }

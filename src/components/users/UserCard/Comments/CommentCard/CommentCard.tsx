@@ -1,5 +1,7 @@
-import {Star } from "lucide-react";
+import { SquarePen, Star, Trash2 } from "lucide-react";
 import "./CommentCard.css";
+import { useFormatter, useTranslations } from "next-intl";
+import { useResena } from "../../../../../hooks/useResena";
 
 interface CommentCardProps {
   authorName: string;
@@ -9,6 +11,17 @@ interface CommentCardProps {
 }
 
 export default function CommentCard({ authorName, timeAgo, rating, comment }: CommentCardProps) {
+  const { editarResenaExistente, eliminarResena, loading, error } = useResena();
+  const t = useTranslations('posts');
+
+  const onEditClick = () => {
+    console.log("Editar reseña");
+  };
+
+  const onDeleteClick = () => {
+    console.log("Eliminar reseña");
+  };
+
   const initials = authorName
     .split(" ")
     .map((n) => n[0])
@@ -22,19 +35,45 @@ export default function CommentCard({ authorName, timeAgo, rating, comment }: Co
         <div className="comment-item__author">
           <div className="comment-item__avatar">{initials}</div>
           <div className="comment-item__author-info">
-            <span className="comment-item__name">{authorName}</span>
+            <div className="comment-item__author-name-stars">
+              <span className="comment-item__name">{authorName}</span>
+              <span className="comment-item__stars">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={`comment-item__star${i < rating ? " comment-item__star--filled" : ""}`}
+                  >
+                    <Star size={16} fill={i < rating ? "currentColor" : "none"} />
+                  </span>
+                ))}
+              </span>
+            </div>
+
             <span className="comment-item__time">{timeAgo}</span>
           </div>
         </div>
-        <div className="comment-item__stars">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <span
-              key={i}
-              className={`comment-item__star${i < rating ? " comment-item__star--filled" : ""}`}
-            >
-              <Star size={16} fill={i < rating ? "currentColor" : "none"} />
-            </span>
-          ))}
+
+        {/* Acciones de edición y eliminación */}
+        <div className="comment-item__actions">
+          <button
+            type="button"
+            className="post-card__edit-button"
+            onClick={onEditClick}
+            aria-label={t("actions.edit")}
+            title={t("actions.edit")}
+          >
+            <SquarePen size={24} strokeWidth={2} />
+          </button>
+
+          <button
+            type="button"
+            className="post-card__delete-button"
+            onClick={onDeleteClick}
+            aria-label={t("actions.delete")}
+            title={t("actions.delete")}
+          >
+            <Trash2 size={24} strokeWidth={2} />
+          </button>
         </div>
       </div>
       <p className="comment-item__text">"{comment}"</p>
