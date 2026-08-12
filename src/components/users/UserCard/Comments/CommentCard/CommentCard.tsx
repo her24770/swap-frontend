@@ -1,25 +1,41 @@
 import { SquarePen, Star, Trash2 } from "lucide-react";
 import "./CommentCard.css";
-import { useFormatter, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useResena } from "../../../../../hooks/useResena";
 
 interface CommentCardProps {
+  idResena: number;
   authorName: string;
   timeAgo: string;
   rating: number;
   comment: string;
+  canManage: boolean;
+  onSuccess?: () => void | Promise<void>;
 }
 
-export default function CommentCard({ authorName, timeAgo, rating, comment }: CommentCardProps) {
+export default function CommentCard({
+  idResena,
+  authorName,
+  timeAgo,
+  rating,
+  comment,
+  canManage,
+  onSuccess,
+}: CommentCardProps) {
   const { editarResenaExistente, eliminarResena, loading, error } = useResena();
-  const t = useTranslations('posts');
+  const t = useTranslations('comments.actions');
 
-  const onEditClick = () => {
-    console.log("Editar reseña");
+  const onEditClick = async () => {
+    const contenido = window.prompt(t("editPrompt"), comment)?.trim();
+    if (!contenido || contenido === comment) return;
+
+    if (await editarResenaExistente(idResena, { contenido })) await onSuccess?.();
   };
 
-  const onDeleteClick = () => {
-    console.log("Eliminar reseña");
+  const onDeleteClick = async () => {
+    if (!window.confirm(t("deleteConfirm"))) return;
+
+    if (await eliminarResena(idResena)) await onSuccess?.();
   };
 
   const initials = authorName
@@ -53,30 +69,34 @@ export default function CommentCard({ authorName, timeAgo, rating, comment }: Co
           </div>
         </div>
 
-        {/* Acciones de edición y eliminación */}
-        <div className="comment-item__actions">
-          <button
-            type="button"
-            className="post-card__edit-button"
-            onClick={onEditClick}
-            aria-label={t("actions.edit")}
-            title={t("actions.edit")}
-          >
-            <SquarePen size={24} strokeWidth={2} />
-          </button>
+        {canManage && (
+          <div className="comment-item__actions">
+            <button
+              type="button"
+              className="post-card__edit-button"
+              onClick={onEditClick}
+              disabled={loading}
+              aria-label={t("edit")}
+              title={t("edit")}
+            >
+              <SquarePen size={24} strokeWidth={2} />
+            </button>
 
-          <button
-            type="button"
-            className="post-card__delete-button"
-            onClick={onDeleteClick}
-            aria-label={t("actions.delete")}
-            title={t("actions.delete")}
-          >
-            <Trash2 size={24} strokeWidth={2} />
-          </button>
-        </div>
+            <button
+              type="button"
+              className="post-card__delete-button"
+              onClick={onDeleteClick}
+              disabled={loading}
+              aria-label={t("delete")}
+              title={t("delete")}
+            >
+              <Trash2 size={24} strokeWidth={2} />
+            </button>
+          </div>
+        )}
       </div>
       <p className="comment-item__text">"{comment}"</p>
+      {error && <p className="comment-item__error" role="alert">{error}</p>}
     </article>
   );
 }

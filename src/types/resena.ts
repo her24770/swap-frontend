@@ -3,6 +3,7 @@ export interface Resena {
     contenido: string;
     calificacion: number;
     me_gusta: number;
+    id_emisor: number;
     emisor: EmisorResena;
     id_receptor: number;
     id_tipo_resena: number;
