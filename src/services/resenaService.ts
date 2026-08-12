@@ -20,6 +20,10 @@ export const resenaService = {
     async obtenerResenasUsuario(idUsuario: number, tipoResena: string): Promise<Resena[]> {
         const response = await apiClient.get<ApiResult<Resena[]>>(`/api/resenas/usuario/${idUsuario}?tipo=${tipoResena}`);
         return response.data;
+    },
+
+    async eliminarResena(idResena: number): Promise<void> {
+        await apiClient.delete(`/api/resenas/${idResena}`);
     }
 
 
