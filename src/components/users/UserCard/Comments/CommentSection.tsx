@@ -30,17 +30,28 @@ export default function CommentSection({
   const currentUserId = useAuthStore((state) => state.usuario?.id_usuario);
 
   return (
-    <>
-      <h2 className="perfil-page__catalog-bar-title">{t("title")}</h2>
-      <div className="comment-section">
-        
-        {!isOwnProfile && (
-          <div className="comment-section__form-col">
-            <CommentForm
-              targetName={targetName}
-              idReceptor={idReceptor} 
-              onSuccess={onSuccessSubmit} 
-              onCancel={onCancel}
+    <div className="comment-section">
+      {/* Formulario izquierda */}
+      <div className="comment-section__form-col">
+        <CommentForm
+          targetName={targetName}
+          idReceptor={idReceptor} 
+          onSuccess={onSuccessSubmit} 
+          onCancel={onCancel}
+        />
+      </div>
+
+      <div className="comment-section__list-col">
+        <div className="comment-section__list">
+          {comments.map((c) => (
+            <CommentCard
+              key={c.id_resena}
+              commentId={c.id_resena}
+              authorId={c.emisor.id_usuario}
+              authorName={c.emisor.nombre}
+              timeAgo={c.fecha_resena}
+              rating={c.calificacion}
+              comment={c.contenido}
             />
           </div>
         )}

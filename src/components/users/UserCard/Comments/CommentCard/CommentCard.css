@@ -81,30 +81,21 @@
   line-height: 1.5;
 }
 
-.comment-item__author-name-stars {
-  display: flex;
-  flex-direction: column;
+.comment-item__report {
+  align-self: flex-end;
+  border: none;
+  background-color: transparent;
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
 }
 
-@media (min-width: 70rem) {
-  .comment-item__author-name-stars {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
-  }
-}
-
-.comment-item__stars {
-  display: flex;
-  align-items: center; 
-
-}
-
-
-
-
-.comment-item__actions {
-  display: flex;
-  gap: 0rem;
-
+.comment-item__report:hover {
+  color: var(--swap-primary-color);
 }

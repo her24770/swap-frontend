@@ -1,5 +1,9 @@
-import { SquarePen, Star, Trash2 } from "lucide-react";
+"use client";
+
 import { useState } from "react";
+import { Flag, Star } from "lucide-react";
+import ReporteModal from "../../../../ui/Modal/Reporte/ReporteModal";
+import { useAuthStore } from "../../../../../store/authStore";
 import "./CommentCard.css";
 import { useFormatter, useTranslations } from "next-intl";
 import { useResena } from "../../../../../hooks/useResena";
@@ -9,7 +13,8 @@ import EditCommentModal, {
 } from "../../../../ui/Modal/EditCommentModal/EditCommentModal";
 
 interface CommentCardProps {
-  idResena: number;
+  commentId: number;
+  authorId?: number;
   authorName: string;
   timeAgo: Date | string;
   rating: number;
@@ -18,44 +23,10 @@ interface CommentCardProps {
   onSuccess?: () => void | Promise<void>;
 }
 
-export default function CommentCard({
-  idResena,
-  authorName,
-  timeAgo,
-  rating,
-  comment,
-  canManage,
-  onSuccess,
-}: CommentCardProps) {
-  const { editarResenaExistente, eliminarResena, loading, error, setError } = useResena();
-  const t = useTranslations('comments.actions');
-  const [modalAction, setModalAction] = useState<ResenaAction | null>(null);
-  const format = useFormatter(); 
-  const formattedTimeAgo = format.relativeTime(new Date(timeAgo));
-
-
-
-  const openModal = (action: ResenaAction) => {
-    setError(null);
-    setModalAction(action);
-  };
-
-  const closeModal = () => {
-    if (loading) return;
-    setError(null);
-    setModalAction(null);
-  };
-
-  const handleAction = async (data?: EditCommentData) => {
-    const succeeded = modalAction === "edit"
-      ? data && await editarResenaExistente(idResena, data)
-      : await eliminarResena(idResena);
-
-    if (!succeeded) return;
-    setModalAction(null);
-    await onSuccess?.();
-  };
-
+export default function CommentCard({ commentId, authorId, authorName, timeAgo, rating, comment }: CommentCardProps) {
+  const [reporteAbierto, setReporteAbierto] = useState(false);
+  const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
+  const esComentarioPropio = Boolean(idUsuarioActual != null && authorId != null && idUsuarioActual === authorId);
   const initials = authorName
     .split(" ")
     .map((n) => n[0])
@@ -114,16 +85,25 @@ export default function CommentCard({
         )}
       </div>
       <p className="comment-item__text">"{comment}"</p>
-      <EditCommentModal
-        isOpen={modalAction !== null}
-        action={modalAction ?? "edit"}
-        comment={comment}
-        initialRating={rating}
-        loading={loading}
-        error={error}
-        onAction={handleAction}
-        onClose={closeModal}
-      />
+      {!esComentarioPropio && (
+        <>
+          <button
+            type="button"
+            className="comment-item__report"
+            onClick={() => setReporteAbierto(true)}
+            aria-label="Reportar comentario"
+          >
+            <Flag size={14} />
+            Reportar
+          </button>
+          <ReporteModal
+            isOpen={reporteAbierto}
+            tipoObjetivo="comentario"
+            idObjetivo={commentId}
+            onClose={() => setReporteAbierto(false)}
+          />
+        </>
+      )}
     </article>
   );
 }
