@@ -81,12 +81,6 @@
   line-height: 1.5;
 }
 
-.comment-item__error {
-  margin: 0;
-  color: var(--swap-danger-color, #ef4444);
-  font-size: 0.75rem;
-}
-
 .comment-item__author-name-stars {
   display: flex;
   flex-direction: column;

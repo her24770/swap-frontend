@@ -17,7 +17,6 @@
 
 .navbar__right {
   position: relative;
-  z-index: 20;
 }
 
 .navbar__notif {
@@ -97,11 +96,13 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.15s ease;
+  z-index: 20;
 }
 
 .navbar__profile-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
+  
 
 .navbar__dropdown {
   position: absolute;

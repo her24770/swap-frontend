@@ -26,7 +26,7 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
   const tActions = useTranslations('common.actions');
   
 
-  const { crearNuevaResena, loading, error: apiError } = useResena();
+  const {crearNuevaResena, loading, error: apiError } = useResena();
   const {activeProfileMode } = usePerspectivaInterna();
 
   const [hoverRating, setHoverRating] = useState(0);
@@ -79,7 +79,6 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
       <input type="hidden" {...register("id_receptor", { valueAsNumber: true })} />
       <input type="hidden" {...register("tipo_resena")} />
 
-      {/* Selector interactivo de Estrellas */}
       <div className="comment-form__stars-container">
         <div className="comment-form__stars">
           {Array.from({ length: 5 }).map((_, i) => {
@@ -95,8 +94,6 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
                 onMouseLeave={() => setHoverRating(0)}
                 onClick={() => {
                   if (!loading) {
-                    // ── SOLUCIÓN ──
-                    // Setea el número nativo y fuerza a Zod a validar en tiempo real
                     setValue("calificacion", starValue, { shouldValidate: true });
                   }
                 }}
@@ -129,7 +126,7 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
 
       {/* Feedback de Errores de la API de SWAP */}
       {apiError && (
-        <div className="p-3 mb-2 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm font-medium">
+        <div className="comment-form__api-error">
           {apiError}
         </div>
       )}
