@@ -34,7 +34,6 @@ export default function CommentSection({
       <h2 className="perfil-page__catalog-bar-title">{t("title")}</h2>
       <div className="comment-section">
         
-        {/* Mueve la condición aquí para no renderizar la columna en el DOM */}
         {!isOwnProfile && (
           <div className="comment-section__form-col">
             <CommentForm

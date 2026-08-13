@@ -3,7 +3,7 @@ import CommentSection from "../../../../../src/components/users/UserCard/Comment
 import { resenaService } from "../../../../../src/services/resenaService";
 import { useAuthStore } from "../../../../../src/store/authStore";
 import type { Resena } from "../../../../../src/types/resena";
-import { render, screen, userEvent, waitFor } from "../../../../utils/render";
+import { render, screen, userEvent, waitFor, within } from "../../../../utils/render";
 
 vi.mock("../../../../../src/components/users/UserCard/Comments/CommentForm/CommentForm", () => ({
   default: () => null,
@@ -38,8 +38,6 @@ describe("CommentSection", () => {
   it("shows working edit and delete actions only on the current user's comment", async () => {
     const user = userEvent.setup();
     const onSuccess = vi.fn();
-    vi.spyOn(window, "prompt").mockReturnValue("Comentario actualizado");
-    vi.spyOn(window, "confirm").mockReturnValue(true);
     vi.spyOn(resenaService, "editarResena").mockResolvedValue({
       ...comments[0],
       contenido: "Comentario actualizado",
@@ -61,11 +59,21 @@ describe("CommentSection", () => {
     expect(screen.getAllByRole("button", { name: "delete" })).toHaveLength(1);
 
     await user.click(screen.getByRole("button", { name: "edit" }));
+    const editDialog = screen.getByRole("dialog", { name: "edit" });
+    const commentInput = within(editDialog).getByRole("textbox", { name: "editPrompt" });
+    await user.click(within(editDialog).getAllByRole("button", { name: "starsAria" })[3]);
+    await user.clear(commentInput);
+    await user.type(commentInput, "Comentario actualizado");
+    await user.click(within(editDialog).getByRole("button", { name: "save" }));
     await waitFor(() => expect(resenaService.editarResena).toHaveBeenCalledWith(1, {
       contenido: "Comentario actualizado",
+      calificacion: 4,
     }));
 
     await user.click(screen.getByRole("button", { name: "delete" }));
+    const deleteDialog = screen.getByRole("dialog", { name: "delete" });
+    expect(within(deleteDialog).getByText("deleteConfirm")).toBeInTheDocument();
+    await user.click(within(deleteDialog).getByRole("button", { name: "delete" }));
     await waitFor(() => {
       expect(resenaService.eliminarResena).toHaveBeenCalledWith(1);
       expect(onSuccess).toHaveBeenCalledTimes(2);

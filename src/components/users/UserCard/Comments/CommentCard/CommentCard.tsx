@@ -7,6 +7,10 @@ import { SquarePen, Star, Trash2, Flag } from "lucide-react";
 import "./CommentCard.css";
 import { useTranslations } from "next-intl";
 import { useResena } from "../../../../../hooks/useResena";
+import EditCommentModal, {
+  type EditCommentData,
+  type ResenaAction,
+} from "../../../../ui/Modal/EditCommentModal/EditCommentModal";
 
 interface CommentCardProps {
   idResena: number;
@@ -25,20 +29,29 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
   const [reporteAbierto, setReporteAbierto] = useState(false);
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
   const esComentarioPropio = Boolean(idUsuarioActual != null && authorId != null && idUsuarioActual === authorId);
-  const { editarResenaExistente, eliminarResena, loading, error } = useResena();
+  const { editarResenaExistente, eliminarResena, loading, error, setError } = useResena();
   const t = useTranslations('comments.actions');
+  const [modalAction, setModalAction] = useState<ResenaAction | null>(null);
 
-  const onEditClick = async () => {
-    const contenido = window.prompt(t("editPrompt"), comment)?.trim();
-    if (!contenido || contenido === comment) return;
-
-    if (await editarResenaExistente(idResena, { contenido })) await onSuccess?.();
+  const openModal = (action: ResenaAction) => {
+    setError(null);
+    setModalAction(action);
   };
 
-  const onDeleteClick = async () => {
-    if (!window.confirm(t("deleteConfirm"))) return;
+  const closeModal = () => {
+    if (loading) return;
+    setError(null);
+    setModalAction(null);
+  };
 
-    if (await eliminarResena(idResena)) await onSuccess?.();
+  const handleAction = async (data?: EditCommentData) => {
+    const succeeded = modalAction === "edit"
+      ? data && await editarResenaExistente(idResena, data)
+      : await eliminarResena(idResena);
+
+    if (!succeeded) return;
+    setModalAction(null);
+    await onSuccess?.();
   };
 
   const initials = authorName
@@ -77,7 +90,7 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
             <button
               type="button"
               className="post-card__edit-button"
-              onClick={onEditClick}
+              onClick={() => openModal("edit")}
               disabled={loading}
               aria-label={t("edit")}
               title={t("edit")}
@@ -88,7 +101,7 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
             <button
               type="button"
               className="post-card__delete-button"
-              onClick={onDeleteClick}
+              onClick={() => openModal("delete")}
               disabled={loading}
               aria-label={t("delete")}
               title={t("delete")}
@@ -119,6 +132,16 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
           />
         </>
       )}
+      <EditCommentModal
+        isOpen={modalAction !== null}
+        action={modalAction ?? "edit"}
+        comment={comment}
+        initialRating={rating}
+        loading={loading}
+        error={error}
+        onAction={handleAction}
+        onClose={closeModal}
+      />
     </article>
   );
 }
