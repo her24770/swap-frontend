@@ -1,7 +1,7 @@
 import { SquarePen, Star, Trash2 } from "lucide-react";
 import { useState } from "react";
 import "./CommentCard.css";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { useResena } from "../../../../../hooks/useResena";
 import EditCommentModal, {
   type EditCommentData,
@@ -11,7 +11,7 @@ import EditCommentModal, {
 interface CommentCardProps {
   idResena: number;
   authorName: string;
-  timeAgo: string;
+  timeAgo: Date | string;
   rating: number;
   comment: string;
   canManage: boolean;
@@ -30,6 +30,10 @@ export default function CommentCard({
   const { editarResenaExistente, eliminarResena, loading, error, setError } = useResena();
   const t = useTranslations('comments.actions');
   const [modalAction, setModalAction] = useState<ResenaAction | null>(null);
+  const format = useFormatter(); 
+  const formattedTimeAgo = format.relativeTime(new Date(timeAgo));
+
+
 
   const openModal = (action: ResenaAction) => {
     setError(null);
@@ -79,7 +83,7 @@ export default function CommentCard({
               </span>
             </div>
 
-            <span className="comment-item__time">{timeAgo}</span>
+            <span className="comment-item__time">{formattedTimeAgo}</span>
           </div>
         </div>
 
