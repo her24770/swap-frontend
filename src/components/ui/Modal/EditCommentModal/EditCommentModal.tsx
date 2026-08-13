@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResenaUpdateInput, schemaResenaUpdate } from "../../../../../src/schemas/schemaResenas";
@@ -39,6 +39,7 @@ export default function EditCommentModal({
   onAction,
   onClose,
 }: EditCommentModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const t = useTranslations("comments.actions");
   const tForm = useTranslations("comments.form");
   const tActions = useTranslations("common.actions");
@@ -76,14 +77,12 @@ export default function EditCommentModal({
 
   useEffect(() => {
     if (!isOpen) return;
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !loading) onClose();
+    const dialog = dialogRef.current;
+    if (!dialog?.open) dialog?.showModal?.();
+    return () => {
+      if (dialog?.open) dialog.close();
     };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, loading, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -99,7 +98,15 @@ export default function EditCommentModal({
   };
 
   return (
-    <dialog className="modal-overlay" onClick={loading ? undefined : onClose}>
+    <dialog
+      ref={dialogRef}
+      className="modal-overlay edit-comment-modal-overlay"
+      onCancel={(event) => {
+        event.preventDefault();
+        if (!loading) onClose();
+      }}
+      onClick={loading ? undefined : onClose}
+    >
       <form
         className="edit-comment-modal"
         role="dialog"
