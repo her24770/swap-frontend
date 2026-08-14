@@ -15,6 +15,11 @@ interface GuardadosResponse {
   data: Array<Publicacion | GuardadoPublicacion>;
 }
 
+interface JustificanteModeracionPayload {
+  motivo: string;
+  detalle?: string;
+}
+
 function normalizarGuardados(data: GuardadosResponse["data"]): Publicacion[] {
   return data.map((item) => {
     if ("publicacion" in item) {
@@ -162,11 +167,17 @@ export const publicacionService = {
       return response.data;
     },
 
-    async bajarModeracion(id: number): Promise<void> {
-      await apiClient.patch(`/api/moderador/publicaciones/${id}/bajar`);
+    async bajarModeracion(id: number, payload: JustificanteModeracionPayload): Promise<void> {
+      await apiClient.patch(`/api/moderador/publicaciones/${id}/bajar`, payload);
     },
 
-    async eliminarModeracion(id: number): Promise<void> {
-      await apiClient.delete(`/api/moderador/publicaciones/${id}`);
+    async reactivarModeracion(id: number, payload: JustificanteModeracionPayload): Promise<void> {
+      await apiClient.patch(`/api/moderador/publicaciones/${id}/reactivar`, payload);
+    },
+
+    async eliminarModeracion(id: number, payload: JustificanteModeracionPayload): Promise<void> {
+      await apiClient.delete(`/api/moderador/publicaciones/${id}`, {
+        body: JSON.stringify(payload),
+      });
     },
 };

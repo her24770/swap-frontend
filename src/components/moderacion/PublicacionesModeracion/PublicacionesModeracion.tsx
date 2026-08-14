@@ -1,15 +1,14 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Eye, Loader2, Search, Trash2, Ban } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Loader2, Trash2, Ban, RotateCcw } from "lucide-react";
 import SearchBar from "../../ui/SearchBar/SearchBar";
-import TagBadge from "../../ui/TagBadge/TagBadge";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
+import JustificanteModeracionModal from "../../ui/Modal/Reporte/JustificanteModeracionModal";
 import { publicacionService } from "../../../services/publicacionService";
 import { normalizeImageUrl } from "../../../lib/imageUrl";
 import { useToast } from "../../../hooks/useToast";
-import { useUIStore } from "../../../store/uiStore";
 import type { Publicacion, PublicacionModeracionFilters } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
 import "../../ui/Button/Button.css";
@@ -32,6 +31,12 @@ const ESTADOS = [
   { value: "reservado", label: "Reservado" },
   { value: "vendido", label: "Vendido" },
 ] as const;
+
+const MOTIVOS_REACTIVACION = [
+  "Error de moderación",
+  "Publicación revisada y permitida",
+  "Corrección aplicada por el usuario",
+];
 
 function tagsFromPublicacion(publicacion: Publicacion): Tag[] {
   return publicacion.etiquetas?.map((rel) => ({
@@ -56,24 +61,37 @@ function formatFecha(fecha: string): string {
 interface AccionesPublicacionProps {
   publicacion: Publicacion;
   onBajar: (publicacion: Publicacion) => void;
+  onReactivar: (publicacion: Publicacion) => void;
   onEliminar: (publicacion: Publicacion) => void;
   busy: boolean;
 }
 
-function AccionesPublicacion({ publicacion, onBajar, onEliminar, busy }: AccionesPublicacionProps) {
+function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, busy }: AccionesPublicacionProps) {
   const estaInactiva = publicacion.estadoRel?.estado === "inactivo";
 
   return (
     <div className="moderacion-publicaciones__actions">
-      <button
-        type="button"
-        className="button button--medium button--warning"
-        onClick={() => onBajar(publicacion)}
-        disabled={busy || estaInactiva}
-      >
-        {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <Ban size={16} />}
-        Bajar publicación
-      </button>
+      {estaInactiva ? (
+        <button
+          type="button"
+          className="button button--medium"
+          onClick={() => onReactivar(publicacion)}
+          disabled={busy}
+        >
+          {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <RotateCcw size={16} />}
+          Reactivar
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="button button--medium button--warning"
+          onClick={() => onBajar(publicacion)}
+          disabled={busy}
+        >
+          {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <Ban size={16} />}
+          Bajar publicación
+        </button>
+      )}
       <button
         type="button"
         className="button button--medium moderacion-publicaciones__danger-btn"
@@ -87,9 +105,15 @@ function AccionesPublicacion({ publicacion, onBajar, onEliminar, busy }: Accione
   );
 }
 
+type AccionModeracion = "bajar" | "reactivar" | "eliminar";
+
+interface JustificantePendiente {
+  accion: AccionModeracion;
+  publicacion: Publicacion;
+}
+
 export default function PublicacionesModeracion() {
   const toast = useToast();
-  const { mostrarConfirm } = useUIStore();
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -103,6 +127,7 @@ export default function PublicacionesModeracion() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Publicacion | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
+  const [justificantePendiente, setJustificantePendiente] = useState<JustificantePendiente | null>(null);
 
   const pageCount = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
@@ -137,59 +162,77 @@ export default function PublicacionesModeracion() {
     void cargarPublicaciones();
   }, [cargarPublicaciones]);
 
-  const handleBuscar = (event: FormEvent) => {
-    event.preventDefault();
-    setPage(1);
-    setQ(qDraft.trim());
-  };
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setPage(1);
+      setQ(qDraft.trim());
+    }, 450);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [qDraft]);
 
   const updateLocalPublicacion = (id: number, updater: (publicacion: Publicacion) => Publicacion) => {
     setPublicaciones((prev) => prev.map((pub) => pub.id_publicacion === id ? updater(pub) : pub));
     setSelected((prev) => prev?.id_publicacion === id ? updater(prev) : prev);
   };
 
-  const bajarPublicacion = (publicacion: Publicacion) => {
-    mostrarConfirm({
-      titulo: "Bajar publicación",
-      mensaje: `¿Deseas bajar "${publicacion.titulo}"? La publicación quedará inactiva.`,
-      onConfirm: async () => {
-        try {
-          setBusyId(publicacion.id_publicacion);
-          await publicacionService.bajarModeracion(publicacion.id_publicacion);
-          updateLocalPublicacion(publicacion.id_publicacion, (pub) => ({
-            ...pub,
-            estadoRel: { id_estado: pub.estadoRel?.id_estado ?? pub.estado, estado: "inactivo" },
-          }));
-          toast.success("Publicación bajada exitosamente.");
-        } catch (err) {
-          toast.error(err instanceof Error ? err.message : "No fue posible bajar la publicación.");
-        } finally {
-          setBusyId(null);
-        }
-      },
-    });
+  const abrirJustificante = (accion: AccionModeracion, publicacion: Publicacion) => {
+    setJustificantePendiente({ accion, publicacion });
   };
 
-  const eliminarPublicacion = (publicacion: Publicacion) => {
-    mostrarConfirm({
-      titulo: "Eliminar publicación",
-      mensaje: `¿Deseas eliminar definitivamente "${publicacion.titulo}"?`,
-      onConfirm: async () => {
-        try {
-          setBusyId(publicacion.id_publicacion);
-          await publicacionService.eliminarModeracion(publicacion.id_publicacion);
-          setPublicaciones((prev) => prev.filter((pub) => pub.id_publicacion !== publicacion.id_publicacion));
-          setTotal((prev) => Math.max(0, prev - 1));
-          setSelected((prev) => prev?.id_publicacion === publicacion.id_publicacion ? null : prev);
-          toast.success("Publicación eliminada exitosamente.");
-        } catch (err) {
-          toast.error(err instanceof Error ? err.message : "No fue posible eliminar la publicación.");
-        } finally {
-          setBusyId(null);
-        }
-      },
-    });
+  const ejecutarAccionModeracion = async (payload: { motivo: string; detalle: string }) => {
+    if (!justificantePendiente) return;
+
+    const { accion, publicacion } = justificantePendiente;
+
+    try {
+      setBusyId(publicacion.id_publicacion);
+
+      if (accion === "bajar") {
+        await publicacionService.bajarModeracion(publicacion.id_publicacion, payload);
+        updateLocalPublicacion(publicacion.id_publicacion, (pub) => ({
+          ...pub,
+          estadoRel: { id_estado: pub.estadoRel?.id_estado ?? pub.estado, estado: "inactivo" },
+        }));
+        toast.success("Publicación bajada exitosamente.");
+      }
+
+      if (accion === "reactivar") {
+        await publicacionService.reactivarModeracion(publicacion.id_publicacion, payload);
+        updateLocalPublicacion(publicacion.id_publicacion, (pub) => ({
+          ...pub,
+          estadoRel: { id_estado: pub.estadoRel?.id_estado ?? pub.estado, estado: "activo" },
+        }));
+        toast.success("Publicación reactivada exitosamente.");
+      }
+
+      if (accion === "eliminar") {
+        await publicacionService.eliminarModeracion(publicacion.id_publicacion, payload);
+        setPublicaciones((prev) => prev.filter((pub) => pub.id_publicacion !== publicacion.id_publicacion));
+        setTotal((prev) => Math.max(0, prev - 1));
+        setSelected((prev) => prev?.id_publicacion === publicacion.id_publicacion ? null : prev);
+        toast.success("Publicación eliminada exitosamente.");
+      }
+
+      setJustificantePendiente(null);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "No fue posible completar la acción.");
+    } finally {
+      setBusyId(null);
+    }
   };
+
+  const tituloJustificante = justificantePendiente?.accion === "bajar"
+    ? "Bajar publicación"
+    : justificantePendiente?.accion === "reactivar"
+      ? "Reactivar publicación"
+      : "Eliminar publicación";
+
+  const preguntaJustificante = justificantePendiente?.accion === "reactivar"
+    ? "¿Por qué quieres reactivar la publicación?"
+    : justificantePendiente?.accion === "eliminar"
+      ? "¿Por qué quieres eliminar la publicación?"
+      : "¿Por qué quieres bajar la publicación?";
 
   return (
     <main className="moderacion-publicaciones">
@@ -203,7 +246,7 @@ export default function PublicacionesModeracion() {
         <span className="moderacion-publicaciones__count">{total} resultados</span>
       </div>
 
-      <form className="moderacion-publicaciones__filters" onSubmit={handleBuscar}>
+      <div className="moderacion-publicaciones__filters">
         <SearchBar
           value={qDraft}
           onChange={setQDraft}
@@ -249,11 +292,7 @@ export default function PublicacionesModeracion() {
           <option value="precio:desc">Mayor precio</option>
           <option value="precio:asc">Menor precio</option>
         </select>
-        <button type="submit" className="button button--medium">
-          <Search size={16} />
-          Buscar
-        </button>
-      </form>
+      </div>
 
       {error && <p className="moderacion-publicaciones__error">{error}</p>}
 
@@ -268,7 +307,6 @@ export default function PublicacionesModeracion() {
         <div className="moderacion-publicaciones__grid">
           {publicaciones.map((publicacion) => {
             const imagen = getImage(publicacion);
-            const tags = tagsFromPublicacion(publicacion);
             const busy = busyId === publicacion.id_publicacion;
 
             return (
@@ -297,11 +335,6 @@ export default function PublicacionesModeracion() {
                     <span>{publicacion.usuario?.email_institucional ?? "Sin correo"}</span>
                   </div>
 
-                  <div className="moderacion-publicaciones__tags">
-                    {tags.slice(0, 3).map((tag) => <TagBadge key={tag.id} tag={tag} size="sm" />)}
-                    {tags.length > 3 && <span className="moderacion-publicaciones__more-tags">+{tags.length - 3}</span>}
-                  </div>
-
                   <div className="moderacion-publicaciones__footer">
                     <div>
                       <strong>Q{Number(publicacion.precio).toFixed(2)}</strong>
@@ -319,8 +352,9 @@ export default function PublicacionesModeracion() {
 
                   <AccionesPublicacion
                     publicacion={publicacion}
-                    onBajar={bajarPublicacion}
-                    onEliminar={eliminarPublicacion}
+                    onBajar={(pub) => abrirJustificante("bajar", pub)}
+                    onReactivar={(pub) => abrirJustificante("reactivar", pub)}
+                    onEliminar={(pub) => abrirJustificante("eliminar", pub)}
                     busy={busy}
                   />
                 </div>
@@ -374,11 +408,25 @@ export default function PublicacionesModeracion() {
           actionsSlot={(
             <AccionesPublicacion
               publicacion={selected}
-              onBajar={bajarPublicacion}
-              onEliminar={eliminarPublicacion}
+              onBajar={(pub) => abrirJustificante("bajar", pub)}
+              onReactivar={(pub) => abrirJustificante("reactivar", pub)}
+              onEliminar={(pub) => abrirJustificante("eliminar", pub)}
               busy={busyId === selected.id_publicacion}
             />
           )}
+        />
+      )}
+
+      {justificantePendiente && (
+        <JustificanteModeracionModal
+          isOpen
+          tipoObjetivo="publicacion"
+          titulo={tituloJustificante}
+          pregunta={preguntaJustificante}
+          motivosPersonalizados={justificantePendiente.accion === "reactivar" ? MOTIVOS_REACTIVACION : undefined}
+          enviando={busyId === justificantePendiente.publicacion.id_publicacion}
+          onClose={() => setJustificantePendiente(null)}
+          onSubmit={ejecutarAccionModeracion}
         />
       )}
     </main>

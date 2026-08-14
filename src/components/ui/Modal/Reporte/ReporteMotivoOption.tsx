@@ -1,16 +1,14 @@
-import type { MotivoReporte } from "../../../../types/reporte";
-
-interface ReporteMotivoOptionProps {
-  motivo: MotivoReporte;
+interface ReporteMotivoOptionProps<TMotivo extends string> {
+  motivo: TMotivo;
   seleccionado: boolean;
-  onSeleccionar: (motivo: MotivoReporte) => void;
+  onSeleccionar: (motivo: TMotivo) => void;
 }
 
-export default function ReporteMotivoOption({
+export default function ReporteMotivoOption<TMotivo extends string>({
   motivo,
   seleccionado,
   onSeleccionar,
-}: ReporteMotivoOptionProps) {
+}: ReporteMotivoOptionProps<TMotivo>) {
   return (
     <label className="reporte-modal__motivo">
       <input
