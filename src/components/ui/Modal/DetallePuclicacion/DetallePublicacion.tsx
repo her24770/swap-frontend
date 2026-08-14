@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
@@ -68,6 +69,7 @@ interface PostModalProps {
   isSaved?: boolean;
   showActions?: boolean;
   soloLectura?: boolean;
+  actionsSlot?: ReactNode;
 }
 
 export default function DetallePublicacion({
@@ -95,6 +97,7 @@ export default function DetallePublicacion({
   isSaved = false,
   showActions = true,
   soloLectura = false,
+  actionsSlot,
   estado,
   estadosDisponibles = [],
   onEstadoChange,
@@ -259,6 +262,12 @@ export default function DetallePublicacion({
             </div>
 
             <p className="post-modal__description">{description}</p>
+
+            {actionsSlot && (
+              <div className="post-modal__actions">
+                {actionsSlot}
+              </div>
+            )}
 
             {showActions && !soloLectura && (type === "tutoria" || (type === "venta" && !esPropiaPublicacion && !expandido)) && (
               <div className="post-modal__actions">

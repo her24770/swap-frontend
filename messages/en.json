@@ -262,6 +262,10 @@
 			"loading": "Checking session...",
 			"comingSoon": "Coming soon",
 			"sections": {
+				"publicaciones": {
+					"title": "Posts",
+					"description": "View and moderate platform posts."
+				},
 				"reportes": {
 					"title": "Reports",
 					"description": "Review and resolve user reports."

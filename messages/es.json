@@ -262,6 +262,10 @@
 			"loading": "Verificando sesión...",
 			"comingSoon": "Próximamente",
 			"sections": {
+				"publicaciones": {
+					"title": "Publicaciones",
+					"description": "Visualizar y moderar publicaciones de la plataforma."
+				},
 				"reportes": {
 					"title": "Reportes",
 					"description": "Revisar y resolver reportes de usuarios."

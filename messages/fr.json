@@ -262,6 +262,10 @@
 			"loading": "Vérification de la session...",
 			"comingSoon": "Bientôt disponible",
 			"sections": {
+				"publicaciones": {
+					"title": "Publications",
+					"description": "Afficher et modérer les publications de la plateforme."
+				},
 				"reportes": {
 					"title": "Signalements",
 					"description": "Examiner et résoudre les signalements d'utilisateurs."

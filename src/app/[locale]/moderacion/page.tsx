@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { ShieldAlert, Users } from "lucide-react";
+import { Newspaper, ShieldAlert, Users } from "lucide-react";
 import { Link } from "../../../i18n/routing";
 import { useModeradorSesion } from "../../../hooks/useModeradorSesion";
 import { tienePermiso } from "../../../lib/moderadorPermisos";
@@ -20,6 +20,16 @@ export default function ModeracionDashboardPage() {
       </h1>
 
       <div className="moderacion-dashboard__grid">
+        <Link href="/moderacion/publicaciones" className="moderacion-dashboard__card">
+          <Newspaper size={22} />
+          <span className="moderacion-dashboard__card-title">
+            {t("sections.publicaciones.title")}
+          </span>
+          <span className="moderacion-dashboard__card-description">
+            {t("sections.publicaciones.description")}
+          </span>
+        </Link>
+
         <Link href="/moderacion/reportes" className="moderacion-dashboard__card">
           <ShieldAlert size={22} />
           <span className="moderacion-dashboard__card-title">
