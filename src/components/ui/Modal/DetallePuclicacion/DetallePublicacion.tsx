@@ -66,6 +66,7 @@ interface PostModalProps {
   onToggleSave?: () => void;
   isSaved?: boolean;
   showActions?: boolean;
+  soloLectura?: boolean;
 }
 
 export default function DetallePublicacion({
@@ -92,6 +93,7 @@ export default function DetallePublicacion({
   onToggleSave,
   isSaved = false,
   showActions = true,
+  soloLectura = false,
   estado,
   estadosDisponibles = [],
   onEstadoChange,
@@ -256,7 +258,7 @@ export default function DetallePublicacion({
 
             <p className="post-modal__description">{description}</p>
 
-            {showActions && (type === "tutoria" || (type === "venta" && !esPropiaPublicacion && !expandido)) && (
+            {showActions && !soloLectura && (type === "tutoria" || (type === "venta" && !esPropiaPublicacion && !expandido)) && (
               <div className="post-modal__actions">
                 {type === "venta" && !esPropiaPublicacion && !expandido && (
                   <button
@@ -291,21 +293,23 @@ export default function DetallePublicacion({
             )}
 
             <div className="post-modal__likes">
-              <button
-                type="button"
-                className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
-                onClick={handleToggleSave}
-                aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
-                disabled={saving}
-              >
-                {saving
-                  ? <Loader2 size={18} className="post-modal__save-spinner" />
-                  : <Bookmark size={18} />
-                }
-              </button>
+              {!soloLectura && (
+                <button
+                  type="button"
+                  className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
+                  onClick={handleToggleSave}
+                  aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
+                  disabled={saving}
+                >
+                  {saving
+                    ? <Loader2 size={18} className="post-modal__save-spinner" />
+                    : <Bookmark size={18} />
+                  }
+                </button>
+              )}
               <span className="post-modal__likes-count">{likes}</span>
             </div>
-            {type === "tutoria" && (
+            {!soloLectura && type === "tutoria" && (
               <>
                 <button
                   type="button"

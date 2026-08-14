@@ -9,6 +9,7 @@
  */
 
 import { useAuthStore } from "../store/authStore";
+import { useModeradorAuthStore } from "../store/moderadorAuthStore";
 
 export interface ApiError {
   status: number;
@@ -57,10 +58,15 @@ async function handleResponse<T>(
       throw err;
     }
 
-    useAuthStore.getState().logout();
+    if (typeof window !== "undefined" && window.location.pathname.includes("/moderacion")) {
+      useModeradorAuthStore.getState().logout();
+      window.location.href = "/moderacion/login";
+    } else {
+      useAuthStore.getState().logout();
 
-    if (typeof window !== "undefined") {
-      window.location.href = "/login";
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
     }
 
     const err: ApiError = {
@@ -116,7 +122,7 @@ async function post<T>(path: string, body?: unknown, options?: RequestInit): Pro
     ...options,
   });
   return handleResponse<T>(response, {
-    skipUnauthorizedRedirect: path === "/api/auth/login",
+    skipUnauthorizedRedirect: path === "/api/auth/login" || path === "/api/moderador/login",
   });
 }
 

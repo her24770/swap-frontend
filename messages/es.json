@@ -237,6 +237,45 @@
 			"passwordMin": "Mínimo 6 caracteres"
 		}
 	},
+	"moderacion": {
+		"login": {
+			"title": "Panel de Moderación",
+			"subtitle": "Ingresa tus credenciales de moderador.",
+			"usuarioLabel": "Usuario",
+			"usuarioPlaceholder": "usuario.moderador",
+			"passwordLabel": "Contraseña",
+			"togglePasswordAria": "Mostrar u ocultar contraseña",
+			"submit": "Ingresar",
+			"submitting": "Ingresando...",
+			"toast": {
+				"welcomeBack": "Sesión de moderador iniciada",
+				"invalidCredentials": "Usuario o contraseña incorrectos.",
+				"loginErrorFallback": "No fue posible iniciar sesión"
+			},
+			"validation": {
+				"usuarioRequired": "El usuario es requerido",
+				"passwordRequired": "La contraseña es requerida"
+			}
+		},
+		"panel": {
+			"greeting": "Hola, {usuario}",
+			"nivelModerador": "Moderador",
+			"nivelSuperadmin": "Superadmin",
+			"logout": "Cerrar sesión",
+			"loading": "Verificando sesión...",
+			"comingSoon": "Próximamente",
+			"sections": {
+				"reportes": {
+					"title": "Reportes",
+					"description": "Revisar y resolver reportes de usuarios."
+				},
+				"moderadores": {
+					"title": "Moderadores",
+					"description": "Gestionar cuentas de moderador."
+				}
+			}
+		}
+	},
 	"forgotPassword": {
 		"title": "Recuperar contraseña",
 		"emailLabel": "Correo electrónico",

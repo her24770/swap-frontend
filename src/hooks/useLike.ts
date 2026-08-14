@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { publicacionService } from "../services/publicacionService";
 import { useUIStore } from "../store/uiStore";
+import { useAuthStore } from "../store/authStore";
 
 export function useLike(
     idPublicacion: number,
@@ -13,6 +14,7 @@ export function useLike(
     const [count, setCount] = useState(initialCount);
     const [loading, setLoading] = useState(false);
     const { agregarNotificacion } = useUIStore();
+    const usuario = useAuthStore((s) => s.usuario);
 
     // Sincronizar si cambian las props iniciales
     useEffect(() => {
@@ -24,7 +26,7 @@ export function useLike(
     }, [initialCount]);
 
     const toggleLike = async () => {
-        if (loading || !idPublicacion) return;
+        if (loading || !idPublicacion || !usuario) return;
         setLoading(true);
 
         const nuevoEstado = !likeado;

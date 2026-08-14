@@ -52,14 +52,16 @@ export function GuardadosProvider({ children }: { children: React.ReactNode }) {
   );
 
   const guardarPublicacion = useCallback(async (id: number) => {
+    if (!usuario) return;
     await publicacionService.guardar(id);
     await cargarGuardados();
-  }, [cargarGuardados]);
+  }, [usuario, cargarGuardados]);
 
   const eliminarGuardado = useCallback(async (id: number) => {
+    if (!usuario) return;
     await publicacionService.eliminarGuardado(id);
     setGuardados((prev) => prev.filter((publicacion) => publicacion.id_publicacion !== id));
-  }, []);
+  }, [usuario]);
 
   const value = useMemo<GuardadosContextValue>(() => ({
     guardados,

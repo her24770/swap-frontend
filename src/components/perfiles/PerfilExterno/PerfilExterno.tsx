@@ -25,9 +25,10 @@ type PerfilExternoMode = "vendedor" | "tutor";
 
 interface PerfilExternoProps {
   userId: number;
+  soloLectura?: boolean;
 }
 
-export default function PerfilExterno({ userId }: PerfilExternoProps) {
+export default function PerfilExterno({ userId, soloLectura = false }: PerfilExternoProps) {
     const t = useTranslations("perfil");
     const searchParams = useSearchParams();
     const initialMode = searchParams.get("modo") === "tutor" ? "tutor" : "vendedor";
@@ -111,11 +112,13 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         ))}
                     </div>
 
-                    <EnviarMensajeButton
-                        userId={user.id_usuario}
-                        userName={user.name}
-                        userImageUrl={user.imageUrl}
-                    />
+                    {!soloLectura && (
+                        <EnviarMensajeButton
+                            userId={user.id_usuario}
+                            userName={user.name}
+                            userImageUrl={user.imageUrl}
+                        />
+                    )}
                 </div>
 
                 <hr className="perfil-page__divider" />
@@ -126,6 +129,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         userName={user.name}
                         userRating={user.rating}
                         userImageUrl={user.imageUrl}
+                        soloLectura={soloLectura}
                     />
                 )}
                 {mode === "tutor" && (
@@ -134,6 +138,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         userName={user.name}
                         userRating={user.rating}
                         userImageUrl={user.imageUrl}
+                        soloLectura={soloLectura}
                     />
                 )}
 
@@ -147,13 +152,14 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         comments={ResenasUsuario}
                         onSuccessSubmit={refetchResenas}
                         onCancel={() => {}}
+                        soloLectura={soloLectura}
                     />
                 </section>
             </>
         )}
         </PerspectivaInternaProvider>
 
-        {user && (
+        {user && !soloLectura && (
             <MiniChatWidget
                 idUsuario={user.id_usuario}
                 nombre={user.name}

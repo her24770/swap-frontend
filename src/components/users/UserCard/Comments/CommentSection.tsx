@@ -9,32 +9,36 @@ import type { Resena} from "../../../../types/resena";
 
 interface CommentSectionProps {
   targetName: string;
-  idReceptor: number;                               
-  comments: Resena[];                            
-  onSuccessSubmit?: () => void;                     
+  idReceptor: number;
+  comments: Resena[];
+  onSuccessSubmit?: () => void;
   onCancel: () => void;
+  soloLectura?: boolean;
 }
 
-export default function CommentSection({ 
-  targetName, 
-  idReceptor, 
-  comments, 
-  onSuccessSubmit, 
-  onCancel 
+export default function CommentSection({
+  targetName,
+  idReceptor,
+  comments,
+  onSuccessSubmit,
+  onCancel,
+  soloLectura = false,
 }: CommentSectionProps) {
   const t = useTranslations('comments');
 
   return (
     <div className="comment-section">
       {/* Formulario izquierda */}
-      <div className="comment-section__form-col">
-        <CommentForm
-          targetName={targetName}
-          idReceptor={idReceptor} 
-          onSuccess={onSuccessSubmit} 
-          onCancel={onCancel}
-        />
-      </div>
+      {!soloLectura && (
+        <div className="comment-section__form-col">
+          <CommentForm
+            targetName={targetName}
+            idReceptor={idReceptor}
+            onSuccess={onSuccessSubmit}
+            onCancel={onCancel}
+          />
+        </div>
+      )}
 
       <div className="comment-section__list-col">
         <div className="comment-section__list">

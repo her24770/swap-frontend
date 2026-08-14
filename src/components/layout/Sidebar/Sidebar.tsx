@@ -2,30 +2,46 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bookmark, Compass, BookOpen, Package, Briefcase, MessageCircle } from "lucide-react";
+import { Bookmark, Compass, BookOpen, Package, Briefcase, MessageCircle, ShieldAlert, Users } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
+import { tienePermiso } from "../../../lib/moderadorPermisos";
+import type { NivelModerador } from "../../../types/moderador";
 import "./Sidebar.css";
 
 interface SidebarProps {
   isOpen: boolean;
+  variant?: "usuario" | "moderador";
+  moderadorNivel?: NivelModerador;
 }
 
-const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar({ isOpen }, ref) {  
+const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
+  { isOpen, variant = "usuario", moderadorNivel },
+  ref
+) {
   const t = useTranslations('layout.sidebar');
+  const tPanel = useTranslations('moderacion.panel');
   const pathname = usePathname();
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
 
-  if (AUTH_ROUTES.includes(pathnameWithoutLocale)) return null;
+  if (variant === "usuario" && AUTH_ROUTES.includes(pathnameWithoutLocale)) return null;
 
-  const navItems = [
-    { icon: Compass, label: t('descubre'), href: '/' },
-    { icon: BookOpen, label: t('tutorias'), href: '/tutorias' },
-    { icon: Package, label: t('materiales'), href: '/materiales' },
-    { icon: Briefcase, label: t('negocios'), href: '/negocios' },
-    { icon: MessageCircle, label: t('mensajes'), href: '/Chat' },
-  ] as const;
+  const navItems = variant === "moderador"
+    ? [
+        { icon: Compass, label: t('descubre'), href: '/moderacion/descubre' },
+        { icon: ShieldAlert, label: tPanel('sections.reportes.title'), href: '/moderacion/reportes' },
+        ...(tienePermiso(moderadorNivel ?? null, "superadmin")
+          ? [{ icon: Users, label: tPanel('sections.moderadores.title'), href: '/moderacion/moderadores' }]
+          : []),
+      ]
+    : [
+        { icon: Compass, label: t('descubre'), href: '/' },
+        { icon: BookOpen, label: t('tutorias'), href: '/tutorias' },
+        { icon: Package, label: t('materiales'), href: '/materiales' },
+        { icon: Briefcase, label: t('negocios'), href: '/negocios' },
+        { icon: MessageCircle, label: t('mensajes'), href: '/Chat' },
+      ];
 
   return (
     <aside ref={ref} className={`sidebar ${isOpen ? "sidebar--open" : ""}`}>

@@ -1,0 +1,14 @@
+.moderacion-layout__loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+}
+
+.moderacion-layout__error {
+  color: var(--swap-danger-color);
+  font-size: 0.875rem;
+  margin: 0 0 1rem;
+}

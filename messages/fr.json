@@ -235,6 +235,45 @@
 			"passwordMin": "Minimum 6 caractères"
 		}
 	},
+	"moderacion": {
+		"login": {
+			"title": "Panneau de modération",
+			"subtitle": "Entrez vos identifiants de modérateur.",
+			"usuarioLabel": "Utilisateur",
+			"usuarioPlaceholder": "utilisateur.moderateur",
+			"passwordLabel": "Mot de passe",
+			"togglePasswordAria": "Afficher ou masquer le mot de passe",
+			"submit": "Se connecter",
+			"submitting": "Connexion...",
+			"toast": {
+				"welcomeBack": "Session de modérateur démarrée",
+				"invalidCredentials": "Utilisateur ou mot de passe incorrect.",
+				"loginErrorFallback": "Impossible de se connecter"
+			},
+			"validation": {
+				"usuarioRequired": "L'utilisateur est requis",
+				"passwordRequired": "Le mot de passe est requis"
+			}
+		},
+		"panel": {
+			"greeting": "Bonjour, {usuario}",
+			"nivelModerador": "Modérateur",
+			"nivelSuperadmin": "Superadmin",
+			"logout": "Se déconnecter",
+			"loading": "Vérification de la session...",
+			"comingSoon": "Bientôt disponible",
+			"sections": {
+				"reportes": {
+					"title": "Signalements",
+					"description": "Examiner et résoudre les signalements d'utilisateurs."
+				},
+				"moderadores": {
+					"title": "Modérateurs",
+					"description": "Gérer les comptes de modérateur."
+				}
+			}
+		}
+	},
 	"forgotPassword": {
 		"title": "Réinitialiser le mot de passe",
 		"emailLabel": "E-mail",
