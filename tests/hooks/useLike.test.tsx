@@ -1,12 +1,30 @@
 import { describe, expect, it, vi } from "vitest";
 import { useLike } from "../../src/hooks/useLike";
 import { publicacionService } from "../../src/services/publicacionService";
+import { useAuthStore } from "../../src/store/authStore";
 import { useUIStore } from "../../src/store/uiStore";
 import { act, renderHook, waitFor } from "../utils/render";
 
 describe("useLike", () => {
+  it("does not call the service without an authenticated user", async () => {
+    const darLike = vi.spyOn(publicacionService, "darLike").mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useLike(1, false, 3));
+
+    await act(async () => {
+      await result.current.toggleLike();
+    });
+
+    expect(darLike).not.toHaveBeenCalled();
+    expect(result.current.likeado).toBe(false);
+  });
+
   it("optimistically likes a publication and calls the service", async () => {
     const darLike = vi.spyOn(publicacionService, "darLike").mockResolvedValue(undefined);
+    useAuthStore.setState({
+      usuario: { id_usuario: 10, nombre: "Ana" } as any,
+      rol: "usuario" as any,
+    });
 
     const { result } = renderHook(() => useLike(1, false, 3));
 
@@ -23,6 +41,10 @@ describe("useLike", () => {
     vi.spyOn(publicacionService, "darLike").mockRejectedValue({
       status: 500,
       message: "No se pudo actualizar",
+    });
+    useAuthStore.setState({
+      usuario: { id_usuario: 10, nombre: "Ana" } as any,
+      rol: "usuario" as any,
     });
 
     const { result } = renderHook(() => useLike(1, false, 3));

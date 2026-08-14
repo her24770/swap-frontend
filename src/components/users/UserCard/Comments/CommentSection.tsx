@@ -11,18 +11,20 @@ import { useAuthStore } from "../../../../store/authStore";
 
 interface CommentSectionProps {
   targetName: string;
-  idReceptor: number;                               
-  comments: Resena[];                            
-  onSuccessSubmit?: () => void;                     
+  idReceptor: number;
+  comments: Resena[];
+  onSuccessSubmit?: () => void;
   onCancel: () => void;
+  soloLectura?: boolean;
 }
 
-export default function CommentSection({ 
-  targetName, 
-  idReceptor, 
-  comments, 
-  onSuccessSubmit, 
-  onCancel 
+export default function CommentSection({
+  targetName,
+  idReceptor,
+  comments,
+  onSuccessSubmit,
+  onCancel,
+  soloLectura = false,
 }: CommentSectionProps) {
 
   const t = useTranslations('comments');

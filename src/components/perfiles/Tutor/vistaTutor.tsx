@@ -41,6 +41,7 @@ interface VistaTutorProps {
   userName?: string;
   userRating?: number;
   userImageUrl?: string;
+  soloLectura?: boolean;
 }
 
 export default function VistaTutor({
@@ -48,6 +49,7 @@ export default function VistaTutor({
   userName = "Usuario de SWAP",
   userRating = 0,
   userImageUrl,
+  soloLectura = false,
 }: VistaTutorProps = {}) {
   const t = useTranslations("perfil");
   const authUserId = useAuthStore((s) => s.usuario?.id_usuario);
@@ -311,6 +313,7 @@ export default function VistaTutor({
             {catalogTutorias.map((pub) => (
               <div key={pub.id} className="h-carousel__item">
                 <PostCard
+                  soloLectura={soloLectura}
                   publicacionId={pub.id}
                   tags={pub.tags}
                   title={pub.title}
@@ -476,6 +479,7 @@ export default function VistaTutor({
 
       {selectedPost && (
         <DetallePublicacion
+          soloLectura={soloLectura}
           isOpen={true}
           onClose={() => setSelectedPost(null)}
           type="tutoria"

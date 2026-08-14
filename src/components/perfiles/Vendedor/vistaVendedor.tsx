@@ -44,6 +44,7 @@ interface VistaVendedorProps {
   userName?: string;
   userRating?: number;
   userImageUrl?: string;
+  soloLectura?: boolean;
 }
 
 export default function VistaVendedor({
@@ -51,6 +52,7 @@ export default function VistaVendedor({
   userName = "Usuario de SWAP",
   userRating = 0,
   userImageUrl,
+  soloLectura = false,
 }: VistaVendedorProps = {}) {
   const t = useTranslations("perfil");
   const authUserId = useAuthStore((s) => s.usuario?.id_usuario);
@@ -296,6 +298,7 @@ export default function VistaVendedor({
             {catalogMaterial.map((pub) => (
               <div key={pub.id} className="h-carousel__item">
                 <PostCard
+                  soloLectura={soloLectura}
                   publicacionId={pub.id}
                   tags={pub.tags}
                   title={pub.title}
@@ -370,6 +373,7 @@ export default function VistaVendedor({
             {catalogNegocio.map((pub) => (
               <div key={pub.id} className="h-carousel__item">
                 <PostCard
+                  soloLectura={soloLectura}
                   publicacionId={pub.id}
                   tags={pub.tags}
                   title={pub.title}
@@ -485,6 +489,7 @@ export default function VistaVendedor({
 
       {selectedPost && (
         <DetallePublicacion
+          soloLectura={soloLectura}
           isOpen={true}
           onClose={() => setSelectedPost(null)}
           type={selectedPost.tipo === "tutoria" ? "tutoria" : "venta"}

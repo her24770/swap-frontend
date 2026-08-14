@@ -40,6 +40,7 @@ interface PostCardProps {
   isPinned?: boolean;
   onPinChange?: (newPinned: boolean) => void;
   categorias?: number[];
+  soloLectura?: boolean;
 }
 
 export default function PostCard({
@@ -64,6 +65,7 @@ export default function PostCard({
   initialLikes = 0,
   isPinned = false,
   onPinChange,
+  soloLectura = false,
 }: PostCardProps) {
   const t = useTranslations("posts");
   const { canEditCards } = usePerspectivaInterna();
@@ -336,7 +338,7 @@ export default function PostCard({
 
           <div className="post-card__footer-actions">
             {/* Like button */}
-            {publicacionId !== undefined && (
+            {!soloLectura && publicacionId !== undefined && (
               <button
                 type="button"
                 className={`post-card__like-button${likeado ? " post-card__like-button--liked" : ""}`}
@@ -351,7 +353,7 @@ export default function PostCard({
             )}
 
             {/* Save button */}
-            {publicacionId !== undefined && (
+            {!soloLectura && publicacionId !== undefined && (
               <button
                 type="button"
                 className={`post-card__save-button${visuallySaved ? " post-card__save-button--saved" : ""}`}

@@ -27,9 +27,10 @@ type PerfilExternoMode = "vendedor" | "tutor";
 
 interface PerfilExternoProps {
   userId: number;
+  soloLectura?: boolean;
 }
 
-export default function PerfilExterno({ userId }: PerfilExternoProps) {
+export default function PerfilExterno({ userId, soloLectura = false }: PerfilExternoProps) {
     const t = useTranslations("perfil");
     const searchParams = useSearchParams();
     const initialMode = searchParams.get("modo") === "tutor" ? "tutor" : "vendedor";
@@ -116,21 +117,23 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         ))}
                     </div>
 
-                    <div className="perfil-page__external-actions">
-                        <EnviarMensajeButton
-                            userId={user.id_usuario}
-                            userName={user.name}
-                            userImageUrl={user.imageUrl}
-                        />
-                        <button
-                            type="button"
-                            className="perfil-page__secondary-btn"
-                            onClick={() => setReporteUsuarioAbierto(true)}
-                        >
-                            <Flag size={16} />
-                            Reportar
-                        </button>
-                    </div>
+                    {!soloLectura && (
+                        <div className="perfil-page__external-actions">
+                            <EnviarMensajeButton
+                                userId={user.id_usuario}
+                                userName={user.name}
+                                userImageUrl={user.imageUrl}
+                            />
+                            <button
+                                type="button"
+                                className="perfil-page__secondary-btn"
+                                onClick={() => setReporteUsuarioAbierto(true)}
+                            >
+                                <Flag size={16} />
+                                Reportar
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <hr className="perfil-page__divider" />
@@ -141,6 +144,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         userName={user.name}
                         userRating={user.rating}
                         userImageUrl={user.imageUrl}
+                        soloLectura={soloLectura}
                     />
                 )}
                 {mode === "tutor" && (
@@ -149,6 +153,7 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                         userName={user.name}
                         userRating={user.rating}
                         userImageUrl={user.imageUrl}
+                        soloLectura={soloLectura}
                     />
                 )}
 
@@ -164,13 +169,14 @@ export default function PerfilExterno({ userId }: PerfilExternoProps) {
                             refetchResenas();
                         }}
                         onCancel={() => {}}
+                        soloLectura={soloLectura}
                     />
                 </section>
             </>
         )}
         </PerspectivaInternaProvider>
 
-        {user && (
+        {user && !soloLectura && (
             <>
                 <MiniChatWidget
                     idUsuario={user.id_usuario}

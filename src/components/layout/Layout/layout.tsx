@@ -23,6 +23,7 @@ export default function Layout({ children }: LayoutProps) {
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
 
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
+  const isModeracionRoute = pathnameWithoutLocale.startsWith("/moderacion");
 
   useEffect(() => {
     if (!sidebarOpen) return;
@@ -44,6 +45,13 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
+
+  // El panel de moderador no comparte Navbar/Sidebar con la app de usuarios
+  // (Navbar esta construido sobre la sesion de usuario: useAuth, notificaciones,
+  // sockets). Arma su propio header en su propio layout anidado.
+  if (isModeracionRoute) {
+    return <>{children}</>;
+  }
 
   return (
     <div className="layout">

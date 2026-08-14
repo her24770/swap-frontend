@@ -1,0 +1,107 @@
+.login-moderador-form {
+  background-color: var(--swap-primary-background);
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 28rem;
+  padding: 2rem 2.5rem;
+}
+
+.login-moderador-form__brand {
+  color: var(--swap-primary-color);
+  height: 1.00rem;
+  width: auto;
+}
+
+.login-moderador-form__title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0.5rem 0 0.25rem;
+  text-align: center;
+}
+
+.login-moderador-form__subtitle {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  margin: 0 0 1.5rem;
+}
+
+.login-moderador-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-moderador-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.login-moderador-form__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--swap-primary-text-color);
+}
+
+.login-moderador-form__input {
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.375rem;
+  background-color: var(--swap-secondary-background);
+  color: var(--swap-primary-text-color);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: var(--swap-font-textos);
+}
+
+.login-moderador-form__input:focus {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 1px var(--swap-primary-color);
+}
+
+.login-moderador-form__input--error {
+  border-color: var(--swap-danger-color);
+}
+
+.login-moderador-form__error {
+  font-size: 0.75rem;
+  color: var(--swap-danger-color);
+}
+
+.login-moderador-form__input-wrapper {
+  position: relative;
+}
+
+.login-moderador-form__input--password {
+  width: 100%;
+  padding-right: 2.5rem;
+  box-sizing: border-box;
+}
+
+.login-moderador-form__toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.login-moderador-form__toggle-password:hover {
+  color: var(--swap-primary-text-color);
+}
+
+.login-moderador-form__input--password::-ms-reveal,
+.login-moderador-form__input--password::-ms-clear {
+  display: none;
+}

@@ -234,6 +234,45 @@
 			"passwordMin": "Minimum 6 characters"
 		}
 	},
+	"moderacion": {
+		"login": {
+			"title": "Moderation Panel",
+			"subtitle": "Enter your moderator credentials.",
+			"usuarioLabel": "Username",
+			"usuarioPlaceholder": "moderator.username",
+			"passwordLabel": "Password",
+			"togglePasswordAria": "Show or hide password",
+			"submit": "Sign in",
+			"submitting": "Signing in...",
+			"toast": {
+				"welcomeBack": "Moderator session started",
+				"invalidCredentials": "Incorrect username or password.",
+				"loginErrorFallback": "Couldn't sign in"
+			},
+			"validation": {
+				"usuarioRequired": "Username is required",
+				"passwordRequired": "Password is required"
+			}
+		},
+		"panel": {
+			"greeting": "Hi, {usuario}",
+			"nivelModerador": "Moderator",
+			"nivelSuperadmin": "Superadmin",
+			"logout": "Sign out",
+			"loading": "Checking session...",
+			"comingSoon": "Coming soon",
+			"sections": {
+				"reportes": {
+					"title": "Reports",
+					"description": "Review and resolve user reports."
+				},
+				"moderadores": {
+					"title": "Moderators",
+					"description": "Manage moderator accounts."
+				}
+			}
+		}
+	},
 	"forgotPassword": {
 		"title": "Reset password",
 		"emailLabel": "Email",

@@ -61,6 +61,7 @@ type Props = {
     onDetallesClick?: (p: Publicacion) => void;
     Ads?: Anuncio[];
     showPersonalizedRecommendationsButton?: boolean;
+    soloLectura?: boolean;
 };
 
 export default function PublicacionesList({
@@ -81,6 +82,7 @@ export default function PublicacionesList({
     onDetallesClick,
     Ads = [],
     showPersonalizedRecommendationsButton = false,
+    soloLectura = false,
 }: Props) {
     const t = useTranslations("seccion");
     const tEmpty = useTranslations("common.empty");
@@ -315,6 +317,7 @@ export default function PublicacionesList({
     const renderPostCard = (p: Publicacion) => (
         <PostCard
             key={p.id_publicacion}
+            soloLectura={soloLectura}
             publicacionId={p.id_publicacion}
             tags={mapTags(p)}
             title={p.titulo}
@@ -632,6 +635,7 @@ export default function PublicacionesList({
 
             {selectedPublicacion && (
                 <DetallePublicacion
+                    soloLectura={soloLectura}
                     isOpen={true}
                     onClose={handleClose}
                     type={selectedPublicacion.tipoPerfil?.tipo_perfil === "tutoria" ? "tutoria" : "venta"}
