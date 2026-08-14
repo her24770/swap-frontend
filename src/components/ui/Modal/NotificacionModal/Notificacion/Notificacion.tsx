@@ -18,6 +18,7 @@ interface NotificacionProps {
   notificacion: NotificacionData;
   onDismiss: (id: number) => void;
   onMarcarLeida?: (id: number) => void;
+  onAbrirChat?: (id: number) => void;
 }
 
 const TIPO_ICONS: Record<TipoNotificacion, React.ReactNode> = {
@@ -32,17 +33,26 @@ export default function Notificacion({
   notificacion,
   onDismiss,
   onMarcarLeida,
+  onAbrirChat,
 }: NotificacionProps) {
   const { id, tipo, titulo, descripcion, fecha, leida, } = notificacion;
 
+  const esMensaje = tipo === "mensaje";
+  const esClickeable = esMensaje || !leida;
+
+  const handleClick = () => {
+    if (!leida) onMarcarLeida?.(id);
+    if (esMensaje) onAbrirChat?.(id);
+  };
+
   return (
     <div
-      className={`notificacion${leida ? "" : " notificacion--unread"}`}
-      onClick={() => !leida && onMarcarLeida?.(id)}
-      role={leida ? undefined : "button"}
-      tabIndex={leida ? undefined : 0}
+      className={`notificacion${leida ? "" : " notificacion--unread"}${esMensaje ? " notificacion--clickable" : ""}`}
+      onClick={esClickeable ? handleClick : undefined}
+      role={esClickeable ? "button" : undefined}
+      tabIndex={esClickeable ? 0 : undefined}
       onKeyDown={(e) => {
-        if (!leida && (e.key === "Enter" || e.key === " ")) onMarcarLeida?.(id);
+        if (esClickeable && (e.key === "Enter" || e.key === " ")) handleClick();
       }}
     >
       {/* Dot de no leída */}

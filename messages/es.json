@@ -20,11 +20,11 @@
 			"mensajes": "Mensajes",
 			"guardados": "Guardados"
 		},
-		"settings":{
-			"settings" : "Ajustes de la aplicación",
-			"theme" : "Tema",
-			"themeDesc" : "Cambia entre claro y oscuro",
-			"language" : "Idioma",
+		"settings": {
+			"settings": "Ajustes de la aplicación",
+			"theme": "Tema",
+			"themeDesc": "Cambia entre claro y oscuro",
+			"language": "Idioma",
 			"languageDesc": "Selecciona tu idioma de preferencia"
 		}
 	},
@@ -167,7 +167,7 @@
 		"tema": "Tema",
 		"rechazar": "Rechazar",
 		"aceptar": "Aceptar",
-		"formulario":{
+		"formulario": {
 			"nuevaSolicitud": "Nueva solicitud de tutoría",
 			"titulo": "Solicitud de tutoría",
 			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
@@ -178,22 +178,19 @@
 			"tema": "Tema",
 			"enviarSolicitud": "Enviar solicitud",
 			"placeholderTema": "Describe el tema de la tutoría",
-			"placeholderLugar": "Ej. Plaza Paiz, UVG"	
-
+			"placeholderLugar": "Ej. Plaza Paiz, UVG"
 		}
-
-		
 	},
 	"descubre": {
 		"title": "Descubre",
 		"placeholderTitle": "Descubre",
 		"placeholderDescription": "Página de descubrimiento de publicaciones - Por desarrollar"
 	},
-	"seccion":{
+	"seccion": {
 		"reciente": "Publicaciones Recientes",
-		"recomendado" : "Publicaciones Recomendadas", 
-		"explorar" : "Explorar más",
-		"ads" : "Anuncios",
+		"recomendado": "Publicaciones Recomendadas",
+		"explorar": "Explorar más",
+		"ads": "Anuncios",
 		"populares": "Publicaciones Populares",
 		"tutores": "Tutores",
 		"personalizedRecommendationsButton": "Recomendados para ti",
@@ -373,7 +370,6 @@
 			"ads": "Anuncios",
 			"comments": "Comentarios y Reseñas",
 			"featured": "Publicaciones Destacadas"
-
 		},
 		"history": {
 			"emptyProducts": "Aún no tienes productos comprados.",
@@ -689,7 +685,7 @@
 		"agreement": {
 			"notes": "Observaciones",
 			"accept": "Aceptar",
-			"sendNew": "Enviar una nueva",
+			"sendNew": "Hacer contraoferta",
 			"reject": "Rechazar",
 			"pendingResponse": "Tu propuesta de acuerdo está pendiente de respuesta.",
 			"markCompleted": "Marcar como completado"

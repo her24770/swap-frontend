@@ -20,11 +20,11 @@
 			"mensajes": "Messages",
 			"guardados": "Saved"
 		},
-		"settings":{
-			"settings" : "Application settings",
-			"theme" : "Theme",
-			"themeDesc" : "Switch between light and dark",
-			"language" : "Language",
+		"settings": {
+			"settings": "Application settings",
+			"theme": "Theme",
+			"themeDesc": "Switch between light and dark",
+			"language": "Language",
 			"languageDesc": "Select your preferred language"
 		}
 	},
@@ -167,7 +167,7 @@
 		"tema": "Topic",
 		"rechazar": "Reject",
 		"aceptar": "Accept",
-		"formulario":{
+		"formulario": {
 			"nuevaSolicitud": "New tutoring request",
 			"titulo": "Tutoring request",
 			"descripcion": "Please complete the form to request tutoring.",
@@ -178,8 +178,7 @@
 			"tema": "Topic",
 			"enviarSolicitud": "Send request",
 			"placeholderTema": "Describe the topic of the tutoring session",
-			"placeholderLugar": "E.g. Plaza Paiz, UVG"	
-
+			"placeholderLugar": "E.g. Plaza Paiz, UVG"
 		}
 	},
 	"descubre": {
@@ -187,11 +186,11 @@
 		"placeholderTitle": "Discover",
 		"placeholderDescription": "Post discovery page — Coming soon"
 	},
-	"seccion":{
+	"seccion": {
 		"reciente": "Recent post",
-		"recomendado" : "Recommended post", 
-		"explorar" : "Explore more",
-		"ads" : "Advertisements",
+		"recomendado": "Recommended post",
+		"explorar": "Explore more",
+		"ads": "Advertisements",
 		"error_loading_section": "Couldn't load this section",
 		"populares": "Popular Posts",
 		"tutores": "Tutors",
@@ -393,7 +392,7 @@
 		},
 		"actions": {
 			"newPublication": "New post",
-			"changeAd": "Change ad", 
+			"changeAd": "Change ad",
 			"createAd": "New ad",
 			"editAd": "Edit ad",
 			"editSchedule": "Edit Schedule",
@@ -405,7 +404,6 @@
 			"createPublicationAria": "Create post",
 			"editPublicationAria": "Edit post"
 		}
-
 	},
 	"vendedor": {
 		"loading": "Loading profile...",
@@ -455,7 +453,6 @@
 			"8": "Inactive",
 			"9": "Cancelled",
 			"10": "Completed"
-
 		}
 	},
 	"comments": {
@@ -485,9 +482,9 @@
 		"certification": {
 			"title": "Certification",
 			"add": "Add certification",
-			"noCert" : "There are no certifications yet.",
-			"pdfNotA" : "Pdf is not available",
-			"select" : "Select a certification to view",
+			"noCert": "There are no certifications yet.",
+			"pdfNotA": "Pdf is not available",
+			"select": "Select a certification to view",
 			"delete": "Delete certification"
 		}
 	},
@@ -681,7 +678,7 @@
 		"agreement": {
 			"notes": "Notes",
 			"accept": "Accept",
-			"sendNew": "Send a new one",
+			"sendNew": "Make a counteroffer",
 			"reject": "Reject",
 			"pendingResponse": "Your agreement proposal is pending a response.",
 			"markCompleted": "Mark as completed"

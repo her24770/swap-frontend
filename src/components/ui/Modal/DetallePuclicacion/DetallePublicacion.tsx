@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { X, Bookmark, Loader2, ChevronRight } from "lucide-react";
+import { X, Bookmark, Loader2, ChevronRight, Flag } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
 import { useAuthStore } from "../../../../store/authStore";
 import { useGuardados } from "../../../../hooks/useGuardados";
@@ -21,6 +21,7 @@ import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
 import ModalSolicitudTutoria from "../Solicitud/Tutoria/SolicitudTutoriaModal"
+import ReporteModal from "../Reporte/ReporteModal";
 
 export type DetallePublicacionType = "venta" | "tutoria";
 
@@ -108,6 +109,7 @@ export default function DetallePublicacion({
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [solicitudTutoriaAbierta, setSolicitudTutoriaAbierta] = useState(false);
+  const [reportePublicacionAbierto, setReportePublicacionAbierto] = useState(false);
 
   if (!isOpen) return null;
 
@@ -294,18 +296,30 @@ export default function DetallePublicacion({
 
             <div className="post-modal__likes">
               {!soloLectura && (
-                <button
-                  type="button"
-                  className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
-                  onClick={handleToggleSave}
-                  aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
-                  disabled={saving}
-                >
-                  {saving
-                    ? <Loader2 size={18} className="post-modal__save-spinner" />
-                    : <Bookmark size={18} />
-                  }
-                </button>
+                <>
+                  {!esPropiaPublicacion && publicacionId && (
+                    <button
+                      type="button"
+                      className="post-modal__report"
+                      onClick={() => setReportePublicacionAbierto(true)}
+                      aria-label="Reportar publicación"
+                    >
+                      <Flag size={18} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
+                    onClick={handleToggleSave}
+                    aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
+                    disabled={saving}
+                  >
+                    {saving
+                      ? <Loader2 size={18} className="post-modal__save-spinner" />
+                      : <Bookmark size={18} />
+                    }
+                  </button>
+                </>
               )}
               <span className="post-modal__likes-count">{likes}</span>
             </div>
@@ -359,6 +373,14 @@ export default function DetallePublicacion({
       onClose={() => setSolicitudTutoriaAbierta(false)}
       onSubmit={() => setSolicitudTutoriaAbierta(false)}
     />
+    {publicacionId && (
+      <ReporteModal
+        isOpen={reportePublicacionAbierto}
+        tipoObjetivo="publicacion"
+        idObjetivo={publicacionId}
+        onClose={() => setReportePublicacionAbierto(false)}
+      />
+    )}
     </>
   );
 

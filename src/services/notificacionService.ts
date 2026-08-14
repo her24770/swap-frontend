@@ -1,6 +1,6 @@
 import { apiClient } from "../lib/apiClient";
 import type { ApiResult } from "../types/ApiResult";
-import type { NotificacionData } from "../components/ui/Modal/NotificacionModal/Notificacion/Notificacion";
+import type { NotificacionData, TipoNotificacion } from "../components/ui/Modal/NotificacionModal/Notificacion/Notificacion";
 
 export interface NotificacionApi {
   id_notificacion: number;
@@ -11,11 +11,19 @@ export interface NotificacionApi {
   estado: { estado: string };
 }
 
+function inferirTipo(mensaje: string): { tipo: TipoNotificacion; titulo: string } {
+  if (mensaje === "Tienes un nuevo mensaje") {
+    return { tipo: "mensaje", titulo: "Nuevo mensaje" };
+  }
+  return { tipo: "sistema", titulo: "Notificación del sistema" };
+}
+
 export function mapNotificacion(n: NotificacionApi): NotificacionData {
+  const { tipo, titulo } = inferirTipo(n.mensaje);
   return {
     id: n.id_notificacion,
-    tipo: "sistema",
-    titulo: "Notificación del sistema",
+    tipo,
+    titulo,
     descripcion: n.mensaje,
     fecha: new Date(n.fecha).toLocaleDateString("es-GT", {
       day: "numeric",

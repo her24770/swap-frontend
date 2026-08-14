@@ -25,6 +25,12 @@ export interface CrearSolicitudAcuerdoInput {
   id_conversacion: number;
 }
 
+export interface EditarSolicitudAcuerdoInput {
+  fecha_entrega: string; // ISO 8601
+  lugar_entrega: string;
+  observaciones: string;
+}
+
 export type EstadoAcuerdoNombre = "activo" | "pendiente" | "completado" | "cancelado";
 
 interface AcuerdoRespuesta {
@@ -100,6 +106,21 @@ export const acuerdoService = {
     estado: EstadoAcuerdoNombre
   ): Promise<AcuerdoRespuesta["data"]> {
     const response = await apiClient.put<AcuerdoRespuesta>(`/api/acuerdo/${idAcuerdo}`, { estado });
+    return response.data;
+  },
+
+  /*
+      Editar una solicitud de acuerdo existente (PUT /api/acuerdo/:idAcuerdo/editar)
+  */
+  async editarSolicitud(
+    idAcuerdo: number,
+    data: EditarSolicitudAcuerdoInput
+  ): Promise<AcuerdoRespuesta["data"]> {
+    const response = await apiClient.put<AcuerdoRespuesta>(
+      `/api/acuerdo/${idAcuerdo}/editar`,
+      data
+    );
+
     return response.data;
   },
 };

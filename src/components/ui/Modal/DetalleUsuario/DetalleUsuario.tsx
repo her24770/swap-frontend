@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { X, ChevronRight, UserCircle2 } from "lucide-react";
+import { useState } from "react";
+import { X, ChevronRight, Flag, UserCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
+import ReporteModal from "../Reporte/ReporteModal";
 import type { Tag } from "../../../../types/tag";
 import "../../../ui/Button/Button.css";
 import "../Modal.css";
@@ -42,6 +44,7 @@ export default function DetalleUsuario({
   onVerPerfil,
 }: DetalleUsuarioProps) {
   const t = useTranslations("posts");
+  const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
 
   if (!isOpen) return null;
 
@@ -125,6 +128,17 @@ export default function DetalleUsuario({
         )}
 
         <div className="post-modal__actions">
+          {userId !== undefined && (
+            <button
+              type="button"
+              className="button button--medium button--outline button--full-width"
+              onClick={() => setReporteUsuarioAbierto(true)}
+            >
+              <Flag size={16} />
+              Reportar
+            </button>
+          )}
+
           {onVerCertificados && (
             <button
               type="button"
@@ -145,6 +159,14 @@ export default function DetalleUsuario({
             </button>
           )}
         </div>
+        {userId !== undefined && (
+          <ReporteModal
+            isOpen={reporteUsuarioAbierto}
+            tipoObjetivo="usuario"
+            idObjetivo={userId}
+            onClose={() => setReporteUsuarioAbierto(false)}
+          />
+        )}
       </div>
     </div>
   );

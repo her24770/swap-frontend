@@ -71,7 +71,7 @@ export default function Layout({ children }: LayoutProps) {
         </main>
       </div>
 
-      {!isAuthRoute && (
+      {!isAuthRoute && !pathnameWithoutLocale.startsWith("/Chat") && (
         <div className="layout__fab-wrapper">
           <FloatingButton
           onClick={() => {

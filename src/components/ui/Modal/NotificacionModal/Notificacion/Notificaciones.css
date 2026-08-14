@@ -22,6 +22,14 @@
   background-color: var(--swap-secondary-background);
 }
 
+.notificacion--clickable {
+  cursor: pointer;
+}
+
+.notificacion--clickable:hover {
+  background-color: var(--swap-secondary-background);
+}
+
 /* ── Dot de no leída ─────────────────────────────────────────────────────── */
 
 .notificacion__dot {
