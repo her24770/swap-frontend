@@ -275,6 +275,77 @@
 					"description": "Gestionar cuentas de moderador."
 				}
 			}
+		},
+		"publicaciones": {
+			"title": "Publicaciones",
+			"subtitle": "Visualiza, filtra y modera publicaciones de toda la plataforma.",
+			"resultsCount": "{count, plural, =1 {1 resultado} other {# resultados}}",
+			"searchPlaceholder": "Buscar por título, descripción, usuario o correo",
+			"tipos": {
+				"todos": "Todos los tipos",
+				"negocio": "Negocios",
+				"material": "Materiales",
+				"tutoria": "Tutorías"
+			},
+			"estados": {
+				"todos": "Todos los estados",
+				"activo": "Activo",
+				"inactivo": "Inactivo",
+				"disponible": "Disponible",
+				"reservado": "Reservado",
+				"vendido": "Vendido"
+			},
+			"sort": {
+				"fechaDesc": "Más recientes",
+				"fechaAsc": "Más antiguas",
+				"meGustaDesc": "Más likes",
+				"precioDesc": "Mayor precio",
+				"precioAsc": "Menor precio"
+			},
+			"motivosReactivacion": {
+				"errorModeracion": "Error de moderación",
+				"revisadaPermitida": "Publicación revisada y permitida",
+				"correccionUsuario": "Corrección aplicada por el usuario"
+			},
+			"acciones": {
+				"reactivar": "Reactivar",
+				"bajar": "Bajar publicación",
+				"eliminar": "Eliminar",
+				"detalle": "Detalle"
+			},
+			"card": {
+				"sinImagen": "Sin imagen",
+				"sinTipo": "Sin tipo",
+				"usuarioDesconocido": "Usuario desconocido",
+				"sinCorreo": "Sin correo",
+				"estadoFallback": "Estado {estado}"
+			},
+			"loading": "Cargando publicaciones...",
+			"empty": "No hay publicaciones que coincidan con los filtros.",
+			"errorCarga": "No fue posible cargar publicaciones.",
+			"errorAccion": "No fue posible completar la acción.",
+			"toasts": {
+				"bajadaSuccess": "Publicación bajada exitosamente.",
+				"reactivadaSuccess": "Publicación reactivada exitosamente.",
+				"eliminadaSuccess": "Publicación eliminada exitosamente."
+			},
+			"pagination": {
+				"anterior": "Anterior",
+				"siguiente": "Siguiente",
+				"paginaInfo": "Página {page} de {pageCount}"
+			},
+			"justificante": {
+				"titulos": {
+					"bajar": "Bajar publicación",
+					"reactivar": "Reactivar publicación",
+					"eliminar": "Eliminar publicación"
+				},
+				"preguntas": {
+					"bajar": "¿Por qué quieres bajar la publicación?",
+					"reactivar": "¿Por qué quieres reactivar la publicación?",
+					"eliminar": "¿Por qué quieres eliminar la publicación?"
+				}
+			}
 		}
 	},
 	"forgotPassword": {

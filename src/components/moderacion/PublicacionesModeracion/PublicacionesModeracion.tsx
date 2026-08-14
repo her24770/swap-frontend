@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Eye, Loader2, Trash2, Ban, RotateCcw } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import SearchBar from "../../ui/SearchBar/SearchBar";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
 import JustificanteModeracionModal from "../../ui/Modal/Reporte/JustificanteModeracionModal";
@@ -17,26 +18,20 @@ import "./PublicacionesModeracion.css";
 const ITEMS_PER_PAGE = 12;
 
 const TIPOS = [
-  { value: "", label: "Todos los tipos" },
-  { value: "negocio", label: "Negocios" },
-  { value: "material", label: "Materiales" },
-  { value: "tutoria", label: "Tutorías" },
+  { value: "", labelKey: "tipos.todos" },
+  { value: "negocio", labelKey: "tipos.negocio" },
+  { value: "material", labelKey: "tipos.material" },
+  { value: "tutoria", labelKey: "tipos.tutoria" },
 ] as const;
 
 const ESTADOS = [
-  { value: "", label: "Todos los estados" },
-  { value: "activo", label: "Activo" },
-  { value: "inactivo", label: "Inactivo" },
-  { value: "disponible", label: "Disponible" },
-  { value: "reservado", label: "Reservado" },
-  { value: "vendido", label: "Vendido" },
+  { value: "", labelKey: "estados.todos" },
+  { value: "activo", labelKey: "estados.activo" },
+  { value: "inactivo", labelKey: "estados.inactivo" },
+  { value: "disponible", labelKey: "estados.disponible" },
+  { value: "reservado", labelKey: "estados.reservado" },
+  { value: "vendido", labelKey: "estados.vendido" },
 ] as const;
-
-const MOTIVOS_REACTIVACION = [
-  "Error de moderación",
-  "Publicación revisada y permitida",
-  "Corrección aplicada por el usuario",
-];
 
 function tagsFromPublicacion(publicacion: Publicacion): Tag[] {
   return publicacion.etiquetas?.map((rel) => ({
@@ -50,8 +45,8 @@ function getImage(publicacion: Publicacion): string {
   return normalizeImageUrl(publicacion.imagenes?.[0]?.url_imagen ?? "");
 }
 
-function formatFecha(fecha: string): string {
-  return new Intl.DateTimeFormat("es-GT", {
+function formatFecha(fecha: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -67,6 +62,7 @@ interface AccionesPublicacionProps {
 }
 
 function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, busy }: AccionesPublicacionProps) {
+  const t = useTranslations("moderacion.publicaciones");
   const estaInactiva = publicacion.estadoRel?.estado === "inactivo";
 
   return (
@@ -79,7 +75,7 @@ function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, bu
           disabled={busy}
         >
           {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <RotateCcw size={16} />}
-          Reactivar
+          {t("acciones.reactivar")}
         </button>
       ) : (
         <button
@@ -89,7 +85,7 @@ function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, bu
           disabled={busy}
         >
           {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <Ban size={16} />}
-          Bajar publicación
+          {t("acciones.bajar")}
         </button>
       )}
       <button
@@ -99,7 +95,7 @@ function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, bu
         disabled={busy}
       >
         {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <Trash2 size={16} />}
-        Eliminar
+        {t("acciones.eliminar")}
       </button>
     </div>
   );
@@ -113,6 +109,8 @@ interface JustificantePendiente {
 }
 
 export default function PublicacionesModeracion() {
+  const t = useTranslations("moderacion.publicaciones");
+  const locale = useLocale();
   const toast = useToast();
   const [publicaciones, setPublicaciones] = useState<Publicacion[]>([]);
   const [total, setTotal] = useState(0);
@@ -128,6 +126,15 @@ export default function PublicacionesModeracion() {
   const [selected, setSelected] = useState<Publicacion | null>(null);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [justificantePendiente, setJustificantePendiente] = useState<JustificantePendiente | null>(null);
+
+  const motivosReactivacion = useMemo(
+    () => [
+      t("motivosReactivacion.errorModeracion"),
+      t("motivosReactivacion.revisadaPermitida"),
+      t("motivosReactivacion.correccionUsuario"),
+    ],
+    [t]
+  );
 
   const pageCount = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
@@ -149,14 +156,14 @@ export default function PublicacionesModeracion() {
       setPublicaciones(response.publicaciones);
       setTotal(response.total);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "No fue posible cargar publicaciones.";
+      const message = err instanceof Error ? err.message : t("errorCarga");
       setError(message);
       setPublicaciones([]);
       setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, t]);
 
   useEffect(() => {
     void cargarPublicaciones();
@@ -194,7 +201,7 @@ export default function PublicacionesModeracion() {
           ...pub,
           estadoRel: { id_estado: pub.estadoRel?.id_estado ?? pub.estado, estado: "inactivo" },
         }));
-        toast.success("Publicación bajada exitosamente.");
+        toast.success(t("toasts.bajadaSuccess"));
       }
 
       if (accion === "reactivar") {
@@ -203,7 +210,7 @@ export default function PublicacionesModeracion() {
           ...pub,
           estadoRel: { id_estado: pub.estadoRel?.id_estado ?? pub.estado, estado: "activo" },
         }));
-        toast.success("Publicación reactivada exitosamente.");
+        toast.success(t("toasts.reactivadaSuccess"));
       }
 
       if (accion === "eliminar") {
@@ -211,46 +218,46 @@ export default function PublicacionesModeracion() {
         setPublicaciones((prev) => prev.filter((pub) => pub.id_publicacion !== publicacion.id_publicacion));
         setTotal((prev) => Math.max(0, prev - 1));
         setSelected((prev) => prev?.id_publicacion === publicacion.id_publicacion ? null : prev);
-        toast.success("Publicación eliminada exitosamente.");
+        toast.success(t("toasts.eliminadaSuccess"));
       }
 
       setJustificantePendiente(null);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "No fue posible completar la acción.");
+      toast.error(err instanceof Error ? err.message : t("errorAccion"));
     } finally {
       setBusyId(null);
     }
   };
 
   const tituloJustificante = justificantePendiente?.accion === "bajar"
-    ? "Bajar publicación"
+    ? t("justificante.titulos.bajar")
     : justificantePendiente?.accion === "reactivar"
-      ? "Reactivar publicación"
-      : "Eliminar publicación";
+      ? t("justificante.titulos.reactivar")
+      : t("justificante.titulos.eliminar");
 
   const preguntaJustificante = justificantePendiente?.accion === "reactivar"
-    ? "¿Por qué quieres reactivar la publicación?"
+    ? t("justificante.preguntas.reactivar")
     : justificantePendiente?.accion === "eliminar"
-      ? "¿Por qué quieres eliminar la publicación?"
-      : "¿Por qué quieres bajar la publicación?";
+      ? t("justificante.preguntas.eliminar")
+      : t("justificante.preguntas.bajar");
 
   return (
     <main className="moderacion-publicaciones">
       <div className="moderacion-publicaciones__header">
         <div>
-          <h1 className="moderacion-publicaciones__title">Publicaciones</h1>
+          <h1 className="moderacion-publicaciones__title">{t("title")}</h1>
           <p className="moderacion-publicaciones__subtitle">
-            Visualiza, filtra y modera publicaciones de toda la plataforma.
+            {t("subtitle")}
           </p>
         </div>
-        <span className="moderacion-publicaciones__count">{total} resultados</span>
+        <span className="moderacion-publicaciones__count">{t("resultsCount", { count: total })}</span>
       </div>
 
       <div className="moderacion-publicaciones__filters">
         <SearchBar
           value={qDraft}
           onChange={setQDraft}
-          placeholder="Buscar por título, descripción, usuario o correo"
+          placeholder={t("searchPlaceholder")}
         />
         <select
           className="moderacion-publicaciones__select"
@@ -261,7 +268,7 @@ export default function PublicacionesModeracion() {
           }}
         >
           {TIPOS.map((option) => (
-            <option key={option.value} value={option.value}>{option.label}</option>
+            <option key={option.value} value={option.value}>{t(option.labelKey)}</option>
           ))}
         </select>
         <select
@@ -273,7 +280,7 @@ export default function PublicacionesModeracion() {
           }}
         >
           {ESTADOS.map((option) => (
-            <option key={option.value} value={option.value}>{option.label}</option>
+            <option key={option.value} value={option.value}>{t(option.labelKey)}</option>
           ))}
         </select>
         <select
@@ -286,11 +293,11 @@ export default function PublicacionesModeracion() {
             setPage(1);
           }}
         >
-          <option value="fecha:desc">Más recientes</option>
-          <option value="fecha:asc">Más antiguas</option>
-          <option value="me_gusta:desc">Más likes</option>
-          <option value="precio:desc">Mayor precio</option>
-          <option value="precio:asc">Menor precio</option>
+          <option value="fecha:desc">{t("sort.fechaDesc")}</option>
+          <option value="fecha:asc">{t("sort.fechaAsc")}</option>
+          <option value="me_gusta:desc">{t("sort.meGustaDesc")}</option>
+          <option value="precio:desc">{t("sort.precioDesc")}</option>
+          <option value="precio:asc">{t("sort.precioAsc")}</option>
         </select>
       </div>
 
@@ -299,10 +306,10 @@ export default function PublicacionesModeracion() {
       {loading ? (
         <div className="moderacion-publicaciones__loading">
           <Loader2 className="moderacion-publicaciones__spinner" size={24} />
-          Cargando publicaciones...
+          {t("loading")}
         </div>
       ) : publicaciones.length === 0 ? (
-        <div className="moderacion-publicaciones__empty">No hay publicaciones que coincidan con los filtros.</div>
+        <div className="moderacion-publicaciones__empty">{t("empty")}</div>
       ) : (
         <div className="moderacion-publicaciones__grid">
           {publicaciones.map((publicacion) => {
@@ -315,15 +322,25 @@ export default function PublicacionesModeracion() {
                   {imagen ? (
                     <Image src={imagen} alt={publicacion.titulo} fill sizes="(max-width: 768px) 100vw, 33vw" unoptimized />
                   ) : (
-                    <span>Sin imagen</span>
+                    <span>{t("card.sinImagen")}</span>
                   )}
                 </div>
 
                 <div className="moderacion-publicaciones__content">
                   <div className="moderacion-publicaciones__meta">
-                    <span className="moderacion-publicaciones__badge">{publicacion.tipoPerfil?.tipo_perfil ?? "Sin tipo"}</span>
+                    <span className="moderacion-publicaciones__badge">
+                      {publicacion.tipoPerfil?.tipo_perfil
+                        ? t.has(`tipos.${publicacion.tipoPerfil.tipo_perfil}`)
+                          ? t(`tipos.${publicacion.tipoPerfil.tipo_perfil}`)
+                          : publicacion.tipoPerfil.tipo_perfil
+                        : t("card.sinTipo")}
+                    </span>
                     <span className={`moderacion-publicaciones__estado moderacion-publicaciones__estado--${publicacion.estadoRel?.estado ?? "desconocido"}`}>
-                      {publicacion.estadoRel?.estado ?? `Estado ${publicacion.estado}`}
+                      {publicacion.estadoRel?.estado
+                        ? t.has(`estados.${publicacion.estadoRel.estado}`)
+                          ? t(`estados.${publicacion.estadoRel.estado}`)
+                          : publicacion.estadoRel.estado
+                        : t("card.estadoFallback", { estado: publicacion.estado })}
                     </span>
                   </div>
 
@@ -331,14 +348,14 @@ export default function PublicacionesModeracion() {
                   <p className="moderacion-publicaciones__description">{publicacion.descripcion}</p>
 
                   <div className="moderacion-publicaciones__seller">
-                    <span>{publicacion.usuario?.nombre ?? "Usuario desconocido"}</span>
-                    <span>{publicacion.usuario?.email_institucional ?? "Sin correo"}</span>
+                    <span>{publicacion.usuario?.nombre ?? t("card.usuarioDesconocido")}</span>
+                    <span>{publicacion.usuario?.email_institucional ?? t("card.sinCorreo")}</span>
                   </div>
 
                   <div className="moderacion-publicaciones__footer">
                     <div>
                       <strong>Q{Number(publicacion.precio).toFixed(2)}</strong>
-                      <span>{formatFecha(publicacion.fecha_publicacion)}</span>
+                      <span>{formatFecha(publicacion.fecha_publicacion, locale)}</span>
                     </div>
                     <button
                       type="button"
@@ -346,7 +363,7 @@ export default function PublicacionesModeracion() {
                       onClick={() => setSelected(publicacion)}
                     >
                       <Eye size={14} />
-                      Detalle
+                      {t("acciones.detalle")}
                     </button>
                   </div>
 
@@ -372,16 +389,16 @@ export default function PublicacionesModeracion() {
           disabled={page <= 1 || loading}
         >
           <ChevronLeft size={14} />
-          Anterior
+          {t("pagination.anterior")}
         </button>
-        <span>Página {page} de {pageCount}</span>
+        <span>{t("pagination.paginaInfo", { page, pageCount })}</span>
         <button
           type="button"
           className="button button--small"
           onClick={() => setPage((prev) => Math.min(pageCount, prev + 1))}
           disabled={page >= pageCount || loading}
         >
-          Siguiente
+          {t("pagination.siguiente")}
           <ChevronRight size={14} />
         </button>
       </div>
@@ -398,7 +415,7 @@ export default function PublicacionesModeracion() {
           tags={tagsFromPublicacion(selected)}
           likes={selected.me_gusta}
           publicacionId={selected.id_publicacion}
-          sellerName={selected.usuario?.nombre ?? "Usuario desconocido"}
+          sellerName={selected.usuario?.nombre ?? t("card.usuarioDesconocido")}
           sellerRating={selected.usuario?.calificacion ?? 0}
           sellerId={selected.usuario?.id_usuario}
           sellerImageUrl={selected.usuario?.url_foto_perfil}
@@ -423,7 +440,7 @@ export default function PublicacionesModeracion() {
           tipoObjetivo="publicacion"
           titulo={tituloJustificante}
           pregunta={preguntaJustificante}
-          motivosPersonalizados={justificantePendiente.accion === "reactivar" ? MOTIVOS_REACTIVACION : undefined}
+          motivosPersonalizados={justificantePendiente.accion === "reactivar" ? motivosReactivacion : undefined}
           enviando={busyId === justificantePendiente.publicacion.id_publicacion}
           onClose={() => setJustificantePendiente(null)}
           onSubmit={ejecutarAccionModeracion}

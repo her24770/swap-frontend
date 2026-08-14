@@ -275,6 +275,77 @@
 					"description": "Manage moderator accounts."
 				}
 			}
+		},
+		"publicaciones": {
+			"title": "Posts",
+			"subtitle": "View, filter, and moderate platform posts.",
+			"resultsCount": "{count, plural, =1 {1 result} other {# results}}",
+			"searchPlaceholder": "Search by title, description, user, or email",
+			"tipos": {
+				"todos": "All types",
+				"negocio": "Businesses",
+				"material": "Materials",
+				"tutoria": "Tutoring"
+			},
+			"estados": {
+				"todos": "All statuses",
+				"activo": "Active",
+				"inactivo": "Inactive",
+				"disponible": "Available",
+				"reservado": "Reserved",
+				"vendido": "Sold"
+			},
+			"sort": {
+				"fechaDesc": "Most recent",
+				"fechaAsc": "Oldest",
+				"meGustaDesc": "Most likes",
+				"precioDesc": "Highest price",
+				"precioAsc": "Lowest price"
+			},
+			"motivosReactivacion": {
+				"errorModeracion": "Moderation error",
+				"revisadaPermitida": "Post reviewed and allowed",
+				"correccionUsuario": "Correction applied by user"
+			},
+			"acciones": {
+				"reactivar": "Reactivate",
+				"bajar": "Take down post",
+				"eliminar": "Delete",
+				"detalle": "Detail"
+			},
+			"card": {
+				"sinImagen": "No image",
+				"sinTipo": "No type",
+				"usuarioDesconocido": "Unknown user",
+				"sinCorreo": "No email",
+				"estadoFallback": "Status {estado}"
+			},
+			"loading": "Loading posts...",
+			"empty": "No posts match the selected filters.",
+			"errorCarga": "Failed to load posts.",
+			"errorAccion": "Failed to complete the action.",
+			"toasts": {
+				"bajadaSuccess": "Post taken down successfully.",
+				"reactivadaSuccess": "Post reactivated successfully.",
+				"eliminadaSuccess": "Post deleted successfully."
+			},
+			"pagination": {
+				"anterior": "Previous",
+				"siguiente": "Next",
+				"paginaInfo": "Page {page} of {pageCount}"
+			},
+			"justificante": {
+				"titulos": {
+					"bajar": "Take down post",
+					"reactivar": "Reactivate post",
+					"eliminar": "Delete post"
+				},
+				"preguntas": {
+					"bajar": "Why do you want to take down the post?",
+					"reactivar": "Why do you want to reactivate the post?",
+					"eliminar": "Why do you want to delete the post?"
+				}
+			}
 		}
 	},
 	"forgotPassword": {
