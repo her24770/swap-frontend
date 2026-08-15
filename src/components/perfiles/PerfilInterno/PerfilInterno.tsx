@@ -15,6 +15,7 @@ import {
   usePerspectivaInterna,
 } from "../../../context/PerspectivaInternaContext";
 import { useAuthStore } from "../../../store/authStore";
+import { useModeradorAuthStore } from "../../../store/moderadorAuthStore";
 import type { ApiResult } from "../../../types/ApiResult";
 import type { AuthResponse } from "../../../types/usuario";
 import type { UserProfileData } from "../../../types/perfil";
@@ -34,6 +35,7 @@ export default function PerfilInterno() {
   const [error, setError] = useState<string | null>(null);
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
   const login = useAuthStore((s) => s.login);
+  const moderador = useModeradorAuthStore((s) => s.moderador);
   const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(idUsuario, mode);
 
 
@@ -44,6 +46,12 @@ export default function PerfilInterno() {
         let usuarioId = idUsuario;
 
         if (!usuarioId) {
+          // Si solo hay sesion de moderador (sin sesion de usuario), NO se resuelve /api/auth/me
+          if (moderador) {
+            setError("Los moderadores no tienen un perfil de usuario propio.");
+            return;
+          }
+
           const sesionResponse = await apiClient.get<ApiResult<AuthResponse> | AuthResponse>(
             "/api/auth/me"
           );
@@ -59,7 +67,7 @@ export default function PerfilInterno() {
     };
 
     fetchUser();
-  }, [idUsuario, login]);
+  }, [idUsuario, login, moderador]);
 
   if (error) return <p className="perfil-page__loading">{error}</p>;
 
