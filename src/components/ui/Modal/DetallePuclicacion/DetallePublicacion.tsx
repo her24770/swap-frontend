@@ -5,9 +5,10 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { X, Bookmark, Loader2, ChevronRight, Flag } from "lucide-react";
+import { X, Bookmark, Loader2, ChevronRight, Flag, AlertTriangle, Trash2 } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
 import { useAuthStore } from "../../../../store/authStore";
+import { useUIStore } from "../../../../store/uiStore";
 import { useGuardados } from "../../../../hooks/useGuardados";
 import EstadoTag from "../../../posts/PostCard/EstadoTag/EstadoTag";
 import type { EstadoOpcion } from "../../../../hooks/useEstados";
@@ -104,6 +105,7 @@ export default function DetallePublicacion({
   const locale = useLocale();
   const router = useRouter();
   const guardados = useGuardados();
+  const { agregarNotificacion, mostrarConfirm } = useUIStore();
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
   const [saving, setSaving] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
@@ -142,6 +144,29 @@ export default function DetallePublicacion({
     } finally {
       setSaving(false);
     }
+  };
+
+  // TODO: conectar con el endpoint de moderacion cuando exista (aun no hay
+  // soporte en el backend para advertencias ni para eliminar publicaciones
+  // ajenas como moderador). Por ahora solo se deja el boton disponible.
+  const handleAdvertenciaModerador = () => {
+    agregarNotificacion({
+      tipo: "info",
+      mensaje: "Advertencias: función en desarrollo, aún no disponible.",
+    });
+  };
+
+  const handleEliminarModerador = () => {
+    mostrarConfirm({
+      titulo: "Eliminar publicación",
+      mensaje: "¿Seguro que deseas eliminar esta publicación como moderador? Esta acción no se puede deshacer.",
+      onConfirm: () => {
+        agregarNotificacion({
+          tipo: "info",
+          mensaje: "Eliminar publicación: función en desarrollo, aún no disponible.",
+        });
+      },
+    });
   };
 
   const handleOpenMessageModal = (callback?: () => void) => {
@@ -323,6 +348,34 @@ export default function DetallePublicacion({
               )}
               <span className="post-modal__likes-count">{likes}</span>
             </div>
+
+            {soloLectura && (
+              <div className="post-modal__actions post-modal__actions--moderador">
+                {publicacionId && (
+                  <button
+                    type="button"
+                    className="button button--medium button--secondary button--full-width"
+                    onClick={() => setReportePublicacionAbierto(true)}
+                  >
+                    <Flag size={16} /> Reportar
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className="button button--medium button--warning button--full-width"
+                  onClick={handleAdvertenciaModerador}
+                >
+                  <AlertTriangle size={16} /> Advertencia
+                </button>
+                <button
+                  type="button"
+                  className="button button--medium button--danger button--full-width"
+                  onClick={handleEliminarModerador}
+                >
+                  <Trash2 size={16} /> Eliminar publicación
+                </button>
+              </div>
+            )}
             {!soloLectura && type === "tutoria" && (
               <>
                 <button
