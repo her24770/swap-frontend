@@ -457,11 +457,19 @@
 	},
 	"comments": {
 		"empty": "Aún no hay comentarios.",
+		"actions": {
+			"edit": "Editar comentario",
+			"delete": "Eliminar comentario",
+			"editPrompt": "Edita tu comentario:",
+			"deleteConfirm": "¿Seguro que deseas eliminar este comentario?"
+		},
 		"form": {
 			"starsAria": "{count} estrellas",
 			"placeholder": "Deja un comentario a {name}",
 			"sendAnonymous": "Enviar como anónimo"
-		}
+		},
+		"title": "Comentarios y Reseñas"
+
 	},
 	"profileHeader": {
 		"toast": {

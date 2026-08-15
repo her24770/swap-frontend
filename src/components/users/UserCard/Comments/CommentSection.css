@@ -13,14 +13,22 @@
 
 .comment-section__list-col {
   flex: 1;
-  min-width: 0;
+  width: 100%;
 }
+
+.comment-section:not(:has(.comment-section__form-col)) .comment-section__list-col {
+  flex: 1 1 100%;
+}
+
+
+
 
 .comment-section__list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   max-height: 16rem;
+  width: 100%;
   overflow-y: auto;
   padding-right: 0.5rem;
   scrollbar-width: thin;

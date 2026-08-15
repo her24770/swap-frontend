@@ -135,7 +135,6 @@ export default function PerfilInterno() {
 
           {mode !== "consumidor" && (
             <>
-              <hr className="perfil-page__divider" />
               <CommentSection
                 targetName={user.name}
                 idReceptor={user.id_usuario}

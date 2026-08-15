@@ -17,9 +17,9 @@ import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
 import { UserProfileHeaderSkeleton } from "../../users/UserCard/UserProfileHeader/UserProfileHeadearSkeleton/UserProfileHeaderSkeleton";
 import {
-  PerfilModeToggleSkeleton,
-  VistaTutorSectionsSkeleton,
-  VistaVendedorSectionsSkeleton,
+    PerfilModeToggleSkeleton,
+    VistaTutorSectionsSkeleton,
+    VistaVendedorSectionsSkeleton,
 } from "../perfilLoading";
 import "../../../app/[locale]/perfil/PerfilConsumidorPage.css";
 
@@ -52,7 +52,9 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
         setMode(initialMode);
         refetchResenas();
     }, [initialMode]);
+    
 
+    
     useEffect(() => {
         const fetchUser = async () => {
         try {
@@ -158,12 +160,14 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
                 <hr className="perfil-page__divider" />
 
                 <section className="perfil-page__section">
-                    <h2 className="perfil-page__section-title">{t("sections.comments")}</h2>
                     <CommentSection
                         targetName={user.name}
                         idReceptor={user.id_usuario}
                         comments={ResenasUsuario}
-                        onSuccessSubmit={refetchResenas}
+                        onSuccessSubmit={() => {
+                            getPerfilPublico(userId).then((updatedUser) => setUser(updatedUser));
+                            refetchResenas();
+                        }}
                         onCancel={() => {}}
                         soloLectura={soloLectura}
                     />

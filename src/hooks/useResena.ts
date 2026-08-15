@@ -47,9 +47,26 @@ export function useResena() {
         }
     };
 
+
+    const eliminarResena = async (idResena: number): Promise<boolean> => {
+        setLoading(true);
+        setError(null);
+        try {
+            await resenaService.eliminarResena(idResena);
+            return true;
+        } catch (err: any) {
+            const mensajeError = err?.response?.data?.message || err.message || "Error al eliminar la reseña";
+            setError(mensajeError);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return {
         crearNuevaResena,
         editarResenaExistente,
+        eliminarResena,
         loading,
         error,
         setError, 

@@ -5,6 +5,8 @@ import CommentCard from "./CommentCard/CommentCard";
 import CommentForm from "./CommentForm/CommentForm";
 import "./CommentSection.css";
 import type { Resena} from "../../../../types/resena";
+import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
+import { useAuthStore } from "../../../../store/authStore";
 
 
 interface CommentSectionProps {
@@ -24,40 +26,50 @@ export default function CommentSection({
   onCancel,
   soloLectura = false,
 }: CommentSectionProps) {
+
   const t = useTranslations('comments');
+  const { isOwnProfile } = usePerspectivaInterna();
+  const currentUserId = useAuthStore((state) => state.usuario?.id_usuario);
 
   return (
-    <div className="comment-section">
-      {/* Formulario izquierda */}
-      {!soloLectura && (
-        <div className="comment-section__form-col">
-          <CommentForm
-            targetName={targetName}
-            idReceptor={idReceptor}
-            onSuccess={onSuccessSubmit}
-            onCancel={onCancel}
-          />
-        </div>
-      )}
-
-      <div className="comment-section__list-col">
-        <div className="comment-section__list">
-          {comments.map((c) => (
-            <CommentCard
-              key={c.id_resena}
-              commentId={c.id_resena}
-              authorId={c.emisor.id_usuario}
-              authorName={c.emisor.nombre}
-              timeAgo={c.fecha_resena}
-              rating={c.calificacion}
-              comment={c.contenido}
+    <>
+      <h2 className="perfil-page__catalog-bar-title">{t("title")}</h2>
+      <div className="comment-section">
+        
+        {!isOwnProfile && (
+          <div className="comment-section__form-col">
+            <CommentForm
+              targetName={targetName}
+              idReceptor={idReceptor} 
+              onSuccess={onSuccessSubmit} 
+              onCancel={onCancel}
             />
-          ))}
-          {comments.length === 0 && (
-            <p className="comment-section__empty">{t('empty')}</p>
-          )}
+          </div>
+        )}
+
+        <div className="comment-section__list-col">
+          <div className="comment-section__list">
+            {comments.map((c) => (
+              <CommentCard
+                key={c.id_resena}
+                commentId={c.id_resena}
+                authorId={c.emisor.id_usuario}
+                idResena={c.id_resena}
+                authorName={c.emisor.nombre}
+                timeAgo={c.fecha_resena}
+                rating={c.calificacion}
+                comment={c.contenido}
+                canManage={currentUserId != null && c.id_emisor === currentUserId}
+                onSuccess={onSuccessSubmit}
+              />
+            ))}
+            {comments.length === 0 && (
+              <p className="comment-section__empty">{t('empty')}</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
+
