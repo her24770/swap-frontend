@@ -66,6 +66,18 @@ export interface PublicacionesResult {
   total: number;
 }
 
+export interface PublicacionesModeracionResult {
+  publicaciones: Publicacion[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface PublicacionesModeracionResponse {
+  message: string;
+  data: PublicacionesModeracionResult;
+}
+
 // Filtros para obtener publicaciones del api.
 export interface PublicacionFilters {
   tipo?: 'negocio' | 'material' | 'tutoria';
@@ -76,6 +88,16 @@ export interface PublicacionFilters {
   all?: boolean;
   recommended?: boolean;
   personalized?: boolean;
+}
+
+export interface PublicacionModeracionFilters {
+  q?: string;
+  tipo?: 'negocio' | 'material' | 'tutoria';
+  estado?: string;
+  page?: number;
+  limit?: number;
+  sort?: 'fecha' | 'me_gusta' | 'precio';
+  order?: 'asc' | 'desc';
 }
 
 export interface PublicacionDetalle {

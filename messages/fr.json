@@ -262,6 +262,10 @@
 			"loading": "Vérification de la session...",
 			"comingSoon": "Bientôt disponible",
 			"sections": {
+				"publicaciones": {
+					"title": "Publications",
+					"description": "Afficher et modérer les publications de la plateforme."
+				},
 				"reportes": {
 					"title": "Signalements",
 					"description": "Examiner et résoudre les signalements d'utilisateurs."
@@ -269,6 +273,77 @@
 				"moderadores": {
 					"title": "Modérateurs",
 					"description": "Gérer les comptes de modérateur."
+				}
+			}
+		},
+		"publicaciones": {
+			"title": "Publications",
+			"subtitle": "Affichez, filtrez et modérez les publications de toute la plateforme.",
+			"resultsCount": "{count, plural, =1 {1 résultat} other {# résultats}}",
+			"searchPlaceholder": "Rechercher par titre, description, utilisateur ou e-mail",
+			"tipos": {
+				"todos": "Tous les types",
+				"negocio": "Entreprises",
+				"material": "Matériels",
+				"tutoria": "Tutorats"
+			},
+			"estados": {
+				"todos": "Tous les statuts",
+				"activo": "Actif",
+				"inactivo": "Inactif",
+				"disponible": "Disponible",
+				"reservado": "Réservé",
+				"vendido": "Vendu"
+			},
+			"sort": {
+				"fechaDesc": "Plus récents",
+				"fechaAsc": "Plus anciens",
+				"meGustaDesc": "Plus de j'aime",
+				"precioDesc": "Prix le plus élevé",
+				"precioAsc": "Prix le plus bas"
+			},
+			"motivosReactivacion": {
+				"errorModeracion": "Erreur de modération",
+				"revisadaPermitida": "Publication révisée et autorisée",
+				"correccionUsuario": "Correction appliquée par l'utilisateur"
+			},
+			"acciones": {
+				"reactivar": "Réactiver",
+				"bajar": "Retirer la publication",
+				"eliminar": "Supprimer",
+				"detalle": "Détail"
+			},
+			"card": {
+				"sinImagen": "Sans image",
+				"sinTipo": "Sans type",
+				"usuarioDesconocido": "Utilisateur inconnu",
+				"sinCorreo": "Sans e-mail",
+				"estadoFallback": "Statut {estado}"
+			},
+			"loading": "Chargement des publications...",
+			"empty": "Aucune publication ne correspond aux filtres.",
+			"errorCarga": "Impossible de charger les publications.",
+			"errorAccion": "Impossible de terminer l'action.",
+			"toasts": {
+				"bajadaSuccess": "Publication retirée avec succès.",
+				"reactivadaSuccess": "Publication réactivée avec succès.",
+				"eliminadaSuccess": "Publication supprimée avec succès."
+			},
+			"pagination": {
+				"anterior": "Précédent",
+				"siguiente": "Suivant",
+				"paginaInfo": "Page {page} sur {pageCount}"
+			},
+			"justificante": {
+				"titulos": {
+					"bajar": "Retirer la publication",
+					"reactivar": "Réactiver la publication",
+					"eliminar": "Supprimer la publication"
+				},
+				"preguntas": {
+					"bajar": "Pourquoi voulez-vous retirer la publication ?",
+					"reactivar": "Pourquoi voulez-vous réactiver la publication ?",
+					"eliminar": "Pourquoi voulez-vous supprimer la publication ?"
 				}
 			}
 		}

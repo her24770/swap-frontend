@@ -4,12 +4,14 @@ interface ReporteAccionesProps {
   puedeEnviar: boolean;
   enviando: boolean;
   onCancelar: () => void;
+  textoEnviar?: string;
 }
 
 export default function ReporteAcciones({
   puedeEnviar,
   enviando,
   onCancelar,
+  textoEnviar = "Enviar",
 }: ReporteAccionesProps) {
   return (
     <div className="reporte-modal__acciones">
@@ -25,7 +27,7 @@ export default function ReporteAcciones({
           <Loader2 size={14} className="reporte-modal__spinner" />
         ) : (
           <>
-            Enviar
+            {textoEnviar}
             <ChevronRight size={14} />
           </>
         )}

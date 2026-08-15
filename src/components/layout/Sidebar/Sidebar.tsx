@@ -2,7 +2,7 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bookmark, Compass, BookOpen, Package, Briefcase, MessageCircle, ShieldAlert, Users } from "lucide-react";
+import { Compass, BookOpen, Package, Briefcase, MessageCircle, Newspaper, ShieldAlert, Users } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
@@ -30,6 +30,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
   const navItems = variant === "moderador"
     ? [
         { icon: Compass, label: t('descubre'), href: '/moderacion/descubre' },
+        { icon: Newspaper, label: tPanel('sections.publicaciones.title'), href: '/moderacion/publicaciones' },
         { icon: ShieldAlert, label: tPanel('sections.reportes.title'), href: '/moderacion/reportes' },
         ...(tienePermiso(moderadorNivel ?? null, "superadmin")
           ? [{ icon: Users, label: tPanel('sections.moderadores.title'), href: '/moderacion/moderadores' }]

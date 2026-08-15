@@ -1,5 +1,5 @@
 import { apiClient } from "../lib/apiClient";
-import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse, FiltroTutorBody, FiltroTutorApiResponse, TutorFiltrado, PublicacionesResponse_Explorar } from "../types/publicacion";
+import type { PublicacionesResponse, Publicacion, PublicacionFilters, PublicacionDetalle, PublicacionDetalleResponse, PublicacionesResult, FiltroPublicacionBody, FiltroPublicacionApiResponse, FiltroTutorBody, FiltroTutorApiResponse, TutorFiltrado, PublicacionesResponse_Explorar, PublicacionModeracionFilters, PublicacionesModeracionResponse, PublicacionesModeracionResult } from "../types/publicacion";
 import type { ApiError } from "../lib/apiClient";
 
 interface GuardadoPublicacion {
@@ -13,6 +13,11 @@ interface GuardadoPublicacion {
 interface GuardadosResponse {
   message: string;
   data: Array<Publicacion | GuardadoPublicacion>;
+}
+
+interface JustificanteModeracionPayload {
+  motivo: string;
+  detalle?: string;
 }
 
 function normalizarGuardados(data: GuardadosResponse["data"]): Publicacion[] {
@@ -143,5 +148,36 @@ export const publicacionService = {
     async getFiltradasTutorias(body: FiltroTutorBody): Promise<TutorFiltrado[]> {
       const response = await apiClient.post<FiltroTutorApiResponse>("/api/user/tutores/buscar", body);
       return response.data.tutores;
+    },
+
+    async getModeracion(filters?: PublicacionModeracionFilters): Promise<PublicacionesModeracionResult> {
+      const params = new URLSearchParams();
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            params.append(key, value.toString());
+          }
+        });
+      }
+
+      const query = params.toString();
+      const response = await apiClient.get<PublicacionesModeracionResponse>(
+        `/api/moderador/publicaciones${query ? `?${query}` : ""}`
+      );
+      return response.data;
+    },
+
+    async bajarModeracion(id: number, payload: JustificanteModeracionPayload): Promise<void> {
+      await apiClient.patch(`/api/moderador/publicaciones/${id}/bajar`, payload);
+    },
+
+    async reactivarModeracion(id: number, payload: JustificanteModeracionPayload): Promise<void> {
+      await apiClient.patch(`/api/moderador/publicaciones/${id}/reactivar`, payload);
+    },
+
+    async eliminarModeracion(id: number, payload: JustificanteModeracionPayload): Promise<void> {
+      await apiClient.delete(`/api/moderador/publicaciones/${id}`, {
+        body: JSON.stringify(payload),
+      });
     },
 };
