@@ -196,7 +196,11 @@ export default function PublicacionesList({
 
     const navigateToTutorProfile = (userId: number) => {
         setSelectedTutor(null);
-        router.push(`/perfil/${userId}?modo=tutor`);
+        router.push(
+            soloLectura
+                ? `/moderacion/perfil/${userId}?modo=tutor`
+                : `/perfil/${userId}?modo=tutor`
+        );
     };
 
     const RenderError = ({ error }: { error: any }) =>
@@ -656,7 +660,11 @@ export default function PublicacionesList({
                     estado={selectedPublicacion.estadoRel?.estado}
                     onSellerClick={(sellerId) => {
                         handleClose();
-                        router.push(`/perfil/${sellerId}?modo=tutor`);
+                        router.push(
+                            soloLectura
+                                ? `/moderacion/perfil/${sellerId}?modo=tutor`
+                                : `/perfil/${sellerId}?modo=tutor`
+                        );
                     }}
                     onVerCertificados={() => console.log("ver certificados")}
                     onSolicitarTutoria={() => console.log("solicitar tutoría")}
