@@ -130,7 +130,6 @@ export default function Chatprincipal({
 
       <AcuerdoBanner
         acuerdo={acuerdo}
-        publicacion={conversacion.publicacion}
         esPropuestaPendiente={esPropuestaPendiente}
         esPropuestaEnviada={esPropuestaEnviada}
         onDetalles={() => setPanel(panel === "acuerdo" ? null : "acuerdo")}
