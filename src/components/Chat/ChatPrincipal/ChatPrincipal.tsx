@@ -26,6 +26,7 @@ interface ChatprincipalProps {
   onCompletarAcuerdo?: () => void;
   onVolver?: () => void;
   puedeEnviarMensajes?: boolean;
+  onVerPerfil?: (idUsuario: number) => void;
 }
 
 export default function Chatprincipal({
@@ -41,6 +42,7 @@ export default function Chatprincipal({
   onCompletarAcuerdo,
   onVolver,
   puedeEnviarMensajes,
+  onVerPerfil,
 }: ChatprincipalProps) {
   const t = useTranslations("chat");
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -80,13 +82,28 @@ export default function Chatprincipal({
               <ChevronLeft size={18} />
             </button>
           )}
-          <div className="chat-principal__avatar">
-            {conversacion.avatarUrl
-              ? <img src={conversacion.avatarUrl} alt={conversacion.nombre} />
-              : <UserCircle2 size={22} strokeWidth={1.2} />
-            }
-          </div>
-          <span className="chat-principal__name">{conversacion.nombre}</span>
+          <button
+            type="button"
+            className="chat-principal__profile"
+            onClick={() => onVerPerfil?.(conversacion.id_otro_usuario)}
+            disabled={!onVerPerfil}
+            aria-label={t("header.viewProfile")}
+          >
+            <div className="chat-principal__avatar">
+              {conversacion.avatarUrl ? (
+                <img
+                  src={conversacion.avatarUrl}
+                  alt={conversacion.nombre}
+                />
+              ) : (
+                <UserCircle2 size={22} strokeWidth={1.2} />
+              )}
+            </div>
+
+            <span className="chat-principal__name">
+              {conversacion.nombre}
+            </span>
+          </button>
         </div>
 
         <div className="chat-principal__menu">

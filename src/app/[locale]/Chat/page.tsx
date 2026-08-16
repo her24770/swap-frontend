@@ -588,6 +588,7 @@ export default function ChatPage() {
           onAceptarAcuerdo={() => selected && handleAceptarAcuerdo(selected.id_conversacion)}
           onRechazarAcuerdo={() => selected && handleRechazarAcuerdo(selected.id_conversacion)}
           onCompletarAcuerdo={() => acuerdo && selected && responderAcuerdo(selected.id_conversacion, acuerdo.id_acuerdo, "completado")}
+          onVerPerfil={(idUsuario) => {router.push(`/perfil/${idUsuario}?modo=vendedor`);}}
           onEnviarNuevaPropuesta={handleAbrirCrearEncuentro}
           onCrearEncuentro={handleAbrirCrearEncuentro}
           onVolver={() => setMostrarChatMovil(false)}

@@ -75,6 +75,7 @@ export interface ContextoConversacionChat {
 
 export interface ConversacionPreview {
   id_conversacion: number;
+  id_otro_usuario: number;
   nombre: string;
   preview: string;
   fecha_ultimo_mensaje?: string;
