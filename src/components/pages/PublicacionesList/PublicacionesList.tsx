@@ -62,6 +62,7 @@ type Props = {
     Ads?: Anuncio[];
     showPersonalizedRecommendationsButton?: boolean;
     soloLectura?: boolean;
+    perfilBasePath?: string;
 };
 
 export default function PublicacionesList({
@@ -83,6 +84,7 @@ export default function PublicacionesList({
     Ads = [],
     showPersonalizedRecommendationsButton = false,
     soloLectura = false,
+    perfilBasePath = "/perfil",
 }: Props) {
     const t = useTranslations("seccion");
     const tEmpty = useTranslations("common.empty");
@@ -196,7 +198,7 @@ export default function PublicacionesList({
 
     const navigateToTutorProfile = (userId: number) => {
         setSelectedTutor(null);
-        router.push(`/perfil/${userId}?modo=tutor`);
+        router.push(`${perfilBasePath}/${userId}?modo=tutor`);
     };
 
     const RenderError = ({ error }: { error: any }) =>
@@ -656,7 +658,7 @@ export default function PublicacionesList({
                     estado={selectedPublicacion.estadoRel?.estado}
                     onSellerClick={(sellerId) => {
                         handleClose();
-                        router.push(`/perfil/${sellerId}?modo=tutor`);
+                        router.push(`${perfilBasePath}/${sellerId}?modo=tutor`);
                     }}
                     onVerCertificados={() => console.log("ver certificados")}
                     onSolicitarTutoria={() => console.log("solicitar tutoría")}

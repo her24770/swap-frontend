@@ -19,7 +19,7 @@ const comments: Resena[] = [
     id_receptor: 20,
     id_tipo_resena: 1,
     fecha_resena: "2026-08-12",
-    emisor: { nombre: "Ana López", url_foto_perfil: "" },
+    emisor: { id_usuario: 1, nombre: "Ana López", url_foto_perfil: "" },
   },
   {
     id_resena: 2,
@@ -30,7 +30,7 @@ const comments: Resena[] = [
     id_receptor: 20,
     id_tipo_resena: 1,
     fecha_resena: "2026-08-11",
-    emisor: { nombre: "Luis Pérez", url_foto_perfil: "" },
+    emisor: { id_usuario: 2, nombre: "Luis Pérez", url_foto_perfil: "" },
   },
 ];
 

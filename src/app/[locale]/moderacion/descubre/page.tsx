@@ -56,6 +56,7 @@ export default function ModeracionDescubrePage() {
         tagsForAll={() => [{ id: 1, name: tTags("negocio"), parentId: null }]}
         Ads={adsData || []}
         soloLectura
+        perfilBasePath="/moderacion/perfil"
       />
     </main>
   );

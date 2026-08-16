@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Flag } from "lucide-react";
+import { Flag, AlertTriangle } from "lucide-react";
 import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfileHeader";
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
 import MiniChatWidget from "../../Chat/MiniChatWidget/MiniChatWidget";
@@ -12,6 +12,7 @@ import ReporteModal from "../../ui/Modal/Reporte/ReporteModal";
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
 import { getPerfilPublico } from "../../../services/perfilService";
+import { useUIStore } from "../../../store/uiStore";
 import { PerspectivaInternaProvider } from "../../../context/PerspectivaInternaContext";
 import type { UserProfileData } from "../../../types/perfil";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
@@ -39,6 +40,15 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
     const [error, setError] = useState<string | null>(null);
     const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
     const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, mode);
+    const { agregarNotificacion } = useUIStore();
+
+    //conectar con el endpoint de moderacion cuando exista
+    const handleAdvertenciaModerador = () => {
+        agregarNotificacion({
+            tipo: "info",
+            mensaje: "Advertencias: función en desarrollo, aún no disponible.",
+        });
+    };
 
     const modes = useMemo(
         () => [
@@ -134,6 +144,25 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
                             </button>
                         </div>
                     )}
+
+                    {soloLectura && (
+                        <div className="perfil-page__external-actions perfil-page__external-actions--moderador">
+                            <button
+                                type="button"
+                                className="button button--medium button--secondary"
+                                onClick={() => setReporteUsuarioAbierto(true)}
+                            >
+                                <Flag size={16} /> Reportar
+                            </button>
+                            <button
+                                type="button"
+                                className="button button--medium button--warning"
+                                onClick={handleAdvertenciaModerador}
+                            >
+                                <AlertTriangle size={16} /> Advertencia
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 <hr className="perfil-page__divider" />
@@ -177,19 +206,20 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
         </PerspectivaInternaProvider>
 
         {user && !soloLectura && (
-            <>
-                <MiniChatWidget
-                    idUsuario={user.id_usuario}
-                    nombre={user.name}
-                    avatarUrl={user.imageUrl}
-                />
-                <ReporteModal
-                    isOpen={reporteUsuarioAbierto}
-                    tipoObjetivo="usuario"
-                    idObjetivo={user.id_usuario}
-                    onClose={() => setReporteUsuarioAbierto(false)}
-                />
-            </>
+            <MiniChatWidget
+                idUsuario={user.id_usuario}
+                nombre={user.name}
+                avatarUrl={user.imageUrl}
+            />
+        )}
+
+        {user && (
+            <ReporteModal
+                isOpen={reporteUsuarioAbierto}
+                tipoObjetivo="usuario"
+                idObjetivo={user.id_usuario}
+                onClose={() => setReporteUsuarioAbierto(false)}
+            />
         )}
         </>
     );
