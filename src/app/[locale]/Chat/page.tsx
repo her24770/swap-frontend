@@ -267,6 +267,25 @@ export default function ChatPage() {
     };
   }, [socket]);
 
+  useEffect(() => {
+    const actualizarConversaciones = async () => {
+      try {
+        const conversacionesActualizadas =
+          await conversacionService.listar(idEstadoPendiente);
+
+        setConversacionesState(conversacionesActualizadas);
+      } catch {
+        // Si falla la actualización por socket, se conserva el estado actual.
+      }
+    };
+
+    socket.on("conversacion:actualizada", actualizarConversaciones);
+
+    return () => {
+      socket.off("conversacion:actualizada", actualizarConversaciones);
+    };
+  }, [socket, idEstadoPendiente]);
+
   const mensajes = selected
     ? mensajesPorConversacion[selected.id_conversacion] ?? []
     : [];
