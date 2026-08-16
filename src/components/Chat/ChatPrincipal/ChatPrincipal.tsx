@@ -25,6 +25,7 @@ interface ChatprincipalProps {
   onCrearEncuentro?: () => void;
   onCompletarAcuerdo?: () => void;
   onVolver?: () => void;
+  puedeEnviarMensajes?: boolean;
 }
 
 export default function Chatprincipal({
@@ -39,6 +40,7 @@ export default function Chatprincipal({
   onCrearEncuentro,
   onCompletarAcuerdo,
   onVolver,
+  puedeEnviarMensajes,
 }: ChatprincipalProps) {
   const t = useTranslations("chat");
   const [menuAbierto, setMenuAbierto] = useState(false);
@@ -57,7 +59,12 @@ export default function Chatprincipal({
     && idUsuarioActual != null
     && acuerdo.id_ofertante === idUsuarioActual,
   );
-  const esAcuerdoActivo = Boolean(acuerdo && acuerdo.estadoRel?.estado === "activo");
+  const puedeCompletarAcuerdo = Boolean(
+    acuerdo
+    && acuerdo.estadoRel?.estado === "activo"
+    && idUsuarioActual != null
+    && acuerdo.id_ofertante !== idUsuarioActual
+  );
 
   return (
     <div className="chat-principal">
@@ -104,7 +111,7 @@ export default function Chatprincipal({
               >
                 {t("menu.agreementHistory")}
               </button>
-              {puedeGestionarAcuerdos && (
+              {puedeGestionarAcuerdos && !esPropuestaEnviada && (
                 <button
                   type="button"
                   className="chat-principal__dropdown-item"
@@ -205,7 +212,7 @@ export default function Chatprincipal({
                   {t("agreement.pendingResponse")}
                 </p>
               )}
-              {esAcuerdoActivo && (
+              {puedeCompletarAcuerdo && (
                 <div className="chat-principal__acuerdo-actions">
                   <button
                     type="button"
@@ -229,7 +236,7 @@ export default function Chatprincipal({
         )}
       </div>
 
-      <ChatInput onEnviar={onEnviar} />
+      <ChatInput onEnviar={onEnviar} disabled={!puedeEnviarMensajes} />
     </div>
   );
 }

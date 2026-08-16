@@ -46,6 +46,7 @@ export default function ChatPage() {
   // "conversacion" trae "activo", "inactivo" y "pendiente" (necesarios para
   // aceptar/bloquear solicitudes y para saber si una conversacion es una solicitud).
   const estadosConversacion = useEstados("conversacion");
+  const idEstadoActivo = estadosConversacion.find((e) => e.estado === "activo")?.id_estado;
   const idEstadoPendiente = estadosConversacion.find((e) => e.estado === "pendiente")?.id_estado;
   const [tab, setTab] = useState<TabMensajes>("todas");
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -187,21 +188,41 @@ export default function ChatPage() {
   // y se une a la sala de socket de esa conversacion (SWAP-332).
   useEffect(() => {
     if (!selected) return;
+
     let cancelado = false;
-    conversacionService.obtenerMensajes(selected.id_conversacion)
+
+    conversacionService
+      .obtenerMensajes(selected.id_conversacion)
       .then((mensajesConversacion) => {
         if (cancelado) return;
+
         setMensajesPorConversacion((prev) => ({
           ...prev,
           [selected.id_conversacion]: mensajesConversacion,
         }));
       })
       .catch(() => {});
-    unirseAConversacion(socket, selected.id_conversacion).catch(() => {});
+
+    const unirse = () => {
+      unirseAConversacion(
+        socket,
+        selected.id_conversacion
+      ).catch(() => {});
+    };
+
+    unirse();
+
+    socket.on("connect", unirse);
+
     return () => {
       cancelado = true;
+      socket.off("connect", unirse);
     };
-  }, [selected?.id_conversacion, socket]);
+  }, [
+    selected?.id_conversacion,
+    selected?.estado_conversacion,
+    socket,
+  ]);
 
   // Escucha "mensaje:nuevo" para todas las conversaciones (SWAP-333): actualiza el
   // historial de la conversacion correspondiente y el preview en el sidebar, sin
@@ -236,6 +257,27 @@ export default function ChatPage() {
       socket.off("mensaje:nuevo", alRecibirMensaje);
     };
   }, [socket]);
+
+  
+  // Escucha "acuerdo:actualizado" (SWAP-489) y refresca los acuerdos
+  // de la conversacion afectada.
+  useEffect(() => {
+    const actualizarAcuerdo = (payload: { id_conversacion?: number }) => {
+      const idConversacion = Number(payload?.id_conversacion);
+
+      if (!Number.isInteger(idConversacion) || idConversacion <= 0) {
+        return;
+      }
+
+      cargarAcuerdosDeConversacion(idConversacion);
+    };
+
+    socket.on("acuerdo:actualizado", actualizarAcuerdo);
+
+    return () => {
+      socket.off("acuerdo:actualizado", actualizarAcuerdo);
+    };
+  }, [socket, cargarAcuerdosDeConversacion]);
 
   useEffect(() => {
     const actualizarConversaciones = async () => {
@@ -338,7 +380,7 @@ export default function ChatPage() {
       await conversacionService.actualizarEstado(id, idEstadoActivo);
       setConversacionesState((prev) => prev.map((conversacion) => (
         conversacion.id_conversacion === id
-          ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
+          ? { ...conversacion, esSolicitud: false, estado_conversacion: idEstadoActivo, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
           : conversacion
       )));
     } catch (err) {
@@ -549,6 +591,7 @@ export default function ChatPage() {
           onEnviarNuevaPropuesta={handleAbrirCrearEncuentro}
           onCrearEncuentro={handleAbrirCrearEncuentro}
           onVolver={() => setMostrarChatMovil(false)}
+          puedeEnviarMensajes={idEstadoActivo != null && selected.estado_conversacion === idEstadoActivo}
         />
       ) : (
         <div className="mensajes-page__empty">

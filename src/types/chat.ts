@@ -82,4 +82,5 @@ export interface ConversacionPreview {
   esSolicitud?: boolean;
   avatarUrl?: string | null;
   contextos?: ContextoConversacionChat[];
+  estado_conversacion: number;
 }

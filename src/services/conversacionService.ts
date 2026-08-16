@@ -40,6 +40,7 @@ function mapConversacion(
 
   return {
     id_conversacion: conversacion.id_conversacion,
+    estado_conversacion: conversacion.estado_conversacion,
     nombre: otro?.nombre ?? "Usuario",
     preview: ultimoMensaje?.mensaje ?? "",
     fecha_ultimo_mensaje: ultimoMensaje
