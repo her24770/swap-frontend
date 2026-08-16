@@ -90,4 +90,24 @@ export function installBrowserMocks() {
     writable: true,
     value: vi.fn(),
   });
+
+  // jsdom no implementa <dialog>.showModal()/close() (ver https://github.com/jsdom/jsdom/issues/3294),
+  // asi que sin este polyfill el atributo "open" nunca se setea y Testing Library
+  // trata el dialog como oculto, aunque el componente lo renderice correctamente.
+  if (typeof HTMLDialogElement !== "undefined") {
+    Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
+      writable: true,
+      value: function showModal(this: HTMLDialogElement) {
+        this.setAttribute("open", "");
+      },
+    });
+
+    Object.defineProperty(HTMLDialogElement.prototype, "close", {
+      writable: true,
+      value: function close(this: HTMLDialogElement) {
+        this.removeAttribute("open");
+        this.dispatchEvent(new Event("close"));
+      },
+    });
+  }
 }
