@@ -29,11 +29,52 @@ export interface Reporte {
   id_reporte: number;
   id_emisor: number;
   id_receptor: number;
+  id_publicacion?: number | null;
+  id_mensaje?: number | null;
   motivo: number;
   observaciones: string;
   fecha: string;
   estado: number;
+  link_imagen: string;
   id_moderador?: number | null;
+}
+
+/**
+ * Refleja GET /api/reportes (paginado)
+ */
+export interface ReporteTableUsuario {
+  nombre: string;
+  email_institucional: string;
+  url_foto_perfil: string;
+}
+
+export interface ReporteTableData {
+  id_reporte: number;
+  tipo: "Publicación" | "Mensaje";
+  fecha: string;
+  estado: string;
+  emisor: ReporteTableUsuario;
+  receptor: ReporteTableUsuario;
+}
+
+export interface ResultadoBusquedaReporte {
+  reportes: ReporteTableData[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface ReportePaginationOptions {
+  page?: number;
+  limit?: number;
+  sort?: "fecha" | "estado";
+  order?: "asc" | "desc";
+  estado?: string;
+  motivo?: string;
+  tipo?: "publicacion" | "mensaje" | "todos";
+  idReceptor?: number;
+  idEmisor?: number;
 }
 
 export const motivosReportePorObjetivo: Record<TipoObjetivoReporte, MotivoReporte[]> = {
