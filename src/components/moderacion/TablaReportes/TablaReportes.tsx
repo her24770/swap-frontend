@@ -3,7 +3,10 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Search, SlidersHorizontal, Check } from "lucide-react";
 import Image from "next/image";
-import type { ReporteTableData } from "../../../types/reporte";
+import { useToast } from "../../../hooks/useToast";
+import type { ReporteDetalle, ReporteTableData } from "../../../types/reporte";
+import type { PublicacionDetalle } from "../../../types/publicacion";
+import DetalleReporteModal from "../../ui/Modal/DetalleReporteModal/DetalleReporteModal";
 import "./TablaReportes.css";
 import "../../../components/ui/Modal/Modal.css";
 import "../../ui/Button/Button.css";
@@ -12,6 +15,8 @@ interface TablaReportesProps {
   reportes: ReporteTableData[];
   total?: number;
   pageSize?: number;
+  onVerDetalles: (id: number) => Promise<ReporteDetalle> | ReporteDetalle;
+  onVerPublicacion: (id: number) => Promise<PublicacionDetalle> | PublicacionDetalle;
 }
 
 
@@ -41,11 +46,13 @@ function getTipoMod(tipo: ReporteTableData["tipo"]): string {
 }
 
 export default function TablaReportes({
-  reportes, total, pageSize = 10,
+  reportes, total, pageSize = 10, onVerDetalles, onVerPublicacion,
 }: TablaReportesProps) {
+  const toast = useToast();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [selected, setSelected] = useState<ReporteTableData | null>(null);
+  const [detalleReporte, setDetalleReporte] = useState<ReporteDetalle | null>(null);
+  const [cargandoDetalleId, setCargandoDetalleId] = useState<number | null>(null);
   const [tipoFilter, setTipoFilter] = useState<string | null>(null);
   const [estadoFilter, setEstadoFilter] = useState<string | null>(null);
   const [openFilter, setOpenFilter] = useState<"tipo" | "estado" | null>(null);
@@ -85,6 +92,19 @@ export default function TablaReportes({
 
   const handleTipoFilter = (v: string | null) => { setTipoFilter(v); setPage(1); setOpenFilter(null); };
   const handleEstadoFilter = (v: string | null) => { setEstadoFilter(v); setPage(1); setOpenFilter(null); };
+
+  const handleVerDetalles = async (id: number) => {
+    if (cargandoDetalleId) return;
+    setCargandoDetalleId(id);
+    try {
+      const detalle = await onVerDetalles(id);
+      setDetalleReporte(detalle);
+    } catch (error: any) {
+      toast.error(error?.message ?? "No fue posible cargar el detalle del reporte.", "Error");
+    } finally {
+      setCargandoDetalleId(null);
+    }
+  };
 
   return (
     <>
@@ -215,9 +235,10 @@ export default function TablaReportes({
                       <button
                         type="button"
                         className="button button--small button--outline"
-                        onClick={() => setSelected(r)}
+                        onClick={() => handleVerDetalles(r.id_reporte)}
+                        disabled={cargandoDetalleId === r.id_reporte}
                       >
-                        Ver detalles
+                        {cargandoDetalleId === r.id_reporte ? "Cargando…" : "Ver detalles"}
                       </button>
                     </td>
                   </tr>
@@ -243,6 +264,13 @@ export default function TablaReportes({
         </div>
       </div>
 
+      {detalleReporte && (
+        <DetalleReporteModal
+          reporte={detalleReporte}
+          onClose={() => setDetalleReporte(null)}
+          onVerPublicacion={onVerPublicacion}
+        />
+      )}
     </>
   );
 }

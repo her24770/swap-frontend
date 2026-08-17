@@ -77,6 +77,52 @@ export interface ReportePaginationOptions {
   idEmisor?: number;
 }
 
+/**
+ * GET /api/reportes/:id buscarReportePorId
+ */
+export interface ReporteDetalleUsuario {
+  id_usuario: number;
+  nombre: string;
+  email_institucional: string;
+}
+
+export interface ReporteDetalleMotivoRel {
+  id_motivo: number;
+  motivo: string;
+}
+
+export interface ReporteDetalleEstadoRel {
+  id_estado: number;
+  estado: string;
+}
+
+export interface ReporteDetallePublicacionRel {
+  id_publicacion: number;
+  titulo: string;
+  estadoRel: { estado: string };
+}
+
+export interface ReporteDetalleMensajeRel {
+  id_mensaje: number;
+  mensaje: string;
+  estadoRel: { estado: string };
+}
+
+export interface ReporteDetalleModeradorRel {
+  id_moderador: number;
+  usuario: string;
+}
+
+export interface ReporteDetalle extends Reporte {
+  emisor: ReporteDetalleUsuario;
+  receptor: ReporteDetalleUsuario;
+  motivoRel: ReporteDetalleMotivoRel;
+  estadoRel: ReporteDetalleEstadoRel;
+  publicacion: ReporteDetallePublicacionRel | null;
+  mensaje: ReporteDetalleMensajeRel | null;
+  moderador: ReporteDetalleModeradorRel | null;
+}
+
 export const motivosReportePorObjetivo: Record<TipoObjetivoReporte, MotivoReporte[]> = {
   usuario: [
     "No cumplió con fechas",
