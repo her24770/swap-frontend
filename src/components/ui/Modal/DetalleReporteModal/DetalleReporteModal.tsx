@@ -118,7 +118,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
             {r.moderador && (
               <div className="detalle-reporte-modal__field">
                 <span className="detalle-reporte-modal__label">Moderador</span>
-                <span className="detalle-reporte-modal__val">{r.moderador.usuario}</span>
+                <span className="detalle-reporte-modal__val">{r.moderador.usuario.nombre}</span>
               </div>
             )}
           </div>
@@ -134,6 +134,21 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
             <span className="detalle-reporte-modal__label">Observaciones</span>
             <p className="detalle-reporte-modal__obs">{r.observaciones}</p>
           </div>
+
+          {/* Mensaje reportado */}
+          {r.mensaje && (
+            <div className="detalle-reporte-modal__field">
+              <span className="detalle-reporte-modal__label">
+                Mensaje reportado
+              </span>
+
+              <div className="detalle-reporte-modal__mensaje">
+                <p className="detalle-reporte-modal__mensaje-text">
+                  {r.mensaje.mensaje}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Publicación vinculada */}
           {r.publicacion && (
