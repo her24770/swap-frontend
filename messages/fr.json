@@ -28,6 +28,66 @@
 			"languageDesc": "Sélectionnez votre langue préférée"
 		}
 	},
+	"onboarding": {
+		"welcome": {
+			"title": "Bienvenue, {nombre} !",
+			"body": "SWAP est la plateforme pour partager, vendre et vous connecter avec des personnes de votre université. N'oubliez pas de toujours respecter la communauté.",
+			"start": "Commencer la visite",
+			"skip": "Passer"
+		},
+		"sidebar": {
+			"descubre": {
+				"title": "Découvrir",
+				"body": "Retrouvez ici toutes les publications récentes, populaires et recommandées pour vous."
+			},
+			"tutorias": {
+				"title": "Tutorat",
+				"body": "Proposez ou demandez des séances de tutorat avec d'autres étudiants de votre université."
+			},
+			"materiales": {
+				"title": "Matériels",
+				"body": "Achetez, vendez ou échangez du matériel d'étude comme des livres et des notes."
+			},
+			"negocios": {
+				"title": "Commerces",
+				"body": "Découvrez les commerces et initiatives de la communauté universitaire."
+			},
+			"mensajes": {
+				"title": "Messages",
+				"body": "Discutez ici avec d'autres utilisateurs à propos de vos publications et accords."
+			}
+		},
+		"navbar": {
+			"menu": {
+				"title": "Menu latéral",
+				"body": "Utilisez ce bouton pour agrandir ou réduire le menu de navigation."
+			},
+			"settings": {
+				"title": "Paramètres",
+				"body": "Changez le thème ou la langue de la plateforme depuis ici."
+			},
+			"notifications": {
+				"title": "Notifications",
+				"body": "Consultez vos notifications et demandes de tutorat en temps réel."
+			},
+			"profile": {
+				"title": "Votre profil",
+				"body": "Accédez à votre profil ou déconnectez-vous depuis ce menu."
+			}
+		},
+		"fab": {
+			"title": "Créer une publication",
+			"body": "Utilisez ce bouton pour publier un tutorat, un matériel d'étude ou un commerce."
+		},
+		"controls": {
+			"back": "Retour",
+			"next": "Suivant",
+			"finish": "Terminer",
+			"skip": "Passer",
+			"stepOf": "{current} sur {total}",
+			"close": "Fermer"
+		}
+	},
 	"locales": {
 		"en": "EN",
 		"es": "ES",

@@ -28,6 +28,66 @@
 			"languageDesc": "Selecciona tu idioma de preferencia"
 		}
 	},
+	"onboarding": {
+		"welcome": {
+			"title": "¡Bienvenido, {nombre}!",
+			"body": "SWAP es la plataforma para compartir, vender y conectar con personas de tu universidad. Recuerda mantener siempre el respeto dentro de la comunidad.",
+			"start": "Comenzar recorrido",
+			"skip": "Saltar"
+		},
+		"sidebar": {
+			"descubre": {
+				"title": "Descubre",
+				"body": "Aquí encontrarás todas las publicaciones recientes, populares y recomendadas para ti."
+			},
+			"tutorias": {
+				"title": "Tutorías",
+				"body": "Ofrece o solicita tutorías con otros estudiantes de tu universidad."
+			},
+			"materiales": {
+				"title": "Materiales",
+				"body": "Compra, vende o intercambia materiales de estudio como libros y apuntes."
+			},
+			"negocios": {
+				"title": "Negocios",
+				"body": "Descubre los negocios y emprendimientos de la comunidad universitaria."
+			},
+			"mensajes": {
+				"title": "Mensajes",
+				"body": "Aquí puedes chatear con otros usuarios sobre tus publicaciones y acuerdos."
+			}
+		},
+		"navbar": {
+			"menu": {
+				"title": "Menú lateral",
+				"body": "Usa este botón para expandir o contraer el menú de navegación."
+			},
+			"settings": {
+				"title": "Configuraciones",
+				"body": "Cambia el tema o el idioma de la plataforma desde aquí."
+			},
+			"notifications": {
+				"title": "Notificaciones",
+				"body": "Revisa tus notificaciones y solicitudes de tutoría en tiempo real."
+			},
+			"profile": {
+				"title": "Tu perfil",
+				"body": "Accede a tu perfil o cierra sesión desde este menú."
+			}
+		},
+		"fab": {
+			"title": "Crear publicación",
+			"body": "Usa este botón para publicar una tutoría, un material de estudio o un negocio."
+		},
+		"controls": {
+			"back": "Atrás",
+			"next": "Siguiente",
+			"finish": "Finalizar",
+			"skip": "Saltar",
+			"stepOf": "{current} de {total}",
+			"close": "Cerrar"
+		}
+	},
 	"locales": {
 		"en": "EN",
 		"es": "ES",

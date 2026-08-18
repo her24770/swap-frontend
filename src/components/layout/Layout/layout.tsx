@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
@@ -7,6 +7,8 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { FloatingButton } from "../../ui/Button/FloatingButton/FloatingButton";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
+import TourBienvenida from "../../ui/Onboarding/TourBienvenida";
+import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
 import "./layout.css";
 
@@ -17,10 +19,12 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [crearOpen, setCrearOpen] = useState(false);
+  const [tourNeedsSidebarOpen, setTourNeedsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
+  const usuario = useAuthStore((state) => state.usuario);
 
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
   const isModeracionRoute = pathnameWithoutLocale.startsWith("/moderacion");
@@ -63,7 +67,7 @@ export default function Layout({ children }: LayoutProps) {
       
       <div className="layout__body">
         {/* Sidebar solo visible en rutas no auth */}
-        {!isAuthRoute && <Sidebar ref={sidebarRef} isOpen={sidebarOpen} />}
+        {!isAuthRoute && <Sidebar ref={sidebarRef} isOpen={sidebarOpen || tourNeedsSidebarOpen} />}
 
         {/* Main content con clase condicional */}
         <main className={isAuthRoute ? "layout__main--auth" : "layout__main"}>
@@ -71,7 +75,7 @@ export default function Layout({ children }: LayoutProps) {
         </main>
       </div>
       {!isAuthRoute && !pathnameWithoutLocale.startsWith("/Chat") &&  (
-        <div className="layout__fab-wrapper">
+        <div className="layout__fab-wrapper" data-tour="fab-crear">
           <FloatingButton
           onClick={() => {
             if (!document.querySelector(".modal-overlay")) setCrearOpen(true);
@@ -97,6 +101,12 @@ export default function Layout({ children }: LayoutProps) {
             />
           </div>
         </div>
+      )}
+
+      {pathnameWithoutLocale === '/' && (
+        <Suspense fallback={null}>
+          <TourBienvenida usuario={usuario} onSidebarNeedOpen={setTourNeedsSidebarOpen} />
+        </Suspense>
       )}
     </div>
   );

@@ -28,6 +28,66 @@
 			"languageDesc": "Select your preferred language"
 		}
 	},
+	"onboarding": {
+		"welcome": {
+			"title": "Welcome, {nombre}!",
+			"body": "SWAP is the platform to share, sell and connect with people from your university. Remember to always keep the community respectful.",
+			"start": "Start tour",
+			"skip": "Skip"
+		},
+		"sidebar": {
+			"descubre": {
+				"title": "Discover",
+				"body": "Here you'll find all recent, popular and recommended posts for you."
+			},
+			"tutorias": {
+				"title": "Tutoring",
+				"body": "Offer or request tutoring sessions with other students from your university."
+			},
+			"materiales": {
+				"title": "Materials",
+				"body": "Buy, sell or exchange study materials such as books and notes."
+			},
+			"negocios": {
+				"title": "Businesses",
+				"body": "Discover businesses and ventures from the university community."
+			},
+			"mensajes": {
+				"title": "Messages",
+				"body": "Chat with other users about your posts and agreements here."
+			}
+		},
+		"navbar": {
+			"menu": {
+				"title": "Side menu",
+				"body": "Use this button to expand or collapse the navigation menu."
+			},
+			"settings": {
+				"title": "Settings",
+				"body": "Change the theme or language of the platform from here."
+			},
+			"notifications": {
+				"title": "Notifications",
+				"body": "Check your notifications and tutoring requests in real time."
+			},
+			"profile": {
+				"title": "Your profile",
+				"body": "Access your profile or sign out from this menu."
+			}
+		},
+		"fab": {
+			"title": "Create a post",
+			"body": "Use this button to post a tutoring session, a study material or a business."
+		},
+		"controls": {
+			"back": "Back",
+			"next": "Next",
+			"finish": "Finish",
+			"skip": "Skip",
+			"stepOf": "{current} of {total}",
+			"close": "Close"
+		}
+	},
 	"locales": {
 		"en": "EN",
 		"es": "ES",
