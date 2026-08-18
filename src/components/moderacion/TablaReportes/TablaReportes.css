@@ -184,6 +184,7 @@
 
 .tabla-reportes__badge--pub { background-color: var(--swap-tipo-pub-background); color: var(--swap-tipo-pub-color); }
 .tabla-reportes__badge--msg { background-color: var(--swap-tipo-msg-background); color: var(--swap-tipo-msg-color); }
+.tabla-reportes__badge--usr { background-color: var(--swap-secondary-background); color: var(--swap-primary-color); }
 
 /* Estado*/
 .tabla-reportes__estado {

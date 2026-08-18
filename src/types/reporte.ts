@@ -23,6 +23,7 @@ export interface CrearReportePayload {
   id_objetivo: number;
   motivo: MotivoReporte;
   detalle?: string;
+  imagenes?: File[];
 }
 
 export interface Reporte {
@@ -50,7 +51,7 @@ export interface ReporteTableUsuario {
 
 export interface ReporteTableData {
   id_reporte: number;
-  tipo: "Publicación" | "Mensaje";
+  tipo: "Publicación" | "Mensaje" | "Usuario";
   fecha: string;
   estado: string;
   emisor: ReporteTableUsuario;
@@ -72,7 +73,7 @@ export interface ReportePaginationOptions {
   order?: "asc" | "desc";
   estado?: string;
   motivo?: string;
-  tipo?: "publicacion" | "mensaje" | "todos";
+  tipo?: "publicacion" | "mensaje" | "usuario" | "todos";
   idReceptor?: number;
   idEmisor?: number;
 }

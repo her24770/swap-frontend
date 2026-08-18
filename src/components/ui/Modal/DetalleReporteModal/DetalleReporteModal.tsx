@@ -37,6 +37,21 @@ function tagsFromEtiquetas(etiquetas: PublicacionEtiquetaRel[]): Tag[] {
   }));
 }
 
+function obtenerEvidencias(linkImagen: string): string[] {
+  if (!linkImagen) return [];
+
+  try {
+    const parsed = JSON.parse(linkImagen);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((url): url is string => typeof url === "string" && url.trim().length > 0);
+    }
+  } catch {
+    // Compatibilidad con reportes antiguos que guardan una sola URL plana.
+  }
+
+  return [linkImagen];
+}
+
 const ESTADO_CLASS: Record<string, string> = {
   pendiente:  "tabla-reportes__estado--pendiente",
   completado: "tabla-reportes__estado--completado",
@@ -78,6 +93,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
 
   const carouselImages = publicacionData?.imagenes.map((img) => img.url_imagen) ?? [];
   const tags = publicacionData ? tagsFromEtiquetas(publicacionData.etiquetas) : [];
+  const evidencias = obtenerEvidencias(r.link_imagen);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -211,13 +227,17 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
           </div>
 
           {/* Imagen de evidencia */}
-          {r.link_imagen && (
+          {evidencias.length > 0 && (
             <>
               <hr className="detalle-reporte-modal__divider" />
               <div className="detalle-reporte-modal__field">
                 <span className="detalle-reporte-modal__label">Evidencia</span>
-                <div className="detalle-reporte-modal__img-wrap">
-                  <Image src={r.link_imagen} alt="Evidencia" fill style={{ objectFit: "cover" }} unoptimized />
+                <div className="detalle-reporte-modal__evidencias">
+                  {evidencias.map((url, index) => (
+                    <div key={`${url}-${index}`} className="detalle-reporte-modal__img-wrap">
+                      <Image src={url} alt={`Evidencia ${index + 1}`} fill style={{ objectFit: "cover" }} unoptimized />
+                    </div>
+                  ))}
                 </div>
               </div>
             </>

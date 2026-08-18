@@ -36,6 +36,7 @@ const ESTADO_CLASS: Record<string, string> = {
 const TIPO_OPTIONS = [
   { value: "Publicación", label: "Publicación", mod: "pub" },
   { value: "Mensaje",     label: "Mensaje",     mod: "msg" },
+  { value: "Usuario",     label: "Usuario",     mod: "usr" },
 ];
 
 const ESTADO_OPTIONS = [
@@ -49,7 +50,9 @@ function initials(nombre: string) {
 }
 
 function getTipoMod(tipo: ReporteTableData["tipo"]): string {
-  return tipo === "Publicación" ? "pub" : "msg";
+  if (tipo === "Publicación") return "pub";
+  if (tipo === "Mensaje") return "msg";
+  return "usr";
 }
 
 export default function TablaReportes({

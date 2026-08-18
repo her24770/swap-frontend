@@ -260,6 +260,12 @@
   background-color: var(--swap-secondary-background);
 }
 
+.detalle-reporte-modal__evidencias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.625rem;
+}
+
 .detalle-reporte-modal__footer {
   display: flex;
   align-items: center;
