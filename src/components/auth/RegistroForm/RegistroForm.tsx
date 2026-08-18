@@ -13,6 +13,7 @@ import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
+import TerminosyCondiciones from "../../../components/ui/Modal/TerminosyCondiciones/TerminosyCondiciones";
 import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
 
@@ -46,6 +47,9 @@ export default function RegistroForm() {
   const [verificationStep, setVerificationStep] = useState(false);
   const [pendingRegistration, setPendingRegistration] = useState<RegistroPayload | null>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
+  const [termsError, setTermsError] = useState<string | null>(null);
+  const [showTerminos, setShowTerminos] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { etiquetas: etiquetasBD, loading: etiquetasLoading, error: etiquetasError } =
     useTodasEtiquetas({soloPadres : true});
@@ -99,6 +103,7 @@ export default function RegistroForm() {
   const onSubmit = async (data: RegistroFormData) => {
     try {
       setServerError(null);
+      setTermsError(null);
       // validate etiquetas count
       const count = data.etiquetas?.length ?? 0;
       if (count < 3) {
@@ -107,6 +112,10 @@ export default function RegistroForm() {
       }
       if (count > 20) {
         setServerError(t('tagsCountMax') || 'No puedes seleccionar más de 20 etiquetas.');
+        return;
+      }
+      if (!aceptaTerminos) {
+        setTermsError(t('termsRequired') || 'Debes aceptar los Términos y Condiciones para continuar.');
         return;
       }
       const carnet = extractCarnetFromEmail(data.email_institucional);
@@ -391,6 +400,38 @@ export default function RegistroForm() {
         <span className="registro-form__error">{serverError}</span>
       )}
 
+      {/* Terminos y condiciones */}
+      <div className="registro-form__field">
+        <div className="registro-form__terms">
+          <button
+            type="button"
+            aria-pressed={aceptaTerminos}
+            onClick={() => {
+              setAceptaTerminos((prev) => !prev);
+              setTermsError(null);
+            }}
+            className="registro-form__terms-checkbox"
+          >
+            <span className={`registro-form__tags-checkbox${aceptaTerminos ? " registro-form__tags-checkbox--checked" : ""}${termsError ? " registro-form__tags-checkbox--error" : ""}`}>
+              {aceptaTerminos && <Check size={11} strokeWidth={3} color="white" />}
+            </span>
+          </button>
+          <p className="registro-form__terms-text">
+            {t('termsPrefix')}{" "}
+            <button
+              type="button"
+              className="registro-form__terms-link"
+              onClick={() => setShowTerminos(true)}
+            >
+              {t('termsLinkText')}
+            </button>
+          </p>
+        </div>
+        {termsError && (
+          <span className="registro-form__error">{termsError}</span>
+        )}
+      </div>
+
       {/* Botón de submit */}
       <button
         type="submit"
@@ -400,6 +441,8 @@ export default function RegistroForm() {
         {isSubmitting ? t('sendingCode') : t('submit')}
         {!isSubmitting && <ChevronRight size={16} />}
       </button>
+
+      <TerminosyCondiciones isOpen={showTerminos} onClose={() => setShowTerminos(false)} />
 
     </form>
   );

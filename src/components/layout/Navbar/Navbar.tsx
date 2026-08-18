@@ -97,6 +97,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
             onClick={onMenuToggle}
             aria-label={t('ariaToggleMenu')}
             type="button"
+            data-tour="navbar-menu"
             className="navbar__menu-btn"
           >
             <Menu size={28} strokeWidth={2} />
@@ -118,6 +119,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
               aria-label="Abrir configuraciones"
               type="button"
               title="Configuraciones"
+              data-tour="navbar-settings"
               className="navbar__menu-btn"
             >
               <Settings size={25} strokeWidth={2} />
@@ -133,6 +135,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                 aria-expanded={notifOpen}
                 type="button"
                 title="Notificaciones"
+                data-tour="navbar-notif"
                 className="navbar__menu-btn navbar__menu-btn--bell"
               >
                 <Bell size={25} strokeWidth={2} />
@@ -185,6 +188,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                   setNotifOpen(false);
                   setProfileOpen((prev) => !prev);
                 }}
+                data-tour="navbar-profile"
                 className="navbar__profile-btn"
               >
                 <UserCircle2 size={28} strokeWidth={1.5} />

@@ -1,392 +1,414 @@
 {
-  "layout": {
-    "meta": {
-      "title": "SWAP",
-      "description": "Site d'échange pour les étudiants de l'UVG"
-    },
-    "navbar": {
-      "ariaToggleMenu": "Ouvrir le menu",
-      "ariaUserProfile": "Profil utilisateur",
-      "logo": "SWAP",
-      "viewProfile": "Voir le profil",
-      "myStore": "Ma boutique",
-      "logout": "Se déconnecter"
-    },
-    "sidebar": {
-      "descubre": "Découvrir",
-      "tutorias": "Tutorat",
-      "materiales": "Matériels",
-      "negocios": "Commerces",
-      "mensajes": "Messages",
-      "guardados": "Enregistrés"
-    },
-    "settings": {
-      "settings": "Paramètres de l'application",
-      "theme": "Thème",
-      "themeDesc": "Basculer entre le mode clair et sombre",
-      "language": "Langue",
-      "languageDesc": "Sélectionnez votre langue préférée"
-    }
-  },
-  "locales": {
-    "en": "EN",
-    "es": "ES",
-    "fr": "FR"
-  },
-  "common": {
-    "brand": "SWAP",
-    "search": {
-      "placeholder": "Rechercher...",
-      "searching": "Recherche...",
-      "filterAria": "Filtrer les publications",
-      "closeFiltersAria": "Fermer les filtres"
-    },
-    "filtros": {
-      "title": "Filtres",
-      "ariaLabel": "Filtres de publication",
-      "close": "Fermer les filtres",
-      "modalidad": "Modalité",
-      "tipo": "Type",
-      "etiquetas": "Étiquettes",
-      "precio": "Prix",
-      "horario": "Horaire",
-      "dias": "Jours",
-      "calificacion": "Évaluation",
-      "aplicar": "Appliquer les filtres",
-      "limpiar": "Tout effacer",
-      "loading": "Chargement...",
-      "categoriesEmpty": "Sélectionner des catégories",
-      "categoriesOne": "1 catégorie sélectionnée",
-      "categoriesMany": "{count} catégories sélectionnées",
-      "timeFrom": "De",
-      "timeTo": "à",
-      "removeTagAria": "Retirer {name}",
-      "starsAria": "{count} étoiles",
-      "currencyMin": "Q0",
-      "currencyMax": "Q{amount}",
-      "modalidadOptions": {
-        "virtual": "Virtuel",
-        "presencial": "Présentiel"
-      },
-      "materialOptions": {
-        "compra": "Achat",
-        "alquiler": "Location"
-      },
-      "negocioOptions": {
-        "producto": "Produit",
-        "servicio": "Service"
-      },
-      "daysShort": {
-        "lunes": "L",
-        "martes": "M",
-        "miercoles": "Me",
-        "jueves": "J",
-        "viernes": "V",
-        "sabado": "S",
-        "domingo": "D"
-      },
-      "daysAria": {
-        "lunes": "Lundi",
-        "martes": "Mardi",
-        "miercoles": "Mercredi",
-        "jueves": "Jeudi",
-        "viernes": "Vendredi",
-        "sabado": "Samedi",
-        "domingo": "Dimanche"
-      }
-    },
-    "empty": {
-      "noResultsFor": "Aucun résultat pour \"{query}\"",
-      "description": "Aucune publication"
-    },
-    "tags": {
-      "material": "Matériel",
-      "tutoria": "Tutorat",
-      "negocio": "Commerce"
-    },
-    "actions": {
-      "cancel": "Annuler",
-      "continue": "Continuer",
-      "send": "Envoyer",
-      "save": "Enregistrer",
-      "saveChanges": "Enregistrer les modifications",
-      "createPublication": "Créer une publication",
-      "editPublication": "Modifier la publication",
-      "publishing": "Publication...",
-      "saving": "Enregistrement..."
-    },
-    "people": {
-      "anonymous": "Anonyme",
-      "you": "Vous"
-    },
-    "time": {
-      "justNow": "À l'instant"
-    },
-    "aria": {
-      "visitProfile": "Visiter le profil {platform}"
-    }
-  },
-  "home": {
-    "title": "DÉCOUVRIR",
-    "loading": "Chargement des commerces...",
-    "empty": {
-      "title": "Aucun commerce disponible",
-      "description": "Aucun commerce étudiant n'a encore été publié."
-    }
-  },
-  "negocios": {
-    "title": "COMMERCES",
-    "loading": "Chargement des commerces...",
-    "errorFallback": "Impossible de récupérer les commerces",
-    "empty": {
-      "title": "Aucun commerce disponible",
-      "description": "Aucun commerce étudiant n'a encore été publié. Soyez le premier à publier le vôtre !"
-    }
-  },
-  "materiales": {
-    "title": "MATÉRIELS",
-    "loading": "Chargement des matériels...",
-    "errorFallback": "Impossible de récupérer les matériels",
-    "empty": {
-      "title": "Aucun matériel disponible",
-      "description": "Aucun matériel académique n'a encore été publié. Soyez le premier à partager !"
-    }
-  },
-  "tutorias": {
-    "title": "TUTORAT",
-    "loading": "Chargement des tutorats...",
-    "empty": {
-      "title": "Aucune séance de tutorat disponible",
-      "description": "Aucun tutorat étudiant n'a encore été publié."
-    },
-    "solicitud": "Demande de tutorat",
-    "fecha": "Date de tutorat",
-    "hora": "Heure de tutorat",
-    "modalidad": "Format de tutorat",
-    "lugar": "Lieu",
-    "tema": "Sujet",
-    "rechazar": "Refuser",
-    "aceptar": "Accepter",
-    "formulario": {
-      "nuevaSolicitud": "Nouvelle demande de tutorat",
-      "titulo": "Demande de tutorat",
-      "descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
-      "fecha": "Date",
-      "hora": "Heure",
-      "modalidad": "Format",
-      "lugar": "Lieu",
-      "tema": "Sujet",
-      "enviarSolicitud": "Envoyer la demande",
-      "placeholderTema": "Décrivez le sujet de la séance de tutorat",
-      "placeholderLugar": "E.g. Plaza Paiz, UVG"
-    }
-  },
-  "descubre": {
-    "title": "Découvrir",
-    "placeholderTitle": "Découvrir",
-    "placeholderDescription": "Page de découverte des publications — À venir"
-  },
-  "seccion": {
-    "reciente": "Publication récente",
-    "recomendado": "Publication recommandée",
-    "explorar": "Explorer plus",
-    "ads": "Publicités",
-    "populares": "Publications Populaires",
-    "tutores": "Tuteurs",
-    "personalizedRecommendationsButton": "Recommandés pour vous",
-    "resultsTitle": "Résultats ({count})",
-    "pagination": {
-      "previous": "Page précédente",
-      "next": "Page suivante",
-      "results": "Pagination des résultats",
-      "filteredResults": "Pagination des résultats filtrés",
-      "posts": "Pagination des publications"
-    },
-    "loadingTutores": "Chargement des tuteurs...",
-    "tutorFallbackName": "Tuteur SWAP",
-    "noTutores": "Aucun tuteur à afficher pour le moment.",
-    "error_loading_section": "Impossible de charger cette section"
-  },
-  "login": {
-    "title": "Connexion",
-    "subtitle": "Nouveau ici ? Saisissez vos identifiants pour vous connecter.",
-    "emailLabel": "E-mail",
-    "emailPlaceholder": "exemple@uvg.edu.gt",
-    "passwordLabel": "Mot de passe",
-    "forgotPassword": "J'ai oublié mon mot de passe",
-    "togglePasswordAria": "Afficher ou masquer le mot de passe",
-    "submit": "Continuer",
-    "submitting": "Connexion...",
-    "footer": {
-      "noAccount": "Vous n'avez pas de compte ?",
-      "register": "Inscrivez-vous ici",
-      "createAccount": "Créer un compte"
-    },
-    "toast": {
-      "welcomeBack": "Bon retour !",
-      "invalidCredentials": "Identifiants incorrects.",
-      "loginErrorFallback": "Impossible de se connecter"
-    },
-    "validation": {
-      "emailRequired": "L'e-mail est requis",
-      "emailInvalid": "E-mail invalide",
-      "passwordRequired": "Le mot de passe est requis",
-      "passwordMin": "Minimum 6 caractères"
-    }
-  },
-  "moderacion": {
-    "login": {
-      "title": "Panneau de modération",
-      "subtitle": "Entrez vos identifiants de modérateur.",
-      "usuarioLabel": "Utilisateur",
-      "usuarioPlaceholder": "utilisateur.moderateur",
-      "passwordLabel": "Mot de passe",
-      "togglePasswordAria": "Afficher ou masquer le mot de passe",
-      "submit": "Se connecter",
-      "submitting": "Connexion...",
-      "toast": {
-        "welcomeBack": "Session de modérateur démarrée",
-        "invalidCredentials": "Utilisateur ou mot de passe incorrect.",
-        "loginErrorFallback": "Impossible de se connecter"
-      },
-      "validation": {
-        "usuarioRequired": "L'utilisateur est requis",
-        "passwordRequired": "Le mot de passe est requis"
-      }
-    },
-    "panel": {
-      "greeting": "Bonjour, {usuario}",
-      "nivelModerador": "Modérateur",
-      "nivelSuperadmin": "Superadmin",
-      "logout": "Se déconnecter",
-      "loading": "Vérification de la session...",
-      "comingSoon": "Bientôt disponible",
-      "sections": {
-        "publicaciones": {
-          "title": "Publications",
-          "description": "Afficher et modérer les publications de la plateforme."
-        },
-        "reportes": {
-          "title": "Signalements",
-          "description": "Examiner et résoudre les signalements d'utilisateurs."
-        },
-        "moderadores": {
-          "title": "Modérateurs",
-          "description": "Gérer les comptes de modérateur."
-        },
-        "palabras": {
-          "title": "Mots restreints",
-          "description": "Gérer la liste des mots restreints."
-        },
-        "usuarios": {
-          "title": "Utilisateurs",
-          "subtitle": "Voir et rechercher les utilisateurs de la plateforme.",
-          "searchPlaceholder": "Rechercher par nom, email ou identifiant...",
-          "resultsCount": "{count} utilisateurs",
-          "loading": "Chargement des utilisateurs...",
-          "empty": "Aucun utilisateur trouvé.",
-          "errorCarga": "Impossible de charger les utilisateurs.",
-          "filtros": {
-            "conReportes": "Avec signalements seulement"
-          },
-          "sort": {
-            "nombreAsc": "Nom (A-Z)",
-            "nombreDesc": "Nom (Z-A)",
-            "reportesDesc": "Les plus signalés",
-            "calificacionAsc": "Note (croissant)",
-            "calificacionDesc": "Note (décroissant)"
-          },
-          "tabla": {
-            "usuario": "Utilisateur",
-            "carnet": "Identifiant",
-            "correo": "Email",
-            "calificacion": "Note",
-            "reportes": "Signalements",
-            "acciones": "Actions",
-            "sinCalificacion": "Pas de note"
-          },
-          "acciones": {
-            "verPerfil": "Voir le profil"
-          },
-          "pagination": {
-            "anterior": "Précédent",
-            "siguiente": "Suivant",
-            "paginaInfo": "Page {page} sur {pageCount}"
-          }
-        }
-      }
-    },
-    "publicaciones": {
-      "title": "Publications",
-      "subtitle": "Affichez, filtrez et modérez les publications de toute la plateforme.",
-      "resultsCount": "{count, plural, =1 {1 résultat} other {# résultats}}",
-      "searchPlaceholder": "Rechercher par titre, description, utilisateur ou e-mail",
-      "tipos": {
-        "todos": "Tous les types",
-        "negocio": "Entreprises",
-        "material": "Matériels",
-        "tutoria": "Tutorats"
-      },
-      "estados": {
-        "todos": "Tous les statuts",
-        "activo": "Actif",
-        "inactivo": "Inactif",
-        "disponible": "Disponible",
-        "reservado": "Réservé",
-        "vendido": "Vendu"
-      },
-      "sort": {
-        "fechaDesc": "Plus récents",
-        "fechaAsc": "Plus anciens",
-        "meGustaDesc": "Plus de j'aime",
-        "precioDesc": "Prix le plus élevé",
-        "precioAsc": "Prix le plus bas"
-      },
-      "motivosReactivacion": {
-        "errorModeracion": "Erreur de modération",
-        "revisadaPermitida": "Publication révisée et autorisée",
-        "correccionUsuario": "Correction appliquée par l'utilisateur"
-      },
-      "acciones": {
-        "reactivar": "Réactiver",
-        "bajar": "Retirer la publication",
-        "eliminar": "Supprimer",
-        "detalle": "Détail"
-      },
-      "card": {
-        "sinImagen": "Sans image",
-        "sinTipo": "Sans type",
-        "usuarioDesconocido": "Utilisateur inconnu",
-        "sinCorreo": "Sans e-mail",
-        "estadoFallback": "Statut {estado}"
-      },
-      "loading": "Chargement des publications...",
-      "empty": "Aucune publication ne correspond aux filtres.",
-      "errorCarga": "Impossible de charger les publications.",
-      "errorAccion": "Impossible de terminer l'action.",
-      "toasts": {
-        "bajadaSuccess": "Publication retirée avec succès.",
-        "reactivadaSuccess": "Publication réactivée avec succès.",
-        "eliminadaSuccess": "Publication supprimée avec succès."
-      },
-      "pagination": {
-        "anterior": "Précédent",
-        "siguiente": "Suivant",
-        "paginaInfo": "Page {page} sur {pageCount}"
-      },
-      "justificante": {
-        "titulos": {
-          "bajar": "Retirer la publication",
-          "reactivar": "Réactiver la publication",
-          "eliminar": "Supprimer la publication"
-        },
-        "preguntas": {
-          "bajar": "Pourquoi voulez-vous retirer la publication ?",
-          "reactivar": "Pourquoi voulez-vous réactiver la publication ?",
-          "eliminar": "Pourquoi voulez-vous supprimer la publication ?"
-        }
-      }
-    },
+	"layout": {
+		"meta": {
+			"title": "SWAP",
+			"description": "Site d'échange pour les étudiants de l'UVG"
+		},
+		"navbar": {
+			"ariaToggleMenu": "Ouvrir le menu",
+			"ariaUserProfile": "Profil utilisateur",
+			"logo": "SWAP",
+			"viewProfile": "Voir le profil",
+			"myStore": "Ma boutique",
+			"logout": "Se déconnecter"
+		},
+		"sidebar": {
+			"descubre": "Découvrir",
+			"tutorias": "Tutorat",
+			"materiales": "Matériels",
+			"negocios": "Commerces",
+			"mensajes": "Messages",
+			"guardados": "Enregistrés"
+		},
+		"settings": {
+			"settings": "Paramètres de l'application",
+			"theme": "Thème",
+			"themeDesc": "Basculer entre le mode clair et sombre",
+			"language": "Langue",
+			"languageDesc": "Sélectionnez votre langue préférée"
+		}
+	},
+	"onboarding": {
+		"welcome": {
+			"title": "Bienvenue, {nombre} !",
+			"body": "SWAP est la plateforme pour partager, vendre et vous connecter avec des personnes de votre université. N'oubliez pas de toujours respecter la communauté.",
+			"start": "Commencer la visite",
+			"skip": "Passer"
+		},
+		"sidebar": {
+			"descubre": {
+				"title": "Découvrir",
+				"body": "Retrouvez ici toutes les publications récentes, populaires et recommandées pour vous."
+			},
+			"tutorias": {
+				"title": "Tutorat",
+				"body": "Proposez ou demandez des séances de tutorat avec d'autres étudiants de votre université."
+			},
+			"materiales": {
+				"title": "Matériels",
+				"body": "Achetez, vendez ou échangez du matériel d'étude comme des livres et des notes."
+			},
+			"negocios": {
+				"title": "Commerces",
+				"body": "Découvrez les commerces et initiatives de la communauté universitaire."
+			},
+			"mensajes": {
+				"title": "Messages",
+				"body": "Discutez ici avec d'autres utilisateurs à propos de vos publications et accords."
+			}
+		},
+		"navbar": {
+			"menu": {
+				"title": "Menu latéral",
+				"body": "Utilisez ce bouton pour agrandir ou réduire le menu de navigation."
+			},
+			"settings": {
+				"title": "Paramètres",
+				"body": "Changez le thème ou la langue de la plateforme depuis ici."
+			},
+			"notifications": {
+				"title": "Notifications",
+				"body": "Consultez vos notifications et demandes de tutorat en temps réel."
+			},
+			"profile": {
+				"title": "Votre profil",
+				"body": "Accédez à votre profil ou déconnectez-vous depuis ce menu."
+			}
+		},
+		"fab": {
+			"title": "Créer une publication",
+			"body": "Utilisez ce bouton pour publier un tutorat, un matériel d'étude ou un commerce."
+		},
+		"controls": {
+			"back": "Retour",
+			"next": "Suivant",
+			"finish": "Terminer",
+			"skip": "Passer",
+			"stepOf": "{current} sur {total}",
+			"close": "Fermer"
+		}
+	},
+	"locales": {
+		"en": "EN",
+		"es": "ES",
+		"fr": "FR"
+	},
+	"common": {
+		"brand": "SWAP",
+		"search": {
+			"placeholder": "Rechercher...",
+			"searching": "Recherche...",
+			"filterAria": "Filtrer les publications",
+			"closeFiltersAria": "Fermer les filtres"
+		},
+		"filtros": {
+			"title": "Filtres",
+			"ariaLabel": "Filtres de publication",
+			"close": "Fermer les filtres",
+			"modalidad": "Modalité",
+			"tipo": "Type",
+			"etiquetas": "Étiquettes",
+			"precio": "Prix",
+			"horario": "Horaire",
+			"dias": "Jours",
+			"calificacion": "Évaluation",
+			"aplicar": "Appliquer les filtres",
+			"limpiar": "Tout effacer",
+			"loading": "Chargement...",
+			"categoriesEmpty": "Sélectionner des catégories",
+			"categoriesOne": "1 catégorie sélectionnée",
+			"categoriesMany": "{count} catégories sélectionnées",
+			"timeFrom": "De",
+			"timeTo": "à",
+			"removeTagAria": "Retirer {name}",
+			"starsAria": "{count} étoiles",
+			"currencyMin": "Q0",
+			"currencyMax": "Q{amount}",
+			"modalidadOptions": {
+				"virtual": "Virtuel",
+				"presencial": "Présentiel"
+			},
+			"materialOptions": {
+				"compra": "Achat",
+				"alquiler": "Location"
+			},
+			"negocioOptions": {
+				"producto": "Produit",
+				"servicio": "Service"
+			},
+			"daysShort": {
+				"lunes": "L",
+				"martes": "M",
+				"miercoles": "Me",
+				"jueves": "J",
+				"viernes": "V",
+				"sabado": "S",
+				"domingo": "D"
+			},
+			"daysAria": {
+				"lunes": "Lundi",
+				"martes": "Mardi",
+				"miercoles": "Mercredi",
+				"jueves": "Jeudi",
+				"viernes": "Vendredi",
+				"sabado": "Samedi",
+				"domingo": "Dimanche"
+			}
+		},
+		"empty": {
+			"noResultsFor": "Aucun résultat pour \"{query}\"",
+			"description": "Aucune publication"
+		},
+		"tags": {
+			"material": "Matériel",
+			"tutoria": "Tutorat",
+			"negocio": "Commerce"
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"continue": "Continuer",
+			"send": "Envoyer",
+			"save": "Enregistrer",
+			"saveChanges": "Enregistrer les modifications",
+			"createPublication": "Créer une publication",
+			"editPublication": "Modifier la publication",
+			"publishing": "Publication...",
+			"saving": "Enregistrement..."
+		},
+		"people": {
+			"anonymous": "Anonyme",
+			"you": "Vous"
+		},
+		"time": {
+			"justNow": "À l'instant"
+		},
+		"aria": {
+			"visitProfile": "Visiter le profil {platform}"
+		}
+	},
+	"home": {
+		"title": "DÉCOUVRIR",
+		"loading": "Chargement des commerces...",
+		"empty": {
+			"title": "Aucun commerce disponible",
+			"description": "Aucun commerce étudiant n'a encore été publié."
+		}
+	},
+	"negocios": {
+		"title": "COMMERCES",
+		"loading": "Chargement des commerces...",
+		"errorFallback": "Impossible de récupérer les commerces",
+		"empty": {
+			"title": "Aucun commerce disponible",
+			"description": "Aucun commerce étudiant n'a encore été publié. Soyez le premier à publier le vôtre !"
+		}
+	},
+	"materiales": {
+		"title": "MATÉRIELS",
+		"loading": "Chargement des matériels...",
+		"errorFallback": "Impossible de récupérer les matériels",
+		"empty": {
+			"title": "Aucun matériel disponible",
+			"description": "Aucun matériel académique n'a encore été publié. Soyez le premier à partager !"
+		}
+	},
+	"tutorias": {
+		"title": "TUTORAT",
+		"loading": "Chargement des tutorats...",
+		"empty": {
+			"title": "Aucune séance de tutorat disponible",
+			"description": "Aucun tutorat étudiant n'a encore été publié."
+		},
+		"solicitud": "Demande de tutorat",
+		"fecha": "Date de tutorat",
+		"hora": "Heure de tutorat",
+		"modalidad": "Format de tutorat",
+		"lugar": "Lieu",
+		"tema": "Sujet",
+		"rechazar": "Refuser",
+		"aceptar": "Accepter",
+		"formulario": {
+			"nuevaSolicitud": "Nouvelle demande de tutorat",
+			"titulo": "Demande de tutorat",
+			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
+			"fecha": "Date",
+			"hora": "Heure",
+			"modalidad": "Format",
+			"lugar": "Lieu",
+			"tema": "Sujet",
+			"enviarSolicitud": "Envoyer la demande",
+			"placeholderTema": "Décrivez le sujet de la séance de tutorat",
+			"placeholderLugar": "E.g. Plaza Paiz, UVG"
+		}
+	},
+	"descubre": {
+		"title": "Découvrir",
+		"placeholderTitle": "Découvrir",
+		"placeholderDescription": "Page de découverte des publications — À venir"
+	},
+	"seccion": {
+		"reciente": "Publication récente",
+		"recomendado": "Publication recommandée",
+		"explorar": "Explorer plus",
+		"ads": "Publicités",
+		"populares": "Publications Populaires",
+		"tutores": "Tuteurs",
+		"personalizedRecommendationsButton": "Recommandés pour vous",
+		"resultsTitle": "Résultats ({count})",
+		"pagination": {
+			"previous": "Page précédente",
+			"next": "Page suivante",
+			"results": "Pagination des résultats",
+			"filteredResults": "Pagination des résultats filtrés",
+			"posts": "Pagination des publications"
+		},
+		"loadingTutores": "Chargement des tuteurs...",
+		"tutorFallbackName": "Tuteur SWAP",
+		"noTutores": "Aucun tuteur à afficher pour le moment.",
+		"error_loading_section": "Impossible de charger cette section"
+	},
+	"login": {
+		"title": "Connexion",
+		"subtitle": "Nouveau ici ? Saisissez vos identifiants pour vous connecter.",
+		"emailLabel": "E-mail",
+		"emailPlaceholder": "exemple@uvg.edu.gt",
+		"passwordLabel": "Mot de passe",
+		"forgotPassword": "J'ai oublié mon mot de passe",
+		"togglePasswordAria": "Afficher ou masquer le mot de passe",
+		"submit": "Continuer",
+		"submitting": "Connexion...",
+		"footer": {
+			"noAccount": "Vous n'avez pas de compte ?",
+			"register": "Inscrivez-vous ici",
+			"createAccount": "Créer un compte"
+		},
+		"toast": {
+			"welcomeBack": "Bon retour !",
+			"invalidCredentials": "Identifiants incorrects.",
+			"loginErrorFallback": "Impossible de se connecter",
+			"accountBlockedTitle": "Compte bloqué",
+			"accountBlocked": "Votre compte a été bloqué. Contactez le support pour plus d'informations."
+		},
+		"validation": {
+			"emailRequired": "L'e-mail est requis",
+			"emailInvalid": "E-mail invalide",
+			"passwordRequired": "Le mot de passe est requis",
+			"passwordMin": "Minimum 6 caractères"
+		}
+	},
+	"moderacion": {
+		"login": {
+			"title": "Panneau de modération",
+			"subtitle": "Entrez vos identifiants de modérateur.",
+			"usuarioLabel": "Utilisateur",
+			"usuarioPlaceholder": "utilisateur.moderateur",
+			"passwordLabel": "Mot de passe",
+			"togglePasswordAria": "Afficher ou masquer le mot de passe",
+			"submit": "Se connecter",
+			"submitting": "Connexion...",
+			"toast": {
+				"welcomeBack": "Session de modérateur démarrée",
+				"invalidCredentials": "Utilisateur ou mot de passe incorrect.",
+				"loginErrorFallback": "Impossible de se connecter"
+			},
+			"validation": {
+				"usuarioRequired": "L'utilisateur est requis",
+				"passwordRequired": "Le mot de passe est requis"
+			}
+		},
+		"panel": {
+			"greeting": "Bonjour, {usuario}",
+			"nivelModerador": "Modérateur",
+			"nivelSuperadmin": "Superadmin",
+			"logout": "Se déconnecter",
+			"loading": "Vérification de la session...",
+			"comingSoon": "Bientôt disponible",
+			"sections": {
+				"publicaciones": {
+					"title": "Publications",
+					"description": "Afficher et modérer les publications de la plateforme."
+				},
+				"reportes": {
+					"title": "Signalements",
+					"description": "Examiner et résoudre les signalements d'utilisateurs."
+				},
+				"moderadores": {
+					"title": "Modérateurs",
+					"description": "Gérer les comptes de modérateur."
+				}
+			}
+		},
+		"publicaciones": {
+			"title": "Publications",
+			"subtitle": "Affichez, filtrez et modérez les publications de toute la plateforme.",
+			"resultsCount": "{count, plural, =1 {1 résultat} other {# résultats}}",
+			"searchPlaceholder": "Rechercher par titre, description, utilisateur ou e-mail",
+			"tipos": {
+				"todos": "Tous les types",
+				"negocio": "Entreprises",
+				"material": "Matériels",
+				"tutoria": "Tutorats"
+			},
+			"estados": {
+				"todos": "Tous les statuts",
+				"activo": "Actif",
+				"inactivo": "Inactif",
+				"disponible": "Disponible",
+				"reservado": "Réservé",
+				"vendido": "Vendu"
+			},
+			"sort": {
+				"fechaDesc": "Plus récents",
+				"fechaAsc": "Plus anciens",
+				"meGustaDesc": "Plus de j'aime",
+				"precioDesc": "Prix le plus élevé",
+				"precioAsc": "Prix le plus bas"
+			},
+			"motivosReactivacion": {
+				"errorModeracion": "Erreur de modération",
+				"revisadaPermitida": "Publication révisée et autorisée",
+				"correccionUsuario": "Correction appliquée par l'utilisateur"
+			},
+			"acciones": {
+				"reactivar": "Réactiver",
+				"bajar": "Retirer la publication",
+				"eliminar": "Supprimer",
+				"detalle": "Détail"
+			},
+			"card": {
+				"sinImagen": "Sans image",
+				"sinTipo": "Sans type",
+				"usuarioDesconocido": "Utilisateur inconnu",
+				"sinCorreo": "Sans e-mail",
+				"estadoFallback": "Statut {estado}"
+			},
+			"loading": "Chargement des publications...",
+			"empty": "Aucune publication ne correspond aux filtres.",
+			"errorCarga": "Impossible de charger les publications.",
+			"errorAccion": "Impossible de terminer l'action.",
+			"toasts": {
+				"bajadaSuccess": "Publication retirée avec succès.",
+				"reactivadaSuccess": "Publication réactivée avec succès.",
+				"eliminadaSuccess": "Publication supprimée avec succès."
+			},
+			"pagination": {
+				"anterior": "Précédent",
+				"siguiente": "Suivant",
+				"paginaInfo": "Page {page} sur {pageCount}"
+			},
+			"justificante": {
+				"titulos": {
+					"bajar": "Retirer la publication",
+					"reactivar": "Réactiver la publication",
+					"eliminar": "Supprimer la publication"
+				},
+				"preguntas": {
+					"bajar": "Pourquoi voulez-vous retirer la publication ?",
+					"reactivar": "Pourquoi voulez-vous réactiver la publication ?",
+					"eliminar": "Pourquoi voulez-vous supprimer la publication ?"
+				}
+			}
+		},
     "palabras": {
       "title": "Mots restreints",
       "subtitle": "Gérer la liste des mots non autorisés sur la plateforme.",
@@ -459,498 +481,504 @@
         "paginaInfo": "Page {page} sur {pageCount}"
       }
     }
-  },
-  "forgotPassword": {
-    "title": "Réinitialiser le mot de passe",
-    "emailLabel": "E-mail",
-    "emailPlaceholder": "exemple@uvg.edu.gt",
-    "codeLabel": "Code de vérification",
-    "codePlaceholder": "000000",
-    "newPasswordLabel": "Nouveau mot de passe",
-    "confirmPasswordLabel": "Confirmer le mot de passe",
-    "passwordPlaceholder": "Au moins 8 caractères",
-    "togglePasswordAria": "Afficher ou masquer le mot de passe",
-    "backToLogin": "Retour à la connexion",
-    "steps": {
-      "email": {
-        "subtitle": "Saisissez votre e-mail institutionnel pour recevoir un code.",
-        "submit": "Envoyer le code",
-        "submitting": "Envoi..."
-      },
-      "code": {
-        "subtitle": "Saisissez le code à 6 chiffres envoyé à votre e-mail.",
-        "submit": "Vérifier le code",
-        "submitting": "Vérification..."
-      },
-      "password": {
-        "subtitle": "Créez un nouveau mot de passe pour votre compte.",
-        "submit": "Mettre à jour",
-        "submitting": "Mise à jour..."
-      }
-    },
-    "toast": {
-      "codeSent": "Si l'e-mail existe, vous recevrez un code.",
-      "codeValid": "Code vérifié.",
-      "passwordUpdated": "Mot de passe mis à jour.",
-      "errorFallback": "Impossible de terminer la récupération"
-    },
-    "validation": {
-      "passwordMismatch": "Les mots de passe ne correspondent pas."
-    }
-  },
-  "registro": {
-    "page": {
-      "title": "Créer un compte sur SWAP",
-      "description1": "Inscrivez-vous avec votre e-mail de l'Universidad del Valle de Guatemala.",
-      "description2": "Découvrez les produits et services proposés par les étudiants au sein de l'Université."
-    },
-    "form": {
-      "firstNameLabel": "Prénom",
-      "lastNameLabel": "Nom",
-      "emailLabel": "E-mail",
-      "passwordLabel": "Créer un mot de passe",
-      "confirmPasswordLabel": "Confirmer le mot de passe",
-      "firstNamePlaceholder": "Michael",
-      "lastNamePlaceholder": "Pérez",
-      "emailPlaceholder": "per0000@uvg.edu.gt",
-      "tagsLabel": "Sélectionnez vos centres d'intérêt",
-      "tagsPlaceholder": "Sélectionnez au moins 1 sujet",
-      "tagsLoading": "Chargement des catégories...",
-      "passwordPlaceholder": "Au moins 8 caractères",
-      "confirmPasswordPlaceholder": "Au moins 8 caractères",
-      "verificationTitle": "Vérifiez votre e-mail",
-      "verificationDescription": "Saisissez le code à 6 chiffres envoyé à votre e-mail institutionnel.",
-      "verificationCodeLabel": "Code de vérification",
-      "verificationCodePlaceholder": "000000",
-      "verificationCodeInvalid": "Le code doit comporter 6 chiffres.",
-      "verificationSessionExpired": "Remplissez à nouveau le formulaire pour demander un nouveau code.",
-      "changeEmail": "Changer l'e-mail",
-      "emailInvalid": "E-mail invalide",
-      "sendingCode": "Envoi du code...",
-      "submitting": "Inscription...",
-      "submit": "Continuer",
-      "submitWithCode": "Créer le compte",
-      "tagsCountMin": "Sélectionnez au moins 3 centre d'intérêt",
-      "tagsCountMax": "Vous pouvez sélectionner jusqu'à 20 centres d'intérêt",
-      "toast": {
-        "success": "Inscription réussie ! Bienvenue sur SWAP.",
-        "codeSent": "Nous avons envoyé un code à votre e-mail institutionnel.",
-        "errorFallback": "Impossible de s'inscrire"
-      }
-    }
-  },
-  "perfil": {
-    "loading": "Chargement du profil...",
-    "mode": {
-      "consumer": "Acheteur",
-      "seller": "Vendeur",
-      "tutor": "Tuteur"
-    },
-    "sections": {
-      "saved": "Enregistrés",
-      "purchases": "Achats",
-      "tutoringHistory": "Tutorats suivis",
-      "catalog": "Votre catalogue",
-      "ads": "Annonces",
-      "comments": "Commentaires et avis",
-      "featured": "Publications en vedette"
-    },
-    "history": {
-      "emptyProducts": "Vous n'avez pas encore acheté de produits.",
-      "emptyTutoring": "Vous n'avez pas encore suivi de tutorat.",
-      "error": "Impossible de charger votre historique.",
-      "unknownUser": "Utilisateur SWAP",
-      "provider": "Prestataire",
-      "date": "Date",
-      "place": "Lieu",
-      "viewAll": "Tout voir",
-      "details": "Détails",
-      "backToProfile": "Retour au profil",
-      "searchPlaceholder": "Rechercher dans l'historique...",
-      "filters": {
-        "aria": "Filtrer les achats",
-        "all": "Tous",
-        "materials": "Matériels",
-        "businesses": "Commerces"
-      }
-    },
-    "actions": {
-      "newPublication": "Nouvelle publication",
-      "changeAd": "Changer l'annonce",
-      "createAd": "Nouvelle annonce",
-      "editAd": "Edit ad",
-      "editSchedule": "Modifier l'horaire",
-      "newPostMaterial": "Nouveau matériel",
-      "newPostNegocio": "Nouveau business",
-      "newPostTutoria": "Nouvelle tutoriale"
-    },
-    "modal": {
-      "createPublicationAria": "Créer une publication",
-      "editPublicationAria": "Modifier la publication"
-    }
-  },
-  "vendedor": {
-    "loading": "Chargement du profil...",
-    "sections": {
-      "catalog": "Catalogue",
-      "ads": "Annonces",
-      "comments": "Commentaires et avis"
-    },
-    "actions": {
-      "newPublication": "Nouvelle publication"
-    }
-  },
-  "posts": {
-    "actions": {
-      "details": "Détails",
-      "edit": "Modifier",
-      "acordar": "Convenir d'un achat",
-      "certificado": "Voir les certificats",
-      "viewProfile": "Voir le profil"
-    },
-    "save": {
-      "addAria": "Enregistrer la publication",
-      "removeAria": "Retirer des favoris"
-    },
-    "tutorTopicsLabel": "Thèmes de tutorat",
-    "aria": {
-      "uploadImage": "Téléverser une image"
-    },
-    "uploadErrors": {
-      "invalidType": "Seules les images JPG, PNG ou WEBP sont autorisées",
-      "tooLarge": "L'image ne peut pas dépasser 5 Mo",
-      "generic": "Erreur lors du téléversement de l'image"
-    },
-    "estado": {
-      "activo": "Actif",
-      "disponible": "Disponible",
-      "reservado": "Réservé",
-      "vendido": "Vendu",
-      "inactivo": "Inactif",
-      "1": "Disponible",
-      "2": "Lu",
-      "3": "Réservé",
-      "4": "Vendu",
-      "5": "Envoyé",
-      "6": "Payé",
-      "7": "Accepté",
-      "8": "Inactif",
-      "9": "Annulé",
-      "10": "Terminé"
-    }
-  },
-  "comments": {
-    "empty": "Pas encore de commentaires.",
-    "actions": {
-      "edit": "Modifier le commentaire",
-      "delete": "Supprimer le commentaire",
-      "editPrompt": "Modifiez votre commentaire :",
-      "deleteConfirm": "Voulez-vous vraiment supprimer ce commentaire ?"
-    },
-    "form": {
-      "starsAria": "{count} étoiles",
-      "placeholder": "Laissez un commentaire à {name}",
-      "sendAnonymous": "Envoyer anonymement"
-    },
-    "title": "Commentaires et avis"
-  },
-  "profileHeader": {
-    "toast": {
-      "updateSuccess": "Profil mis à jour avec succès",
-      "updateErrorFallback": "Impossible de mettre à jour le profil"
-    },
-    "actions": {
-      "editProfile": "Modifier le profil",
-      "editTags": "Etiquettes"
-    },
-    "aria": {
-      "editProfile": "Modifier le profil"
-    },
-    "labels": {
-      "paymentMethod": "Moyen de paiement :",
-      "contact": "Contact"
-    },
-    "certification": {
-      "title": "Certifications",
-      "add": "Ajouter une certification",
-      "noCert": "Il n'y a pas encore de certifications.",
-      "pdfNotA": "PDF non disponible",
-      "select": "Sélectionnez une certification pour l'afficher",
-      "delete": "Supprimer la certification"
-    }
-  },
-  "updateProfileModal": {
-    "title": "Mettre à jour le profil",
-    "photoLabel": "Photo de profil",
-    "actions": {
-      "cancel": "Annuler",
-      "update": "Mettre à jour",
-      "saving": "Enregistrement..."
-    },
-    "confirm": {
-      "submit": {
-        "title": "Confirmer les modifications",
-        "message": "Voulez-vous vraiment mettre à jour votre profil avec ces modifications ?"
-      },
-      "discard": {
-        "title": "Quitter sans enregistrer",
-        "message": "Vous avez des modifications non enregistrées. Voulez-vous quitter quand même ?"
-      },
-      "actions": {
-        "back": "Retour",
-        "confirmSave": "Oui, mettre à jour",
-        "confirmDiscard": "Oui, quitter"
-      }
-    },
-    "form": {
-      "firstName": "Prénom",
-      "lastName": "Nom",
-      "description": "Description",
-      "descriptionPlaceholder": "Ajoutez une description"
-    },
-    "contacts": {
-      "label": "Contacts",
-      "addAria": "Ajouter un contact",
-      "removeAria": "Supprimer le contact",
-      "typePlaceholder": "Sélectionner le type",
-      "valuePlaceholder": "contact",
-      "types": {
-        "phone": "Téléphone",
-        "whatsapp": "WhatsApp",
-        "instagram": "Instagram",
-        "email": "E-mail"
-      }
-    },
-    "imageUpload": {
-      "text": "Cliquez ou glissez des images pour téléverser",
-      "hint": "PNG ou JPG",
-      "previewAlt": "Aperçu",
-      "currentImageAlt": "Image actuelle"
-    }
-  },
-  "solicitudAcuerdoModal": {
-    "title": "Demander un accord",
-    "triggerButton": "Demander un accord",
-    "fields": {
-      "objeto": "Objet",
-      "costo": "Coût",
-      "lugar": "Lieu de livraison",
-      "lugarPlaceholder": "Ex. Plaza Ceibal, UVG",
-      "fecha": "Date",
-      "hora": "Heure",
-      "detalles": "Détails",
-      "detallesPlaceholder": "Ajoutez des détails sur l'accord"
-    },
-    "errors": {
-      "required": "Ce champ est obligatoire",
-      "pastDate": "La date et l'heure doivent être futures"
-    },
-    "actions": {
-      "cancel": "Annuler",
-      "send": "Envoyer la demande",
-      "sending": "Envoi..."
-    },
-    "exito": "Demande d'accord envoyée",
-    "errorGenerico": "Impossible d'envoyer la demande. Réessayez."
-  },
-  "accionesAcuerdo": {
-    "aceptar": "Accepter",
-    "aceptando": "Acceptation...",
-    "rechazar": "Refuser",
-    "rechazando": "Refus...",
-    "confirmRechazar": {
-      "title": "Refuser la demande",
-      "message": "Êtes-vous sûr de vouloir refuser cette demande d'accord ?"
-    }
-  },
-  "acuerdoPendienteBadge": {
-    "label": "Accord en attente"
-  },
-  "recordatorioAcuerdo": {
-    "title": "Accord programmé",
-    "overdue": "En retard",
-    "marcarCompletado": "Marquer comme terminé",
-    "completando": "Finalisation..."
-  },
-  "solicitudConversacionBanner": {
-    "texto": "Cette personne souhaite démarrer une conversation avec vous",
-    "aceptar": "Accepter",
-    "aceptando": "Acceptation...",
-    "bloquear": "Bloquer",
-    "bloqueando": "Blocage...",
-    "errorGenerico": "Impossible de traiter la demande. Réessayez.",
-    "confirmBloquear": {
-      "title": "Bloquer la conversation",
-      "message": "Êtes-vous sûr de vouloir bloquer cette demande de conversation ?"
-    }
-  },
-  "seccionAcuerdosConversacion": {
-    "cargando": "Chargement des accords...",
-    "error": "Impossible de charger les accords de cette conversation",
-    "solicitudPendiente": "Demande d'accord pour {objeto}",
-    "errorAccion": "Impossible de traiter l'action. Réessayez."
-  },
-  "loading": "Chargement des publications...",
-  "publicacionForm": {
-    "titleCreate": "Créer une publication",
-    "titleEdit": "Modifier la publication",
-    "fields": {
-      "status": "Statut",
-      "statusAvailable": "Disponible",
-      "statusSold": "Vendu",
-      "statusReserved": "Réservé",
-      "productName": "Nom du produit",
-      "productNamePlaceholder": "ex. Cours de calcul",
-      "description": "Description",
-      "descriptionPlaceholder": "Décrivez les caractéristiques et avantages clés...",
-      "price": "Prix",
-      "type": "Type de publication",
-      "typePlaceholder": "Sélectionner un type",
-      "category": "Catégorie",
-      "categoryTriggerEmpty": "Sélectionner une catégorie",
-      "categoryTriggerOne": "1 catégorie sélectionnée",
-      "categoryTriggerMany": "{count} catégories sélectionnées",
-      "featured": "Publication mise en avant",
-      "photo": "Photo du produit",
-      "uploadText": "Cliquez ou glissez une image pour la téléverser",
-      "uploadHint": "PNG, JPG ou WEBP (max. 5 Mo)",
-      "removeImageAria": "Supprimer l'image",
-      "removeTagAria": "Supprimer {tag}"
-    },
-    "actions": {
-      "cancel": "Annuler",
-      "create": "Créer une publication",
-      "publishing": "Publication...",
-      "saveChanges": "Enregistrer les modifications",
-      "saving": "Enregistrement..."
-    }
-  },
-  "certificacionForm": {
-    "titleCreate": "Ajouter une certification",
-    "titleEdit": "Modifier la certification",
-    "fields": {
-      "name": "Nom de la certification",
-      "namePlaceholder": "ex. Diplôme d'électricité INTECAP",
-      "lugarEmision": "Lieu d'émission",
-      "lugarEmisionPlaceholder": "ex. Université du Val de Guatemala",
-      "etiqueta": "Domaine ou catégorie",
-      "etiquetaPlaceholder": "Sélectionnez une catégorie",
-      "pdf": "Fichier PDF",
-      "pdfEditHint": " (facultatif — conserve le fichier précédent si vous n'en téléversez pas un nouveau)",
-      "existingPdf": "PDF existant",
-      "uploadText": "Cliquez ou glissez un PDF pour le téléverser",
-      "uploadMaxReached": "Vous avez déjà un PDF sélectionné. Supprimez-le pour en téléverser un autre.",
-      "uploadHint": "Fichiers PDF uniquement (max. 10 Mo)",
-      "removePdfAria": "Supprimer le fichier PDF"
-    },
-    "errors": {
-      "pdfRequired": "Le fichier PDF est obligatoire."
-    },
-    "actions": {
-      "cancel": "Annuler",
-      "create": "Ajouter la certification",
-      "saveChanges": "Enregistrer les modifications",
-      "saving": "Enregistrement..."
-    }
-  },
-  "chat": {
-    "empty": {
-      "selectConversation": "Sélectionnez une conversation"
-    },
-    "header": {
-      "back": "Retour aux conversations",
-      "options": "Options",
-      "viewProfile": "Voir le profil"
-    },
-    "menu": {
-      "agreementHistory": "Historique des accords",
-      "createAgreement": "Créer un accord",
-      "report": "Signaler"
-    },
-    "agreement": {
-      "notes": "Observations",
-      "accept": "Accepter",
-      "sendNew": "Faire une contre-offre",
-      "reject": "Refuser",
-      "pendingResponse": "Votre proposition d'accord est en attente de réponse.",
-      "markCompleted": "Marquer comme terminé"
-    },
-    "banner": {
-      "noAgreement": "Aucun accord défini",
-      "createAgreement": "+ Créer un accord",
-      "pendingProposalReceived": "Vous avez une proposition d'accord",
-      "pendingProposalSent": "Votre proposition d'accord est en attente",
-      "nextAgreement": "Prochain accord",
-      "details": "Détails"
-    },
-    "post": {
-      "about": "À propos de cette publication",
-      "viewPost": "Voir la publication"
-    },
-    "input": {
-      "emoji": "Emoji",
-      "placeholder": "Écrivez un message",
-      "attach": "Joindre",
-      "send": "Envoyer"
-    },
-    "messages": {
-      "today": "AUJOURD'HUI",
-      "yesterday": "HIER",
-      "avatarAlt": "avatar"
-    },
-    "panel": {
-      "close": "Fermer le panneau",
-      "titles": {
-        "agreement": "Détail de l'accord",
-        "post": "Publication",
-        "options": "Options",
-        "history": "Historique des accords"
-      }
-    },
-    "history": {
-      "empty": "Il n'y a pas encore d'accords avec cet utilisateur.",
-      "error": "Impossible de charger l'historique des accords.",
-      "unknownUser": "Utilisateur SWAP",
-      "groups": {
-        "pendiente": "En attente",
-        "activo": "En cours",
-        "completado": "Terminés"
-      }
-    },
-    "sidebar": {
-      "title": "Messages",
-      "subtitle": "Conversations actives",
-      "confirm": "Confirmer",
-      "delete": "Supprimer",
-      "tabs": {
-        "all": "Toutes",
-        "sales": "Ventes",
-        "purchases": "Achats"
-      }
-    },
-    "system": {
-      "attachedImageMessage": "Image jointe :",
-      "imagePreview": "Image :",
-      "agreementAccepted": "Accord accepté.",
-      "agreementRejected": "Proposition d'accord rejetée.",
-      "newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord.",
-      "agreementCompleted": "Accord marqué comme terminé.",
-      "agreementActionError": "Impossible de traiter l'action. Réessayez.",
-      "noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord."
-    }
-  },
-  "sendMessageModal": {
-    "title": "Envoyer un message à {name}",
-    "close": "Fermer",
-    "back": "Retour",
-    "requestTutoring": "Convenir d'un tutorat",
-    "suggestionsLabel": "Suggestions",
-    "selectSuggestion": "Sélectionnez un message suggéré",
-    "messageLabel": "Écrivez votre message",
-    "placeholder": "Écrivez quelque chose...",
-    "hint": "Ne partagez pas d'informations sensibles",
-    "cancel": "Annuler",
-    "send": "Envoyer",
-    "sending": "Envoi..."
-  }
+	},
+	"forgotPassword": {
+		"title": "Réinitialiser le mot de passe",
+		"emailLabel": "E-mail",
+		"emailPlaceholder": "exemple@uvg.edu.gt",
+		"codeLabel": "Code de vérification",
+		"codePlaceholder": "000000",
+		"newPasswordLabel": "Nouveau mot de passe",
+		"confirmPasswordLabel": "Confirmer le mot de passe",
+		"passwordPlaceholder": "Au moins 8 caractères",
+		"togglePasswordAria": "Afficher ou masquer le mot de passe",
+		"backToLogin": "Retour à la connexion",
+		"steps": {
+			"email": {
+				"subtitle": "Saisissez votre e-mail institutionnel pour recevoir un code.",
+				"submit": "Envoyer le code",
+				"submitting": "Envoi..."
+			},
+			"code": {
+				"subtitle": "Saisissez le code à 6 chiffres envoyé à votre e-mail.",
+				"submit": "Vérifier le code",
+				"submitting": "Vérification..."
+			},
+			"password": {
+				"subtitle": "Créez un nouveau mot de passe pour votre compte.",
+				"submit": "Mettre à jour",
+				"submitting": "Mise à jour..."
+			}
+		},
+		"toast": {
+			"codeSent": "Si l'e-mail existe, vous recevrez un code.",
+			"codeValid": "Code vérifié.",
+			"passwordUpdated": "Mot de passe mis à jour.",
+			"errorFallback": "Impossible de terminer la récupération"
+		},
+		"validation": {
+			"passwordMismatch": "Les mots de passe ne correspondent pas."
+		}
+	},
+	"registro": {
+		"page": {
+			"title": "Créer un compte sur SWAP",
+			"description1": "Inscrivez-vous avec votre e-mail de l'Universidad del Valle de Guatemala.",
+			"description2": "Découvrez les produits et services proposés par les étudiants au sein de l'Université."
+		},
+		"form": {
+			"firstNameLabel": "Prénom",
+			"lastNameLabel": "Nom",
+			"emailLabel": "E-mail",
+			"passwordLabel": "Créer un mot de passe",
+			"confirmPasswordLabel": "Confirmer le mot de passe",
+			"firstNamePlaceholder": "Michael",
+			"lastNamePlaceholder": "Pérez",
+			"emailPlaceholder": "per0000@uvg.edu.gt",
+			"tagsLabel": "Sélectionnez vos centres d'intérêt",
+			"tagsPlaceholder": "Sélectionnez au moins 1 sujet",
+			"tagsLoading": "Chargement des catégories...",
+			"passwordPlaceholder": "Au moins 8 caractères",
+			"confirmPasswordPlaceholder": "Au moins 8 caractères",
+			"verificationTitle": "Vérifiez votre e-mail",
+			"verificationDescription": "Saisissez le code à 6 chiffres envoyé à votre e-mail institutionnel.",
+			"verificationCodeLabel": "Code de vérification",
+			"verificationCodePlaceholder": "000000",
+			"verificationCodeInvalid": "Le code doit comporter 6 chiffres.",
+			"verificationSessionExpired": "Remplissez à nouveau le formulaire pour demander un nouveau code.",
+			"changeEmail": "Changer l'e-mail",
+			"emailInvalid": "E-mail invalide",
+			"sendingCode": "Envoi du code...",
+			"submitting": "Inscription...",
+			"submit": "Continuer",
+			"submitWithCode": "Créer le compte",
+			"tagsCountMin": "Sélectionnez au moins 3 centre d'intérêt",
+			"tagsCountMax": "Vous pouvez sélectionner jusqu'à 20 centres d'intérêt",
+			"termsPrefix": "J'accepte les",
+			"termsLinkText": "Conditions Générales et la Politique de Confidentialité",
+			"termsRequired": "Vous devez accepter les Conditions Générales pour continuer.",
+			"toast": {
+				"success": "Inscription réussie ! Bienvenue sur SWAP.",
+				"codeSent": "Nous avons envoyé un code à votre e-mail institutionnel.",
+				"errorFallback": "Impossible de s'inscrire"
+			}
+		}
+	},
+	"perfil": {
+		"loading": "Chargement du profil...",
+		"mode": {
+			"consumer": "Acheteur",
+			"seller": "Vendeur",
+			"tutor": "Tuteur"
+		},
+		"sections": {
+			"saved": "Enregistrés",
+			"purchases": "Achats",
+			"tutoringHistory": "Tutorats suivis",
+			"catalog": "Votre catalogue",
+			"catalogMaterial": "Votre catalogue Matériel",
+			"catalogNegocio": "Votre catalogue Commerce",
+			"schedule": "Horaire",
+			"ads": "Annonces",
+			"comments": "Commentaires et avis",
+			"featured": "Publications en vedette"
+		},
+		"history": {
+			"emptyProducts": "Vous n'avez pas encore acheté de produits.",
+			"emptyTutoring": "Vous n'avez pas encore suivi de tutorat.",
+			"error": "Impossible de charger votre historique.",
+			"unknownUser": "Utilisateur SWAP",
+			"provider": "Prestataire",
+			"date": "Date",
+			"place": "Lieu",
+			"viewAll": "Tout voir",
+			"details": "Détails",
+			"backToProfile": "Retour au profil",
+			"searchPlaceholder": "Rechercher dans l'historique...",
+			"filters": {
+				"aria": "Filtrer les achats",
+				"all": "Tous",
+				"materials": "Matériels",
+				"businesses": "Commerces"
+			}
+		},
+		"actions": {
+			"newPublication": "Nouvelle publication",
+			"changeAd": "Changer l'annonce",
+			"createAd": "Nouvelle annonce",
+			"editAd": "Edit ad",
+			"editSchedule": "Modifier l'horaire",
+			"newPostMaterial": "Nouveau matériel",
+			"newPostNegocio": "Nouveau business",
+			"newPostTutoria": "Nouvelle tutoriale"
+		},
+		"modal": {
+			"createPublicationAria": "Créer une publication",
+			"editPublicationAria": "Modifier la publication"
+		}
+	},
+	"vendedor": {
+		"loading": "Chargement du profil...",
+		"sections": {
+			"catalog": "Catalogue",
+			"ads": "Annonces",
+			"comments": "Commentaires et avis"
+		},
+		"actions": {
+			"newPublication": "Nouvelle publication"
+		}
+	},
+	"posts": {
+		"actions": {
+			"details": "Détails",
+			"edit": "Modifier",
+			"acordar": "Convenir d'un achat",
+			"certificado": "Voir les certificats",
+			"viewProfile": "Voir le profil"
+		},
+		"save": {
+			"addAria": "Enregistrer la publication",
+			"removeAria": "Retirer des favoris"
+		},
+		"tutorTopicsLabel": "Thèmes de tutorat",
+		"aria": {
+			"uploadImage": "Téléverser une image"
+		},
+		"uploadErrors": {
+			"invalidType": "Seules les images JPG, PNG ou WEBP sont autorisées",
+			"tooLarge": "L'image ne peut pas dépasser 5 Mo",
+			"generic": "Erreur lors du téléversement de l'image"
+		},
+		"estado": {
+			"activo": "Actif",
+			"disponible": "Disponible",
+			"reservado": "Réservé",
+			"vendido": "Vendu",
+			"inactivo": "Inactif",
+			"1": "Disponible",
+			"2": "Lu",
+			"3": "Réservé",
+			"4": "Vendu",
+			"5": "Envoyé",
+			"6": "Payé",
+			"7": "Accepté",
+			"8": "Inactif",
+			"9": "Annulé",
+			"10": "Terminé"
+		}
+	},
+	"comments": {
+		"empty": "Pas encore de commentaires.",
+		"actions": {
+			"edit": "Modifier le commentaire",
+			"delete": "Supprimer le commentaire",
+			"editPrompt": "Modifiez votre commentaire :",
+			"deleteConfirm": "Voulez-vous vraiment supprimer ce commentaire ?"
+		},
+		"form": {
+			"starsAria": "{count} étoiles",
+			"placeholder": "Laissez un commentaire à {name}",
+			"sendAnonymous": "Envoyer anonymement"
+		},
+		"title": "Commentaires et avis"
+	},
+	"profileHeader": {
+		"toast": {
+			"updateSuccess": "Profil mis à jour avec succès",
+			"updateErrorFallback": "Impossible de mettre à jour le profil"
+		},
+		"actions": {
+			"editProfile": "Modifier le profil",
+			"editTags": "Etiquettes"
+		},
+		"aria": {
+			"editProfile": "Modifier le profil"
+		},
+		"labels": {
+			"paymentMethod": "Moyen de paiement :",
+			"contact": "Contact"
+		},
+		"certification": {
+			"title": "Certifications",
+			"add": "Ajouter une certification",
+			"noCert": "Il n'y a pas encore de certifications.",
+			"pdfNotA": "PDF non disponible",
+			"select": "Sélectionnez une certification pour l'afficher",
+			"delete": "Supprimer la certification"
+		}
+	},
+	"updateProfileModal": {
+		"title": "Mettre à jour le profil",
+		"photoLabel": "Photo de profil",
+		"actions": {
+			"cancel": "Annuler",
+			"update": "Mettre à jour",
+			"saving": "Enregistrement..."
+		},
+		"confirm": {
+			"submit": {
+				"title": "Confirmer les modifications",
+				"message": "Voulez-vous vraiment mettre à jour votre profil avec ces modifications ?"
+			},
+			"discard": {
+				"title": "Quitter sans enregistrer",
+				"message": "Vous avez des modifications non enregistrées. Voulez-vous quitter quand même ?"
+			},
+			"actions": {
+				"back": "Retour",
+				"confirmSave": "Oui, mettre à jour",
+				"confirmDiscard": "Oui, quitter"
+			}
+		},
+		"form": {
+			"firstName": "Prénom",
+			"lastName": "Nom",
+			"description": "Description",
+			"descriptionPlaceholder": "Ajoutez une description"
+		},
+		"contacts": {
+			"label": "Contacts",
+			"addAria": "Ajouter un contact",
+			"removeAria": "Supprimer le contact",
+			"typePlaceholder": "Sélectionner le type",
+			"valuePlaceholder": "contact",
+			"types": {
+				"phone": "Téléphone",
+				"whatsapp": "WhatsApp",
+				"instagram": "Instagram",
+				"email": "E-mail"
+			}
+		},
+		"imageUpload": {
+			"text": "Cliquez ou glissez des images pour téléverser",
+			"hint": "PNG ou JPG",
+			"previewAlt": "Aperçu",
+			"currentImageAlt": "Image actuelle"
+		}
+	},
+	"solicitudAcuerdoModal": {
+		"title": "Demander un accord",
+		"triggerButton": "Demander un accord",
+		"fields": {
+			"objeto": "Objet",
+			"costo": "Coût",
+			"lugar": "Lieu de livraison",
+			"lugarPlaceholder": "Ex. Plaza Ceibal, UVG",
+			"fecha": "Date",
+			"hora": "Heure",
+			"detalles": "Détails",
+			"detallesPlaceholder": "Ajoutez des détails sur l'accord"
+		},
+		"errors": {
+			"required": "Ce champ est obligatoire",
+			"pastDate": "La date et l'heure doivent être futures"
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"send": "Envoyer la demande",
+			"sending": "Envoi..."
+		},
+		"exito": "Demande d'accord envoyée",
+		"errorGenerico": "Impossible d'envoyer la demande. Réessayez."
+	},
+	"accionesAcuerdo": {
+		"aceptar": "Accepter",
+		"aceptando": "Acceptation...",
+		"rechazar": "Refuser",
+		"rechazando": "Refus...",
+		"confirmRechazar": {
+			"title": "Refuser la demande",
+			"message": "Êtes-vous sûr de vouloir refuser cette demande d'accord ?"
+		}
+	},
+	"acuerdoPendienteBadge": {
+		"label": "Accord en attente"
+	},
+	"recordatorioAcuerdo": {
+		"title": "Accord programmé",
+		"overdue": "En retard",
+		"marcarCompletado": "Marquer comme terminé",
+		"completando": "Finalisation..."
+	},
+	"solicitudConversacionBanner": {
+		"texto": "Cette personne souhaite démarrer une conversation avec vous",
+		"aceptar": "Accepter",
+		"aceptando": "Acceptation...",
+		"bloquear": "Bloquer",
+		"bloqueando": "Blocage...",
+		"errorGenerico": "Impossible de traiter la demande. Réessayez.",
+		"confirmBloquear": {
+			"title": "Bloquer la conversation",
+			"message": "Êtes-vous sûr de vouloir bloquer cette demande de conversation ?"
+		}
+	},
+	"seccionAcuerdosConversacion": {
+		"cargando": "Chargement des accords...",
+		"error": "Impossible de charger les accords de cette conversation",
+		"solicitudPendiente": "Demande d'accord pour {objeto}",
+		"errorAccion": "Impossible de traiter l'action. Réessayez."
+	},
+	"loading": "Chargement des publications...",
+	"publicacionForm": {
+		"titleCreate": "Créer une publication",
+		"titleEdit": "Modifier la publication",
+		"fields": {
+			"status": "Statut",
+			"statusAvailable": "Disponible",
+			"statusSold": "Vendu",
+			"statusReserved": "Réservé",
+			"productName": "Nom du produit",
+			"productNamePlaceholder": "ex. Cours de calcul",
+			"description": "Description",
+			"descriptionPlaceholder": "Décrivez les caractéristiques et avantages clés...",
+			"price": "Prix",
+			"type": "Type de publication",
+			"typePlaceholder": "Sélectionner un type",
+			"category": "Catégorie",
+			"categoryTriggerEmpty": "Sélectionner une catégorie",
+			"categoryTriggerOne": "1 catégorie sélectionnée",
+			"categoryTriggerMany": "{count} catégories sélectionnées",
+			"featured": "Publication mise en avant",
+			"photo": "Photo du produit",
+			"uploadText": "Cliquez ou glissez une image pour la téléverser",
+			"uploadHint": "PNG, JPG ou WEBP (max. 5 Mo)",
+			"removeImageAria": "Supprimer l'image",
+			"removeTagAria": "Supprimer {tag}"
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"create": "Créer une publication",
+			"publishing": "Publication...",
+			"saveChanges": "Enregistrer les modifications",
+			"saving": "Enregistrement..."
+		}
+	},
+	"certificacionForm": {
+		"titleCreate": "Ajouter une certification",
+		"titleEdit": "Modifier la certification",
+		"fields": {
+			"name": "Nom de la certification",
+			"namePlaceholder": "ex. Diplôme d'électricité INTECAP",
+			"lugarEmision": "Lieu d'émission",
+			"lugarEmisionPlaceholder": "ex. Université du Val de Guatemala",
+			"etiqueta": "Domaine ou catégorie",
+			"etiquetaPlaceholder": "Sélectionnez une catégorie",
+			"pdf": "Fichier PDF",
+			"pdfEditHint": " (facultatif — conserve le fichier précédent si vous n'en téléversez pas un nouveau)",
+			"existingPdf": "PDF existant",
+			"uploadText": "Cliquez ou glissez un PDF pour le téléverser",
+			"uploadMaxReached": "Vous avez déjà un PDF sélectionné. Supprimez-le pour en téléverser un autre.",
+			"uploadHint": "Fichiers PDF uniquement (max. 10 Mo)",
+			"removePdfAria": "Supprimer le fichier PDF"
+		},
+		"errors": {
+			"pdfRequired": "Le fichier PDF est obligatoire."
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"create": "Ajouter la certification",
+			"saveChanges": "Enregistrer les modifications",
+			"saving": "Enregistrement..."
+		}
+	},
+	"chat": {
+		"empty": {
+			"selectConversation": "Sélectionnez une conversation"
+		},
+		"header": {
+			"back": "Retour aux conversations",
+			"options": "Options",
+			"viewProfile": "Voir le profil"
+		},
+		"menu": {
+			"agreementHistory": "Historique des accords",
+			"createAgreement": "Créer un accord",
+			"report": "Signaler"
+		},
+		"agreement": {
+			"notes": "Observations",
+			"accept": "Accepter",
+			"sendNew": "Faire une contre-offre",
+			"reject": "Refuser",
+			"pendingResponse": "Votre proposition d'accord est en attente de réponse.",
+			"markCompleted": "Marquer comme terminé"
+		},
+		"banner": {
+			"noAgreement": "Aucun accord défini",
+			"createAgreement": "+ Créer un accord",
+			"pendingProposalReceived": "Vous avez une proposition d'accord",
+			"pendingProposalSent": "Votre proposition d'accord est en attente",
+			"nextAgreement": "Prochain accord",
+			"details": "Détails"
+		},
+		"post": {
+			"about": "À propos de cette publication",
+			"viewPost": "Voir la publication"
+		},
+		"input": {
+			"emoji": "Emoji",
+			"placeholder": "Écrivez un message",
+			"attach": "Joindre",
+			"send": "Envoyer"
+		},
+		"messages": {
+			"today": "AUJOURD'HUI",
+			"yesterday": "HIER",
+			"avatarAlt": "avatar"
+		},
+		"panel": {
+			"close": "Fermer le panneau",
+			"titles": {
+				"agreement": "Détail de l'accord",
+				"post": "Publication",
+				"options": "Options",
+				"history": "Historique des accords"
+			}
+		},
+		"history": {
+			"empty": "Il n'y a pas encore d'accords avec cet utilisateur.",
+			"error": "Impossible de charger l'historique des accords.",
+			"unknownUser": "Utilisateur SWAP",
+			"groups": {
+				"pendiente": "En attente",
+				"activo": "En cours",
+				"completado": "Terminés"
+			}
+		},
+		"sidebar": {
+			"title": "Messages",
+			"subtitle": "Conversations actives",
+			"confirm": "Confirmer",
+			"delete": "Supprimer",
+			"tabs": {
+				"all": "Toutes",
+				"sales": "Ventes",
+				"purchases": "Achats"
+			}
+		},
+		"system": {
+			"attachedImageMessage": "Image jointe :",
+			"imagePreview": "Image :",
+			"agreementAccepted": "Accord accepté.",
+			"agreementRejected": "Proposition d'accord rejetée.",
+			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord.",
+			"agreementCompleted": "Accord marqué comme terminé.",
+			"agreementActionError": "Impossible de traiter l'action. Réessayez.",
+			"noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord."
+		}
+	},
+	"sendMessageModal": {
+		"title": "Envoyer un message à {name}",
+		"close": "Fermer",
+		"back": "Retour",
+		"requestTutoring": "Convenir d'un tutorat",
+		"suggestionsLabel": "Suggestions",
+		"selectSuggestion": "Sélectionnez un message suggéré",
+		"messageLabel": "Écrivez votre message",
+		"placeholder": "Écrivez quelque chose...",
+		"hint": "Ne partagez pas d'informations sensibles",
+		"cancel": "Annuler",
+		"send": "Envoyer",
+		"sending": "Envoi..."
+	}
 }

@@ -22,6 +22,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
 ) {
   const t = useTranslations('layout.sidebar');
   const tPanel = useTranslations('moderacion.panel');
+  const tMod = useTranslations('moderacion');
   const pathname = usePathname();
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
 
@@ -29,21 +30,21 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
 
   const navItems = variant === "moderador"
     ? [
-        { icon: Compass, label: t('descubre'), href: '/moderacion/descubre' },
-        { icon: Newspaper, label: tPanel('sections.publicaciones.title'), href: '/moderacion/publicaciones' },
-        { icon: UserCheck, label: tPanel('sections.usuarios.title'), href: '/moderacion/usuarios' },
-        { icon: ShieldAlert, label: tPanel('sections.reportes.title'), href: '/moderacion/reportes' },
-        { icon: Ban, label: tPanel('sections.palabras.title'), href: '/moderacion/palabras' },
+        { icon: Compass, label: t('descubre'), href: '/moderacion/descubre', tour: undefined as string | undefined },
+        { icon: Newspaper, label: tPanel('sections.publicaciones.title'), href: '/moderacion/publicaciones', tour: undefined as string | undefined },
+        { icon: UserCheck, label: tMod('usuarios.title'), href: '/moderacion/usuarios', tour: undefined as string | undefined },
+        { icon: ShieldAlert, label: tPanel('sections.reportes.title'), href: '/moderacion/reportes', tour: undefined as string | undefined },
+        { icon: Ban, label: tMod('palabras.title'), href: '/moderacion/palabras', tour: undefined as string | undefined },
         ...(tienePermiso(moderadorNivel ?? null, "superadmin")
-          ? [{ icon: Users, label: tPanel('sections.moderadores.title'), href: '/moderacion/moderadores' }]
+          ? [{ icon: Users, label: tPanel('sections.moderadores.title'), href: '/moderacion/moderadores', tour: undefined as string | undefined }]
           : []),
       ]
     : [
-        { icon: Compass, label: t('descubre'), href: '/' },
-        { icon: BookOpen, label: t('tutorias'), href: '/tutorias' },
-        { icon: Package, label: t('materiales'), href: '/materiales' },
-        { icon: Briefcase, label: t('negocios'), href: '/negocios' },
-        { icon: MessageCircle, label: t('mensajes'), href: '/Chat' },
+        { icon: Compass, label: t('descubre'), href: '/', tour: 'sidebar-descubre' },
+        { icon: BookOpen, label: t('tutorias'), href: '/tutorias', tour: 'sidebar-tutorias' },
+        { icon: Package, label: t('materiales'), href: '/materiales', tour: 'sidebar-materiales' },
+        { icon: Briefcase, label: t('negocios'), href: '/negocios', tour: 'sidebar-negocios' },
+        { icon: MessageCircle, label: t('mensajes'), href: '/Chat', tour: 'sidebar-mensajes' },
       ];
 
   return (
@@ -51,13 +52,14 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
       <nav className="sidebar__nav">
         {/* Grupo superior de links */}
         <div className="sidebar__menu">
-          {navItems.map(({ icon: Icon, label, href }) => {
+          {navItems.map(({ icon: Icon, label, href, tour }) => {
             const isActive = href === '/' ? pathnameWithoutLocale === '/' : pathnameWithoutLocale.startsWith(href);
             return (
               <Link
                 key={href}
                 href={href}
                 title={label}
+                data-tour={tour}
                 className={`sidebar__link ${isActive ? "sidebar__link--active" : ""}`}
               >
                 <span className="sidebar__icon">

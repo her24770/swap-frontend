@@ -14,6 +14,8 @@ import { useModeradorAuthStore } from "../store/moderadorAuthStore";
 export interface ApiError {
   status: number;
   message: string;
+  // Codigo que manda el backend en el body { "code": "CUENTA_BLOQUEADA" }
+  code?: string;
 }
 
 interface HandleResponseOptions {
@@ -36,12 +38,12 @@ function buildHeaders(extra?: HeadersInit): Headers {
   });
 }
 
-async function getErrorMessage(response: Response, fallback: string): Promise<string> {
+async function parseErrorBody(response: Response, fallback: string): Promise<{ message: string; code?: string }> {
   try {
     const body = await response.json();
-    return body.message ?? body.error ?? fallback;
+    return { message: body.message ?? body.error ?? fallback, code: body.code };
   } catch {
-    return fallback;
+    return { message: fallback };
   }
 }
 
@@ -51,10 +53,8 @@ async function handleResponse<T>(
 ): Promise<T> {
   if (response.status === 401) {
     if (options.skipUnauthorizedRedirect) {
-      const err: ApiError = {
-        status: 401,
-        message: await getErrorMessage(response, "Error 401"),
-      };
+      const { message, code } = await parseErrorBody(response, "Error 401");
+      const err: ApiError = { status: 401, message, code };
       throw err;
     }
 
@@ -84,8 +84,8 @@ async function handleResponse<T>(
   }
 
   if (!response.ok) {
-    const message = await getErrorMessage(response, `Error ${response.status}`);
-    const err: ApiError = { status: response.status, message };
+    const { message, code } = await parseErrorBody(response, `Error ${response.status}`);
+    const err: ApiError = { status: response.status, message, code };
     throw err;
   }
 
