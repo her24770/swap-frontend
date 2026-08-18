@@ -32,4 +32,12 @@ export const reporteService = {
 
     return response.data;
   },
+
+  async actualizarEstadoReporte(id: number, nuevoEstado: string): Promise<ReporteDetalle> {
+    const response = await apiClient.put<ApiResult<ReporteDetalle>>(
+      `/api/reportes/${id}`,
+      { estado: nuevoEstado }
+    );
+    return response.data;
+  }
 };
