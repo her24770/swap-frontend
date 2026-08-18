@@ -32,11 +32,11 @@ export default function ModeracionReportesPage() {
               : tipoFilter === "Mensaje"
                 ? "mensaje"
                 : "todos",
-          estado: estadoFilter === "Pendiente"
+          estado: estadoFilter === "pendiente"
             ? "pendiente"
-            : estadoFilter === "Resuelto"
+            : estadoFilter === "resuelto"
               ? "resuelto"
-              : estadoFilter === "Rechazado"
+              : estadoFilter === "rechazado"
                 ? "rechazado"
                 : "todos",
         });
@@ -51,7 +51,6 @@ export default function ModeracionReportesPage() {
 
     cargarReportes();
   }, [page, tipoFilter, estadoFilter]);
-
   
   return (
     <div className="moderacion-reportes-page">
@@ -66,10 +65,12 @@ export default function ModeracionReportesPage() {
         onPageChange={setPage}
         onTipoFilterChange={(tipo) => {
           setTipoFilter(tipo);
+          console.log("Tipo filter changed to:", tipo);
           setPage(1);
         }}
         onEstadoFilterChange={(estado) => {
           setEstadoFilter(estado);
+          console.log("Estado filter changed to:", estado);
           setPage(1);
         }}
         onVerDetalles={reporteService.obtenerReportePorId}

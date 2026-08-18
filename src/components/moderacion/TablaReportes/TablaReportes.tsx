@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, SlidersHorizontal, Check } from "lucide-react";
+import { Search, SlidersHorizontal, Check, SpadeIcon } from "lucide-react";
 import Image from "next/image";
 import { useToast } from "../../../hooks/useToast";
 import type { ReporteDetalle, ReporteTableData } from "../../../types/reporte";
@@ -10,6 +10,8 @@ import DetalleReporteModal from "../../ui/Modal/DetalleReporteModal/DetalleRepor
 import "./TablaReportes.css";
 import "../../../components/ui/Modal/Modal.css";
 import "../../ui/Button/Button.css";
+import { reporteService } from "../../../services/reporteService";
+
 
 interface TablaReportesProps {
   reportes: ReporteTableData[];
@@ -29,8 +31,8 @@ interface TablaReportesProps {
 
 const ESTADO_CLASS: Record<string, string> = {
   pendiente:  "tabla-reportes__estado--pendiente",
-  completado: "tabla-reportes__estado--completado",
-  cancelado:  "tabla-reportes__estado--cancelado",
+  resuelto: "tabla-reportes__estado--resuelto",
+  rechazado:  "tabla-reportes__estado--rechazado",
 };
 
 const TIPO_OPTIONS = [
@@ -71,7 +73,7 @@ export default function TablaReportes({
   const [detalleReporte, setDetalleReporte] = useState<ReporteDetalle | null>(null);
   const [cargandoDetalleId, setCargandoDetalleId] = useState<number | null>(null);
   const [openFilter, setOpenFilter] = useState<"tipo" | "estado" | null>(null);
-
+  const [cambiarEstado, setCambiarEstado] = useState(false);
   const tipoFilterRef = useRef<HTMLDivElement>(null);
   const estadoFilterRef = useRef<HTMLDivElement>(null);
 
@@ -230,9 +232,31 @@ export default function TablaReportes({
                       {new Date(r.fecha).toLocaleDateString("es", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td>
-                      <span className={`tabla-reportes__estado ${ESTADO_CLASS[estadoKey] ?? ""}`}>
-                        {r.estado}
-                      </span>
+                      <select 
+                      className={`tabla-reportes__estado ${ESTADO_CLASS[estadoKey] ?? ""}`}
+                      onClick={() => setCambiarEstado(true)}
+                      >
+                        <option value="pendiente">Pendiente</option>
+                        <option value="resuelto">Resuelto</option>
+                        <option value="rechazado">Rechazado</option>
+
+                      </select>
+
+                      {cambiarEstado && (
+                        <button
+                          type="button"
+                          className="tabla-reportes__estado-guardar"
+                          onClick={() => {
+                            // actualizarEstadoReporte(r.estado);
+                            setCambiarEstado(false);
+                          
+                            }
+                          }
+                        >
+                        </button>
+                      )}
+
+                      
                     </td>
                     <td>
                       <UsuarioCell

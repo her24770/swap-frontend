@@ -187,13 +187,51 @@
 
 /* Estado*/
 .tabla-reportes__estado {
-  display: inline-block;
-  padding: 0.125rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 1.25rem 0.2rem 0.6rem; /* Espacio extra a la derecha para la flecha */
   border-radius: 9999px;
   font-size: 0.6875rem;
   font-weight: 500;
   text-transform: capitalize;
+  border: 1px solid transparent;
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  
+  /* Quita el estilo nativo del navegador */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Icono de flecha sutil integrado mediante SVG */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.4rem center;
+  background-size: 0.6rem;
 }
+
+.tabla-reportes__estado:hover {
+  transform: scale(1.03);
+}
+
+.tabla-reportes__estado:focus {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+.tabla-reportes__estado:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.tabla-reportes__estado option {
+  background-color: #ffffff;
+  color: #1f2937;
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+
 
 .tabla-reportes__estado--pendiente  { background-color: var(--swap-warning-background); color: var(--swap-warning-color); }
 .tabla-reportes__estado--completado { background-color: var(--swap-success-background); color: var(--swap-success-color); }
