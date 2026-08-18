@@ -99,18 +99,21 @@ export interface ReporteDetalleEstadoRel {
 export interface ReporteDetallePublicacionRel {
   id_publicacion: number;
   titulo: string;
-  estadoRel: { estado: string };
 }
 
 export interface ReporteDetalleMensajeRel {
   id_mensaje: number;
   mensaje: string;
-  estadoRel: { estado: string };
+  estadoRel: {
+    estado: string;
+  };
 }
 
 export interface ReporteDetalleModeradorRel {
   id_moderador: number;
-  usuario: string;
+  usuario: {
+    nombre: string;
+  };
 }
 
 export interface ReporteDetalle extends Reporte {

@@ -55,7 +55,9 @@
   transition: opacity 0.15s ease;
 }
 
-.detalle-reporte-modal__close:hover { opacity: 1; }
+.detalle-reporte-modal__close:hover {
+  opacity: 1;
+}
 
 .detalle-reporte-modal__content {
   display: flex;
@@ -175,10 +177,28 @@
     opacity: 0;
     transform: translateX(0.75rem);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+.detalle-reporte-modal__mensaje {
+  padding: 0.75rem 0.875rem;
+  background-color: var(--swap-secondary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+}
+
+.detalle-reporte-modal__mensaje-text {
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-primary-text-color);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .detalle-reporte-modal__publicacion-panel-header {
