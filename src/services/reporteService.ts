@@ -10,7 +10,9 @@ import type {
 
 export const reporteService = {
   async crearReporte(payload: CrearReportePayload): Promise<Reporte> {
-    const response = await apiClient.post<ApiResult<Reporte>>("/api/reportes", payload);
+    const imagenes = payload.imagenes ?? [];
+    const body = imagenes.length > 0 ? crearReporteFormData(payload) : payload;
+    const response = await apiClient.post<ApiResult<Reporte>>("/api/reportes", body);
     return response.data;
   },
 
@@ -33,3 +35,17 @@ export const reporteService = {
     return response.data;
   },
 };
+
+function crearReporteFormData(payload: CrearReportePayload): FormData {
+  const formData = new FormData();
+  formData.append("tipo_objetivo", payload.tipo_objetivo);
+  formData.append("id_objetivo", String(payload.id_objetivo));
+  formData.append("motivo", payload.motivo);
+  formData.append("detalle", payload.detalle ?? "");
+
+  for (const imagen of payload.imagenes ?? []) {
+    formData.append("imagenes", imagen);
+  }
+
+  return formData;
+}

@@ -31,6 +31,8 @@ export default function ModeracionReportesPage() {
               ? "publicacion"
               : tipoFilter === "Mensaje"
                 ? "mensaje"
+                : tipoFilter === "Usuario"
+                  ? "usuario"
                 : "todos",
           estado: estadoFilter ?? undefined,
         });
