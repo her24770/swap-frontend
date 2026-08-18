@@ -1,7 +1,7 @@
 import { apiClient } from "../lib/apiClient";
 import { useAuthStore } from "../store/authStore";
 import type { ApiResult } from "../types/ApiResult";
-import type { ConversacionPreview, Mensaje } from "../types/chat";
+import type { ConversacionPreview, ContextoConversacionChat, Mensaje } from "../types/chat";
 import type {
   ActualizarEstadoConversacionData,
   ActualizarEstadoConversacionResponse,
@@ -21,6 +21,7 @@ interface ConversacionApi {
   usuario1?: UsuarioConversacionApi;
   usuario2?: UsuarioConversacionApi;
   mensajes?: { mensaje: string; fecha_enviado: string }[];
+  contextos?: ContextoConversacionChat[];
 }
 
 interface IniciarConversacionApi {
@@ -39,6 +40,8 @@ function mapConversacion(
 
   return {
     id_conversacion: conversacion.id_conversacion,
+    id_otro_usuario: esUsuario1? conversacion.id_usuario_2: conversacion.id_usuario_1,
+    estado_conversacion: conversacion.estado_conversacion,
     nombre: otro?.nombre ?? "Usuario",
     preview: ultimoMensaje?.mensaje ?? "",
     fecha_ultimo_mensaje: ultimoMensaje
@@ -54,6 +57,7 @@ function mapConversacion(
       idEstadoPendiente != null
       && conversacion.estado_conversacion === idEstadoPendiente
       && conversacion.id_usuario_2 === idUsuarioActual,
+    contextos: conversacion.contextos ?? [],
   };
 }
 
@@ -108,13 +112,22 @@ export const conversacionService = {
   async iniciarConversacion(
     idUsuario2: number,
     mensaje: string,
-    idEstadoPendiente?: number
+    idEstadoPendiente?: number,
+    idPublicacion?: number
   ): Promise<{ conversacion: ConversacionPreview; mensaje: Mensaje }> {
     const idUsuarioActual = useAuthStore.getState().usuario?.id_usuario ?? 0;
 
+    const payload = {
+      id_usuario_2: idUsuario2,
+      mensaje,
+      ...(idPublicacion != null && {
+        id_publicacion: idPublicacion,
+      }),
+    };
+
     const response = await apiClient.post<ApiResult<IniciarConversacionApi>>(
       "/api/conversacion",
-      { id_usuario_2: idUsuario2, mensaje }
+      payload
     );
 
     return {

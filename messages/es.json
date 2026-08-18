@@ -544,7 +544,6 @@
 			"sendAnonymous": "Enviar como anónimo"
 		},
 		"title": "Comentarios y Reseñas"
-
 	},
 	"profileHeader": {
 		"toast": {
@@ -758,7 +757,8 @@
 		},
 		"header": {
 			"back": "Volver a conversaciones",
-			"options": "Opciones"
+			"options": "Opciones",
+			"viewProfile": "Ver perfil"
 		},
 		"menu": {
 			"agreementHistory": "Historial de acuerdos",

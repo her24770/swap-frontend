@@ -7,11 +7,12 @@ import "./ChatInput.css";
 
 interface ChatInputProps {
   onEnviar: (texto: string) => void;
+  disabled?: boolean;
 }
 
 const EMOJIS = ["😀", "😂", "😍", "🥳", "🤔", "😭", "👍", "👌", "❤️", "👏"];
 
-export default function ChatInput({ onEnviar }: ChatInputProps) {
+export default function ChatInput({ onEnviar, disabled = false }: ChatInputProps) {
   const t = useTranslations("chat.input");
   const [texto, setTexto] = useState("");
   const [mostrarEmojis, setMostrarEmojis] = useState(false);
@@ -32,6 +33,7 @@ export default function ChatInput({ onEnviar }: ChatInputProps) {
           aria-label={t("emoji")}
           aria-expanded={mostrarEmojis}
           onClick={() => setMostrarEmojis((prev) => !prev)}
+          disabled={disabled}
         >
           <Smile size={18} />
         </button>
@@ -60,6 +62,7 @@ export default function ChatInput({ onEnviar }: ChatInputProps) {
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleEnviar()}
+        disabled={disabled}
       />
       <button
         type="button"

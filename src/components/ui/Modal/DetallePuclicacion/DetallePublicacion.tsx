@@ -185,14 +185,8 @@ export default function DetallePublicacion({
 
     const params = new URLSearchParams({
       compose: "1",
-      recipient: sellerName,
       sellerId: String(sellerId),
       postId: String(publicacionId),
-      postTitle: title,
-      postPrice: String(price),
-      postDescription: description,
-      postImageUrl: normalizedImageUrl,
-      postType: type,
       message: mensaje,
     });
 

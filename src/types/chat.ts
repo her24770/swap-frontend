@@ -46,25 +46,42 @@ export interface Conversacion {
   estadoRel?: EstadoChat;
   mensajes?: Mensaje[];
   acuerdos?: Acuerdo[];
+  contextos?: ContextoConversacionChat;
   ultimo_mensaje?: Mensaje | null;
 }
 
-export interface PublicacionChatResumen {
-  id: number;
+export interface PublicacionContextoChat {
+  id_publicacion: number;
   titulo: string;
   precio: number;
-  descripcion?: string;
-  imagenUrl?: string;
-  tipo: "venta" | "tutoria" | "negocio" | "material";
+  id_usuario: number;
+  imagenes?: {
+    url_imagen: string;
+  }[];
+}
+
+export interface ContextoConversacionChat {
+  id_contexto: number;
+  id_conversacion: number;
+  id_publicacion: number;
+  id_usuario: number;
+  fecha_contexto: string;
+  publicacion: PublicacionContextoChat;
+  usuario: {
+    id_usuario: number;
+    nombre: string;
+  };
 }
 
 export interface ConversacionPreview {
   id_conversacion: number;
+  id_otro_usuario: number;
   nombre: string;
   preview: string;
   fecha_ultimo_mensaje?: string;
   ultimo_mensaje?: Mensaje | null;
   esSolicitud?: boolean;
   avatarUrl?: string | null;
-  publicacion?: PublicacionChatResumen;
+  contextos?: ContextoConversacionChat[];
+  estado_conversacion: number;
 }
