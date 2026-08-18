@@ -408,7 +408,79 @@
 					"eliminar": "Why do you want to delete the post?"
 				}
 			}
-		}
+		},
+    "palabras": {
+      "title": "Restricted words",
+      "subtitle": "Manage the list of words not allowed on the platform.",
+      "searchPlaceholder": "Search word...",
+      "loading": "Loading words...",
+      "empty": "No restricted words yet.",
+      "errorCarga": "Could not load restricted words.",
+      "errorAccion": "Could not complete the action.",
+      "tabla": {
+        "palabra": "Word",
+        "acciones": "Actions"
+      },
+      "acciones": {
+        "agregar": "Add",
+        "editar": "Edit",
+        "eliminar": "Delete"
+      },
+      "modal": {
+        "tituloCrear": "Add restricted word",
+        "tituloEditar": "Edit restricted word",
+        "label": "Word",
+        "placeholder": "Type the word...",
+        "cancelar": "Cancel",
+        "guardar": "Save",
+        "cerrar": "Close"
+      },
+      "confirmar": {
+        "titulo": "Delete word",
+        "mensaje": "Are you sure you want to delete \"{palabra}\" from the restricted words list?"
+      },
+      "toasts": {
+        "creadaSuccess": "Word added successfully.",
+        "editadaSuccess": "Word updated successfully.",
+        "eliminadaSuccess": "Word deleted successfully."
+      }
+    },
+    "usuarios": {
+      "title": "Users",
+      "subtitle": "View and search platform users.",
+      "searchPlaceholder": "Search by name, email or ID...",
+      "resultsCount": "{count} users",
+      "loading": "Loading users...",
+      "empty": "No users found.",
+      "errorCarga": "Could not load users.",
+      "filtros": {
+        "conReportes": "Only with reports"
+      },
+      "sort": {
+        "nombreAsc": "Name (A-Z)",
+        "nombreDesc": "Name (Z-A)",
+        "reportesDesc": "Most reported",
+        "calificacionAsc": "Rating (low to high)",
+        "calificacionDesc": "Rating (high to low)"
+      },
+      "tabla": {
+        "usuario": "User",
+        "carnet": "ID",
+        "correo": "Email",
+        "calificacion": "Rating",
+        "reportes": "Reports",
+        "acciones": "Actions",
+        "sinCalificacion": "No rating"
+      },
+      "acciones": {
+        "verPerfil": "View profile"
+      },
+      "pagination": {
+        "anterior": "Previous",
+        "siguiente": "Next",
+        "paginaInfo": "Page {page} of {pageCount}"
+      }
+    }
 	},
 	"forgotPassword": {
 		"title": "Reset password",

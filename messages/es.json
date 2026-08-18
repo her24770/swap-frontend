@@ -297,119 +297,213 @@
 		}
 	},
 	"moderacion": {
-		"login": {
-			"title": "Panel de Moderación",
-			"subtitle": "Ingresa tus credenciales de moderador.",
-			"usuarioLabel": "Usuario",
-			"usuarioPlaceholder": "usuario.moderador",
-			"passwordLabel": "Contraseña",
-			"togglePasswordAria": "Mostrar u ocultar contraseña",
-			"submit": "Ingresar",
-			"submitting": "Ingresando...",
-			"toast": {
-				"welcomeBack": "Sesión de moderador iniciada",
-				"invalidCredentials": "Usuario o contraseña incorrectos.",
-				"loginErrorFallback": "No fue posible iniciar sesión"
-			},
-			"validation": {
-				"usuarioRequired": "El usuario es requerido",
-				"passwordRequired": "La contraseña es requerida"
-			}
-		},
-		"panel": {
-			"greeting": "Hola, {usuario}",
-			"nivelModerador": "Moderador",
-			"nivelSuperadmin": "Superadmin",
-			"logout": "Cerrar sesión",
-			"loading": "Verificando sesión...",
-			"comingSoon": "Próximamente",
-			"sections": {
-				"publicaciones": {
-					"title": "Publicaciones",
-					"description": "Visualizar y moderar publicaciones de la plataforma."
-				},
-				"reportes": {
-					"title": "Reportes",
-					"description": "Revisar y resolver reportes de usuarios."
-				},
-				"moderadores": {
-					"title": "Moderadores",
-					"description": "Gestionar cuentas de moderador."
-				}
-			}
-		},
-		"publicaciones": {
-			"title": "Publicaciones",
-			"subtitle": "Visualiza, filtra y modera publicaciones de toda la plataforma.",
-			"resultsCount": "{count, plural, =1 {1 resultado} other {# resultados}}",
-			"searchPlaceholder": "Buscar por título, descripción, usuario o correo",
-			"tipos": {
-				"todos": "Todos los tipos",
-				"negocio": "Negocios",
-				"material": "Materiales",
-				"tutoria": "Tutorías"
-			},
-			"estados": {
-				"todos": "Todos los estados",
-				"activo": "Activo",
-				"inactivo": "Inactivo",
-				"disponible": "Disponible",
-				"reservado": "Reservado",
-				"vendido": "Vendido"
-			},
+    "login": {
+      "title": "Panel de Moderación",
+      "subtitle": "Ingresa tus credenciales de moderador.",
+      "usuarioLabel": "Usuario",
+      "usuarioPlaceholder": "usuario.moderador",
+      "passwordLabel": "Contraseña",
+      "togglePasswordAria": "Mostrar u ocultar contraseña",
+      "submit": "Ingresar",
+      "submitting": "Ingresando...",
+      "toast": {
+        "welcomeBack": "Sesión de moderador iniciada",
+        "invalidCredentials": "Usuario o contraseña incorrectos.",
+        "loginErrorFallback": "No fue posible iniciar sesión"
+      },
+      "validation": {
+        "usuarioRequired": "El usuario es requerido",
+        "passwordRequired": "La contraseña es requerida"
+      }
+    },
+    "panel": {
+      "greeting": "Hola, {usuario}",
+      "nivelModerador": "Moderador",
+      "nivelSuperadmin": "Superadmin",
+      "logout": "Cerrar sesión",
+      "loading": "Verificando sesión...",
+      "comingSoon": "Próximamente",
+      "sections": {
+        "publicaciones": {
+          "title": "Publicaciones",
+          "description": "Visualizar y moderar publicaciones de la plataforma."
+        },
+        "reportes": {
+          "title": "Reportes",
+          "description": "Revisar y resolver reportes de usuarios."
+        },
+        "moderadores": {
+          "title": "Moderadores",
+          "description": "Gestionar cuentas de moderador."
+        },
+        "palabras": {
+          "title": "Palabras restringidas",
+          "description": "Gestionar el listado de palabras restringidas."
+        },
+        "usuarios": {
+			"title": "Usuarios",
+			"subtitle": "Ver y buscar usuarios de la plataforma.",
+			"searchPlaceholder": "Buscar por nombre, correo o carnet...",
+			"resultsCount": "{count} usuarios",
+			"loading": "Cargando usuarios...",
+			"empty": "No se encontraron usuarios.",
+			"errorCarga": "No fue posible cargar los usuarios.",
+			"filtros": { "conReportes": "Solo con reportes" },
 			"sort": {
-				"fechaDesc": "Más recientes",
-				"fechaAsc": "Más antiguas",
-				"meGustaDesc": "Más likes",
-				"precioDesc": "Mayor precio",
-				"precioAsc": "Menor precio"
+				"nombreAsc": "Nombre (A-Z)", "nombreDesc": "Nombre (Z-A)",
+				"reportesDesc": "Más reportados",
+				"calificacionAsc": "Calificación (menor a mayor)", "calificacionDesc": "Calificación (mayor a menor)"
 			},
-			"motivosReactivacion": {
-				"errorModeracion": "Error de moderación",
-				"revisadaPermitida": "Publicación revisada y permitida",
-				"correccionUsuario": "Corrección aplicada por el usuario"
-			},
-			"acciones": {
-				"reactivar": "Reactivar",
-				"bajar": "Bajar publicación",
-				"eliminar": "Eliminar",
-				"detalle": "Detalle"
-			},
-			"card": {
-				"sinImagen": "Sin imagen",
-				"sinTipo": "Sin tipo",
-				"usuarioDesconocido": "Usuario desconocido",
-				"sinCorreo": "Sin correo",
-				"estadoFallback": "Estado {estado}"
-			},
-			"loading": "Cargando publicaciones...",
-			"empty": "No hay publicaciones que coincidan con los filtros.",
-			"errorCarga": "No fue posible cargar publicaciones.",
-			"errorAccion": "No fue posible completar la acción.",
-			"toasts": {
-				"bajadaSuccess": "Publicación bajada exitosamente.",
-				"reactivadaSuccess": "Publicación reactivada exitosamente.",
-				"eliminadaSuccess": "Publicación eliminada exitosamente."
-			},
-			"pagination": {
-				"anterior": "Anterior",
-				"siguiente": "Siguiente",
-				"paginaInfo": "Página {page} de {pageCount}"
-			},
-			"justificante": {
-				"titulos": {
-					"bajar": "Bajar publicación",
-					"reactivar": "Reactivar publicación",
-					"eliminar": "Eliminar publicación"
-				},
-				"preguntas": {
-					"bajar": "¿Por qué quieres bajar la publicación?",
-					"reactivar": "¿Por qué quieres reactivar la publicación?",
-					"eliminar": "¿Por qué quieres eliminar la publicación?"
-				}
-			}
+			"tabla": { "usuario": "Usuario", "carnet": "Carnet", "correo": "Correo", "calificacion": "Calificación", "reportes": "Reportes", "acciones": "Acciones", "sinCalificacion": "Sin calificación" },
+			"acciones": { "verPerfil": "Ver perfil" },
+			"pagination": { "anterior": "Anterior", "siguiente": "Siguiente", "paginaInfo": "Página {page} de {pageCount}" }
 		}
-	},
+      }
+    },
+    "publicaciones": {
+      "title": "Publicaciones",
+      "subtitle": "Visualiza, filtra y modera publicaciones de toda la plataforma.",
+      "resultsCount": "{count, plural, =1 {1 resultado} other {# resultados}}",
+      "searchPlaceholder": "Buscar por título, descripción, usuario o correo",
+      "tipos": {
+        "todos": "Todos los tipos",
+        "negocio": "Negocios",
+        "material": "Materiales",
+        "tutoria": "Tutorías"
+      },
+      "estados": {
+        "todos": "Todos los estados",
+        "activo": "Activo",
+        "inactivo": "Inactivo",
+        "disponible": "Disponible",
+        "reservado": "Reservado",
+        "vendido": "Vendido"
+      },
+      "sort": {
+        "fechaDesc": "Más recientes",
+        "fechaAsc": "Más antiguas",
+        "meGustaDesc": "Más likes",
+        "precioDesc": "Mayor precio",
+        "precioAsc": "Menor precio"
+      },
+      "motivosReactivacion": {
+        "errorModeracion": "Error de moderación",
+        "revisadaPermitida": "Publicación revisada y permitida",
+        "correccionUsuario": "Corrección aplicada por el usuario"
+      },
+      "acciones": {
+        "reactivar": "Reactivar",
+        "bajar": "Bajar publicación",
+        "eliminar": "Eliminar",
+        "detalle": "Detalle"
+      },
+      "card": {
+        "sinImagen": "Sin imagen",
+        "sinTipo": "Sin tipo",
+        "usuarioDesconocido": "Usuario desconocido",
+        "sinCorreo": "Sin correo",
+        "estadoFallback": "Estado {estado}"
+      },
+      "loading": "Cargando publicaciones...",
+      "empty": "No hay publicaciones que coincidan con los filtros.",
+      "errorCarga": "No fue posible cargar publicaciones.",
+      "errorAccion": "No fue posible completar la acción.",
+      "toasts": {
+        "bajadaSuccess": "Publicación bajada exitosamente.",
+        "reactivadaSuccess": "Publicación reactivada exitosamente.",
+        "eliminadaSuccess": "Publicación eliminada exitosamente."
+      },
+      "pagination": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente",
+        "paginaInfo": "Página {page} de {pageCount}"
+      },
+      "justificante": {
+        "titulos": {
+          "bajar": "Bajar publicación",
+          "reactivar": "Reactivar publicación",
+          "eliminar": "Eliminar publicación"
+        },
+        "preguntas": {
+          "bajar": "¿Por qué quieres bajar la publicación?",
+          "reactivar": "¿Por qué quieres reactivar la publicación?",
+          "eliminar": "¿Por qué quieres eliminar la publicación?"
+        }
+      }
+    },
+    "palabras": {
+      "title": "Palabras restringidas",
+      "subtitle": "Gestionar el listado de palabras no permitidas en la plataforma.",
+      "searchPlaceholder": "Buscar palabra...",
+      "loading": "Cargando palabras...",
+      "empty": "No hay palabras restringidas todavía.",
+      "errorCarga": "No fue posible cargar las palabras restringidas.",
+      "errorAccion": "No fue posible completar la acción.",
+      "tabla": {
+        "palabra": "Palabra",
+        "acciones": "Acciones"
+      },
+      "acciones": {
+        "agregar": "Agregar",
+        "editar": "Editar",
+        "eliminar": "Eliminar"
+      },
+      "modal": {
+        "tituloCrear": "Agregar palabra restringida",
+        "tituloEditar": "Editar palabra restringida",
+        "label": "Palabra",
+        "placeholder": "Escribe la palabra...",
+        "cancelar": "Cancelar",
+        "guardar": "Guardar",
+        "cerrar": "Cerrar"
+      },
+      "confirmar": {
+        "titulo": "Eliminar palabra",
+        "mensaje": "¿Seguro que quieres eliminar \"{palabra}\" de la lista de palabras restringidas?"
+      },
+      "toasts": {
+        "creadaSuccess": "Palabra agregada exitosamente.",
+        "editadaSuccess": "Palabra actualizada exitosamente.",
+        "eliminadaSuccess": "Palabra eliminada exitosamente."
+      }
+    },
+    "usuarios": {
+      "title": "Usuarios",
+      "subtitle": "Ver y buscar usuarios de la plataforma.",
+      "searchPlaceholder": "Buscar por nombre, correo o carnet...",
+      "resultsCount": "{count} usuarios",
+      "loading": "Cargando usuarios...",
+      "empty": "No se encontraron usuarios.",
+      "errorCarga": "No fue posible cargar los usuarios.",
+      "filtros": {
+        "conReportes": "Solo con reportes"
+      },
+      "sort": {
+        "nombreAsc": "Nombre (A-Z)",
+        "nombreDesc": "Nombre (Z-A)",
+        "reportesDesc": "Más reportados",
+        "calificacionAsc": "Calificación (menor a mayor)",
+        "calificacionDesc": "Calificación (mayor a menor)"
+      },
+      "tabla": {
+        "usuario": "Usuario",
+        "carnet": "Carnet",
+        "correo": "Correo",
+        "calificacion": "Calificación",
+        "reportes": "Reportes",
+        "acciones": "Acciones",
+        "sinCalificacion": "Sin calificación"
+      },
+      "acciones": {
+        "verPerfil": "Ver perfil"
+      },
+      "pagination": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente",
+        "paginaInfo": "Página {page} de {pageCount}"
+      }
+    }
+  },
 	"forgotPassword": {
 		"title": "Recuperar contraseña",
 		"emailLabel": "Correo electrónico",

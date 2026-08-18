@@ -408,7 +408,79 @@
 					"eliminar": "Pourquoi voulez-vous supprimer la publication ?"
 				}
 			}
-		}
+		},
+    "palabras": {
+      "title": "Mots restreints",
+      "subtitle": "Gérer la liste des mots non autorisés sur la plateforme.",
+      "searchPlaceholder": "Rechercher un mot...",
+      "loading": "Chargement des mots...",
+      "empty": "Aucun mot restreint pour le moment.",
+      "errorCarga": "Impossible de charger les mots restreints.",
+      "errorAccion": "Impossible de terminer l'action.",
+      "tabla": {
+        "palabra": "Mot",
+        "acciones": "Actions"
+      },
+      "acciones": {
+        "agregar": "Ajouter",
+        "editar": "Modifier",
+        "eliminar": "Supprimer"
+      },
+      "modal": {
+        "tituloCrear": "Ajouter un mot restreint",
+        "tituloEditar": "Modifier le mot restreint",
+        "label": "Mot",
+        "placeholder": "Écrire le mot...",
+        "cancelar": "Annuler",
+        "guardar": "Enregistrer",
+        "cerrar": "Fermer"
+      },
+      "confirmar": {
+        "titulo": "Supprimer le mot",
+        "mensaje": "Voulez-vous vraiment supprimer \"{palabra}\" de la liste des mots restreints ?"
+      },
+      "toasts": {
+        "creadaSuccess": "Mot ajouté avec succès.",
+        "editadaSuccess": "Mot mis à jour avec succès.",
+        "eliminadaSuccess": "Mot supprimé avec succès."
+      }
+    },
+    "usuarios": {
+      "title": "Utilisateurs",
+      "subtitle": "Voir et rechercher les utilisateurs de la plateforme.",
+      "searchPlaceholder": "Rechercher par nom, email ou identifiant...",
+      "resultsCount": "{count} utilisateurs",
+      "loading": "Chargement des utilisateurs...",
+      "empty": "Aucun utilisateur trouvé.",
+      "errorCarga": "Impossible de charger les utilisateurs.",
+      "filtros": {
+        "conReportes": "Avec signalements seulement"
+      },
+      "sort": {
+        "nombreAsc": "Nom (A-Z)",
+        "nombreDesc": "Nom (Z-A)",
+        "reportesDesc": "Les plus signalés",
+        "calificacionAsc": "Note (croissant)",
+        "calificacionDesc": "Note (décroissant)"
+      },
+      "tabla": {
+        "usuario": "Utilisateur",
+        "carnet": "Identifiant",
+        "correo": "Email",
+        "calificacion": "Note",
+        "reportes": "Signalements",
+        "acciones": "Actions",
+        "sinCalificacion": "Pas de note"
+      },
+      "acciones": {
+        "verPerfil": "Voir le profil"
+      },
+      "pagination": {
+        "anterior": "Précédent",
+        "siguiente": "Suivant",
+        "paginaInfo": "Page {page} sur {pageCount}"
+      }
+    }
 	},
 	"forgotPassword": {
 		"title": "Réinitialiser le mot de passe",
@@ -504,6 +576,9 @@
 			"purchases": "Achats",
 			"tutoringHistory": "Tutorats suivis",
 			"catalog": "Votre catalogue",
+			"catalogMaterial": "Votre catalogue Matériel",
+			"catalogNegocio": "Votre catalogue Commerce",
+			"schedule": "Horaire",
 			"ads": "Annonces",
 			"comments": "Commentaires et avis",
 			"featured": "Publications en vedette"

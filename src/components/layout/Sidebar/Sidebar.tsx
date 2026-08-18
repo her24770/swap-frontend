@@ -2,7 +2,7 @@
 import { forwardRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, BookOpen, Package, Briefcase, MessageCircle, Newspaper, ShieldAlert, Users } from "lucide-react";
+import { Compass, BookOpen, Package, Briefcase, MessageCircle, Newspaper, ShieldAlert, Users, Ban, UserCheck } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
@@ -22,6 +22,7 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
 ) {
   const t = useTranslations('layout.sidebar');
   const tPanel = useTranslations('moderacion.panel');
+  const tMod = useTranslations('moderacion');
   const pathname = usePathname();
   const pathnameWithoutLocale = stripLocalePrefix(pathname);
 
@@ -31,7 +32,9 @@ const Sidebar = forwardRef<HTMLElement, SidebarProps>(function Sidebar(
     ? [
         { icon: Compass, label: t('descubre'), href: '/moderacion/descubre', tour: undefined as string | undefined },
         { icon: Newspaper, label: tPanel('sections.publicaciones.title'), href: '/moderacion/publicaciones', tour: undefined as string | undefined },
+        { icon: UserCheck, label: tMod('usuarios.title'), href: '/moderacion/usuarios', tour: undefined as string | undefined },
         { icon: ShieldAlert, label: tPanel('sections.reportes.title'), href: '/moderacion/reportes', tour: undefined as string | undefined },
+        { icon: Ban, label: tMod('palabras.title'), href: '/moderacion/palabras', tour: undefined as string | undefined },
         ...(tienePermiso(moderadorNivel ?? null, "superadmin")
           ? [{ icon: Users, label: tPanel('sections.moderadores.title'), href: '/moderacion/moderadores', tour: undefined as string | undefined }]
           : []),
