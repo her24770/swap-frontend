@@ -40,8 +40,8 @@ const TIPO_OPTIONS = [
 
 const ESTADO_OPTIONS = [
   { value: "pendiente",  label: "Pendiente" },
-  { value: "completado", label: "Completado" },
-  { value: "cancelado",  label: "Cancelado" },
+  { value: "resuelto", label: "Resuelto" },
+  { value: "rechazado",  label: "Rechazado" },
 ];
 
 function initials(nombre: string) {

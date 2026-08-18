@@ -32,7 +32,13 @@ export default function ModeracionReportesPage() {
               : tipoFilter === "Mensaje"
                 ? "mensaje"
                 : "todos",
-          estado: estadoFilter ?? undefined,
+          estado: estadoFilter === "Pendiente"
+            ? "pendiente"
+            : estadoFilter === "Resuelto"
+              ? "resuelto"
+              : estadoFilter === "Rechazado"
+                ? "rechazado"
+                : "todos",
         });
 
         setReportes(resultado.reportes);
