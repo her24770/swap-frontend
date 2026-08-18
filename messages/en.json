@@ -1,847 +1,959 @@
 {
-	"layout": {
-		"meta": {
-			"title": "SWAP",
-			"description": "Exchange site for UVG students"
-		},
-		"navbar": {
-			"ariaToggleMenu": "Toggle menu",
-			"ariaUserProfile": "User profile",
-			"logo": "SWAP",
-			"viewProfile": "View profile",
-			"myStore": "My store",
-			"logout": "Sign out"
-		},
-		"sidebar": {
-			"descubre": "Discover",
-			"tutorias": "Tutoring",
-			"materiales": "Materials",
-			"negocios": "Businesses",
-			"mensajes": "Messages",
-			"guardados": "Saved"
-		},
-		"settings": {
-			"settings": "Application settings",
-			"theme": "Theme",
-			"themeDesc": "Switch between light and dark",
-			"language": "Language",
-			"languageDesc": "Select your preferred language"
-		}
-	},
-	"locales": {
-		"en": "EN",
-		"es": "ES",
-		"fr": "FR"
-	},
-	"common": {
-		"brand": "SWAP",
-		"search": {
-			"placeholder": "Search...",
-			"searching": "Searching...",
-			"filterAria": "Filter posts",
-			"closeFiltersAria": "Close filters"
-		},
-		"filtros": {
-			"title": "Filters",
-			"ariaLabel": "Post filters",
-			"close": "Close filters",
-			"modalidad": "Format",
-			"tipo": "Type",
-			"etiquetas": "Tags",
-			"precio": "Price",
-			"horario": "Schedule",
-			"dias": "Days",
-			"calificacion": "Rating",
-			"aplicar": "Apply filters",
-			"limpiar": "Clear all",
-			"loading": "Loading...",
-			"categoriesEmpty": "Select categories",
-			"categoriesOne": "1 category selected",
-			"categoriesMany": "{count} categories selected",
-			"timeFrom": "From",
-			"timeTo": "to",
-			"removeTagAria": "Remove {name}",
-			"starsAria": "{count} stars",
-			"currencyMin": "Q0",
-			"currencyMax": "Q{amount}",
-			"modalidadOptions": {
-				"virtual": "Virtual",
-				"presencial": "In person"
-			},
-			"materialOptions": {
-				"compra": "Buy",
-				"alquiler": "Rent"
-			},
-			"negocioOptions": {
-				"producto": "Product",
-				"servicio": "Service"
-			},
-			"daysShort": {
-				"lunes": "M",
-				"martes": "T",
-				"miercoles": "W",
-				"jueves": "T",
-				"viernes": "F",
-				"sabado": "S",
-				"domingo": "S"
-			},
-			"daysAria": {
-				"lunes": "Monday",
-				"martes": "Tuesday",
-				"miercoles": "Wednesday",
-				"jueves": "Thursday",
-				"viernes": "Friday",
-				"sabado": "Saturday",
-				"domingo": "Sunday"
-			}
-		},
-		"empty": {
-			"noResultsFor": "No results found for \"{query}\"",
-			"description": "No posts"
-		},
-		"tags": {
-			"material": "Material",
-			"tutoria": "Tutoring",
-			"negocio": "Business"
-		},
-		"actions": {
-			"cancel": "Cancel",
-			"continue": "Continue",
-			"send": "Send",
-			"save": "Save",
-			"saveChanges": "Save changes",
-			"createPublication": "Create post",
-			"editPublication": "Edit post",
-			"publishing": "Publishing...",
-			"saving": "Saving..."
-		},
-		"people": {
-			"anonymous": "Anonymous",
-			"you": "You"
-		},
-		"time": {
-			"justNow": "Just now"
-		},
-		"aria": {
-			"visitProfile": "Visit {platform} profile"
-		}
-	},
-	"home": {
-		"title": "DISCOVER",
-		"loading": "Loading businesses...",
-		"empty": {
-			"title": "No businesses available",
-			"description": "There are no student businesses posted yet."
-		}
-	},
-	"negocios": {
-		"title": "BUSINESSES",
-		"loading": "Loading businesses...",
-		"errorFallback": "Couldn't fetch businesses",
-		"empty": {
-			"title": "No businesses available",
-			"description": "There are no student businesses posted yet. Be the first to publish yours!"
-		}
-	},
-	"materiales": {
-		"title": "MATERIALS",
-		"loading": "Loading materials...",
-		"errorFallback": "Couldn't fetch materials",
-		"empty": {
-			"title": "No materials available",
-			"description": "No academic materials have been posted yet. Be the first to share!"
-		}
-	},
-	"tutorias": {
-		"title": "TUTORING",
-		"loading": "Loading tutoring sessions...",
-		"empty": {
-			"title": "No tutoring sessions available",
-			"description": "There are no student tutoring sessions posted yet."
-		},
-		"solicitud": "Tutoring request",
-		"fecha": "Tutoring date",
-		"hora": "Tutoring time",
-		"modalidad": "Tutoring format",
-		"lugar": "Location",
-		"tema": "Topic",
-		"rechazar": "Reject",
-		"aceptar": "Accept",
-		"formulario": {
-			"nuevaSolicitud": "New tutoring request",
-			"titulo": "Tutoring request",
-			"descripcion": "Please complete the form to request tutoring.",
-			"fecha": "Date",
-			"hora": "Time",
-			"modalidad": "Format",
-			"lugar": "Location",
-			"tema": "Topic",
-			"enviarSolicitud": "Send request",
-			"placeholderTema": "Describe the topic of the tutoring session",
-			"placeholderLugar": "E.g. Plaza Paiz, UVG"
-		}
-	},
-	"descubre": {
-		"title": "Discover",
-		"placeholderTitle": "Discover",
-		"placeholderDescription": "Post discovery page — Coming soon"
-	},
-	"seccion": {
-		"reciente": "Recent post",
-		"recomendado": "Recommended post",
-		"explorar": "Explore more",
-		"ads": "Advertisements",
-		"error_loading_section": "Couldn't load this section",
-		"populares": "Popular Posts",
-		"tutores": "Tutors",
-		"personalizedRecommendationsButton": "Recommended for you",
-		"resultsTitle": "Results ({count})",
-		"pagination": {
-			"previous": "Previous page",
-			"next": "Next page",
-			"results": "Results pagination",
-			"filteredResults": "Filtered results pagination",
-			"posts": "Posts pagination"
-		},
-		"loadingTutores": "Loading tutors...",
-		"tutorFallbackName": "SWAP Tutor",
-		"noTutores": "No tutors to show yet."
-	},
-	"login": {
-		"title": "Sign in",
-		"subtitle": "New here? Enter your credentials to sign in.",
-		"emailLabel": "Email",
-		"emailPlaceholder": "example@uvg.edu.gt",
-		"passwordLabel": "Password",
-		"forgotPassword": "Forgot my password",
-		"togglePasswordAria": "Show or hide password",
-		"submit": "Continue",
-		"submitting": "Signing in...",
-		"footer": {
-			"noAccount": "Don't have an account?",
-			"register": "Sign up here",
-			"createAccount": "Create account"
-		},
-		"toast": {
-			"welcomeBack": "Welcome back!",
-			"invalidCredentials": "Incorrect credentials.",
-			"loginErrorFallback": "Couldn't sign in"
-		},
-		"validation": {
-			"emailRequired": "Email is required",
-			"emailInvalid": "Invalid email",
-			"passwordRequired": "Password is required",
-			"passwordMin": "Minimum 6 characters"
-		}
-	},
-	"moderacion": {
-		"login": {
-			"title": "Moderation Panel",
-			"subtitle": "Enter your moderator credentials.",
-			"usuarioLabel": "Username",
-			"usuarioPlaceholder": "moderator.username",
-			"passwordLabel": "Password",
-			"togglePasswordAria": "Show or hide password",
-			"submit": "Sign in",
-			"submitting": "Signing in...",
-			"toast": {
-				"welcomeBack": "Moderator session started",
-				"invalidCredentials": "Incorrect username or password.",
-				"loginErrorFallback": "Couldn't sign in"
-			},
-			"validation": {
-				"usuarioRequired": "Username is required",
-				"passwordRequired": "Password is required"
-			}
-		},
-		"panel": {
-			"greeting": "Hi, {usuario}",
-			"nivelModerador": "Moderator",
-			"nivelSuperadmin": "Superadmin",
-			"logout": "Sign out",
-			"loading": "Checking session...",
-			"comingSoon": "Coming soon",
-			"sections": {
-				"publicaciones": {
-					"title": "Posts",
-					"description": "View and moderate platform posts."
-				},
-				"reportes": {
-					"title": "Reports",
-					"description": "Review and resolve user reports."
-				},
-				"moderadores": {
-					"title": "Moderators",
-					"description": "Manage moderator accounts."
-				}
-			}
-		},
-		"publicaciones": {
-			"title": "Posts",
-			"subtitle": "View, filter, and moderate platform posts.",
-			"resultsCount": "{count, plural, =1 {1 result} other {# results}}",
-			"searchPlaceholder": "Search by title, description, user, or email",
-			"tipos": {
-				"todos": "All types",
-				"negocio": "Businesses",
-				"material": "Materials",
-				"tutoria": "Tutoring"
-			},
-			"estados": {
-				"todos": "All statuses",
-				"activo": "Active",
-				"inactivo": "Inactive",
-				"disponible": "Available",
-				"reservado": "Reserved",
-				"vendido": "Sold"
-			},
-			"sort": {
-				"fechaDesc": "Most recent",
-				"fechaAsc": "Oldest",
-				"meGustaDesc": "Most likes",
-				"precioDesc": "Highest price",
-				"precioAsc": "Lowest price"
-			},
-			"motivosReactivacion": {
-				"errorModeracion": "Moderation error",
-				"revisadaPermitida": "Post reviewed and allowed",
-				"correccionUsuario": "Correction applied by user"
-			},
-			"acciones": {
-				"reactivar": "Reactivate",
-				"bajar": "Take down post",
-				"eliminar": "Delete",
-				"detalle": "Detail"
-			},
-			"card": {
-				"sinImagen": "No image",
-				"sinTipo": "No type",
-				"usuarioDesconocido": "Unknown user",
-				"sinCorreo": "No email",
-				"estadoFallback": "Status {estado}"
-			},
-			"loading": "Loading posts...",
-			"empty": "No posts match the selected filters.",
-			"errorCarga": "Failed to load posts.",
-			"errorAccion": "Failed to complete the action.",
-			"toasts": {
-				"bajadaSuccess": "Post taken down successfully.",
-				"reactivadaSuccess": "Post reactivated successfully.",
-				"eliminadaSuccess": "Post deleted successfully."
-			},
-			"pagination": {
-				"anterior": "Previous",
-				"siguiente": "Next",
-				"paginaInfo": "Page {page} of {pageCount}"
-			},
-			"justificante": {
-				"titulos": {
-					"bajar": "Take down post",
-					"reactivar": "Reactivate post",
-					"eliminar": "Delete post"
-				},
-				"preguntas": {
-					"bajar": "Why do you want to take down the post?",
-					"reactivar": "Why do you want to reactivate the post?",
-					"eliminar": "Why do you want to delete the post?"
-				}
-			}
-		}
-	},
-	"forgotPassword": {
-		"title": "Reset password",
-		"emailLabel": "Email",
-		"emailPlaceholder": "example@uvg.edu.gt",
-		"codeLabel": "Verification code",
-		"codePlaceholder": "000000",
-		"newPasswordLabel": "New password",
-		"confirmPasswordLabel": "Confirm password",
-		"passwordPlaceholder": "At least 8 characters",
-		"togglePasswordAria": "Show or hide password",
-		"backToLogin": "Back to sign in",
-		"steps": {
-			"email": {
-				"subtitle": "Enter your institutional email to receive a code.",
-				"submit": "Send code",
-				"submitting": "Sending..."
-			},
-			"code": {
-				"subtitle": "Enter the 6-digit code we sent to your email.",
-				"submit": "Verify code",
-				"submitting": "Verifying..."
-			},
-			"password": {
-				"subtitle": "Create a new password for your account.",
-				"submit": "Update password",
-				"submitting": "Updating..."
-			}
-		},
-		"toast": {
-			"codeSent": "If the email exists, you will receive a code.",
-			"codeValid": "Code verified.",
-			"passwordUpdated": "Password updated successfully.",
-			"errorFallback": "Couldn't complete password recovery"
-		},
-		"validation": {
-			"passwordMismatch": "Passwords do not match."
-		}
-	},
-	"registro": {
-		"page": {
-			"title": "Create an account on SWAP",
-			"description1": "Sign up with your Universidad del Valle de Guatemala email.",
-			"description2": "Discover products and services offered by students within the University."
-		},
-		"form": {
-			"firstNameLabel": "First name",
-			"lastNameLabel": "Last name",
-			"emailLabel": "Email",
-			"passwordLabel": "Create a password",
-			"confirmPasswordLabel": "Confirm password",
-			"firstNamePlaceholder": "Michael",
-			"lastNamePlaceholder": "Perez",
-			"emailPlaceholder": "per0000@uvg.edu.gt",
-			"tagsLabel": "Select your interests",
-			"tagsPlaceholder": "Select up at least 1 subject",
-			"tagsLoading": "Loading categories...",
-			"passwordPlaceholder": "At least 8 characters",
-			"confirmPasswordPlaceholder": "At least 8 characters",
-			"verificationTitle": "Verify your email",
-			"verificationDescription": "Enter the 6-digit code we sent to your institutional email.",
-			"verificationCodeLabel": "Verification code",
-			"verificationCodePlaceholder": "000000",
-			"verificationCodeInvalid": "The code must have 6 digits.",
-			"verificationSessionExpired": "Complete the form again to request a new code.",
-			"changeEmail": "Change email",
-			"emailInvalid": "Email is not valid",
-			"sendingCode": "Sending code...",
-			"submitting": "Signing up...",
-			"submit": "Continue",
-			"submitWithCode": "Create account",
-			"tagsCountMin": "Select at least 3 interests",
-			"tagsCountMax": "You can select up to 20 interests",
-			"toast": {
-				"success": "Registration successful! Welcome to SWAP.",
-				"codeSent": "We sent a code to your institutional email.",
-				"errorFallback": "Couldn't sign up"
-			}
-		}
-	},
-	"perfil": {
-		"loading": "Loading profile...",
-		"mode": {
-			"consumer": "Buyer",
-			"seller": "Seller",
-			"tutor": "Tutor"
-		},
-		"sections": {
-			"saved": "Saved",
-			"purchases": "Purchases",
-			"tutoringHistory": "Tutoring history",
-			"catalog": "Your catalog",
-			"catalogMaterial": "Your catalog Material",
-			"catalogNegocio": "Your catalog Business",
-			"schedule": "Schedule",
-			"ads": "Ads",
-			"comments": "Comments & reviews",
-			"featured": "Featured Posts"
-		},
-		"history": {
-			"emptyProducts": "You have not bought any products yet.",
-			"emptyTutoring": "You have not taken any tutoring sessions yet.",
-			"error": "Could not load your history.",
-			"unknownUser": "SWAP user",
-			"provider": "Provider",
-			"date": "Date",
-			"place": "Place",
-			"viewAll": "View all",
-			"details": "Details",
-			"backToProfile": "Back to profile",
-			"searchPlaceholder": "Search history...",
-			"filters": {
-				"aria": "Filter purchases",
-				"all": "All",
-				"materials": "Materials",
-				"businesses": "Businesses"
-			}
-		},
-		"actions": {
-			"newPublication": "New post",
-			"changeAd": "Change ad",
-			"createAd": "New ad",
-			"editAd": "Edit ad",
-			"editSchedule": "Edit Schedule",
-			"newPostMaterial": "New material",
-			"newPostNegocio": "New business",
-			"newPostTutoria": "New tutoring"
-		},
-		"modal": {
-			"createPublicationAria": "Create post",
-			"editPublicationAria": "Edit post"
-		}
-	},
-	"vendedor": {
-		"loading": "Loading profile...",
-		"sections": {
-			"catalog": "Catalog",
-			"ads": "Ads",
-			"comments": "Comments & reviews"
-		},
-		"actions": {
-			"newPublication": "New post"
-		}
-	},
-	"posts": {
-		"actions": {
-			"details": "Details",
-			"edit": "Edit",
-			"acordar": "Agree on purchase",
-			"certificado": "View certificates",
-			"viewProfile": "View profile"
-		},
-		"save": {
-			"addAria": "Save post",
-			"removeAria": "Remove from saved"
-		},
-		"tutorTopicsLabel": "Tutoring topics",
-		"aria": {
-			"uploadImage": "Upload image"
-		},
-		"uploadErrors": {
-			"invalidType": "Only JPG, PNG, or WEBP images are allowed",
-			"tooLarge": "The image cannot be larger than 5 MB",
-			"generic": "Error uploading image"
-		},
-		"estado": {
-			"activo": "Active",
-			"disponible": "Available",
-			"reservado": "Reserved",
-			"vendido": "Sold",
-			"inactivo": "Inactive",
-			"1": "Available",
-			"2": "Read",
-			"3": "Reserved",
-			"4": "Sold",
-			"5": "Sent",
-			"6": "Pending",
-			"7": "Active",
-			"8": "Inactive",
-			"9": "Cancelled",
-			"10": "Completed"
-		}
-	},
-	"comments": {
-		"empty": "No comments yet.",
-		"actions": {
-			"edit": "Edit comment",
-			"delete": "Delete comment",
-			"editPrompt": "Edit your comment:",
-			"deleteConfirm": "Are you sure you want to delete this comment?"
-		},
-		"form": {
-			"starsAria": "{count} stars",
-			"placeholder": "Leave a comment for {name}",
-			"sendAnonymous": "Send anonymously"
-		},
-		"title": "Comments & Reviews"
-	},
-	"profileHeader": {
-		"toast": {
-			"updateSuccess": "Profile updated successfully",
-			"updateErrorFallback": "Couldn't update profile"
-		},
-		"actions": {
-			"editProfile": "Profile",
-			"editTags": "Tags"
-		},
-		"aria": {
-			"editProfile": "Edit profile"
-		},
-		"labels": {
-			"paymentMethod": "Payment method:",
-			"contact": "Contact"
-		},
-		"certification": {
-			"title": "Certification",
-			"add": "Add certification",
-			"noCert": "There are no certifications yet.",
-			"pdfNotA": "Pdf is not available",
-			"select": "Select a certification to view",
-			"delete": "Delete certification"
-		}
-	},
-	"updateProfileModal": {
-		"title": "Update profile",
-		"photoLabel": "Profile photo",
-		"actions": {
-			"cancel": "Cancel",
-			"update": "Update",
-			"saving": "Saving..."
-		},
-		"confirm": {
-			"submit": {
-				"title": "Confirm changes",
-				"message": "Are you sure you want to update your profile with these changes?"
-			},
-			"discard": {
-				"title": "Leave without saving",
-				"message": "You have unsaved changes. Do you want to leave anyway?"
-			},
-			"actions": {
-				"back": "Go back",
-				"confirmSave": "Yes, update",
-				"confirmDiscard": "Yes, leave"
-			}
-		},
-		"form": {
-			"firstName": "First name",
-			"lastName": "Last name",
-			"description": "Description",
-			"descriptionPlaceholder": "Add a description"
-		},
-		"contacts": {
-			"label": "Contacts",
-			"addAria": "Add contact",
-			"removeAria": "Remove contact",
-			"typePlaceholder": "Select type",
-			"valuePlaceholder": "contact",
-			"types": {
-				"phone": "Phone",
-				"whatsapp": "WhatsApp",
-				"instagram": "Instagram",
-				"email": "Email"
-			}
-		},
-		"imageUpload": {
-			"text": "Click or drag images to upload",
-			"hint": "PNG or JPG",
-			"previewAlt": "Preview",
-			"currentImageAlt": "Current image"
-		}
-	},
-	"solicitudAcuerdoModal": {
-		"title": "Request agreement",
-		"triggerButton": "Request agreement",
-		"fields": {
-			"objeto": "Item",
-			"costo": "Cost",
-			"lugar": "Delivery place",
-			"lugarPlaceholder": "E.g. Plaza Ceibal, UVG",
-			"fecha": "Date",
-			"hora": "Time",
-			"detalles": "Details",
-			"detallesPlaceholder": "Add details about the agreement"
-		},
-		"errors": {
-			"required": "This field is required",
-			"pastDate": "Date and time must be in the future"
-		},
-		"actions": {
-			"cancel": "Cancel",
-			"send": "Send request",
-			"sending": "Sending..."
-		},
-		"exito": "Agreement request sent",
-		"errorGenerico": "Couldn't send the request. Please try again."
-	},
-	"accionesAcuerdo": {
-		"aceptar": "Accept",
-		"aceptando": "Accepting...",
-		"rechazar": "Reject",
-		"rechazando": "Rejecting...",
-		"confirmRechazar": {
-			"title": "Reject request",
-			"message": "Are you sure you want to reject this agreement request?"
-		}
-	},
-	"acuerdoPendienteBadge": {
-		"label": "Pending agreement"
-	},
-	"recordatorioAcuerdo": {
-		"title": "Scheduled agreement",
-		"overdue": "Overdue",
-		"marcarCompletado": "Mark as completed",
-		"completando": "Completing..."
-	},
-	"solicitudConversacionBanner": {
-		"texto": "This person wants to start a conversation with you",
-		"aceptar": "Accept",
-		"aceptando": "Accepting...",
-		"bloquear": "Block",
-		"bloqueando": "Blocking...",
-		"errorGenerico": "Couldn't process the request. Please try again.",
-		"confirmBloquear": {
-			"title": "Block conversation",
-			"message": "Are you sure you want to block this conversation request?"
-		}
-	},
-	"seccionAcuerdosConversacion": {
-		"cargando": "Loading agreements...",
-		"error": "Couldn't load the agreements for this conversation",
-		"solicitudPendiente": "Agreement request for {objeto}",
-		"errorAccion": "Couldn't process the action. Please try again."
-	},
-	"loading": "Loading publications...",
-	"publicacionForm": {
-		"titleCreate": "Create post",
-		"titleEdit": "Edit post",
-		"fields": {
-			"status": "Status",
-			"statusAvailable": "Available",
-			"statusSold": "Sold",
-			"statusReserved": "Reserved",
-			"productName": "Product name",
-			"productNamePlaceholder": "e.g. Calculus tutoring",
-			"description": "Description",
-			"descriptionPlaceholder": "Describe key features and benefits...",
-			"price": "Price",
-			"type": "Post type",
-			"typePlaceholder": "Select type",
-			"category": "Category",
-			"categoryTriggerEmpty": "Select category",
-			"categoryTriggerOne": "1 category selected",
-			"categoryTriggerMany": "{count} categories selected",
-			"featured": "Featured post",
-			"photo": "Product photo",
-			"uploadText": "Click or drag an image to upload",
-			"uploadHint": "PNG, JPG or WEBP (max 5MB)",
-			"removeImageAria": "Remove image",
-			"removeTagAria": "Remove {tag}"
-		},
-		"actions": {
-			"cancel": "Cancel",
-			"create": "Create post",
-			"publishing": "Publishing...",
-			"saveChanges": "Save changes",
-			"saving": "Saving..."
-		}
-	},
-	"certificacionForm": {
-		"titleCreate": "Add certification",
-		"titleEdit": "Edit certification",
-		"fields": {
-			"name": "Certification name",
-			"namePlaceholder": "e.g. INTECAP electrical diploma",
-			"lugarEmision": "Place of issuance",
-			"lugarEmisionPlaceholder": "e.g. Universidad del Valle de Guatemala",
-			"etiqueta": "Area or category",
-			"etiquetaPlaceholder": "Select a category",
-			"pdf": "PDF file",
-			"pdfEditHint": " (optional — keeps the previous file if you do not upload a new one)",
-			"existingPdf": "Existing PDF",
-			"uploadText": "Click or drag a PDF to upload",
-			"uploadMaxReached": "You already have a PDF selected. Remove it to upload another.",
-			"uploadHint": "PDF files only (max 10MB)",
-			"removePdfAria": "Remove PDF file"
-		},
-		"errors": {
-			"pdfRequired": "PDF file is required."
-		},
-		"actions": {
-			"cancel": "Cancel",
-			"create": "Add certification",
-			"saveChanges": "Save changes",
-			"saving": "Saving..."
-		}
-	},
-	"chat": {
-		"empty": {
-			"selectConversation": "Select a conversation"
-		},
-		"header": {
-			"back": "Back to conversations",
-			"options": "Options",
-			"viewProfile": "View profile"
-		},
-		"menu": {
-			"agreementHistory": "Agreement history",
-			"createAgreement": "Create agreement",
-			"report": "Report"
-		},
-		"agreement": {
-			"notes": "Notes",
-			"accept": "Accept",
-			"sendNew": "Make a counteroffer",
-			"reject": "Reject",
-			"pendingResponse": "Your agreement proposal is pending a response.",
-			"markCompleted": "Mark as completed"
-		},
-		"banner": {
-			"noAgreement": "No agreement set",
-			"createAgreement": "+ Create agreement",
-			"pendingProposalReceived": "You have an agreement proposal",
-			"pendingProposalSent": "Your agreement proposal is pending",
-			"nextAgreement": "Next agreement",
-			"details": "Details"
-		},
-		"post": {
-			"about": "About this post",
-			"viewPost": "View post"
-		},
-		"input": {
-			"emoji": "Emoji",
-			"placeholder": "Type a message",
-			"attach": "Attach",
-			"send": "Send"
-		},
-		"messages": {
-			"today": "TODAY",
-			"yesterday": "YESTERDAY",
-			"avatarAlt": "avatar"
-		},
-		"panel": {
-			"close": "Close panel",
-			"titles": {
-				"agreement": "Agreement details",
-				"post": "Post",
-				"options": "Options",
-				"history": "Agreement history"
-			}
-		},
-		"history": {
-			"empty": "There are no agreements with this user yet.",
-			"error": "Couldn't load the agreement history.",
-			"unknownUser": "SWAP user",
-			"groups": {
-				"pendiente": "Pending",
-				"activo": "Ongoing",
-				"completado": "Completed"
-			}
-		},
-		"sidebar": {
-			"title": "Messages",
-			"subtitle": "Active conversations",
-			"confirm": "Confirm",
-			"delete": "Delete",
-			"tabs": {
-				"all": "All",
-				"sales": "Sales",
-				"purchases": "Purchases"
-			}
-		},
-		"system": {
-			"attachedImageMessage": "Attached image:",
-			"imagePreview": "Image:",
-			"agreementAccepted": "Agreement accepted.",
-			"agreementRejected": "Agreement proposal rejected.",
-			"newAgreementProposalSent": "You sent a new agreement proposal.",
-			"agreementCompleted": "Agreement marked as completed.",
-			"agreementActionError": "Couldn't process the action. Please try again.",
-			"noPublicationForAgreement": "This conversation doesn't have an associated listing to create an agreement yet."
-		}
-	},
-	"sendMessageModal": {
-		"title": "Send message to {name}",
-		"close": "Close",
-		"back": "Back",
-		"requestTutoring": "Arrange tutoring",
-		"suggestionsLabel": "Suggestions",
-		"selectSuggestion": "Select a suggested message",
-		"messageLabel": "Write your message",
-		"placeholder": "Write something...",
-		"hint": "Do not share sensitive information",
-		"cancel": "Cancel",
-		"send": "Send",
-		"sending": "Sending..."
-	}
+  "layout": {
+    "meta": {
+      "title": "SWAP",
+      "description": "Exchange site for UVG students"
+    },
+    "navbar": {
+      "ariaToggleMenu": "Toggle menu",
+      "ariaUserProfile": "User profile",
+      "logo": "SWAP",
+      "viewProfile": "View profile",
+      "myStore": "My store",
+      "logout": "Sign out"
+    },
+    "sidebar": {
+      "descubre": "Discover",
+      "tutorias": "Tutoring",
+      "materiales": "Materials",
+      "negocios": "Businesses",
+      "mensajes": "Messages",
+      "guardados": "Saved"
+    },
+    "settings": {
+      "settings": "Application settings",
+      "theme": "Theme",
+      "themeDesc": "Switch between light and dark",
+      "language": "Language",
+      "languageDesc": "Select your preferred language"
+    }
+  },
+  "locales": {
+    "en": "EN",
+    "es": "ES",
+    "fr": "FR"
+  },
+  "common": {
+    "brand": "SWAP",
+    "search": {
+      "placeholder": "Search...",
+      "searching": "Searching...",
+      "filterAria": "Filter posts",
+      "closeFiltersAria": "Close filters"
+    },
+    "filtros": {
+      "title": "Filters",
+      "ariaLabel": "Post filters",
+      "close": "Close filters",
+      "modalidad": "Format",
+      "tipo": "Type",
+      "etiquetas": "Tags",
+      "precio": "Price",
+      "horario": "Schedule",
+      "dias": "Days",
+      "calificacion": "Rating",
+      "aplicar": "Apply filters",
+      "limpiar": "Clear all",
+      "loading": "Loading...",
+      "categoriesEmpty": "Select categories",
+      "categoriesOne": "1 category selected",
+      "categoriesMany": "{count} categories selected",
+      "timeFrom": "From",
+      "timeTo": "to",
+      "removeTagAria": "Remove {name}",
+      "starsAria": "{count} stars",
+      "currencyMin": "Q0",
+      "currencyMax": "Q{amount}",
+      "modalidadOptions": {
+        "virtual": "Virtual",
+        "presencial": "In person"
+      },
+      "materialOptions": {
+        "compra": "Buy",
+        "alquiler": "Rent"
+      },
+      "negocioOptions": {
+        "producto": "Product",
+        "servicio": "Service"
+      },
+      "daysShort": {
+        "lunes": "M",
+        "martes": "T",
+        "miercoles": "W",
+        "jueves": "T",
+        "viernes": "F",
+        "sabado": "S",
+        "domingo": "S"
+      },
+      "daysAria": {
+        "lunes": "Monday",
+        "martes": "Tuesday",
+        "miercoles": "Wednesday",
+        "jueves": "Thursday",
+        "viernes": "Friday",
+        "sabado": "Saturday",
+        "domingo": "Sunday"
+      }
+    },
+    "empty": {
+      "noResultsFor": "No results found for \"{query}\"",
+      "description": "No posts"
+    },
+    "tags": {
+      "material": "Material",
+      "tutoria": "Tutoring",
+      "negocio": "Business"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "continue": "Continue",
+      "send": "Send",
+      "save": "Save",
+      "saveChanges": "Save changes",
+      "createPublication": "Create post",
+      "editPublication": "Edit post",
+      "publishing": "Publishing...",
+      "saving": "Saving..."
+    },
+    "people": {
+      "anonymous": "Anonymous",
+      "you": "You"
+    },
+    "time": {
+      "justNow": "Just now"
+    },
+    "aria": {
+      "visitProfile": "Visit {platform} profile"
+    }
+  },
+  "home": {
+    "title": "DISCOVER",
+    "loading": "Loading businesses...",
+    "empty": {
+      "title": "No businesses available",
+      "description": "There are no student businesses posted yet."
+    }
+  },
+  "negocios": {
+    "title": "BUSINESSES",
+    "loading": "Loading businesses...",
+    "errorFallback": "Couldn't fetch businesses",
+    "empty": {
+      "title": "No businesses available",
+      "description": "There are no student businesses posted yet. Be the first to publish yours!"
+    }
+  },
+  "materiales": {
+    "title": "MATERIALS",
+    "loading": "Loading materials...",
+    "errorFallback": "Couldn't fetch materials",
+    "empty": {
+      "title": "No materials available",
+      "description": "No academic materials have been posted yet. Be the first to share!"
+    }
+  },
+  "tutorias": {
+    "title": "TUTORING",
+    "loading": "Loading tutoring sessions...",
+    "empty": {
+      "title": "No tutoring sessions available",
+      "description": "There are no student tutoring sessions posted yet."
+    },
+    "solicitud": "Tutoring request",
+    "fecha": "Tutoring date",
+    "hora": "Tutoring time",
+    "modalidad": "Tutoring format",
+    "lugar": "Location",
+    "tema": "Topic",
+    "rechazar": "Reject",
+    "aceptar": "Accept",
+    "formulario": {
+      "nuevaSolicitud": "New tutoring request",
+      "titulo": "Tutoring request",
+      "descripcion": "Please complete the form to request tutoring.",
+      "fecha": "Date",
+      "hora": "Time",
+      "modalidad": "Format",
+      "lugar": "Location",
+      "tema": "Topic",
+      "enviarSolicitud": "Send request",
+      "placeholderTema": "Describe the topic of the tutoring session",
+      "placeholderLugar": "E.g. Plaza Paiz, UVG"
+    }
+  },
+  "descubre": {
+    "title": "Discover",
+    "placeholderTitle": "Discover",
+    "placeholderDescription": "Post discovery page — Coming soon"
+  },
+  "seccion": {
+    "reciente": "Recent post",
+    "recomendado": "Recommended post",
+    "explorar": "Explore more",
+    "ads": "Advertisements",
+    "error_loading_section": "Couldn't load this section",
+    "populares": "Popular Posts",
+    "tutores": "Tutors",
+    "personalizedRecommendationsButton": "Recommended for you",
+    "resultsTitle": "Results ({count})",
+    "pagination": {
+      "previous": "Previous page",
+      "next": "Next page",
+      "results": "Results pagination",
+      "filteredResults": "Filtered results pagination",
+      "posts": "Posts pagination"
+    },
+    "loadingTutores": "Loading tutors...",
+    "tutorFallbackName": "SWAP Tutor",
+    "noTutores": "No tutors to show yet."
+  },
+  "login": {
+    "title": "Sign in",
+    "subtitle": "New here? Enter your credentials to sign in.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "example@uvg.edu.gt",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot my password",
+    "togglePasswordAria": "Show or hide password",
+    "submit": "Continue",
+    "submitting": "Signing in...",
+    "footer": {
+      "noAccount": "Don't have an account?",
+      "register": "Sign up here",
+      "createAccount": "Create account"
+    },
+    "toast": {
+      "welcomeBack": "Welcome back!",
+      "invalidCredentials": "Incorrect credentials.",
+      "loginErrorFallback": "Couldn't sign in"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Minimum 6 characters"
+    }
+  },
+  "moderacion": {
+    "login": {
+      "title": "Moderation Panel",
+      "subtitle": "Enter your moderator credentials.",
+      "usuarioLabel": "Username",
+      "usuarioPlaceholder": "moderator.username",
+      "passwordLabel": "Password",
+      "togglePasswordAria": "Show or hide password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "toast": {
+        "welcomeBack": "Moderator session started",
+        "invalidCredentials": "Incorrect username or password.",
+        "loginErrorFallback": "Couldn't sign in"
+      },
+      "validation": {
+        "usuarioRequired": "Username is required",
+        "passwordRequired": "Password is required"
+      }
+    },
+    "panel": {
+      "greeting": "Hi, {usuario}",
+      "nivelModerador": "Moderator",
+      "nivelSuperadmin": "Superadmin",
+      "logout": "Sign out",
+      "loading": "Checking session...",
+      "comingSoon": "Coming soon",
+      "sections": {
+        "publicaciones": {
+          "title": "Posts",
+          "description": "View and moderate platform posts."
+        },
+        "reportes": {
+          "title": "Reports",
+          "description": "Review and resolve user reports."
+        },
+        "moderadores": {
+          "title": "Moderators",
+          "description": "Manage moderator accounts."
+        },
+        "palabras": {
+          "title": "Restricted words",
+          "description": "Manage the restricted words list."
+        },
+        "usuarios": {
+          "title": "Users",
+          "subtitle": "View and search platform users.",
+          "searchPlaceholder": "Search by name, email or ID...",
+          "resultsCount": "{count} users",
+          "loading": "Loading users...",
+          "empty": "No users found.",
+          "errorCarga": "Could not load users.",
+          "filtros": {
+            "conReportes": "Only with reports"
+          },
+          "sort": {
+            "nombreAsc": "Name (A-Z)",
+            "nombreDesc": "Name (Z-A)",
+            "reportesDesc": "Most reported",
+            "calificacionAsc": "Rating (low to high)",
+            "calificacionDesc": "Rating (high to low)"
+          },
+          "tabla": {
+            "usuario": "User",
+            "carnet": "ID",
+            "correo": "Email",
+            "calificacion": "Rating",
+            "reportes": "Reports",
+            "acciones": "Actions",
+            "sinCalificacion": "No rating"
+          },
+          "acciones": {
+            "verPerfil": "View profile"
+          },
+          "pagination": {
+            "anterior": "Previous",
+            "siguiente": "Next",
+            "paginaInfo": "Page {page} of {pageCount}"
+          }
+        }
+      }
+    },
+    "publicaciones": {
+      "title": "Posts",
+      "subtitle": "View, filter, and moderate platform posts.",
+      "resultsCount": "{count, plural, =1 {1 result} other {# results}}",
+      "searchPlaceholder": "Search by title, description, user, or email",
+      "tipos": {
+        "todos": "All types",
+        "negocio": "Businesses",
+        "material": "Materials",
+        "tutoria": "Tutoring"
+      },
+      "estados": {
+        "todos": "All statuses",
+        "activo": "Active",
+        "inactivo": "Inactive",
+        "disponible": "Available",
+        "reservado": "Reserved",
+        "vendido": "Sold"
+      },
+      "sort": {
+        "fechaDesc": "Most recent",
+        "fechaAsc": "Oldest",
+        "meGustaDesc": "Most likes",
+        "precioDesc": "Highest price",
+        "precioAsc": "Lowest price"
+      },
+      "motivosReactivacion": {
+        "errorModeracion": "Moderation error",
+        "revisadaPermitida": "Post reviewed and allowed",
+        "correccionUsuario": "Correction applied by user"
+      },
+      "acciones": {
+        "reactivar": "Reactivate",
+        "bajar": "Take down post",
+        "eliminar": "Delete",
+        "detalle": "Detail"
+      },
+      "card": {
+        "sinImagen": "No image",
+        "sinTipo": "No type",
+        "usuarioDesconocido": "Unknown user",
+        "sinCorreo": "No email",
+        "estadoFallback": "Status {estado}"
+      },
+      "loading": "Loading posts...",
+      "empty": "No posts match the selected filters.",
+      "errorCarga": "Failed to load posts.",
+      "errorAccion": "Failed to complete the action.",
+      "toasts": {
+        "bajadaSuccess": "Post taken down successfully.",
+        "reactivadaSuccess": "Post reactivated successfully.",
+        "eliminadaSuccess": "Post deleted successfully."
+      },
+      "pagination": {
+        "anterior": "Previous",
+        "siguiente": "Next",
+        "paginaInfo": "Page {page} of {pageCount}"
+      },
+      "justificante": {
+        "titulos": {
+          "bajar": "Take down post",
+          "reactivar": "Reactivate post",
+          "eliminar": "Delete post"
+        },
+        "preguntas": {
+          "bajar": "Why do you want to take down the post?",
+          "reactivar": "Why do you want to reactivate the post?",
+          "eliminar": "Why do you want to delete the post?"
+        }
+      }
+    },
+    "palabras": {
+      "title": "Restricted words",
+      "subtitle": "Manage the list of words not allowed on the platform.",
+      "searchPlaceholder": "Search word...",
+      "loading": "Loading words...",
+      "empty": "No restricted words yet.",
+      "errorCarga": "Could not load restricted words.",
+      "errorAccion": "Could not complete the action.",
+      "tabla": {
+        "palabra": "Word",
+        "acciones": "Actions"
+      },
+      "acciones": {
+        "agregar": "Add",
+        "editar": "Edit",
+        "eliminar": "Delete"
+      },
+      "modal": {
+        "tituloCrear": "Add restricted word",
+        "tituloEditar": "Edit restricted word",
+        "label": "Word",
+        "placeholder": "Type the word...",
+        "cancelar": "Cancel",
+        "guardar": "Save",
+        "cerrar": "Close"
+      },
+      "confirmar": {
+        "titulo": "Delete word",
+        "mensaje": "Are you sure you want to delete \"{palabra}\" from the restricted words list?"
+      },
+      "toasts": {
+        "creadaSuccess": "Word added successfully.",
+        "editadaSuccess": "Word updated successfully.",
+        "eliminadaSuccess": "Word deleted successfully."
+      }
+    },
+    "usuarios": {
+      "title": "Users",
+      "subtitle": "View and search platform users.",
+      "searchPlaceholder": "Search by name, email or ID...",
+      "resultsCount": "{count} users",
+      "loading": "Loading users...",
+      "empty": "No users found.",
+      "errorCarga": "Could not load users.",
+      "filtros": {
+        "conReportes": "Only with reports"
+      },
+      "sort": {
+        "nombreAsc": "Name (A-Z)",
+        "nombreDesc": "Name (Z-A)",
+        "reportesDesc": "Most reported",
+        "calificacionAsc": "Rating (low to high)",
+        "calificacionDesc": "Rating (high to low)"
+      },
+      "tabla": {
+        "usuario": "User",
+        "carnet": "ID",
+        "correo": "Email",
+        "calificacion": "Rating",
+        "reportes": "Reports",
+        "acciones": "Actions",
+        "sinCalificacion": "No rating"
+      },
+      "acciones": {
+        "verPerfil": "View profile"
+      },
+      "pagination": {
+        "anterior": "Previous",
+        "siguiente": "Next",
+        "paginaInfo": "Page {page} of {pageCount}"
+      }
+    }
+  },
+  "forgotPassword": {
+    "title": "Reset password",
+    "emailLabel": "Email",
+    "emailPlaceholder": "example@uvg.edu.gt",
+    "codeLabel": "Verification code",
+    "codePlaceholder": "000000",
+    "newPasswordLabel": "New password",
+    "confirmPasswordLabel": "Confirm password",
+    "passwordPlaceholder": "At least 8 characters",
+    "togglePasswordAria": "Show or hide password",
+    "backToLogin": "Back to sign in",
+    "steps": {
+      "email": {
+        "subtitle": "Enter your institutional email to receive a code.",
+        "submit": "Send code",
+        "submitting": "Sending..."
+      },
+      "code": {
+        "subtitle": "Enter the 6-digit code we sent to your email.",
+        "submit": "Verify code",
+        "submitting": "Verifying..."
+      },
+      "password": {
+        "subtitle": "Create a new password for your account.",
+        "submit": "Update password",
+        "submitting": "Updating..."
+      }
+    },
+    "toast": {
+      "codeSent": "If the email exists, you will receive a code.",
+      "codeValid": "Code verified.",
+      "passwordUpdated": "Password updated successfully.",
+      "errorFallback": "Couldn't complete password recovery"
+    },
+    "validation": {
+      "passwordMismatch": "Passwords do not match."
+    }
+  },
+  "registro": {
+    "page": {
+      "title": "Create an account on SWAP",
+      "description1": "Sign up with your Universidad del Valle de Guatemala email.",
+      "description2": "Discover products and services offered by students within the University."
+    },
+    "form": {
+      "firstNameLabel": "First name",
+      "lastNameLabel": "Last name",
+      "emailLabel": "Email",
+      "passwordLabel": "Create a password",
+      "confirmPasswordLabel": "Confirm password",
+      "firstNamePlaceholder": "Michael",
+      "lastNamePlaceholder": "Perez",
+      "emailPlaceholder": "per0000@uvg.edu.gt",
+      "tagsLabel": "Select your interests",
+      "tagsPlaceholder": "Select up at least 1 subject",
+      "tagsLoading": "Loading categories...",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPasswordPlaceholder": "At least 8 characters",
+      "verificationTitle": "Verify your email",
+      "verificationDescription": "Enter the 6-digit code we sent to your institutional email.",
+      "verificationCodeLabel": "Verification code",
+      "verificationCodePlaceholder": "000000",
+      "verificationCodeInvalid": "The code must have 6 digits.",
+      "verificationSessionExpired": "Complete the form again to request a new code.",
+      "changeEmail": "Change email",
+      "emailInvalid": "Email is not valid",
+      "sendingCode": "Sending code...",
+      "submitting": "Signing up...",
+      "submit": "Continue",
+      "submitWithCode": "Create account",
+      "tagsCountMin": "Select at least 3 interests",
+      "tagsCountMax": "You can select up to 20 interests",
+      "toast": {
+        "success": "Registration successful! Welcome to SWAP.",
+        "codeSent": "We sent a code to your institutional email.",
+        "errorFallback": "Couldn't sign up"
+      }
+    }
+  },
+  "perfil": {
+    "loading": "Loading profile...",
+    "mode": {
+      "consumer": "Buyer",
+      "seller": "Seller",
+      "tutor": "Tutor"
+    },
+    "sections": {
+      "saved": "Saved",
+      "purchases": "Purchases",
+      "tutoringHistory": "Tutoring history",
+      "catalog": "Your catalog",
+      "catalogMaterial": "Your catalog Material",
+      "catalogNegocio": "Your catalog Business",
+      "schedule": "Schedule",
+      "ads": "Ads",
+      "comments": "Comments & reviews",
+      "featured": "Featured Posts"
+    },
+    "history": {
+      "emptyProducts": "You have not bought any products yet.",
+      "emptyTutoring": "You have not taken any tutoring sessions yet.",
+      "error": "Could not load your history.",
+      "unknownUser": "SWAP user",
+      "provider": "Provider",
+      "date": "Date",
+      "place": "Place",
+      "viewAll": "View all",
+      "details": "Details",
+      "backToProfile": "Back to profile",
+      "searchPlaceholder": "Search history...",
+      "filters": {
+        "aria": "Filter purchases",
+        "all": "All",
+        "materials": "Materials",
+        "businesses": "Businesses"
+      }
+    },
+    "actions": {
+      "newPublication": "New post",
+      "changeAd": "Change ad",
+      "createAd": "New ad",
+      "editAd": "Edit ad",
+      "editSchedule": "Edit Schedule",
+      "newPostMaterial": "New material",
+      "newPostNegocio": "New business",
+      "newPostTutoria": "New tutoring"
+    },
+    "modal": {
+      "createPublicationAria": "Create post",
+      "editPublicationAria": "Edit post"
+    }
+  },
+  "vendedor": {
+    "loading": "Loading profile...",
+    "sections": {
+      "catalog": "Catalog",
+      "ads": "Ads",
+      "comments": "Comments & reviews"
+    },
+    "actions": {
+      "newPublication": "New post"
+    }
+  },
+  "posts": {
+    "actions": {
+      "details": "Details",
+      "edit": "Edit",
+      "acordar": "Agree on purchase",
+      "certificado": "View certificates",
+      "viewProfile": "View profile"
+    },
+    "save": {
+      "addAria": "Save post",
+      "removeAria": "Remove from saved"
+    },
+    "tutorTopicsLabel": "Tutoring topics",
+    "aria": {
+      "uploadImage": "Upload image"
+    },
+    "uploadErrors": {
+      "invalidType": "Only JPG, PNG, or WEBP images are allowed",
+      "tooLarge": "The image cannot be larger than 5 MB",
+      "generic": "Error uploading image"
+    },
+    "estado": {
+      "activo": "Active",
+      "disponible": "Available",
+      "reservado": "Reserved",
+      "vendido": "Sold",
+      "inactivo": "Inactive",
+      "1": "Available",
+      "2": "Read",
+      "3": "Reserved",
+      "4": "Sold",
+      "5": "Sent",
+      "6": "Pending",
+      "7": "Active",
+      "8": "Inactive",
+      "9": "Cancelled",
+      "10": "Completed"
+    }
+  },
+  "comments": {
+    "empty": "No comments yet.",
+    "actions": {
+      "edit": "Edit comment",
+      "delete": "Delete comment",
+      "editPrompt": "Edit your comment:",
+      "deleteConfirm": "Are you sure you want to delete this comment?"
+    },
+    "form": {
+      "starsAria": "{count} stars",
+      "placeholder": "Leave a comment for {name}",
+      "sendAnonymous": "Send anonymously"
+    },
+    "title": "Comments & Reviews"
+  },
+  "profileHeader": {
+    "toast": {
+      "updateSuccess": "Profile updated successfully",
+      "updateErrorFallback": "Couldn't update profile"
+    },
+    "actions": {
+      "editProfile": "Profile",
+      "editTags": "Tags"
+    },
+    "aria": {
+      "editProfile": "Edit profile"
+    },
+    "labels": {
+      "paymentMethod": "Payment method:",
+      "contact": "Contact"
+    },
+    "certification": {
+      "title": "Certification",
+      "add": "Add certification",
+      "noCert": "There are no certifications yet.",
+      "pdfNotA": "Pdf is not available",
+      "select": "Select a certification to view",
+      "delete": "Delete certification"
+    }
+  },
+  "updateProfileModal": {
+    "title": "Update profile",
+    "photoLabel": "Profile photo",
+    "actions": {
+      "cancel": "Cancel",
+      "update": "Update",
+      "saving": "Saving..."
+    },
+    "confirm": {
+      "submit": {
+        "title": "Confirm changes",
+        "message": "Are you sure you want to update your profile with these changes?"
+      },
+      "discard": {
+        "title": "Leave without saving",
+        "message": "You have unsaved changes. Do you want to leave anyway?"
+      },
+      "actions": {
+        "back": "Go back",
+        "confirmSave": "Yes, update",
+        "confirmDiscard": "Yes, leave"
+      }
+    },
+    "form": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "description": "Description",
+      "descriptionPlaceholder": "Add a description"
+    },
+    "contacts": {
+      "label": "Contacts",
+      "addAria": "Add contact",
+      "removeAria": "Remove contact",
+      "typePlaceholder": "Select type",
+      "valuePlaceholder": "contact",
+      "types": {
+        "phone": "Phone",
+        "whatsapp": "WhatsApp",
+        "instagram": "Instagram",
+        "email": "Email"
+      }
+    },
+    "imageUpload": {
+      "text": "Click or drag images to upload",
+      "hint": "PNG or JPG",
+      "previewAlt": "Preview",
+      "currentImageAlt": "Current image"
+    }
+  },
+  "solicitudAcuerdoModal": {
+    "title": "Request agreement",
+    "triggerButton": "Request agreement",
+    "fields": {
+      "objeto": "Item",
+      "costo": "Cost",
+      "lugar": "Delivery place",
+      "lugarPlaceholder": "E.g. Plaza Ceibal, UVG",
+      "fecha": "Date",
+      "hora": "Time",
+      "detalles": "Details",
+      "detallesPlaceholder": "Add details about the agreement"
+    },
+    "errors": {
+      "required": "This field is required",
+      "pastDate": "Date and time must be in the future"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "send": "Send request",
+      "sending": "Sending..."
+    },
+    "exito": "Agreement request sent",
+    "errorGenerico": "Couldn't send the request. Please try again."
+  },
+  "accionesAcuerdo": {
+    "aceptar": "Accept",
+    "aceptando": "Accepting...",
+    "rechazar": "Reject",
+    "rechazando": "Rejecting...",
+    "confirmRechazar": {
+      "title": "Reject request",
+      "message": "Are you sure you want to reject this agreement request?"
+    }
+  },
+  "acuerdoPendienteBadge": {
+    "label": "Pending agreement"
+  },
+  "recordatorioAcuerdo": {
+    "title": "Scheduled agreement",
+    "overdue": "Overdue",
+    "marcarCompletado": "Mark as completed",
+    "completando": "Completing..."
+  },
+  "solicitudConversacionBanner": {
+    "texto": "This person wants to start a conversation with you",
+    "aceptar": "Accept",
+    "aceptando": "Accepting...",
+    "bloquear": "Block",
+    "bloqueando": "Blocking...",
+    "errorGenerico": "Couldn't process the request. Please try again.",
+    "confirmBloquear": {
+      "title": "Block conversation",
+      "message": "Are you sure you want to block this conversation request?"
+    }
+  },
+  "seccionAcuerdosConversacion": {
+    "cargando": "Loading agreements...",
+    "error": "Couldn't load the agreements for this conversation",
+    "solicitudPendiente": "Agreement request for {objeto}",
+    "errorAccion": "Couldn't process the action. Please try again."
+  },
+  "loading": "Loading publications...",
+  "publicacionForm": {
+    "titleCreate": "Create post",
+    "titleEdit": "Edit post",
+    "fields": {
+      "status": "Status",
+      "statusAvailable": "Available",
+      "statusSold": "Sold",
+      "statusReserved": "Reserved",
+      "productName": "Product name",
+      "productNamePlaceholder": "e.g. Calculus tutoring",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe key features and benefits...",
+      "price": "Price",
+      "type": "Post type",
+      "typePlaceholder": "Select type",
+      "category": "Category",
+      "categoryTriggerEmpty": "Select category",
+      "categoryTriggerOne": "1 category selected",
+      "categoryTriggerMany": "{count} categories selected",
+      "featured": "Featured post",
+      "photo": "Product photo",
+      "uploadText": "Click or drag an image to upload",
+      "uploadHint": "PNG, JPG or WEBP (max 5MB)",
+      "removeImageAria": "Remove image",
+      "removeTagAria": "Remove {tag}"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "create": "Create post",
+      "publishing": "Publishing...",
+      "saveChanges": "Save changes",
+      "saving": "Saving..."
+    }
+  },
+  "certificacionForm": {
+    "titleCreate": "Add certification",
+    "titleEdit": "Edit certification",
+    "fields": {
+      "name": "Certification name",
+      "namePlaceholder": "e.g. INTECAP electrical diploma",
+      "lugarEmision": "Place of issuance",
+      "lugarEmisionPlaceholder": "e.g. Universidad del Valle de Guatemala",
+      "etiqueta": "Area or category",
+      "etiquetaPlaceholder": "Select a category",
+      "pdf": "PDF file",
+      "pdfEditHint": " (optional — keeps the previous file if you do not upload a new one)",
+      "existingPdf": "Existing PDF",
+      "uploadText": "Click or drag a PDF to upload",
+      "uploadMaxReached": "You already have a PDF selected. Remove it to upload another.",
+      "uploadHint": "PDF files only (max 10MB)",
+      "removePdfAria": "Remove PDF file"
+    },
+    "errors": {
+      "pdfRequired": "PDF file is required."
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "create": "Add certification",
+      "saveChanges": "Save changes",
+      "saving": "Saving..."
+    }
+  },
+  "chat": {
+    "empty": {
+      "selectConversation": "Select a conversation"
+    },
+    "header": {
+      "back": "Back to conversations",
+      "options": "Options",
+      "viewProfile": "View profile"
+    },
+    "menu": {
+      "agreementHistory": "Agreement history",
+      "createAgreement": "Create agreement",
+      "report": "Report"
+    },
+    "agreement": {
+      "notes": "Notes",
+      "accept": "Accept",
+      "sendNew": "Make a counteroffer",
+      "reject": "Reject",
+      "pendingResponse": "Your agreement proposal is pending a response.",
+      "markCompleted": "Mark as completed"
+    },
+    "banner": {
+      "noAgreement": "No agreement set",
+      "createAgreement": "+ Create agreement",
+      "pendingProposalReceived": "You have an agreement proposal",
+      "pendingProposalSent": "Your agreement proposal is pending",
+      "nextAgreement": "Next agreement",
+      "details": "Details"
+    },
+    "post": {
+      "about": "About this post",
+      "viewPost": "View post"
+    },
+    "input": {
+      "emoji": "Emoji",
+      "placeholder": "Type a message",
+      "attach": "Attach",
+      "send": "Send"
+    },
+    "messages": {
+      "today": "TODAY",
+      "yesterday": "YESTERDAY",
+      "avatarAlt": "avatar"
+    },
+    "panel": {
+      "close": "Close panel",
+      "titles": {
+        "agreement": "Agreement details",
+        "post": "Post",
+        "options": "Options",
+        "history": "Agreement history"
+      }
+    },
+    "history": {
+      "empty": "There are no agreements with this user yet.",
+      "error": "Couldn't load the agreement history.",
+      "unknownUser": "SWAP user",
+      "groups": {
+        "pendiente": "Pending",
+        "activo": "Ongoing",
+        "completado": "Completed"
+      }
+    },
+    "sidebar": {
+      "title": "Messages",
+      "subtitle": "Active conversations",
+      "confirm": "Confirm",
+      "delete": "Delete",
+      "tabs": {
+        "all": "All",
+        "sales": "Sales",
+        "purchases": "Purchases"
+      }
+    },
+    "system": {
+      "attachedImageMessage": "Attached image:",
+      "imagePreview": "Image:",
+      "agreementAccepted": "Agreement accepted.",
+      "agreementRejected": "Agreement proposal rejected.",
+      "newAgreementProposalSent": "You sent a new agreement proposal.",
+      "agreementCompleted": "Agreement marked as completed.",
+      "agreementActionError": "Couldn't process the action. Please try again.",
+      "noPublicationForAgreement": "This conversation doesn't have an associated listing to create an agreement yet."
+    }
+  },
+  "sendMessageModal": {
+    "title": "Send message to {name}",
+    "close": "Close",
+    "back": "Back",
+    "requestTutoring": "Arrange tutoring",
+    "suggestionsLabel": "Suggestions",
+    "selectSuggestion": "Select a suggested message",
+    "messageLabel": "Write your message",
+    "placeholder": "Write something...",
+    "hint": "Do not share sensitive information",
+    "cancel": "Cancel",
+    "send": "Send",
+    "sending": "Sending..."
+  }
 }
