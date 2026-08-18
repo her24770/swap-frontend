@@ -22,8 +22,9 @@ interface JustificanteModeracionModalProps {
   pregunta: string;
   enviando: boolean;
   motivosPersonalizados?: string[];
+  mostrarCampoDias?: boolean;
   onClose: () => void;
-  onSubmit: (payload: { motivo: string; detalle: string }) => Promise<void> | void;
+  onSubmit: (payload: { motivo: string; detalle: string; dias?: number }) => Promise<void> | void;
 }
 
 export default function JustificanteModeracionModal({
@@ -33,6 +34,7 @@ export default function JustificanteModeracionModal({
   pregunta,
   enviando,
   motivosPersonalizados,
+  mostrarCampoDias = false,
   onClose,
   onSubmit,
 }: JustificanteModeracionModalProps) {
@@ -42,23 +44,28 @@ export default function JustificanteModeracionModal({
   );
   const [motivoSeleccionado, setMotivoSeleccionado] = useState<string | null>(null);
   const [detalle, setDetalle] = useState("");
+  const [dias, setDias] = useState<number | "">("");
 
   useEffect(() => {
     if (isOpen) {
       setMotivoSeleccionado(null);
       setDetalle("");
+      setDias("");
     }
   }, [isOpen, tipoObjetivo]);
 
   if (!isOpen) return null;
 
+  const diasValidos = !mostrarCampoDias || (typeof dias === "number" && dias > 0);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!motivoSeleccionado || enviando) return;
+    if (!motivoSeleccionado || !diasValidos || enviando) return;
 
     await onSubmit({
       motivo: motivoSeleccionado,
       detalle,
+      ...(mostrarCampoDias ? { dias: Number(dias) } : {}),
     });
   };
 
@@ -82,6 +89,23 @@ export default function JustificanteModeracionModal({
             />
           </section>
 
+          {mostrarCampoDias && (
+            <label className="reporte-modal__detalle">
+              <span className="reporte-modal__section-title">Días de suspensión</span>
+              <input
+                type="number"
+                min={1}
+                className="reporte-modal__textarea"
+                value={dias}
+                onChange={(event) => {
+                  const valor = event.target.value;
+                  setDias(valor === "" ? "" : Number(valor));
+                }}
+                placeholder="Cantidad de días desde hoy"
+              />
+            </label>
+          )}
+
           <ReporteDetalle
             valor={detalle}
             limiteCaracteres={LIMITE_DETALLE_REPORTE}
@@ -89,7 +113,7 @@ export default function JustificanteModeracionModal({
           />
 
           <ReporteAcciones
-            puedeEnviar={Boolean(motivoSeleccionado)}
+            puedeEnviar={Boolean(motivoSeleccionado) && diasValidos}
             enviando={enviando}
             onCancelar={onClose}
             textoEnviar="Confirmar"

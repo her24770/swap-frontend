@@ -469,11 +469,47 @@
         "correo": "Email",
         "calificacion": "Note",
         "reportes": "Signalements",
+        "estado": "Statut",
         "acciones": "Actions",
         "sinCalificacion": "Pas de note"
       },
+      "estado": {
+        "activo": "Actif",
+        "bloqueado": "Bloqué",
+        "suspendidoHasta": "Suspendu jusqu'au {fecha}"
+      },
       "acciones": {
-        "verPerfil": "Voir le profil"
+        "verPerfil": "Voir le profil",
+        "advertir": "Avertir",
+        "bloquear": "Bloquer",
+        "suspender": "Suspendre",
+        "reactivar": "Réactiver"
+      },
+      "justificante": {
+        "titulos": {
+          "advertencia": "Envoyer un avertissement",
+          "bloquear": "Bloquer le compte",
+          "suspender": "Suspendre le compte",
+          "reactivar": "Réactiver le compte"
+        },
+        "preguntas": {
+          "advertencia": "Pourquoi voulez-vous avertir cet utilisateur ?",
+          "bloquear": "Pourquoi voulez-vous bloquer ce compte ?",
+          "suspender": "Pourquoi voulez-vous suspendre ce compte ?",
+          "reactivar": "Pourquoi voulez-vous réactiver ce compte ?"
+        },
+        "motivosReactivacion": {
+          "suspensionCumplida": "Suspension terminée",
+          "apelacionAprobada": "Appel approuvé",
+          "correccionUsuario": "Correction effectuée par l'utilisateur"
+        }
+      },
+      "errorAccion": "Impossible de terminer l'action.",
+      "toasts": {
+        "advertenciaSuccess": "Avertissement envoyé avec succès.",
+        "bloquearSuccess": "Compte bloqué avec succès.",
+        "suspenderSuccess": "Compte suspendu avec succès.",
+        "reactivarSuccess": "Compte réactivé avec succès."
       },
       "pagination": {
         "anterior": "Précédent",

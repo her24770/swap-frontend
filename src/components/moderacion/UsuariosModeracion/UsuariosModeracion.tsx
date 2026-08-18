@@ -2,20 +2,31 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Loader2, Flag, Eye } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Flag, Eye, AlertTriangle, Ban, Clock, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SearchBar from "../../ui/SearchBar/SearchBar";
 import { Link } from "../../../i18n/routing";
 import { usuarioService } from "../../../services/usuarioService";
 import { normalizeImageUrl } from "../../../lib/imageUrl";
-import type { UsuarioModeracion, UsuarioModeracionFilters } from "../../../types/usuarioModeracion";
+import { interpretarEstadoCuenta } from "../../../lib/estadoCuenta";
+import { useToast } from "../../../hooks/useToast";
+import JustificanteModeracionModal from "../../ui/Modal/Reporte/JustificanteModeracionModal";
+import type { UsuarioModeracion, UsuarioModeracionFilters, AccionEstadoCuenta } from "../../../types/usuarioModeracion";
 import "../../../components/ui/Button/Button.css";
 import "./UsuariosModeracion.css";
 
 const ITEMS_PER_PAGE = 12;
 
+type AccionCuenta = AccionEstadoCuenta | "advertencia";
+
+interface AccionPendiente {
+  tipo: AccionCuenta;
+  usuario: UsuarioModeracion;
+}
+
 export default function UsuariosModeracion() {
   const t = useTranslations("moderacion.usuarios");
+  const toast = useToast();
 
   const [usuarios, setUsuarios] = useState<UsuarioModeracion[]>([]);
   const [total, setTotal] = useState(0);
@@ -27,6 +38,17 @@ export default function UsuariosModeracion() {
   const [order, setOrder] = useState<NonNullable<UsuarioModeracionFilters["order"]>>("asc");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [busyId, setBusyId] = useState<number | null>(null);
+  const [accionPendiente, setAccionPendiente] = useState<AccionPendiente | null>(null);
+
+  const motivosReactivacion = useMemo(
+    () => [
+      t("justificante.motivosReactivacion.suspensionCumplida"),
+      t("justificante.motivosReactivacion.apelacionAprobada"),
+      t("justificante.motivosReactivacion.correccionUsuario"),
+    ],
+    [t]
+  );
 
   const pageCount = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
@@ -67,6 +89,51 @@ export default function UsuariosModeracion() {
 
     return () => window.clearTimeout(timeoutId);
   }, [qDraft]);
+
+  const abrirAccion = (tipo: AccionCuenta, usuario: UsuarioModeracion) => {
+    setAccionPendiente({ tipo, usuario });
+  };
+
+  const ejecutarAccion = async (payload: { motivo: string; detalle: string; dias?: number }) => {
+    if (!accionPendiente) return;
+    const { tipo, usuario } = accionPendiente;
+
+    try {
+      setBusyId(usuario.id_usuario);
+
+      if (tipo === "advertencia") {
+        await usuarioService.crearAdvertencia(usuario.id_usuario, {
+          motivo: payload.motivo,
+          detalle: payload.detalle || undefined,
+        });
+        toast.success(t("toasts.advertenciaSuccess"));
+      } else {
+        const resultado = await usuarioService.cambiarEstado(usuario.id_usuario, {
+          accion: tipo,
+          dias: payload.dias,
+          motivo: payload.motivo,
+          detalle: payload.detalle || undefined,
+        });
+        setUsuarios((prev) =>
+          prev.map((u) =>
+            u.id_usuario === usuario.id_usuario
+              ? { ...u, tiempo_suspendido: resultado.tiempo_suspendido }
+              : u
+          )
+        );
+        toast.success(t(`toasts.${tipo}Success` as `toasts.${AccionEstadoCuenta}Success`));
+      }
+
+      setAccionPendiente(null);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("errorAccion"));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const tituloAccion = accionPendiente ? t(`justificante.titulos.${accionPendiente.tipo}`) : "";
+  const preguntaAccion = accionPendiente ? t(`justificante.preguntas.${accionPendiente.tipo}`) : "";
 
   return (
     <main className="usuarios-moderacion">
@@ -129,52 +196,123 @@ export default function UsuariosModeracion() {
               <th>{t("tabla.correo")}</th>
               <th>{t("tabla.calificacion")}</th>
               <th>{t("tabla.reportes")}</th>
+              <th>{t("tabla.estado")}</th>
               <th className="usuarios-moderacion__col-acciones">{t("tabla.acciones")}</th>
             </tr>
           </thead>
           <tbody>
-            {usuarios.map((usuario) => (
-              <tr key={usuario.id_usuario}>
-                <td>
-                  <div className="usuarios-moderacion__usuario-cell">
-                    <div className="usuarios-moderacion__avatar">
-                      {usuario.url_foto_perfil ? (
-                        <Image
-                          src={normalizeImageUrl(usuario.url_foto_perfil)}
-                          alt={usuario.nombre}
-                          fill
-                          sizes="32px"
-                          unoptimized
-                        />
-                      ) : null}
+            {usuarios.map((usuario) => {
+              const estado = interpretarEstadoCuenta(usuario.tiempo_suspendido);
+              const busy = busyId === usuario.id_usuario;
+
+              return (
+                <tr key={usuario.id_usuario}>
+                  <td>
+                    <div className="usuarios-moderacion__usuario-cell">
+                      <div className="usuarios-moderacion__avatar">
+                        {usuario.url_foto_perfil ? (
+                          <Image
+                            src={normalizeImageUrl(usuario.url_foto_perfil)}
+                            alt={usuario.nombre}
+                            fill
+                            sizes="32px"
+                            unoptimized
+                          />
+                        ) : null}
+                      </div>
+                      <span>{usuario.nombre}</span>
                     </div>
-                    <span>{usuario.nombre}</span>
-                  </div>
-                </td>
-                <td>{usuario.carnet}</td>
-                <td>{usuario.email_institucional}</td>
-                <td>{usuario.calificacion != null ? Number(usuario.calificacion).toFixed(1) : t("tabla.sinCalificacion")}</td>
-                <td>
-                  {usuario.reportes_recibidos > 0 ? (
-                    <span className="usuarios-moderacion__badge usuarios-moderacion__badge--reportes">
-                      <Flag size={12} />
-                      {usuario.reportes_recibidos}
-                    </span>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td className="usuarios-moderacion__col-acciones">
-                  <Link
-                    href={`/moderacion/perfil/${usuario.id_usuario}`}
-                    className="button button--small"
-                  >
-                    <Eye size={14} />
-                    {t("acciones.verPerfil")}
-                  </Link>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td>{usuario.carnet}</td>
+                  <td>{usuario.email_institucional}</td>
+                  <td>{usuario.calificacion != null ? Number(usuario.calificacion).toFixed(1) : t("tabla.sinCalificacion")}</td>
+                  <td>
+                    {usuario.reportes_recibidos > 0 ? (
+                      <span className="usuarios-moderacion__badge usuarios-moderacion__badge--reportes">
+                        <Flag size={12} />
+                        {usuario.reportes_recibidos}
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td>
+                    {estado.bloqueada ? (
+                      <span className="usuarios-moderacion__badge usuarios-moderacion__badge--bloqueado">
+                        {t("estado.bloqueado")}
+                      </span>
+                    ) : estado.suspendidaHasta ? (
+                      <span className="usuarios-moderacion__badge usuarios-moderacion__badge--suspendido">
+                        {t("estado.suspendidoHasta", {
+                          fecha: estado.suspendidaHasta.toLocaleDateString("es-GT"),
+                        })}
+                      </span>
+                    ) : (
+                      <span className="usuarios-moderacion__badge usuarios-moderacion__badge--activo">
+                        {t("estado.activo")}
+                      </span>
+                    )}
+                  </td>
+                  <td className="usuarios-moderacion__col-acciones">
+                    <div className="usuarios-moderacion__actions">
+                      <Link
+                        href={`/moderacion/perfil/${usuario.id_usuario}`}
+                        className="button button--small"
+                        title={t("acciones.verPerfil")}
+                        aria-label={t("acciones.verPerfil")}
+                      >
+                        <Eye size={14} />
+                      </Link>
+                      <button
+                        type="button"
+                        className="button button--small"
+                        title={t("acciones.advertir")}
+                        aria-label={t("acciones.advertir")}
+                        disabled={busy}
+                        onClick={() => abrirAccion("advertencia", usuario)}
+                      >
+                        <AlertTriangle size={14} />
+                      </button>
+                      {estado.activa ? (
+                        <>
+                          <button
+                            type="button"
+                            className="button button--small button--warning"
+                            title={t("acciones.bloquear")}
+                            aria-label={t("acciones.bloquear")}
+                            disabled={busy}
+                            onClick={() => abrirAccion("bloquear", usuario)}
+                          >
+                            <Ban size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            className="button button--small button--warning"
+                            title={t("acciones.suspender")}
+                            aria-label={t("acciones.suspender")}
+                            disabled={busy}
+                            onClick={() => abrirAccion("suspender", usuario)}
+                          >
+                            <Clock size={14} />
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          className="button button--small"
+                          title={t("acciones.reactivar")}
+                          aria-label={t("acciones.reactivar")}
+                          disabled={busy}
+                          onClick={() => abrirAccion("reactivar", usuario)}
+                        >
+                          <RotateCcw size={14} />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
@@ -200,6 +338,20 @@ export default function UsuariosModeracion() {
           <ChevronRight size={14} />
         </button>
       </div>
+
+      {accionPendiente && (
+        <JustificanteModeracionModal
+          isOpen
+          tipoObjetivo="usuario"
+          titulo={tituloAccion}
+          pregunta={preguntaAccion}
+          motivosPersonalizados={accionPendiente.tipo === "reactivar" ? motivosReactivacion : undefined}
+          mostrarCampoDias={accionPendiente.tipo === "suspender"}
+          enviando={busyId === accionPendiente.usuario.id_usuario}
+          onClose={() => setAccionPendiente(null)}
+          onSubmit={ejecutarAccion}
+        />
+      )}
     </main>
   );
 }

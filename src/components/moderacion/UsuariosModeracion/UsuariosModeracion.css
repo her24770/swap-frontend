@@ -149,8 +149,30 @@
   color: var(--swap-error-color, #dc2626);
 }
 
+.usuarios-moderacion__badge--activo {
+  background-color: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+.usuarios-moderacion__badge--bloqueado {
+  background-color: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+
+.usuarios-moderacion__badge--suspendido {
+  background-color: rgba(217, 119, 6, 0.12);
+  color: #d97706;
+}
+
+.usuarios-moderacion__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
 .usuarios-moderacion__col-acciones {
-  width: 8rem;
+  width: 13rem;
 }
 
 .usuarios-moderacion__pagination {

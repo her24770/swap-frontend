@@ -25,3 +25,27 @@ export interface UsuariosModeracionResult {
   page: number;
   limit: number;
 }
+
+export type AccionEstadoCuenta = "bloquear" | "suspender" | "reactivar";
+
+export interface CambiarEstadoCuentaPayload {
+  accion: AccionEstadoCuenta;
+  dias?: number;
+  motivo: string;
+  detalle?: string;
+}
+
+export interface CambiarEstadoCuentaResult {
+  id_usuario: number;
+  accion: string;
+  tiempo_suspendido: number;
+}
+
+export interface AdvertenciaPayload {
+  motivo: string;
+  detalle?: string;
+}
+
+export interface AdvertenciaResult {
+  id_usuario: number;
+}

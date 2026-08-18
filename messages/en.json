@@ -469,11 +469,47 @@
         "correo": "Email",
         "calificacion": "Rating",
         "reportes": "Reports",
+        "estado": "Status",
         "acciones": "Actions",
         "sinCalificacion": "No rating"
       },
+      "estado": {
+        "activo": "Active",
+        "bloqueado": "Blocked",
+        "suspendidoHasta": "Suspended until {fecha}"
+      },
       "acciones": {
-        "verPerfil": "View profile"
+        "verPerfil": "View profile",
+        "advertir": "Warn",
+        "bloquear": "Block",
+        "suspender": "Suspend",
+        "reactivar": "Reactivate"
+      },
+      "justificante": {
+        "titulos": {
+          "advertencia": "Send warning",
+          "bloquear": "Block account",
+          "suspender": "Suspend account",
+          "reactivar": "Reactivate account"
+        },
+        "preguntas": {
+          "advertencia": "Why do you want to warn this user?",
+          "bloquear": "Why do you want to block this account?",
+          "suspender": "Why do you want to suspend this account?",
+          "reactivar": "Why do you want to reactivate this account?"
+        },
+        "motivosReactivacion": {
+          "suspensionCumplida": "Suspension completed",
+          "apelacionAprobada": "Appeal approved",
+          "correccionUsuario": "Correction made by the user"
+        }
+      },
+      "errorAccion": "Could not complete the action.",
+      "toasts": {
+        "advertenciaSuccess": "Warning sent successfully.",
+        "bloquearSuccess": "Account blocked successfully.",
+        "suspenderSuccess": "Account suspended successfully.",
+        "reactivarSuccess": "Account reactivated successfully."
       },
       "pagination": {
         "anterior": "Previous",

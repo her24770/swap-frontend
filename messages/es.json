@@ -491,11 +491,47 @@
         "correo": "Correo",
         "calificacion": "Calificación",
         "reportes": "Reportes",
+        "estado": "Estado",
         "acciones": "Acciones",
         "sinCalificacion": "Sin calificación"
       },
+      "estado": {
+        "activo": "Activo",
+        "bloqueado": "Bloqueado",
+        "suspendidoHasta": "Suspendido hasta {fecha}"
+      },
       "acciones": {
-        "verPerfil": "Ver perfil"
+        "verPerfil": "Ver perfil",
+        "advertir": "Advertir",
+        "bloquear": "Bloquear",
+        "suspender": "Suspender",
+        "reactivar": "Reactivar"
+      },
+      "justificante": {
+        "titulos": {
+          "advertencia": "Enviar advertencia",
+          "bloquear": "Bloquear cuenta",
+          "suspender": "Suspender cuenta",
+          "reactivar": "Reactivar cuenta"
+        },
+        "preguntas": {
+          "advertencia": "¿Por qué quieres advertir a este usuario?",
+          "bloquear": "¿Por qué quieres bloquear esta cuenta?",
+          "suspender": "¿Por qué quieres suspender esta cuenta?",
+          "reactivar": "¿Por qué quieres reactivar esta cuenta?"
+        },
+        "motivosReactivacion": {
+          "suspensionCumplida": "Suspensión cumplida",
+          "apelacionAprobada": "Apelación aprobada",
+          "correccionUsuario": "Corrección realizada por el usuario"
+        }
+      },
+      "errorAccion": "No fue posible completar la acción.",
+      "toasts": {
+        "advertenciaSuccess": "Advertencia enviada exitosamente.",
+        "bloquearSuccess": "Cuenta bloqueada exitosamente.",
+        "suspenderSuccess": "Cuenta suspendida exitosamente.",
+        "reactivarSuccess": "Cuenta reactivada exitosamente."
       },
       "pagination": {
         "anterior": "Anterior",
