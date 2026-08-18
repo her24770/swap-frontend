@@ -25,6 +25,18 @@
   --swap-danger-background: #fef2f2;
 
   --swap-success-color: #06ab43;
+  --swap-success-background: #ecfdf3;
+
+  /* Warning */
+  --swap-warning-color: #854F0B;
+  --swap-warning-background: #fef3c7;
+
+  /*Tipo de reporte*/
+  --swap-tipo-pub-color: #0C447C;
+  --swap-tipo-pub-background: #E6F1FB;
+
+  --swap-tipo-msg-color: #72243E;
+  --swap-tipo-msg-background: #FBEAF0;
 
   /* Colores para las tags de padres e hijas */
   --swap-tag-padre-bg: #2596be;
@@ -62,6 +74,18 @@
   --swap-danger-background: #450A0A;
 
   --swap-success-color: #06ab43;
+  --swap-success-background: #052e1c;
+
+  /* Warning */
+  --swap-warning-color: #FBBF24;
+  --swap-warning-background: #451a03;
+
+    /*Tipo de reporte*/
+  --swap-tipo-pub-color: #76b0ea;
+  --swap-tipo-pub-background: #043c70;
+
+  --swap-tipo-msg-color: #d17292;
+  --swap-tipo-msg-background: #770b31;
 
   /* Colores para las tags de padres e hijas */
   --swap-tag-padre-bg: #2596be;

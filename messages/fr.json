@@ -859,7 +859,8 @@
     },
     "header": {
       "back": "Retour aux conversations",
-      "options": "Options"
+      "options": "Options",
+      "viewProfile": "Voir le profil"
     },
     "menu": {
       "agreementHistory": "Historique des accords",

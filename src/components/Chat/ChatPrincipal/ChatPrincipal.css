@@ -41,6 +41,37 @@
   color: var(--swap-primary-text-color);
 }
 
+.chat-principal__profile {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.25rem;
+  margin: -0.25rem;
+
+  background: none;
+  border: none;
+  border-radius: 0.5rem;
+
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+
+  transition: background-color 0.15s ease;
+}
+
+.chat-principal__profile:hover {
+  background-color: var(--swap-tertiary-background);
+}
+
+.chat-principal__profile:focus-visible {
+  outline: 2px solid var(--swap-primary-color);
+  outline-offset: 2px;
+}
+
+.chat-principal__profile:disabled {
+  cursor: default;
+}
+
 .chat-principal__avatar {
   width: 2rem;
   height: 2rem;

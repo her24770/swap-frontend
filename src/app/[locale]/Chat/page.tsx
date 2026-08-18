@@ -9,6 +9,7 @@ import SolicitudAcuerdoModal, {
   PublicacionAcuerdo,
   type SolicitudAcuerdoFormData,
 } from "../../../components/ui/Modal/SolicitudAcuerdo/SolicitudAcuerdoModal";
+import SeleccionPublicacionModal from "../../../components/ui/Modal/SeleccionPublicacionAcuerdo/SeleccionPublicacionAcuerdoModal";
 import { acuerdoService } from "../../../services/acuerdoService";
 import { conversacionService } from "../../../services/conversacionService";
 import { useEstados } from "../../../hooks/useEstados";
@@ -16,10 +17,8 @@ import { useSocket, unirseAConversacion, enviarMensajePorSocket } from "../../..
 import { useAuthStore } from "../../../store/authStore";
 import { useUIStore } from "../../../store/uiStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
-import type { ConversacionPreview, Mensaje, PublicacionChatResumen, TabMensajes } from "../../../types/chat";
-import { useConversacionPublicacionStore } from "../../../store/conversacionPublicacionStore";
+import type { ConversacionPreview, Mensaje, TabMensajes } from "../../../types/chat";
 import "./ChatPage.css";
-import { publicacionService } from "../../../services/publicacionService";
 
 // NOTA: no hay (todavia) una regla real de negocio para distinguir conversaciones
 // de "ventas" vs "compras" (ningun ticket del sprint la define), asi que los tabs
@@ -47,6 +46,7 @@ export default function ChatPage() {
   // "conversacion" trae "activo", "inactivo" y "pendiente" (necesarios para
   // aceptar/bloquear solicitudes y para saber si una conversacion es una solicitud).
   const estadosConversacion = useEstados("conversacion");
+  const idEstadoActivo = estadosConversacion.find((e) => e.estado === "activo")?.id_estado;
   const idEstadoPendiente = estadosConversacion.find((e) => e.estado === "pendiente")?.id_estado;
   const [tab, setTab] = useState<TabMensajes>("todas");
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -59,14 +59,12 @@ export default function ChatPage() {
   const [mensajesPorConversacion, setMensajesPorConversacion] =
     useState<Record<number, Mensaje[]>>({});
   const [modalSolicitudAbierto, setModalSolicitudAbierto] = useState(false);
+  const [modalSeleccionPublicacionAbierto, setModalSeleccionPublicacionAbierto] = useState(false);
+  const [publicacionSeleccionada, setPublicacionSeleccionada] = useState<PublicacionAcuerdo | null>(null);
   const [enviandoSolicitud, setEnviandoSolicitud] = useState(false);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [acuerdoEditando, setAcuerdoEditando] = useState<AcuerdoHistorial | null>(null);
   const inicioConversacionEjecutado = useRef(false);
-  // Relacionar conversacion con publicacion con persistencia en Zustand
-  const guardarRelacion = useConversacionPublicacionStore((state) => state.guardarRelacion)
-  const obtenerPublicacion = useConversacionPublicacionStore((state) => state.obtenerPublicacion);
-  const [publicacionGuardada, setPublicacionGuardada] = useState< PublicacionAcuerdo| null>(null);
 
   // Carga el listado real de conversaciones del usuario (GET /api/conversacion/conversaciones,
   // ST-H44-1/SWAP-338). Espera a que los estados esten disponibles para poder marcar
@@ -123,47 +121,20 @@ export default function ChatPage() {
     inicioConversacionEjecutado.current = true;
 
     const postId = searchParams.get("postId");
-    const postTitle = searchParams.get("postTitle");
-    const postPrice = searchParams.get("postPrice");
-    const postDescription = searchParams.get("postDescription");
-    const postImageUrl = searchParams.get("postImageUrl");
-    const postType = searchParams.get("postType");
-    const recipient = searchParams.get("recipient");
-
-    const publicacion: PublicacionChatResumen | undefined = postId
-      ? {
-        id: Number(postId),
-        titulo: postTitle || recipient || "",
-        precio: postPrice ? parseFloat(postPrice) : 0,
-        descripcion: postDescription || undefined,
-        imagenUrl: postImageUrl || undefined,
-        tipo: (postType as PublicacionChatResumen["tipo"]) || "venta",
-      }
-      : undefined;
+    const idPublicacion = postId && Number.isInteger(Number(postId)) && Number(postId) > 0 ? Number(postId): undefined;
       
-      conversacionService.iniciarConversacion(Number(sellerId), message, idEstadoPendiente)
+      conversacionService.iniciarConversacion(Number(sellerId), message, idEstadoPendiente, idPublicacion)
       .then(({ conversacion }) => {
-        const conversacionConPublicacion = publicacion
-          ? { ...conversacion, publicacion }
-          : conversacion;
-
-        if (publicacion) {
-          guardarRelacion(
-            conversacion.id_conversacion,
-            publicacion.id
-          );
-        }
-
         setConversacionesState((prev) => {
           const existingIndex = prev.findIndex(
             (item) => item.id_conversacion === conversacion.id_conversacion
           );
           if (existingIndex >= 0) {
             const updated = [...prev];
-            updated[existingIndex] = conversacionConPublicacion;
+            updated[existingIndex] = conversacion;
             return updated;
           }
-          return [conversacionConPublicacion, ...prev];
+          return [conversacion, ...prev];
         });
 
         setSelectedId(conversacion.id_conversacion);
@@ -217,21 +188,41 @@ export default function ChatPage() {
   // y se une a la sala de socket de esa conversacion (SWAP-332).
   useEffect(() => {
     if (!selected) return;
+
     let cancelado = false;
-    conversacionService.obtenerMensajes(selected.id_conversacion)
+
+    conversacionService
+      .obtenerMensajes(selected.id_conversacion)
       .then((mensajesConversacion) => {
         if (cancelado) return;
+
         setMensajesPorConversacion((prev) => ({
           ...prev,
           [selected.id_conversacion]: mensajesConversacion,
         }));
       })
       .catch(() => {});
-    unirseAConversacion(socket, selected.id_conversacion).catch(() => {});
+
+    const unirse = () => {
+      unirseAConversacion(
+        socket,
+        selected.id_conversacion
+      ).catch(() => {});
+    };
+
+    unirse();
+
+    socket.on("connect", unirse);
+
     return () => {
       cancelado = true;
+      socket.off("connect", unirse);
     };
-  }, [selected?.id_conversacion, socket]);
+  }, [
+    selected?.id_conversacion,
+    selected?.estado_conversacion,
+    socket,
+  ]);
 
   // Escucha "mensaje:nuevo" para todas las conversaciones (SWAP-333): actualiza el
   // historial de la conversacion correspondiente y el preview en el sidebar, sin
@@ -266,6 +257,46 @@ export default function ChatPage() {
       socket.off("mensaje:nuevo", alRecibirMensaje);
     };
   }, [socket]);
+
+  
+  // Escucha "acuerdo:actualizado" (SWAP-489) y refresca los acuerdos
+  // de la conversacion afectada.
+  useEffect(() => {
+    const actualizarAcuerdo = (payload: { id_conversacion?: number }) => {
+      const idConversacion = Number(payload?.id_conversacion);
+
+      if (!Number.isInteger(idConversacion) || idConversacion <= 0) {
+        return;
+      }
+
+      cargarAcuerdosDeConversacion(idConversacion);
+    };
+
+    socket.on("acuerdo:actualizado", actualizarAcuerdo);
+
+    return () => {
+      socket.off("acuerdo:actualizado", actualizarAcuerdo);
+    };
+  }, [socket, cargarAcuerdosDeConversacion]);
+
+  useEffect(() => {
+    const actualizarConversaciones = async () => {
+      try {
+        const conversacionesActualizadas =
+          await conversacionService.listar(idEstadoPendiente);
+
+        setConversacionesState(conversacionesActualizadas);
+      } catch {
+        // Si falla la actualización por socket, se conserva el estado actual.
+      }
+    };
+
+    socket.on("conversacion:actualizada", actualizarConversaciones);
+
+    return () => {
+      socket.off("conversacion:actualizada", actualizarConversaciones);
+    };
+  }, [socket, idEstadoPendiente]);
 
   const mensajes = selected
     ? mensajesPorConversacion[selected.id_conversacion] ?? []
@@ -349,7 +380,7 @@ export default function ChatPage() {
       await conversacionService.actualizarEstado(id, idEstadoActivo);
       setConversacionesState((prev) => prev.map((conversacion) => (
         conversacion.id_conversacion === id
-          ? { ...conversacion, esSolicitud: false, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
+          ? { ...conversacion, esSolicitud: false, estado_conversacion: idEstadoActivo, fecha_ultimo_mensaje: conversacion.fecha_ultimo_mensaje ?? obtenerHoraActual() }
           : conversacion
       )));
     } catch (err) {
@@ -419,10 +450,9 @@ export default function ChatPage() {
     responderAcuerdo(idConversacion, acuerdoPendiente.id_acuerdo, "cancelado");
   };
 
-  // Crea una nueva solicitud de acuerdo (POST /api/acuerdo/:idPublicacion, ST-H36-6).
-  // Reutiliza la publicacion del acuerdo mas reciente de la conversacion como
-  // "objeto" del acuerdo, ya que la conversacion en si no guarda una publicacion
-  // asociada (una misma conversacion puede tener varias solicitudes en el tiempo).
+// Crea una nueva solicitud de acuerdo sobre una publicación seleccionada
+// explícitamente entre los contextos disponibles de la conversación.
+// En modo edición reutiliza el acuerdo existente para realizar la contraoferta.
   const handleEnviarSolicitud = async (data: SolicitudAcuerdoFormData) => {
     if (!selected) return;
     setEnviandoSolicitud(true);
@@ -445,7 +475,7 @@ export default function ChatPage() {
       setModalSolicitudAbierto(false);
       setModoEdicion(false);
       setAcuerdoEditando(null);
-      setPublicacionGuardada(null);
+      setPublicacionSeleccionada(null);
 
       await cargarAcuerdosDeConversacion(selected.id_conversacion);
       setConversacionesState((prev) => prev.map((conversacion) => (
@@ -461,60 +491,73 @@ export default function ChatPage() {
     }
   };
 
-  const publicacionParaNuevaSolicitud = useMemo(() => {
-    if (selected?.publicacion) {
-      return {
-          id_publicacion: selected.publicacion.id,
-          titulo: selected.publicacion.titulo,
-          precio: selected.publicacion.precio,
-      };
-    }
+  const contextosDisponiblesParaAcuerdo = useMemo(() => {
+    if (!selected || !idUsuarioActual) return [];
 
-    const ultimoAcuerdo = acuerdosSeleccionados[0];
-    if (!ultimoAcuerdo) return null;
-    return {
-      id_publicacion: ultimoAcuerdo.publicacion.id_publicacion,
-      titulo: ultimoAcuerdo.publicacion.titulo,
-      precio: ultimoAcuerdo.publicacion.precio,
-    };
-  }, [acuerdosSeleccionados]);
+    return (selected.contextos ?? []).filter(
+      (contexto) =>
+        contexto.publicacion.id_usuario !== idUsuarioActual
+    );
+  }, [selected, idUsuarioActual]);
 
-  const handleAbrirCrearEncuentro = async () => {
-    if (!publicacionParaNuevaSolicitud) {
-      const idPublicacion = selected
-        ? obtenerPublicacion(selected.id_conversacion)
-        : undefined;
-      // No hay publicacion asociada a esta conversacion todavia: sin un
-      // selector de publicacion (fuera del alcance de este sprint) no
-      // podemos saber sobre que publicacion crear el acuerdo.
-      if(!idPublicacion){
-        agregarNotificacion({ tipo: "info", mensaje: t("system.noPublicationForAgreement") });
-        return;
-      }
+  const publicacionesDisponiblesParaAcuerdo = useMemo<PublicacionAcuerdo[]>( () =>
+    contextosDisponiblesParaAcuerdo.map((contexto) => ({
+      id_publicacion: contexto.publicacion.id_publicacion,
+      titulo: contexto.publicacion.titulo,
+      precio: Number(contexto.publicacion.precio),
+    })),
+    [contextosDisponiblesParaAcuerdo]
+  );
 
-      try {
-        const publicacion = await publicacionService.getById(idPublicacion);
-        setPublicacionGuardada({
-          id_publicacion: publicacion.id_publicacion,
-          titulo: publicacion.titulo,
-          precio: publicacion.precio,
-        });
-      } catch {
-        agregarNotificacion({
-          tipo: "info",
-          mensaje: t("system.noPublicationForAgreement"),
-        });
-        return;
-      }
-    }
-
+  const handleAbrirCrearEncuentro = () => {
+    // Contraoferta:
+    // el acuerdo existente ya determina de forma inequívoca la publicación.
     if (acuerdo && acuerdo.estadoRel?.estado === "pendiente") {
       setModoEdicion(true);
       setAcuerdoEditando(acuerdo);
-    } else {
-      setModoEdicion(false);
-      setAcuerdoEditando(null);
+
+      setPublicacionSeleccionada({
+        id_publicacion: acuerdo.publicacion.id_publicacion,
+        titulo: acuerdo.publicacion.titulo,
+        precio: Number(acuerdo.publicacion.precio),
+      });
+
+      setModalSolicitudAbierto(true);
+      return;
     }
+
+    // A partir de aquí estamos creando un acuerdo NUEVO.
+    setModoEdicion(false);
+    setAcuerdoEditando(null);
+
+    if (publicacionesDisponiblesParaAcuerdo.length === 0) {
+      agregarNotificacion({
+        tipo: "info",
+        mensaje: t("system.noPublicationForAgreement"),
+      });
+      return;
+    }
+
+    // Un único contexto: no tiene sentido obligar al usuario a seleccionarlo.
+    if (publicacionesDisponiblesParaAcuerdo.length === 1) {
+      setPublicacionSeleccionada(publicacionesDisponiblesParaAcuerdo[0]);
+      setModalSolicitudAbierto(true);
+      return;
+    }
+
+    // Varios contextos: el usuario decide explícitamente.
+    setPublicacionSeleccionada(null);
+    setModalSeleccionPublicacionAbierto(true);
+  };
+
+  const handleSeleccionarPublicacion = (
+    publicacion: PublicacionAcuerdo
+  ) => {
+    setPublicacionSeleccionada(publicacion);
+    setModalSeleccionPublicacionAbierto(false);
+
+    setModoEdicion(false);
+    setAcuerdoEditando(null);
 
     setModalSolicitudAbierto(true);
   };
@@ -545,9 +588,11 @@ export default function ChatPage() {
           onAceptarAcuerdo={() => selected && handleAceptarAcuerdo(selected.id_conversacion)}
           onRechazarAcuerdo={() => selected && handleRechazarAcuerdo(selected.id_conversacion)}
           onCompletarAcuerdo={() => acuerdo && selected && responderAcuerdo(selected.id_conversacion, acuerdo.id_acuerdo, "completado")}
+          onVerPerfil={(idUsuario) => {router.push(`/perfil/${idUsuario}?modo=vendedor`);}}
           onEnviarNuevaPropuesta={handleAbrirCrearEncuentro}
           onCrearEncuentro={handleAbrirCrearEncuentro}
           onVolver={() => setMostrarChatMovil(false)}
+          puedeEnviarMensajes={idEstadoActivo != null && selected.estado_conversacion === idEstadoActivo}
         />
       ) : (
         <div className="mensajes-page__empty">
@@ -555,12 +600,23 @@ export default function ChatPage() {
         </div>
       )}
 
-      {modalSolicitudAbierto && (publicacionParaNuevaSolicitud || publicacionGuardada) && (
+      {modalSeleccionPublicacionAbierto && (
+        <SeleccionPublicacionModal
+          isOpen={modalSeleccionPublicacionAbierto}
+          publicaciones={publicacionesDisponiblesParaAcuerdo}
+          onClose={() => {
+            setModalSeleccionPublicacionAbierto(false);
+          }}
+          onSelect={handleSeleccionarPublicacion}
+        />
+      )}
+
+      {modalSolicitudAbierto && publicacionSeleccionada && (
         <SolicitudAcuerdoModal
           isOpen={modalSolicitudAbierto}
-          publicacion={publicacionParaNuevaSolicitud ?? publicacionGuardada!}
+          publicacion={publicacionSeleccionada}
           acuerdoInicial={acuerdoEditando}
-          onClose={() => {setModalSolicitudAbierto(false); setModoEdicion(false); setAcuerdoEditando(null); setPublicacionGuardada(null)}}
+          onClose={() => {setModalSolicitudAbierto(false); setModoEdicion(false); setAcuerdoEditando(null); setPublicacionSeleccionada(null)}}
           onSubmit={handleEnviarSolicitud}
           isSaving={enviandoSolicitud}
         />
