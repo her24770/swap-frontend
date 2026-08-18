@@ -7,8 +7,8 @@ describe("ChatSidebar", () => {
     render(
       <ChatSidebar
         conversaciones={[
-          { id_conversacion: 1, nombre: "María López", preview: "Libro disponible" },
-          { id_conversacion: 2, nombre: "Carlos Ruiz", preview: "Tutoría de cálculo" },
+          { id_conversacion: 1, nombre: "María López", preview: "Libro disponible", id_otro_usuario: 1, estado_conversacion: 1 },
+          { id_conversacion: 2, nombre: "Carlos Ruiz", preview: "Tutoría de cálculo", id_otro_usuario: 2, estado_conversacion: 1 },
         ]}
         selectedId={null}
         tab="todas"
