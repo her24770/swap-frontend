@@ -285,7 +285,9 @@
 		"toast": {
 			"welcomeBack": "Welcome back!",
 			"invalidCredentials": "Incorrect credentials.",
-			"loginErrorFallback": "Couldn't sign in"
+			"loginErrorFallback": "Couldn't sign in",
+			"accountBlockedTitle": "Account blocked",
+			"accountBlocked": "Your account has been blocked. Contact support for more information."
 		},
 		"validation": {
 			"emailRequired": "Email is required",

@@ -20,6 +20,9 @@ interface LoginFormData {
   password: string;
 }
 
+// correo temporal para probar notificacion
+const EMAIL_PRUEBA_BLOQUEADA = "bloqueado@uvg.edu.gt";
+
 export default function LoginForm() {
   const t = useTranslations('login');
   const tValidation = useTranslations('login.validation');
@@ -40,6 +43,15 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setServerError(null);
+
+      // Para pruebas
+      if (data.email.trim().toLowerCase() === EMAIL_PRUEBA_BLOQUEADA) {
+        const blockedMessage = t('toast.accountBlocked');
+        setServerError(blockedMessage);
+        toast.warning(blockedMessage, t('toast.accountBlockedTitle'));
+        return;
+      }
+
       const response = await apiClient.post<AuthResponse>("/api/auth/login", {
         email_institucional: data.email,
         password: data.password,
@@ -51,6 +63,15 @@ export default function LoginForm() {
       router.refresh();
     } catch (error) {
       const apiError = error as ApiError;
+
+      // Contrato esperado del backend para cuenta bloqueada: status 401 con { "code": "CUENTA_BLOQUEADA" } en el body
+      if (apiError.code === "CUENTA_BLOQUEADA") {
+        const blockedMessage = t('toast.accountBlocked');
+        setServerError(blockedMessage);
+        toast.warning(blockedMessage, t('toast.accountBlockedTitle'));
+        return;
+      }
+
       const message =
         apiError.status === 401
           ? t('toast.invalidCredentials')
