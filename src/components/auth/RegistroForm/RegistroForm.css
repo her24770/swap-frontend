@@ -271,3 +271,48 @@
   background-color: var(--swap-primary-color);
   border-color: var(--swap-primary-color);
 }
+
+.registro-form__tags-checkbox--error {
+  border-color: var(--swap-danger-color);
+}
+
+/* Terminos y condiciones */
+
+.registro-form__terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.registro-form__terms-checkbox {
+  background: none;
+  border: none;
+  padding: 0.1rem 0 0;
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.registro-form__terms-text {
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.registro-form__terms-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--swap-primary-color);
+  text-decoration: underline;
+}
+
+.registro-form__terms-link:hover {
+  opacity: 0.85;
+}

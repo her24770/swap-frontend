@@ -420,6 +420,9 @@
 			"submitWithCode": "Create account",
 			"tagsCountMin": "Select at least 3 interests",
 			"tagsCountMax": "You can select up to 20 interests",
+			"termsPrefix": "I accept the",
+			"termsLinkText": "Terms and Conditions and the Privacy Policy",
+			"termsRequired": "You must accept the Terms and Conditions to continue.",
 			"toast": {
 				"success": "Registration successful! Welcome to SWAP.",
 				"codeSent": "We sent a code to your institutional email.",
