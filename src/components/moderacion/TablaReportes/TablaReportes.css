@@ -234,8 +234,8 @@
 
 
 .tabla-reportes__estado--pendiente  { background-color: var(--swap-warning-background); color: var(--swap-warning-color); }
-.tabla-reportes__estado--completado { background-color: var(--swap-success-background); color: var(--swap-success-color); }
-.tabla-reportes__estado--cancelado  { background-color: var(--swap-danger-background); color: var(--swap-danger-color); }
+.tabla-reportes__estado--resuelto { background-color: var(--swap-success-background); color: var(--swap-success-color); }
+.tabla-reportes__estado--rechazado  { background-color: var(--swap-danger-background); color: var(--swap-danger-color); }
 
 .tabla-reportes__user-cell {
   display: flex;

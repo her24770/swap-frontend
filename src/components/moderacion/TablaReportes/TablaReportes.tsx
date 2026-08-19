@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, SlidersHorizontal, Check, SpadeIcon } from "lucide-react";
+import { Search, SlidersHorizontal, Check } from "lucide-react";
 import Image from "next/image";
 import { useToast } from "../../../hooks/useToast";
 import type { ReporteDetalle, ReporteTableData } from "../../../types/reporte";
@@ -11,7 +11,6 @@ import "./TablaReportes.css";
 import "../../../components/ui/Modal/Modal.css";
 import "../../ui/Button/Button.css";
 import { reporteService } from "../../../services/reporteService";
-
 
 interface TablaReportesProps {
   reportes: ReporteTableData[];
@@ -28,11 +27,10 @@ interface TablaReportesProps {
   onVerPublicacion: (id: number) => Promise<PublicacionDetalle> | PublicacionDetalle;
 }
 
-
 const ESTADO_CLASS: Record<string, string> = {
-  pendiente:  "tabla-reportes__estado--pendiente",
-  resuelto: "tabla-reportes__estado--resuelto",
-  rechazado:  "tabla-reportes__estado--rechazado",
+  pendiente: "tabla-reportes__estado--pendiente",
+  resuelto:  "tabla-reportes__estado--resuelto",
+  rechazado: "tabla-reportes__estado--rechazado",
 };
 
 const TIPO_OPTIONS = [
@@ -41,9 +39,9 @@ const TIPO_OPTIONS = [
 ];
 
 const ESTADO_OPTIONS = [
-  { value: "pendiente",  label: "Pendiente" },
-  { value: "resuelto", label: "Resuelto" },
-  { value: "rechazado",  label: "Rechazado" },
+  { value: "pendiente", label: "Pendiente" },
+  { value: "resuelto",  label: "Resuelto" },
+  { value: "rechazado", label: "Rechazado" },
 ];
 
 function initials(nombre: string) {
@@ -70,13 +68,21 @@ export default function TablaReportes({
 }: TablaReportesProps) {
   const toast = useToast();
   const [search, setSearch] = useState("");
+  const [listaReportes, setListaReportes] = useState<ReporteTableData[]>(reportes);
   const [detalleReporte, setDetalleReporte] = useState<ReporteDetalle | null>(null);
   const [cargandoDetalleId, setCargandoDetalleId] = useState<number | null>(null);
+  const [actualizandoEstadoId, setActualizandoEstadoId] = useState<number | null>(null);
   const [openFilter, setOpenFilter] = useState<"tipo" | "estado" | null>(null);
-  const [cambiarEstado, setCambiarEstado] = useState(false);
+  
   const tipoFilterRef = useRef<HTMLDivElement>(null);
   const estadoFilterRef = useRef<HTMLDivElement>(null);
 
+  // Sincronizar estado local cuando las props cambian
+  useEffect(() => {
+    setListaReportes(reportes);
+  }, [reportes]);
+
+  // Manejador para cerrar menús desplegables al hacer clic fuera
   useEffect(() => {
     if (!openFilter) return;
     const ref = openFilter === "tipo" ? tipoFilterRef : estadoFilterRef;
@@ -92,15 +98,15 @@ export default function TablaReportes({
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
 
-    return reportes.filter((r) =>
+    return listaReportes.filter((r) =>
       !q ||
       r.emisor.nombre.toLowerCase().includes(q) ||
       r.receptor.nombre.toLowerCase().includes(q) ||
       String(r.id_reporte).includes(q)
     );
-  }, [reportes, search]);
+  }, [listaReportes, search]);
 
-  const handleSearch = (v: string) => { setSearch(v); setSearch(v); };
+  const handleSearch = (v: string) => setSearch(v);
 
   const handleTipoFilter = (v: string | null) => {
     onTipoFilterChange(v);
@@ -122,6 +128,38 @@ export default function TablaReportes({
       toast.error(error?.message ?? "No fue posible cargar el detalle del reporte.", "Error");
     } finally {
       setCargandoDetalleId(null);
+    }
+  };
+
+  // Función principal para cambiar el estado del reporte
+  const handleCambiarEstado = async (id_reporte: number, nuevoEstado: string) => {
+    const reporteActual = listaReportes.find((r) => r.id_reporte === id_reporte);
+    const estadoAnterior = reporteActual?.estado;
+
+    if (!estadoAnterior || estadoAnterior.toLowerCase() === nuevoEstado.toLowerCase()) {
+      return;
+    }
+
+    setActualizandoEstadoId(id_reporte);
+
+    setListaReportes((prev) =>
+      prev.map((r) =>
+        r.id_reporte === id_reporte ? { ...r, estado: nuevoEstado } : r
+      )
+    );
+
+    try {
+      await reporteService.actualizarEstadoReporte(id_reporte, nuevoEstado);
+      toast.success("Estado del reporte actualizado correctamente.");
+    } catch (error: any) {
+      setListaReportes((prev) =>
+        prev.map((r) =>
+          r.id_reporte === id_reporte ? { ...r, estado: estadoAnterior } : r
+        )
+      );
+      toast.error(error?.message ?? "No fue posible actualizar el estado del reporte.", "Error");
+    } finally {
+      setActualizandoEstadoId(null);
     }
   };
 
@@ -220,43 +258,36 @@ export default function TablaReportes({
             <tbody>
               {filtered.map((r) => {
                 const estadoKey = r.estado.toLowerCase();
+                const estaActualizando = actualizandoEstadoId === r.id_reporte;
+
                 return (
                   <tr key={r.id_reporte}>
-                    <td className="tabla-reportes__id">#{String(r.id_reporte).padStart(6, "0")}</td>
+                    <td className="tabla-reportes__id">
+                      #{String(r.id_reporte).padStart(6, "0")}
+                    </td>
                     <td>
                       <span className={`tabla-reportes__badge tabla-reportes__badge--${getTipoMod(r.tipo)}`}>
                         {r.tipo}
                       </span>
                     </td>
                     <td className="tabla-reportes__fecha">
-                      {new Date(r.fecha).toLocaleDateString("es", { day: "2-digit", month: "short", year: "numeric" })}
+                      {new Date(r.fecha).toLocaleDateString("es", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </td>
                     <td>
-                      <select 
-                      className={`tabla-reportes__estado ${ESTADO_CLASS[estadoKey] ?? ""}`}
-                      onClick={() => setCambiarEstado(true)}
+                      <select
+                        value={estadoKey}
+                        className={`tabla-reportes__estado ${ESTADO_CLASS[estadoKey] ?? ""}`}
+                        disabled={estaActualizando}
+                        onChange={(e) => handleCambiarEstado(r.id_reporte, e.target.value)}
                       >
                         <option value="pendiente">Pendiente</option>
                         <option value="resuelto">Resuelto</option>
                         <option value="rechazado">Rechazado</option>
-
                       </select>
-
-                      {cambiarEstado && (
-                        <button
-                          type="button"
-                          className="tabla-reportes__estado-guardar"
-                          onClick={() => {
-                            // actualizarEstadoReporte(r.estado);
-                            setCambiarEstado(false);
-                          
-                            }
-                          }
-                        >
-                        </button>
-                      )}
-
-                      
                     </td>
                     <td>
                       <UsuarioCell
@@ -323,16 +354,23 @@ export default function TablaReportes({
   );
 }
 
-function UsuarioCell({ nombre, email, foto }: {
-  nombre: string; email: string; foto?: string;
+function UsuarioCell({
+  nombre,
+  email,
+  foto,
+}: {
+  nombre: string;
+  email: string;
+  foto?: string;
 }) {
   return (
     <div className="tabla-reportes__user-cell">
       <div className="tabla-reportes__avatar">
-        {foto
-          ? <Image src={foto} alt={nombre} fill style={{ objectFit: "cover" }} unoptimized />
-          : <span>{initials(nombre)}</span>
-        }
+        {foto ? (
+          <Image src={foto} alt={nombre} fill style={{ objectFit: "cover" }} unoptimized />
+        ) : (
+          <span>{initials(nombre)}</span>
+        )}
       </div>
       <div className="tabla-reportes__user-info">
         <span className="tabla-reportes__user-name">{nombre}</span>
@@ -342,7 +380,15 @@ function UsuarioCell({ nombre, email, foto }: {
   );
 }
 
-function Paginacion({ page, total, onChange }: { page: number; total: number; onChange: (p: number) => void }) {
+function Paginacion({
+  page,
+  total,
+  onChange,
+}: {
+  page: number;
+  total: number;
+  onChange: (p: number) => void;
+}) {
   const pages: (number | "...")[] = [];
   for (let i = 1; i <= total; i++) {
     if (i === 1 || i === total || Math.abs(i - page) <= 1) pages.push(i);
