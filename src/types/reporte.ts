@@ -71,7 +71,7 @@ export interface ReportePaginationOptions {
   limit?: number;
   sort?: "fecha" | "estado";
   order?: "asc" | "desc";
-  estado?: string;
+  estado?: "pendiente" | "resuelto" | "rechazado" | "todos";
   motivo?: string;
   tipo?: "publicacion" | "mensaje" | "usuario" | "todos";
   idReceptor?: number;

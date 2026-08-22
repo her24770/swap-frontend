@@ -34,7 +34,13 @@ export default function ModeracionReportesPage() {
                 : tipoFilter === "Usuario"
                   ? "usuario"
                 : "todos",
-          estado: estadoFilter ?? undefined,
+          estado: estadoFilter === "pendiente"
+            ? "pendiente"
+            : estadoFilter === "resuelto"
+              ? "resuelto"
+              : estadoFilter === "rechazado"
+                ? "rechazado"
+                : "todos",
         });
 
         setReportes(resultado.reportes);
@@ -47,7 +53,6 @@ export default function ModeracionReportesPage() {
 
     cargarReportes();
   }, [page, tipoFilter, estadoFilter]);
-
   
   return (
     <div className="moderacion-reportes-page">
@@ -62,10 +67,12 @@ export default function ModeracionReportesPage() {
         onPageChange={setPage}
         onTipoFilterChange={(tipo) => {
           setTipoFilter(tipo);
+          console.log("Tipo filter changed to:", tipo);
           setPage(1);
         }}
         onEstadoFilterChange={(estado) => {
           setEstadoFilter(estado);
+          console.log("Estado filter changed to:", estado);
           setPage(1);
         }}
         onVerDetalles={reporteService.obtenerReportePorId}

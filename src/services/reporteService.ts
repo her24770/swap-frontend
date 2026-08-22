@@ -34,6 +34,14 @@ export const reporteService = {
 
     return response.data;
   },
+
+  async actualizarEstadoReporte(id: number, nuevoEstado: string): Promise<ReporteDetalle> {
+    const response = await apiClient.put<ApiResult<ReporteDetalle>>(
+      `/api/reportes/${id}`,
+      { id_reporte: id, estado: nuevoEstado }
+    );
+    return response.data;
+  }
 };
 
 function crearReporteFormData(payload: CrearReportePayload): FormData {
