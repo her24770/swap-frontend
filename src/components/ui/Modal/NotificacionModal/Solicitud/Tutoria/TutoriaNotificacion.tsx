@@ -1,6 +1,6 @@
 "use client";
 
-import type { ButtonHTMLAttributes, ElementType, ReactNode } from "react";
+import { useState, type ButtonHTMLAttributes, type ElementType, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import {
   BookOpen,
@@ -10,9 +10,9 @@ import {
   MapPin,
   UserCircle2,
   X,
+  Loader2,
 } from "lucide-react";
 import "./TutoriaNotificacion.css";
-
 
 export interface SolicitudTutoriaNotificacion {
   id: number;
@@ -22,12 +22,15 @@ export interface SolicitudTutoriaNotificacion {
   lugar: string;
   tema: string;
   tutoria?: string;
+  avatarUrl?: string | null;
+  tipoPerfil?: string;
+  id_conversacion?: number;
 }
 
 interface TarjetaNotificacionSolicitudProps {
   solicitud: SolicitudTutoriaNotificacion;
-  onAceptar?: (id: number) => void;
-  onRechazar?: (id: number) => void;
+  onAceptar?: (id: number) => Promise<void> | void;
+  onRechazar?: (id: number) => Promise<void> | void;
 }
 
 interface ActionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -73,15 +76,49 @@ export default function TarjetaNotificacionSolicitud({
   onRechazar,
 }: TarjetaNotificacionSolicitudProps) {
   const t = useTranslations("tutorias");
+  const [procesando, setProcesando] = useState<"aceptar" | "rechazar" | null>(null);
+
+  const handleAceptar = async () => {
+    if (!onAceptar || procesando) return;
+    setProcesando("aceptar");
+    try {
+      await onAceptar(solicitud.id);
+    } finally {
+      setProcesando(null);
+    }
+  };
+
+  const handleRechazar = async () => {
+    if (!onRechazar || procesando) return;
+    setProcesando("rechazar");
+    try {
+      await onRechazar(solicitud.id);
+    } finally {
+      setProcesando(null);
+    }
+  };
+
+  // Cabecera dinámica: si es tutoría muestra "SOLICITUD DE TUTORÍA", o el tipo correspondiente
+  const headerText = solicitud.tipoPerfil
+    ? `SOLICITUD DE ${solicitud.tipoPerfil.toUpperCase()}`
+    : t("solicitud");
 
   return (
     <article className="tutoria-notificacion">
       <header className="tutoria-notificacion__header">
         <span className="tutoria-notificacion__avatar" aria-hidden="true">
-          <UserCircle2 size={24} />
+          {solicitud.avatarUrl ? (
+            <img
+              src={solicitud.avatarUrl}
+              alt={solicitud.alumno}
+              className="tutoria-notificacion__avatar-img"
+            />
+          ) : (
+            <UserCircle2 size={24} />
+          )}
         </span>
         <div>
-          <p className="tutoria-notificacion__eyebrow">{t("solicitud")}</p>
+          <p className="tutoria-notificacion__eyebrow">{headerText}</p>
           <h3>{solicitud.alumno}</h3>
           {solicitud.tutoria && <p>{solicitud.tutoria}</p>}
         </div>
@@ -113,18 +150,18 @@ export default function TarjetaNotificacionSolicitud({
 
       <footer className="tutoria-notificacion__actions">
         <ActionButton
-          icon={X}
+          icon={procesando === "rechazar" ? Loader2 : X}
           variant="reject"
-          onClick={() => onRechazar?.(solicitud.id)}
-          disabled={!onRechazar}
+          onClick={handleRechazar}
+          disabled={!onRechazar || procesando !== null}
         >
           {t("rechazar")}
         </ActionButton>
         <ActionButton
-          icon={Check}
+          icon={procesando === "aceptar" ? Loader2 : Check}
           variant="accept"
-          onClick={() => onAceptar?.(solicitud.id)}
-          disabled={!onAceptar}
+          onClick={handleAceptar}
+          disabled={!onAceptar || procesando !== null}
         >
           {t("aceptar")}
         </ActionButton>
