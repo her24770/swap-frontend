@@ -14,7 +14,7 @@ export default function DescubrePage() {
 
   const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: ITEMS_PER_PAGE, page: morePage });
   const { data: recentsData, loading: recentsLoading, error: recentsError } = usePublicaciones({ limit: ITEMS_PER_PAGE, sort: "fecha" });
-  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({recommended: true});
+  const { data: recommendedData, loading: recommendedLoading, error: recommendedError } = usePublicaciones({ personalized: true });
 
   const loadingStates = {
     more: moreLoading,
@@ -45,7 +45,6 @@ export default function DescubrePage() {
         errors={errors}
         itemsPerPage={ITEMS_PER_PAGE}
         onDetallesClick={(p) => handleDetallesClick(p)}
-        showPersonalizedRecommendationsButton
         Ads={[]}
       />
     </main>

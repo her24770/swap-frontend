@@ -1,8 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter, usePathname } from "next/navigation";
-import { stripLocalePrefix } from "../../../i18n/pathname";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import HorizontalCarousel from "../../../components/ui/HorizontalCarousel/HorizontalCarousel";
@@ -60,7 +59,6 @@ type Props = {
     tagsForAll?: (tTags: any) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
     Ads?: Anuncio[];
-    showPersonalizedRecommendationsButton?: boolean;
     soloLectura?: boolean;
     perfilBasePath?: string;
 };
@@ -82,7 +80,6 @@ export default function PublicacionesList({
     tagsForAll,
     onDetallesClick,
     Ads = [],
-    showPersonalizedRecommendationsButton = false,
     soloLectura = false,
     perfilBasePath = "/perfil",
 }: Props) {
@@ -91,10 +88,6 @@ export default function PublicacionesList({
     const tTags = useTranslations("common.tags");
     const tSearch = useTranslations("common.search");
     const router = useRouter();
-    const pathname = stripLocalePrefix(usePathname());
-    const isDescubreRoute = pathname === "/" || pathname === "/descubre";
-    const showRecommendationsButton =
-        showPersonalizedRecommendationsButton || isDescubreRoute;
     const { publicacion: service } = useServices();
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
@@ -333,29 +326,11 @@ export default function PublicacionesList({
         />
     );
 
-    const handlePersonalizedRecommendationsClick = () => {
-        setSearchQuery("");
-        setFilteredResults(null);
-        setFilteredTutores(null);
-        setActiveFilters(null);
-        setInternalPage(1);
-    };
-
-
     return (
         <div className="publicaciones-list">
             <div className="publicaciones-list__header">
                 <div className="publicaciones-list__title-actions">
                     <h1 className="publicaciones-list__title">{title}</h1>
-                    {showRecommendationsButton && (
-                        <button
-                            type="button"
-                            className="button button--small"
-                            onClick={handlePersonalizedRecommendationsClick}
-                        >
-                            {t("personalizedRecommendationsButton")}
-                        </button>
-                    )}
                 </div>
                 <div className="publicaciones-list__search-actions" ref={filterAnchorRef}>
                     <SearchBar
