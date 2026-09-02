@@ -379,24 +379,6 @@ export default function DetallePublicacion({
                 </button>
               </div>
             )}
-            {!soloLectura && type === "tutoria" && (
-              <>
-                <button
-                  type="button"
-                  className="button button--medium button--warning button--full-width"
-                  onClick={onVerCertificados}
-                >
-                  {t('actions.certificado')}
-                </button>
-                <button
-                  type="button"
-                  className="button button--medium button--full-width"
-                  onClick={() => setSolicitudTutoriaAbierta(true)}
-                >
-                  Solicitar Tutoría <ChevronRight size={16} />
-                </button>
-              </>
-            )}
           </div>
 
           {expandido && (
