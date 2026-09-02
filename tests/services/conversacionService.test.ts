@@ -92,6 +92,29 @@ describe("conversacionService.listar", () => {
     const [comoRemitente] = await conversacionService.listar(3);
     expect(comoRemitente.esSolicitud).toBe(false);
   });
+
+  it("IT-21: al alternar comprador/vendedor conserva el contexto del otro participante", async () => {
+    const conversacionApi = {
+      id_conversacion: 12,
+      id_usuario_1: 1,
+      id_usuario_2: 2,
+      estado_conversacion: 1,
+      usuario1: { id_usuario: 1, nombre: "Comprador", url_foto_perfil: "comprador.png" },
+      usuario2: { id_usuario: 2, nombre: "Vendedora", url_foto_perfil: "vendedora.png" },
+      mensajes: [{ mensaje: "Coordinemos la entrega", fecha_enviado: "2026-09-01T10:00:00.000Z" }],
+    };
+    const get = vi.spyOn(apiClient, "get").mockResolvedValue({ success: true, data: [conversacionApi] });
+
+    useAuthStore.getState().login(USUARIO_ACTUAL, "usuario");
+    const [vistaComprador] = await conversacionService.listar();
+
+    useAuthStore.getState().login({ ...USUARIO_ACTUAL, id_usuario: 2, nombre: "Vendedora" }, "usuario");
+    const [vistaVendedor] = await conversacionService.listar();
+
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(vistaComprador).toMatchObject({ id_otro_usuario: 2, nombre: "Vendedora", preview: "Coordinemos la entrega" });
+    expect(vistaVendedor).toMatchObject({ id_otro_usuario: 1, nombre: "Comprador", preview: "Coordinemos la entrega" });
+  });
 });
 
 describe("conversacionService.obtenerMensajes", () => {
