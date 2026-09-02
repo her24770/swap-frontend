@@ -18,7 +18,16 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
         result = await service.getGlobalRecommendations(filters.tipo);
         setTotal(result.length);
       } else if (filters.personalized) {
-        result = await service.getPersonalizedRecommendations();
+        try {
+          const personalizedResult = await service.getPersonalizedRecommendations();
+          if (personalizedResult && personalizedResult.length > 0) {
+            result = personalizedResult;
+          } else {
+            result = await service.getGlobalRecommendations(filters.tipo);
+          }
+        } catch {
+          result = await service.getGlobalRecommendations(filters.tipo);
+        }
         setTotal(result.length);
       } else {
         const response = await service.getAll(filters);
