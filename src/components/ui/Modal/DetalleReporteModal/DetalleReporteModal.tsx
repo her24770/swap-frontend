@@ -198,7 +198,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                   <button
                     type="button"
                     className="detalle-reporte-modal__user-name"
-                    onClick={() => { router.push(`/vendedor/${r.emisor.id_usuario}`); onClose(); }}
+                    onClick={() => { router.push(`/perfil/${r.emisor.id_usuario}`); onClose(); }}
                   >
                     {r.emisor.nombre}
                   </button>
@@ -216,7 +216,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                   <button
                     type="button"
                     className="detalle-reporte-modal__user-name"
-                    onClick={() => { router.push(`/vendedor/${r.receptor.id_usuario}`); onClose(); }}
+                    onClick={() => { router.push(`/perfil/${r.receptor.id_usuario}`); onClose(); }}
                   >
                     {r.receptor.nombre}
                   </button>

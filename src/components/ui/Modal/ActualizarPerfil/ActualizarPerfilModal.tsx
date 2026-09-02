@@ -188,29 +188,31 @@ export default function ActualizarPerfilModal({
         <div className="update-profile-modal" onClick={(e) => e.stopPropagation()}>
           <h2 className="update-profile-modal__title">{t("title")}</h2>
 
-          <PerfilForm
-            nombre={nombre}
-            apellido={apellido}
-            descripcion={descripcion}
-            onNombreChange={setNombre}
-            onApellidoChange={setApellido}
-            onDescripcionChange={setDescripcion}
-          />
-
-          <ListaContactos
-            contacts={contacts}
-            onAdd={addContact}
-            onRemove={removeContact}
-            onChange={updateContact}
-          />
-
-          <div className="update-profile-modal__foto">
-            <label className="update-profile-modal__label">{t("photoLabel")}</label>
-            <SubirImagen
-              onFileChange={handleFileChange}
-              previewUrl={previewUrl}
-              currentProfileImage={initialFoto}
+          <div className="update-profile-modal__body">
+            <PerfilForm
+              nombre={nombre}
+              apellido={apellido}
+              descripcion={descripcion}
+              onNombreChange={setNombre}
+              onApellidoChange={setApellido}
+              onDescripcionChange={setDescripcion}
             />
+
+            <ListaContactos
+              contacts={contacts}
+              onAdd={addContact}
+              onRemove={removeContact}
+              onChange={updateContact}
+            />
+
+            <div className="update-profile-modal__foto">
+              <label className="update-profile-modal__label">{t("photoLabel")}</label>
+              <SubirImagen
+                onFileChange={handleFileChange}
+                previewUrl={previewUrl}
+                currentProfileImage={initialFoto}
+              />
+            </div>
           </div>
 
           <div className="update-profile-modal__footer">
