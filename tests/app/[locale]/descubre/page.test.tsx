@@ -50,14 +50,13 @@ describe("descubre page", () => {
       limit: 12,
       sort: "fecha",
     });
-    expect(pageMocks.usePublicaciones).toHaveBeenCalledWith({ recommended: true });
+    expect(pageMocks.usePublicaciones).toHaveBeenCalledWith({ personalized: true });
 
     expect(pageMocks.publicacionesList).toHaveBeenCalledWith(
       expect.objectContaining({
         title: "title",
         currentPage: 1,
         itemsPerPage: 12,
-        showPersonalizedRecommendationsButton: true,
         Ads: [],
       })
     );

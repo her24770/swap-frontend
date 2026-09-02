@@ -83,7 +83,6 @@ describe("home page", () => {
         totalPublicaciones: 1,
         currentPage: 1,
         itemsPerPage: 12,
-        showPersonalizedRecommendationsButton: true,
         Ads: [{ id_anuncio: 1, titulo: "Anuncio" }],
       })
     );
