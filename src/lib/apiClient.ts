@@ -47,6 +47,34 @@ async function parseErrorBody(response: Response, fallback: string): Promise<{ m
   }
 }
 
+let cerrandoSesion = false;
+
+async function forzarCierreSesion(destino: "usuario" | "moderador"): Promise<void> {
+  if (cerrandoSesion || typeof window === "undefined") return;
+  cerrandoSesion = true;
+
+  // Limpia la cookie httpOnly en el servidor — antes solo se limpiaba el
+  // estado de Zustand en el navegador, dejando la cookie intacta (firma
+  // válida, versión de sesión vieja), lista para volver a fallar en la
+  // siguiente petición autenticada que se disparara en la página de destino.
+  // /api/auth/logout sirve para ambos tipos de cuenta: solo opera sobre la
+  // cookie swap-token, que es la misma para usuario y moderador — no existe
+  // (ni hace falta) un /api/moderador/logout aparte.
+  try {
+    await fetch(`${BASE_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+  } catch {
+    // si falla la llamada, igual seguimos limpiando el estado local y redirigiendo
+  }
+
+  if (destino === "moderador") {
+    useModeradorAuthStore.getState().logout();
+    window.location.href = "/moderacion/login";
+  } else {
+    useAuthStore.getState().logout();
+    window.location.href = "/login";
+  }
+}
+
 async function handleResponse<T>(
   response: Response,
   options: HandleResponseOptions = {}
@@ -58,16 +86,8 @@ async function handleResponse<T>(
       throw err;
     }
 
-    if (typeof window !== "undefined" && window.location.pathname.includes("/moderacion")) {
-      useModeradorAuthStore.getState().logout();
-      window.location.href = "/moderacion/login";
-    } else {
-      useAuthStore.getState().logout();
-
-      if (typeof window !== "undefined") {
-        window.location.href = "/login";
-      }
-    }
+    const esModeracion = typeof window !== "undefined" && window.location.pathname.includes("/moderacion");
+    void forzarCierreSesion(esModeracion ? "moderador" : "usuario");
 
     const err: ApiError = {
       status: 401,

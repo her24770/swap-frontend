@@ -89,3 +89,19 @@
   border-top: 1px solid var(--swap-primary-border-color);
   margin: 8px 0;
 }
+
+.settings-modal__button {
+  border: 1px solid var(--swap-primary-border-color);
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-family: var(--swap-font-textos);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.settings-modal__button:hover {
+  background-color: var(--swap-secondary-background);
+}
