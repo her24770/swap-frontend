@@ -33,11 +33,12 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
     setIsAtStart(sLeft <= tolerance);
     setIsAtEnd(sLeft + cWidth >= sWidth - tolerance);
 
-    // En el carrusel de anuncios, cada anuncio ocupa el 100% del contenedor
-    const step = cWidth || 1;
-    const maxActiveIndex = Math.max(0, Math.ceil((sWidth - cWidth) / step));
-    const calculatedDotsCount = maxActiveIndex + 1;
+    // En el carrusel de anuncios, cada anuncio ocupa el 100% del contenedor por lo que hay un punto por anuncio
+    const calculatedDotsCount = items.length;
     setDotsCount(calculatedDotsCount);
+
+    const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
+    const step = (cWidth || 1) + gap;
 
     const currentIndex = Math.min(
       calculatedDotsCount - 1,
@@ -69,11 +70,16 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
     };
   }, [children]);
 
+  const getStep = (track: HTMLDivElement) => {
+    const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
+    return track.clientWidth + gap;
+  };
+
   const scroll = (dir: "left" | "right") => {
     const track = trackRef.current;
     if (!track) return;
 
-    const step = track.clientWidth;
+    const step = getStep(track);
     const scrollAmount = dir === "right" ? step : -step;
     track.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
@@ -82,7 +88,7 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
     const track = trackRef.current;
     if (!track) return;
 
-    const step = track.clientWidth;
+    const step = getStep(track);
     track.scrollTo({
       left: index * step,
       behavior: "smooth",
