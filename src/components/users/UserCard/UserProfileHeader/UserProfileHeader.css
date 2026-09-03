@@ -218,6 +218,35 @@
   width: 100%;
   align-items: center;
 }
+
+.user-profile-header__tags-toggle-btn {
+  font-family: var(--swap-font-subtitulos);
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid var(--swap-primary-color);
+  background-color: transparent;
+  color: var(--swap-primary-color);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.user-profile-header__tags-toggle-btn:hover:not(:disabled) {
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color, #ffffff);
+}
+
+.user-profile-header__tags-toggle-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
 /* ── Contact ───────────────────────────────────────────────────────────────── */
 
 .user-profile-header__contact-block {

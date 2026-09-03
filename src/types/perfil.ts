@@ -1,4 +1,4 @@
-import type { Tag } from "./tag";
+import type { Tag, UserTag } from "./tag";
 import type { Contact } from "./comment";
 import type { UsuarioEtiquetaRel } from "../lib/tags";
 import type { Resena } from "./resena";
@@ -11,7 +11,7 @@ export interface UserProfileData {
   rating: number;
   totalReviews: number;
   contacts: Contact[];
-  tags?: Tag[];
+  tags?: UserTag[];
   paymentMethod?: string;
   calificacion?: number;
   totalResenas?: number;
