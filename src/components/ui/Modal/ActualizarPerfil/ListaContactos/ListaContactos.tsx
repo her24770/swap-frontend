@@ -1,12 +1,8 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import {X, Plus} from "lucide-react";
-import type { Contact } from "../../../../../types/comment";
+import { X, Plus, Check, ChevronDown } from "lucide-react";
 import "./ListaContactos.css";
-
-interface UserContactProps {
-    contacts: Contact[];
-}
 
 export interface Contacto {
   id: number;
@@ -19,6 +15,102 @@ interface ListaContactosProps {
   onAdd: () => void;
   onRemove: (id: number) => void;
   onChange: (id: number, field: "type" | "value", value: string) => void;
+}
+
+interface TipoContactoSelectProps {
+  value: string;
+  onSelect: (value: string) => void;
+}
+
+function TipoContactoSelect({ value, onSelect }: TipoContactoSelectProps) {
+  const t = useTranslations("updateProfileModal.contacts");
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  const handleSelect = (next: string) => {
+    setOpen(false);
+    if (next !== value) onSelect(next);
+  };
+
+  const labelFor = (type: string) => {
+    switch (type) {
+      case "telefono":
+        return t("types.phone");
+      case "whatsapp":
+        return t("types.whatsapp");
+      case "instagram":
+        return t("types.instagram");
+      case "correo_personal":
+        return t("types.email");
+      default:
+        return t("typePlaceholder");
+    }
+  };
+
+  const renderOption = (type: string) => {
+    const selected = type === value;
+    return (
+      <li key={type} role="option" aria-selected={selected}>
+        <button
+          type="button"
+          className={`lista-contactos__select-option${
+            selected ? " lista-contactos__select-option--selected" : ""
+          }`}
+          onClick={() => handleSelect(type)}
+        >
+          <span>{labelFor(type)}</span>
+          {selected && <Check size={14} className="lista-contactos__select-check" />}
+        </button>
+      </li>
+    );
+  };
+
+  return (
+    <div className="lista-contactos__select" ref={wrapperRef}>
+      <button
+        type="button"
+        className={`lista-contactos__select-trigger${open ? " lista-contactos__select-trigger--open" : ""}${
+          value ? "" : " lista-contactos__select-trigger--placeholder"
+        }`}
+        onClick={() => setOpen((prev) => !prev)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span className="lista-contactos__select-value">{labelFor(value)}</span>
+        <ChevronDown
+          size={15}
+          className={`lista-contactos__select-chevron${open ? " lista-contactos__select-chevron--open" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <ul className="lista-contactos__select-menu" role="listbox">
+          {renderOption("telefono")}
+          {renderOption("whatsapp")}
+          {renderOption("instagram")}
+          {renderOption("correo_personal")}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export default function ListaContactos({ contacts, onAdd, onRemove, onChange }: ListaContactosProps) {
@@ -41,17 +133,10 @@ export default function ListaContactos({ contacts, onAdd, onRemove, onChange }: 
 
       {contacts.map((contact) => (
         <div key={contact.id} className="lista-contactos__row">
-          <select
-            className="lista-contactos__select"
+          <TipoContactoSelect
             value={contact.type}
-            onChange={(e) => onChange(contact.id, "type", e.target.value)}
-          >
-            <option value="">{t("typePlaceholder")}</option>
-            <option value="telefono">{t("types.phone")}</option>
-            <option value="whatsapp">{t("types.whatsapp")}</option>
-            <option value="instagram">{t("types.instagram")}</option>
-            <option value="correo_personal">{t("types.email")}</option>
-          </select>
+            onSelect={(next) => onChange(contact.id, "type", next)}
+          />
           <input
             type="text"
             className="lista-contactos__input"
