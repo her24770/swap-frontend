@@ -22,8 +22,10 @@ import TagBadge from "../../TagBadge/TagBadge";
 import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
+import { usuarioService } from "../../../../services/usuarioService";
 import ModalSolicitudTutoria from "../Solicitud/Tutoria/SolicitudTutoriaModal"
 import ReporteModal from "../Reporte/ReporteModal";
+import JustificanteModeracionModal from "../Reporte/JustificanteModeracionModal";
 
 export type DetallePublicacionType = "venta" | "tutoria";
 
@@ -115,6 +117,8 @@ export default function DetallePublicacion({
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [solicitudTutoriaAbierta, setSolicitudTutoriaAbierta] = useState(false);
   const [reportePublicacionAbierto, setReportePublicacionAbierto] = useState(false);
+  const [advertenciaAbierta, setAdvertenciaAbierta] = useState(false);
+  const [enviandoAdvertencia, setEnviandoAdvertencia] = useState(false);
 
   if (!isOpen) return null;
 
@@ -149,14 +153,24 @@ export default function DetallePublicacion({
     }
   };
 
-  // TODO: conectar con el endpoint de moderacion cuando exista (aun no hay
-  // soporte en el backend para advertencias ni para eliminar publicaciones
-  // ajenas como moderador). Por ahora solo se deja el boton disponible.
-  const handleAdvertenciaModerador = () => {
-    agregarNotificacion({
-      tipo: "info",
-      mensaje: "Advertencias: función en desarrollo, aún no disponible.",
-    });
+  const handleAdvertenciaModerador = async (payload: { motivo: string; detalle: string }) => {
+    if (!sellerId) return;
+    try {
+      setEnviandoAdvertencia(true);
+      await usuarioService.crearAdvertencia(sellerId, {
+        motivo: payload.motivo,
+        detalle: payload.detalle || undefined,
+      });
+      agregarNotificacion({ tipo: "success", mensaje: "Advertencia enviada exitosamente." });
+      setAdvertenciaAbierta(false);
+    } catch (error) {
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: error instanceof Error ? error.message : "No fue posible enviar la advertencia.",
+      });
+    } finally {
+      setEnviandoAdvertencia(false);
+    }
   };
 
   const handleEliminarModerador = () => {
@@ -366,7 +380,8 @@ export default function DetallePublicacion({
                 <button
                   type="button"
                   className="button button--medium button--warning button--full-width"
-                  onClick={handleAdvertenciaModerador}
+                  onClick={() => setAdvertenciaAbierta(true)}
+                  disabled={!sellerId}
                 >
                   <AlertTriangle size={16} /> Advertencia
                 </button>
@@ -437,6 +452,15 @@ export default function DetallePublicacion({
         onClose={() => setReportePublicacionAbierto(false)}
       />
     )}
+    <JustificanteModeracionModal
+      isOpen={advertenciaAbierta}
+      tipoObjetivo="usuario"
+      titulo="Enviar advertencia"
+      pregunta="¿Por qué quieres advertir a este usuario?"
+      enviando={enviandoAdvertencia}
+      onClose={() => setAdvertenciaAbierta(false)}
+      onSubmit={handleAdvertenciaModerador}
+    />
     </>
   );
 
