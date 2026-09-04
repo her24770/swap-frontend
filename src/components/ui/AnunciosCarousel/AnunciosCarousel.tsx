@@ -7,9 +7,10 @@ import "./AnunciosCarousel.css";
 
 interface AnunciosCarouselProps {
   children: React.ReactNode;
+  autoPlayInterval?: number;
 }
 
-export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
+export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: AnunciosCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const items = React.Children.toArray(children);
 
@@ -17,6 +18,7 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [activeItemIndex, setActiveItemIndex] = useState(0);
   const [dotsCount, setDotsCount] = useState(0);
+  const autoPlayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Si no hay elementos, no renderizamos nada
   if (items.length === 0) return null;
@@ -75,16 +77,7 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
     return track.clientWidth + gap;
   };
 
-  const scroll = (dir: "left" | "right") => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const step = getStep(track);
-    const scrollAmount = dir === "right" ? step : -step;
-    track.scrollBy({ left: scrollAmount, behavior: "smooth" });
-  };
-
-  const handleDotClick = (index: number) => {
+  const scrollToIndex = (index: number) => {
     const track = trackRef.current;
     if (!track) return;
 
@@ -95,11 +88,79 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
     });
   };
 
+  const scroll = (dir: "left" | "right") => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const step = getStep(track);
+    const scrollAmount = dir === "right" ? step : -step;
+    track.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
+  const handleDotClick = (index: number) => {
+    scrollToIndex(index);
+  };
+
+  const restartAutoPlay = () => {
+    if (autoPlayTimerRef.current) {
+      clearInterval(autoPlayTimerRef.current);
+      autoPlayTimerRef.current = null;
+    }
+
+    if (!autoPlayInterval || items.length <= 1) return;
+
+    autoPlayTimerRef.current = setInterval(() => {
+      const track = trackRef.current;
+      if (!track) return;
+
+      const step = getStep(track);
+      const nextIndex = step > 0
+        ? Math.round(track.scrollLeft / step) + 1
+        : 1;
+
+      if (nextIndex >= items.length) {
+        scrollToIndex(0);
+      } else {
+        scrollToIndex(nextIndex);
+      }
+    }, autoPlayInterval);
+  };
+
+  useEffect(() => {
+    restartAutoPlay();
+    return () => {
+      if (autoPlayTimerRef.current) {
+        clearInterval(autoPlayTimerRef.current);
+        autoPlayTimerRef.current = null;
+      }
+    };
+  }, [items.length, autoPlayInterval]);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const handleUserInteraction = () => restartAutoPlay();
+
+    track.addEventListener("pointerdown", handleUserInteraction);
+    track.addEventListener("wheel", handleUserInteraction, { passive: true });
+    track.addEventListener("touchstart", handleUserInteraction, { passive: true });
+
+    return () => {
+      track.removeEventListener("pointerdown", handleUserInteraction);
+      track.removeEventListener("wheel", handleUserInteraction);
+      track.removeEventListener("touchstart", handleUserInteraction);
+    };
+  }, [items.length, autoPlayInterval]);
+
   return (
     <div className="a-carousel">
       <CarouselButton
         direction="left"
-        onClick={() => scroll("left")}
+        onClick={() => {
+          scroll("left");
+          restartAutoPlay();
+        }}
         disabled={isAtStart}
         ariaLabel="Anuncio anterior"
       />
@@ -114,7 +175,10 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
 
       <CarouselButton
         direction="right"
-        onClick={() => scroll("right")}
+        onClick={() => {
+          scroll("right");
+          restartAutoPlay();
+        }}
         disabled={isAtEnd}
         ariaLabel="Siguiente anuncio"
       />
@@ -122,7 +186,10 @@ export default function AnunciosCarousel({ children }: AnunciosCarouselProps) {
       <CarouselIndicator
         dotsCount={dotsCount}
         activeItemIndex={activeItemIndex}
-        onDotClick={handleDotClick}
+        onDotClick={(index) => {
+          handleDotClick(index);
+          restartAutoPlay();
+        }}
       />
     </div>
   );

@@ -137,3 +137,16 @@
   color: var(--swap-tertiary-text-color);
   margin: 0;
 }
+
+@media (max-width: 639px) {
+  .ad-banner--image {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .ad-banner__img {
+    object-fit: contain;
+    max-height: none;
+  }
+}
