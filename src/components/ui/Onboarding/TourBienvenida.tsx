@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Usuario } from "../../../types/usuario";
@@ -73,7 +73,14 @@ function computePosition(rect: DOMRect, placement: Placement, size: { width: num
 export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienvenidaProps) {
   const t = useTranslations("onboarding");
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const recienRegistrado = searchParams.get("registered") === "true";
+  // Fix MJ-01: antes la única forma de ver el tour de nuevo era borrar
+  // localStorage a mano — no había ninguna acción visible para el usuario.
+  // El botón "Reiniciar tutorial" (en Ajustes) limpia la marca guardada y
+  // navega a "/?tour=replay", que este query param detecta.
+  const quiereReiniciar = searchParams.get("tour") === "replay";
   const [active, setActive] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [rect, setRect] = useState<DOMRect | null>(null);
@@ -82,17 +89,23 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
 
   const step = STEPS[stepIndex];
 
-  // Solo se muestra cuando esta recien registrado
-  const puedeMostrarse = recienRegistrado || MOSTRAR_TAMBIEN_EN_LOGIN_PARA_PRUEBAS;
+  // Solo se muestra cuando esta recien registrado, o cuando el usuario pidió
+  // verlo de nuevo explícitamente desde Ajustes.
+  const puedeMostrarse = recienRegistrado || quiereReiniciar || MOSTRAR_TAMBIEN_EN_LOGIN_PARA_PRUEBAS;
 
   useEffect(() => {
     if (!usuario || !puedeMostrarse) return;
     try {
+      if (quiereReiniciar) {
+        // Reinicio explícito: ignora la marca de "ya visto" — para eso está el botón.
+        setActive(true);
+        return;
+      }
       const seen = window.localStorage.getItem(`${STORAGE_PREFIX}${usuario.id_usuario}`);
       if (!seen) setActive(true);
     } catch {
     }
-  }, [usuario, recienRegistrado]);
+  }, [usuario, recienRegistrado, quiereReiniciar]);
 
   useEffect(() => {
     if (!active) return;
@@ -153,6 +166,9 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
     }
     onSidebarNeedOpen(false);
     setActive(false);
+    if (quiereReiniciar) {
+      router.replace(pathname, { scroll: false });
+    }
   }
 
   function goNext() {
