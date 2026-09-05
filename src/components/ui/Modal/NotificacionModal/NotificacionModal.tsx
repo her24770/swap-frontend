@@ -19,8 +19,8 @@ interface NotificacionModalProps {
   onMarcarTodasLeidas?: () => void;
   onMarcarLeida?: (id: number) => void;
   onAbrirChat?: (id: number) => void;
-  onAceptarSolicitud?: (id: number) => void;
-  onRechazarSolicitud?: (id: number) => void;
+  onAceptarSolicitud?: (id: number) => Promise<void> | void;
+  onRechazarSolicitud?: (id: number) => Promise<void> | void;
 }
 
 type PanelPosition = {
