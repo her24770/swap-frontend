@@ -87,7 +87,7 @@ export const acuerdoService = {
     if (options.q?.trim()) params.set("q", options.q.trim());
 
     const response = await apiClient.get<AcuerdosHistorialResponse>(
-      `/api/acuerdo/user/${idUsuario}?${params.toString()}`
+      `/api/acuerdo/?${params.toString()}`
     );
 
     if (Array.isArray(response.data)) {

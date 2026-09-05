@@ -13,8 +13,7 @@
 }
 
 .layout__main {
-  display: flex;
-  flex-direction: column;
+  padding-bottom: 2rem;
   flex: 1;
   min-height: 0;
   background-color: var(--swap-primary-background);
