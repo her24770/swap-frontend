@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
@@ -194,32 +195,34 @@ export default function Certificaciones({
         </div>
       </div>
 
-      {canEdit && certModalOpen && (
-        <div
-          className="modal-overlay"
-          onClick={() => setCertModalOpen(false)}
-          role="presentation"
-        >
+      {canEdit && certModalOpen && typeof document !== "undefined" &&
+        createPortal(
           <div
-            className="perfil-page__crear-pub-modal"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Agregar certificación"
+            className="modal-overlay"
+            onClick={() => setCertModalOpen(false)}
+            role="presentation"
           >
-            <div className="perfil-page__crear-pub-modal-content">
-              <SubirCertForm
-                mode="crear"
-                onCancel={() => setCertModalOpen(false)}
-                onSuccess={() => {
-                  setCertModalOpen(false);
-                  onRefresh?.();
-                }}
-              />
+            <div
+              className="perfil-page__crear-pub-modal"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Agregar certificación"
+            >
+              <div className="perfil-page__crear-pub-modal-content">
+                <SubirCertForm
+                  mode="crear"
+                  onCancel={() => setCertModalOpen(false)}
+                  onSuccess={() => {
+                    setCertModalOpen(false);
+                    onRefresh?.();
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

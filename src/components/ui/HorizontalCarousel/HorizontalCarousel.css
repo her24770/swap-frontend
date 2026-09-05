@@ -38,6 +38,12 @@
 
 
 
+@media (max-width: 639px) {
+  .h-carousel__btn {
+    display: none;
+  }
+}
+
 @media (min-width: 640px) {
   .h-carousel {
     --h-carousel-arrow-offset: -1rem;
