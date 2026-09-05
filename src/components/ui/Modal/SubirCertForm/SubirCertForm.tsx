@@ -7,6 +7,7 @@ import { SquarePlus, FileText, CloudUpload, ChevronRight, X } from "lucide-react
 import { useTranslations } from "next-intl";
 import { schemaCertificacion, validateCertificacionPdf, type CertificacionFormData } from "../../../../schemas/zodSchemas";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
+import { useToast } from "../../../../hooks/useToast";
 import "../../../ui/Button/Button.css";
 import "../CrearPublicacionForm/CrearPublicacionForm.css";
 import "./SubirCertForm.css";
@@ -31,6 +32,7 @@ type SubirCertFormProps = CrearCertFormProps | EditarCertFormProps;
 
 export default function SubirCertForm(props: SubirCertFormProps) {
   const t = useTranslations("certificacionForm");
+  const toast = useToast();
   const { onSuccess, onCancel } = props;
   const isEditing = props.mode === "editar";
   const defaultValues = isEditing ? props.defaultValues : undefined;
@@ -61,6 +63,9 @@ export default function SubirCertForm(props: SubirCertFormProps) {
     },
   });
 
+  /**
+   * Valida en cliente el tipo y tamaño máximo (5MB) del archivo PDF seleccionado.
+   */
   const procesarArchivo = (file: File) => {
     const validationError = validateCertificacionPdf(file);
     if (validationError) {
@@ -72,12 +77,20 @@ export default function SubirCertForm(props: SubirCertFormProps) {
     setNombreArchivo(file.name);
   };
 
+  /**
+   * Limpia el PDF seleccionado en el formulario.
+   */
   const removerPdf = () => {
     setArchivoPdf(null);
     setNombreArchivo(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  /**
+   * Envía el formulario de certificación.
+   * En modo creación, la API responde 202 Accepted de inmediato indicando que entró a la cola
+   * de moderación/validación en background.
+   */
   const onSubmit = async (data: CertificacionFormData) => {
     if (!isEditing && !archivoPdf) {
       setErrorPdf(t("errors.pdfRequired"));
@@ -100,8 +113,16 @@ export default function SubirCertForm(props: SubirCertFormProps) {
         body: formData,
       });
 
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.message ?? `Error ${res.status}`);
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(json.message ?? json.error ?? `Error ${res.status}`);
+      }
+
+      // Notificar al usuario que la certificación se encuentra en proceso de validación en background
+      toast.info(
+        json.message ||
+          "Tu certificación se envió correctamente y está en proceso de revisión. Te avisaremos en un momento."
+      );
 
       reset();
       setArchivoPdf(null);

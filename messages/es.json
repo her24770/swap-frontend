@@ -933,7 +933,7 @@
 			"existingPdf": "PDF existente",
 			"uploadText": "Haz clic o arrastra un PDF para subir",
 			"uploadMaxReached": "Ya tienes un PDF seleccionado. Quítalo para subir otro.",
-			"uploadHint": "Solo archivos PDF (máx. 10MB)",
+			"uploadHint": "Solo archivos PDF (máx. 5MB)",
 			"removePdfAria": "Quitar archivo PDF"
 		},
 		"errors": {

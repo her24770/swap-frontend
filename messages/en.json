@@ -904,7 +904,7 @@
 			"existingPdf": "Existing PDF",
 			"uploadText": "Click or drag a PDF to upload",
 			"uploadMaxReached": "You already have a PDF selected. Remove it to upload another.",
-			"uploadHint": "PDF files only (max 10MB)",
+			"uploadHint": "PDF files only (max 5MB)",
 			"removePdfAria": "Remove PDF file"
 		},
 		"errors": {

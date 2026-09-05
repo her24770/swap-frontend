@@ -904,7 +904,7 @@
 			"existingPdf": "PDF existant",
 			"uploadText": "Cliquez ou glissez un PDF pour le téléverser",
 			"uploadMaxReached": "Vous avez déjà un PDF sélectionné. Supprimez-le pour en téléverser un autre.",
-			"uploadHint": "Fichiers PDF uniquement (max. 10 Mo)",
+			"uploadHint": "Fichiers PDF uniquement (max. 5 Mo)",
 			"removePdfAria": "Supprimer le fichier PDF"
 		},
 		"errors": {

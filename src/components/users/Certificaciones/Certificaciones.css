@@ -214,6 +214,13 @@
   min-width: 0;
 }
 
+.certificaciones__viewer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
 .certificaciones__btn-fullscreen {
   display: inline-flex;
   align-items: center;
@@ -225,7 +232,7 @@
   color: var(--swap-tertiary-text-color);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
-  margin-left: auto; /* Empuja el botón al extremo derecho */
+  text-decoration: none;
 }
 
 .certificaciones__btn-fullscreen:hover {

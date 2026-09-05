@@ -205,30 +205,35 @@ export const schemaEditarPerfil = z.object({
 
 // Certificacion
 
-const MAX_PDF_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_PDF_SIZE_BYTES = 5 * 1024 * 1024; // Límite de 5 MB según contrato de moderación
 const ACCEPTED_PDF_TYPE = "application/pdf";
 
 export const schemaCertificacion = z.object({
   nombre: z
     .string()
     .min(3, "El nombre debe tener al menos 3 caracteres.")
-    .max(100, "El nombre no puede superar los 100 caracteres."),
+    .max(100, "El nombre no puede superar 100 caracteres."),
+
   lugar_emision: z
-    .string({ required_error: "El lugar de emisión es obligatorio." })
+    .string()
     .min(3, "El lugar de emisión debe tener al menos 3 caracteres.")
-    .max(100, "El lugar de emisión no puede superar los 100 caracteres."),
+    .max(100, "El lugar de emisión no puede superar 100 caracteres."),
+
   id_etiqueta: z.coerce
     .number({ message: "La etiqueta es obligatoria." })
     .int("El ID de etiqueta debe ser un entero.")
     .positive("Debes seleccionar una etiqueta válida."),
 });
 
+/**
+ * Valida que el archivo cumpla con formato PDF y el tamaño máximo permitido (5MB).
+ */
 export function validateCertificacionPdf(file: File): string | null {
   if (file.type !== ACCEPTED_PDF_TYPE) {
     return "El archivo debe ser un PDF válido.";
   }
   if (file.size > MAX_PDF_SIZE_BYTES) {
-    return "El PDF no debe pesar más de 10MB.";
+    return "El PDF no debe pesar más de 5MB.";
   }
   return null;
 }
