@@ -12,8 +12,8 @@ import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
 import NotificacionModal from "../../ui/Modal/NotificacionModal/NotificacionModal";
 import type { NotificacionData } from "../../ui/Modal/NotificacionModal/Notificacion/Notificacion";
 import { notificacionService, mapNotificacion, type NotificacionApi } from "../../../services/notificacionService";
+import { useSolicitudesAcuerdo } from "../../../hooks/useSolicitudesAcuerdo";
 import { useSocket } from "../../../hooks/useSocket";
-import { MOCK_SOLICITUDES_TUTORIA } from "../../../mocks/solicitudesTutoria";
 import "./Navbar.css";
 
 interface NavbarProps {
@@ -37,8 +37,15 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [notificaciones, setNotificaciones] = useState<NotificacionData[]>([]);
   const socket = useSocket();
-  const [solicitudesTutoria, setSolicitudesTutoria] = useState(MOCK_SOLICITUDES_TUTORIA);
 
+  // Hook que encapsula la carga, sincronización en tiempo real y acciones de solicitudes
+  const {
+    solicitudes: solicitudesTutoria,
+    aceptarSolicitud: handleAceptarSolicitud,
+    rechazarSolicitud: handleRechazarSolicitud,
+  } = useSolicitudesAcuerdo({ isOpen: notifOpen });
+
+  // Carga notificaciones de mensajes cuando se abre el modal
   useEffect(() => {
     if (!notifOpen) return;
     notificacionService.getAll()
@@ -155,12 +162,8 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                 onDismiss={(id) =>
                   setNotificaciones((prev) => prev.filter((n) => n.id !== id))
                 }
-                onAceptarSolicitud={(id) =>
-                  setSolicitudesTutoria((prev) => prev.filter((solicitud) => solicitud.id !== id))
-                }
-                onRechazarSolicitud={(id) =>
-                  setSolicitudesTutoria((prev) => prev.filter((solicitud) => solicitud.id !== id))
-                }
+                onAceptarSolicitud={handleAceptarSolicitud}
+                onRechazarSolicitud={handleRechazarSolicitud}
                 onMarcarLeida={(id) => {
                   setNotificaciones((prev) =>
                     prev.map((n) => (n.id === id ? { ...n, leida: true } : n)),

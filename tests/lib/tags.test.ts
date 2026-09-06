@@ -29,6 +29,17 @@ describe("tags helpers", () => {
         { etiqueta: { id_etiqueta: 3, nombre: "Negocio", id_etiqueta_padre: null } },
       ])
     ).toEqual([{ id: 3, name: "Negocio", parentId: null }]);
+
+    expect(
+      mapUsuarioEtiquetasToTags([
+        {
+          id_usuario: 2,
+          id_etiqueta: 2,
+          peso: 5,
+          etiqueta: { id_etiqueta: 2, nombre: "Biologia", id_etiqueta_padre: null },
+        },
+      ])
+    ).toEqual([{ id: 2, name: "Biologia", parentId: null, peso: 5 }]);
   });
 
   it("uses a fallback tag when a publicacion has no etiquetas", () => {

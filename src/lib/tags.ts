@@ -1,4 +1,4 @@
-import type { Tag } from "../types/tag";
+import type { Tag, UserTag } from "../types/tag";
 
 // Tags por tipo de publicación (para Materiales, Negocios, Tutorías, Home)
 export const TAG_MATERIAL: Tag = { id: 1, name: "Material", parentId: null };
@@ -21,6 +21,7 @@ export interface EtiquetaApi {
 export interface UsuarioEtiquetaRel {
   id_usuario?: number;
   id_etiqueta?: number;
+  peso?: number;
   etiqueta: EtiquetaApi;
 }
 
@@ -40,8 +41,11 @@ export function mapEtiquetaToTag(etiqueta: EtiquetaApi): Tag {
   };
 }
 
-export function mapUsuarioEtiquetasToTags(relations: UsuarioEtiquetaRel[] = []): Tag[] {
-  return relations.map((rel) => mapEtiquetaToTag(rel.etiqueta));
+export function mapUsuarioEtiquetasToTags(relations: UsuarioEtiquetaRel[] = []): UserTag[] {
+  return relations.map((rel) => ({
+    ...mapEtiquetaToTag(rel.etiqueta),
+    ...(rel.peso !== undefined ? { peso: rel.peso } : {}),
+  }));
 }
 
 export function mapPublicacionEtiquetasToTags(

@@ -1,10 +1,13 @@
 import { apiClient } from "../lib/apiClient";
+import { conversacionService } from "./conversacionService";
+import { formatDateTime } from "../utils/date";
 import type {
   AcuerdosHistorialResult,
   AcuerdosHistorialResponse,
   TipoHistorialAcuerdo,
   AcuerdoHistorial,
 } from "../types/acuerdo";
+import type { SolicitudTutoriaNotificacion } from "../components/ui/Modal/NotificacionModal/Solicitud/Tutoria/TutoriaNotificacion";
 
 interface HistorialUsuarioOptions {
   page?: number;
@@ -48,6 +51,30 @@ interface AcuerdoRespuesta {
   };
 }
 
+/**
+ * Mapea un objeto de Acuerdo del backend al formato requerido por la tarjeta visual de notificación.
+ */
+export function mapAcuerdoToSolicitud(acuerdo: AcuerdoHistorial): SolicitudTutoriaNotificacion {
+  const { fecha, hora } = formatDateTime(acuerdo.fecha_entrega);
+  const tipoPerfil = acuerdo.publicacion?.tipoPerfil?.tipo_perfil;
+  const alumno = acuerdo.publicacion?.usuario?.nombre ?? "Usuario";
+  const avatarUrl = acuerdo.publicacion?.usuario?.url_foto_perfil ?? null;
+  const tutoria = acuerdo.publicacion?.titulo ?? "";
+
+  return {
+    id: acuerdo.id_acuerdo,
+    alumno,
+    tutoria,
+    fecha,
+    hora,
+    lugar: acuerdo.lugar_entrega || "Lugar a convenir",
+    tema: acuerdo.observaciones || "Sin observaciones",
+    avatarUrl,
+    tipoPerfil,
+    id_conversacion: acuerdo.id_conversacion,
+  };
+}
+
 export const acuerdoService = {
   async getHistorialUsuario(
     idUsuario: number,
@@ -83,6 +110,37 @@ export const acuerdoService = {
       `/api/acuerdo/conversacion/${idConversacion}`
     );
     return response.data;
+  },
+
+  /*
+      Consulta todas las solicitudes de acuerdos pendientes que ha recibido el usuario autenticado.
+  */
+  async getSolicitudesPendientesUsuario(idUsuarioActual?: number): Promise<SolicitudTutoriaNotificacion[]> {
+    try {
+      const conversaciones = await conversacionService.listar();
+      if (!conversaciones || conversaciones.length === 0) return [];
+
+      const resultados = await Promise.allSettled(
+        conversaciones.map((c) => acuerdoService.getPorConversacion(c.id_conversacion))
+      );
+
+      const acuerdosPendientes: AcuerdoHistorial[] = [];
+      resultados.forEach((res) => {
+        if (res.status === "fulfilled" && Array.isArray(res.value)) {
+          const pendientes = res.value.filter((a) => {
+            const esPendiente = a.estadoRel?.estado === "pendiente";
+            // Solo considerar como notificación entrante si no fue el usuario actual quien la creó
+            const esEntrante = idUsuarioActual ? a.id_ofertante !== idUsuarioActual : true;
+            return esPendiente && esEntrante;
+          });
+          acuerdosPendientes.push(...pendientes);
+        }
+      });
+
+      return acuerdosPendientes.map(mapAcuerdoToSolicitud);
+    } catch {
+      return [];
+    }
   },
 
   /*

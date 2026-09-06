@@ -1,10 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 import AcuerdoBanner from "../../../../src/components/Chat/ChatPrincipal/AcuerdoBanner/AcuerdoBanner";
+import { formatDateTime } from "../../../../src/utils/date";
 import { render, screen } from "../../../utils/render";
 
 describe("AcuerdoBanner", () => {
   it("IT-23: muestra el recordatorio completo cuando hay un acuerdo activo", () => {
     const onDetalles = vi.fn();
+    const fechaEntrega = "2026-09-15 10:00";
+    const { fecha, hora } = formatDateTime(fechaEntrega);
 
     render(
       <AcuerdoBanner
@@ -16,7 +19,7 @@ describe("AcuerdoBanner", () => {
           id_conversacion: 10,
           estado: 1,
           estadoRel: { id_estado: 1, estado: "activo" },
-          fecha_entrega: "2026-09-15 10:00",
+          fecha_entrega: fechaEntrega,
           lugar_entrega: "Biblioteca",
           observaciones: "Entregar material",
           publicacion: {
@@ -39,6 +42,7 @@ describe("AcuerdoBanner", () => {
     expect(screen.getByText("nextAgreement")).toBeInTheDocument();
     expect(screen.getByText("Libro de cálculo")).toBeInTheDocument();
     expect(screen.getByText(/Biblioteca/)).toBeInTheDocument();
-    expect(screen.getByText(/2026-09-15 10:00/)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`${fecha}\\s+${hora}`))).toBeInTheDocument();
   });
 });
+

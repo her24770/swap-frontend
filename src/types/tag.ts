@@ -4,3 +4,7 @@ export interface Tag {
   /** id_etiqueta del padre en BD; null/undefined = etiqueta padre */
   parentId?: number | null;
 }
+
+export interface UserTag extends Tag {
+  peso?: number;
+}

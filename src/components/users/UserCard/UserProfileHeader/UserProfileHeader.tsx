@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
-import { Pencil, CreditCard, FileText, Camera, Loader2 } from "lucide-react";
+import { Pencil, CreditCard, FileText, Camera, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
@@ -12,7 +12,7 @@ import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
-import type { Tag } from "../../../../types/tag";
+import type { Tag, UserTag } from "../../../../types/tag";
 import type { Certificacion } from "../../../../types/certificacion";
 import { useToast } from "../../../../hooks/useToast";
 import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
@@ -37,7 +37,8 @@ export default function UserProfileHeader({
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
-  const [displayTags, setDisplayTags] = useState<Tag[]>(user.tags ?? []);
+  const [displayTags, setDisplayTags] = useState<UserTag[]>(user.tags ?? []);
+  const [showAllTags, setShowAllTags] = useState(false);
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
   const [showCerts, setShowCerts] = useState(false);
   const toast = useToast();
@@ -100,6 +101,18 @@ export default function UserProfileHeader({
     setDisplayTags(user.tags ?? []);
   }, [user.tags]);
 
+  const sortedTags = useMemo(() => {
+    return [...displayTags].sort((a, b) => {
+      const pesoA = a.peso ?? 0;
+      const pesoB = b.peso ?? 0;
+      return pesoB - pesoA;
+    });
+  }, [displayTags]);
+
+  const tagsToShow = useMemo(() => {
+    if (showAllTags) return sortedTags;
+    return sortedTags.slice(0, 5);
+  }, [sortedTags, showAllTags]);
 
   const initialModalContacts = useMemo(
     () =>
@@ -249,11 +262,22 @@ export default function UserProfileHeader({
         </div>
 
         <div className="user-profile-header__side-col">
-          {displayTags.length > 0 && (
+          {sortedTags.length > 0 && (
             <div className="user-profile-header__tags">
-              {displayTags.map((tag) => (
+              {tagsToShow.map((tag) => (
                 <TagBadge key={tag.id} tag={tag} size="lg" />
               ))}
+              {sortedTags.length > 5 && (
+                <button
+                  type="button"
+                  className="user-profile-header__tags-toggle-btn"
+                  onClick={() => setShowAllTags((prev) => !prev)}
+                  aria-expanded={showAllTags}
+                >
+                  <span>{showAllTags ? "Ver menos" : `Ver más (+${sortedTags.length - 5})`}</span>
+                  {showAllTags ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+              )}
             </div>
           )}
           <div className="user-profile-header__contact-block">
