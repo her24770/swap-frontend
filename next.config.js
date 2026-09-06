@@ -37,6 +37,7 @@ const nextConfig = {
                             "style-src 'self' 'unsafe-inline'",
                             `img-src 'self' data: https: blob:`,
                             `connect-src 'self' ${apiUrl} ${socketUrl} wss: https:`,
+                            `frame-src 'self' ${apiUrl} https://*.r2.dev blob: data:`,
                             "frame-ancestors 'none'",
                             "base-uri 'self'",
                             "form-action 'self'",

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2 } from "lucide-react";
+import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
 import type { Certificacion } from "../../../types/certificacion";
@@ -157,14 +157,25 @@ export default function Certificaciones({
                   </div>
 
                   {selected.ruta_pdf && (
-                    <button
-                      type="button"
-                      className="certificaciones__btn-fullscreen"
-                      onClick={toggleFullscreen}
-                      title={isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}
-                    >
-                      {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-                    </button>
+                    <div className="certificaciones__viewer-actions">
+                      <a
+                        href={selected.ruta_pdf}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="certificaciones__btn-fullscreen"
+                        title="Abrir PDF en pestaña nueva"
+                      >
+                        <ExternalLink size={16} />
+                      </a>
+                      <button
+                        type="button"
+                        className="certificaciones__btn-fullscreen"
+                        onClick={toggleFullscreen}
+                        title={isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}
+                      >
+                        {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                      </button>
+                    </div>
                   )}
                 </div>
 

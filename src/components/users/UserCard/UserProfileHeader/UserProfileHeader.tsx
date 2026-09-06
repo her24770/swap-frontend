@@ -15,6 +15,8 @@ import type { UserProfileData, UserProfileEditData } from "../../../../types/per
 import type { Tag, UserTag } from "../../../../types/tag";
 import type { Certificacion } from "../../../../types/certificacion";
 import { useToast } from "../../../../hooks/useToast";
+import { useSocket } from "../../../../hooks/useSocket";
+import type { NotificacionApi } from "../../../../services/notificacionService";
 import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
 import { useUIStore } from "../../../../store/uiStore";
 import { contactosToUpsertBody, reemplazarContactosUsuario } from "../../../../lib/contactosUsuario";
@@ -42,6 +44,7 @@ export default function UserProfileHeader({
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
   const [showCerts, setShowCerts] = useState(false);
   const toast = useToast();
+  const socket = useSocket();
   const { canEditProfile } = usePerspectivaInterna();
   const { mostrarConfirm } = useUIStore();
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -83,6 +86,9 @@ export default function UserProfileHeader({
     });
   };
 
+  /**
+   * Consulta las certificaciones asociadas al usuario desde la API.
+   */
   const fetchCertificaciones = useCallback(async () => {
     if (!user.id_usuario) return;
     try {
@@ -96,6 +102,27 @@ export default function UserProfileHeader({
   useEffect(() => {
     fetchCertificaciones();
   }, [fetchCertificaciones]);
+
+  /**
+   * Escucha eventos de WebSocket ("notificacion:nueva").
+   * Cuando el worker en segundo plano aprueba una certificación,
+   * se refresca automáticamente la lista de certificaciones en tiempo real.
+   */
+  useEffect(() => {
+    function alRecibirNotificacion(notificacion: NotificacionApi) {
+      if (
+        notificacion?.mensaje &&
+        notificacion.mensaje.includes("ha sido validada y aprobada exitosamente")
+      ) {
+        void fetchCertificaciones();
+      }
+    }
+
+    socket.on("notificacion:nueva", alRecibirNotificacion);
+    return () => {
+      socket.off("notificacion:nueva", alRecibirNotificacion);
+    };
+  }, [socket, fetchCertificaciones]);
 
   useEffect(() => {
     setDisplayTags(user.tags ?? []);
