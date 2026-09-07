@@ -269,10 +269,11 @@
 	},
 	"login": {
 		"title": "Sign in",
-		"subtitle": "New here? Enter your credentials to sign in.",
+		"subtitle": "Enter your credentials if you already have an account.",
 		"emailLabel": "Email",
 		"emailPlaceholder": "example@uvg.edu.gt",
 		"passwordLabel": "Password",
+		"passwordPlaceholder": "Enter your password",
 		"forgotPassword": "Forgot my password",
 		"togglePasswordAria": "Show or hide password",
 		"submit": "Continue",
@@ -292,6 +293,7 @@
 		"validation": {
 			"emailRequired": "Email is required",
 			"emailInvalid": "Invalid email",
+			"emailInstitutional": "Use your institutional email @uvg.edu.gt",
 			"passwordRequired": "Password is required",
 			"passwordMin": "Minimum 6 characters"
 		}
@@ -301,8 +303,9 @@
 			"title": "Moderation Panel",
 			"subtitle": "Enter your moderator credentials.",
 			"usuarioLabel": "Username",
-			"usuarioPlaceholder": "moderator.username",
+			"usuarioPlaceholder": "Enter your username",
 			"passwordLabel": "Password",
+			"passwordPlaceholder": "Enter your password",
 			"togglePasswordAria": "Show or hide password",
 			"submit": "Sign in",
 			"submitting": "Signing in...",
@@ -553,7 +556,8 @@
 			"errorFallback": "Couldn't complete password recovery"
 		},
 		"validation": {
-			"passwordMismatch": "Passwords do not match."
+			"passwordMismatch": "Passwords do not match.",
+			"emailInstitutional": "Use your institutional email @uvg.edu.gt"
 		}
 	},
 	"registro": {
