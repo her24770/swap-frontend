@@ -1,4 +1,5 @@
 import { ChevronRight, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ReporteAccionesProps {
   puedeEnviar: boolean;
@@ -11,12 +12,15 @@ export default function ReporteAcciones({
   puedeEnviar,
   enviando,
   onCancelar,
-  textoEnviar = "Enviar",
+  textoEnviar,
 }: ReporteAccionesProps) {
+  const t = useTranslations("reporte.acciones");
+  const enviar = textoEnviar ?? t("enviar");
+
   return (
     <div className="reporte-modal__acciones">
       <button type="button" className="reporte-modal__btn reporte-modal__btn--ghost" onClick={onCancelar}>
-        Cancelar
+        {t("cancelar")}
       </button>
       <button
         type="submit"
@@ -27,7 +31,7 @@ export default function ReporteAcciones({
           <Loader2 size={14} className="reporte-modal__spinner" />
         ) : (
           <>
-            {textoEnviar}
+            {enviar}
             <ChevronRight size={14} />
           </>
         )}

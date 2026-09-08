@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaAnuncio, AnuncioInput } from "../../../../schemas/schemaAnuncios";
@@ -12,6 +13,7 @@ interface CrearAnuncioFormProps {
 }
 
 export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: CrearAnuncioFormProps) {
+    const t = useTranslations("anuncioForm");
     const isEditMode = !!anuncio; // Determina si es creación o edición
     
     const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
@@ -38,11 +40,11 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
 
     const procesarArchivo = (file: File) => {
         if (!file.type.startsWith("image/")) {
-            setErrorImagen("El archivo debe ser una imagen válida (PNG, JPG, WEBP).");
+            setErrorImagen(t("errors.invalidType"));
             return;
         }
         if (file.size > 5 * 1024 * 1024) {
-            setErrorImagen("La imagen no debe pesar más de 5MB.");
+            setErrorImagen(t("errors.tooLarge"));
             return;
         }
 
@@ -91,7 +93,7 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
     const onSubmit = async (data: AnuncioInput) => {
         // Al editar, subir una nueva imagen es opcional (mantiene la anterior si no se sube nada)
         if (!isEditMode && !archivoImagen) {
-            setErrorImagen("La imagen del anuncio es obligatoria para publicar.");
+            setErrorImagen(t("errors.imageRequired"));
             return;
         }
 
@@ -122,7 +124,7 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
             
             if (onAnuncioProcesado) onAnuncioProcesado();
         } catch (error: any) {
-            setErrorServidor(error.message || "Hubo un problema al procesar la solicitud con el servidor.");
+            setErrorServidor(error.message || t("errors.server"));
         } finally {
             setCargando(false);
         }
@@ -137,17 +139,17 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
                     </svg>
                 </div>
                 <h2 className="crear-publicacion__title">
-                    {isEditMode ? "Editar anuncio" : "Crear nuevo anuncio"}
+                    {isEditMode ? t("titleEdit") : t("titleCreate")}
                 </h2>
             </header>
 
             <form onSubmit={handleSubmit(onSubmit)} className="crear-publicacion__fields">
                 {/* Campo Título */}
                 <div className="crear-publicacion__field">
-                    <label className="crear-publicacion__label">Título del anuncio</label>
+                    <label className="crear-publicacion__label">{t("fields.titulo")}</label>
                     <input
                         type="text"
-                        placeholder="¿Qué artículo deseas anunciar?"
+                        placeholder={t("fields.tituloPlaceholder")}
                         {...register("titulo")}
                         className={`crear-publicacion__input ${errors.titulo ? "crear-publicacion__input--error" : ""}`}
                     />
@@ -156,9 +158,9 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
 
                 {/* Campo Descripción */}
                 <div className="crear-publicacion__field">
-                    <label className="crear-publicacion__label">Descripción</label>
+                    <label className="crear-publicacion__label">{t("fields.descripcion")}</label>
                     <textarea
-                        placeholder="Detalla el estado de tu artículo, qué buscas a cambio, disponibilidad, etc..."
+                        placeholder={t("fields.descripcionPlaceholder")}
                         {...register("descripcion")}
                         className={`crear-publicacion__textarea ${errors.descripcion ? "crear-publicacion__textarea--error" : ""}`}
                     />
@@ -167,7 +169,7 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
 
                 {/* Zona de Carga de Imagen */}
                 <div className="crear-publicacion__field">
-                    <label className="crear-publicacion__label">Foto del artículo</label>
+                    <label className="crear-publicacion__label">{t("fields.foto")}</label>
                     
                     <input
                         type="file"
@@ -192,10 +194,10 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
                             </svg>
                         </div>
                         <p className="crear-publicacion__upload-text">
-                            Arrastra una imagen o haz clic para buscar
+                            {t("fields.uploadText")}
                         </p>
                         <p className="crear-publicacion__upload-hint">
-                            Formatos aceptados: PNG, JPG o WEBP (Máx. 5MB)
+                            {t("fields.uploadHint")}
                         </p>
                     </div>
 
@@ -207,14 +209,14 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
                             <div className="crear-publicacion__preview-item">
                                 <img
                                     src={vistaPreviaUrl}
-                                    alt="Vista previa del artículo"
+                                    alt={t("fields.previewAlt")}
                                     className="crear-publicacion__preview-img"
                                 />
                                 <button
                                     type="button"
                                     onClick={removerImagen}
                                     className="crear-publicacion__preview-remove"
-                                    title="Eliminar imagen"
+                                    title={t("fields.removeImageAria")}
                                 >
                                     ✕
                                 </button>
@@ -237,14 +239,14 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
                         disabled={cargando}
                         className="crear-publicacion__btn-cancel"
                     >
-                        Cancelar
+                        {t("actions.cancel")}
                     </button>
                     <button
                         type="submit"
                         disabled={cargando}
                         className="crear-publicacion__btn-submit"
                     >
-                        {cargando ? "Procesando..." : isEditMode ? "Guardar cambios" : "Publicar Anuncio"}
+                        {cargando ? t("actions.processing") : isEditMode ? t("actions.submitEdit") : t("actions.submitCreate")}
                     </button>
                 </footer>
             </form>

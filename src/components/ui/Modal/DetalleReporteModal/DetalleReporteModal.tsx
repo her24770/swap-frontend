@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { X, UserCircle2, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -61,9 +62,13 @@ const ESTADO_CLASS: Record<string, string> = {
 export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto, onVerPublicacion }: DetalleReporteModalProps) {
   const router = useRouter();
   const toast = useToast();
+  const t = useTranslations("moderacion.reportes");
+  const tDet = useTranslations("moderacion.reportes.detalle");
+  const locale = useLocale();
   const r = reporte;
-  const tipo = r.publicacion ? "Publicación" : r.mensaje ? "Mensaje" : "Usuario";
+  const tipoKey = r.publicacion ? "publicacion" : r.mensaje ? "mensaje" : "usuario";
   const estadoKey = r.estadoRel.estado.toLowerCase();
+  const estadoLabel = t.has(`estados.${estadoKey}`) ? t(`estados.${estadoKey}`) : r.estadoRel.estado;
   const [publicacionAbierta, setPublicacionAbierta] = useState(false);
   const [publicacionData, setPublicacionData] = useState<PublicacionDetalle | null>(null);
   const [cargandoPublicacion, setCargandoPublicacion] = useState(false);
@@ -84,7 +89,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
       const data = await onVerPublicacion(r.publicacion.id_publicacion);
       setPublicacionData(data);
     } catch (error: any) {
-      toast.error(error?.message ?? "No fue posible cargar la publicación.", "Error");
+      toast.error(error?.message ?? tDet("toastPublicacionError"), t("errorGenerico"));
       setPublicacionAbierta(false);
     } finally {
       setCargandoPublicacion(false);
@@ -104,9 +109,9 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
 
         <div className="detalle-reporte-modal__header">
           <h2 className="detalle-reporte-modal__title">
-            Reporte #{String(r.id_reporte).padStart(6, "0")}
+            {tDet("titulo", { id: String(r.id_reporte).padStart(6, "0") })}
           </h2>
-          <button type="button" className="detalle-reporte-modal__close" onClick={onClose} aria-label="Cerrar">
+          <button type="button" className="detalle-reporte-modal__close" onClick={onClose} aria-label={tDet("cerrarAria")}>
             <X size={18} />
           </button>
         </div>
@@ -116,24 +121,24 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
 
           <div className="detalle-reporte-modal__grid">
             <div className="detalle-reporte-modal__field">
-              <span className="detalle-reporte-modal__label">Tipo</span>
-              <span className="detalle-reporte-modal__val">{tipo}</span>
+              <span className="detalle-reporte-modal__label">{tDet("labels.tipo")}</span>
+              <span className="detalle-reporte-modal__val">{t(`tipos.${tipoKey}`)}</span>
             </div>
             <div className="detalle-reporte-modal__field">
-              <span className="detalle-reporte-modal__label">Fecha</span>
+              <span className="detalle-reporte-modal__label">{tDet("labels.fecha")}</span>
               <span className="detalle-reporte-modal__val">
-                {new Date(r.fecha).toLocaleDateString("es", { day: "2-digit", month: "short", year: "numeric" })}
+                {new Date(r.fecha).toLocaleDateString(locale, { day: "2-digit", month: "short", year: "numeric" })}
               </span>
             </div>
             <div className="detalle-reporte-modal__field">
-              <span className="detalle-reporte-modal__label">Estado</span>
+              <span className="detalle-reporte-modal__label">{tDet("labels.estado")}</span>
               <span className={`tabla-reportes__estado ${ESTADO_CLASS[estadoKey] ?? ""}`}>
-                {r.estadoRel.estado}
+                {estadoLabel}
               </span>
             </div>
             {r.moderador && (
               <div className="detalle-reporte-modal__field">
-                <span className="detalle-reporte-modal__label">Moderador</span>
+                <span className="detalle-reporte-modal__label">{tDet("labels.moderador")}</span>
                 <span className="detalle-reporte-modal__val">{r.moderador.usuario.nombre}</span>
               </div>
             )}
@@ -143,11 +148,11 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
 
           {/* Motivo y observaciones */}
           <div className="detalle-reporte-modal__field">
-            <span className="detalle-reporte-modal__label">Motivo</span>
+            <span className="detalle-reporte-modal__label">{tDet("labels.motivo")}</span>
             <span className="detalle-reporte-modal__val">{r.motivoRel.motivo}</span>
           </div>
           <div className="detalle-reporte-modal__field">
-            <span className="detalle-reporte-modal__label">Observaciones</span>
+            <span className="detalle-reporte-modal__label">{tDet("labels.observaciones")}</span>
             <p className="detalle-reporte-modal__obs">{r.observaciones}</p>
           </div>
 
@@ -155,7 +160,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
           {r.mensaje && (
             <div className="detalle-reporte-modal__field">
               <span className="detalle-reporte-modal__label">
-                Mensaje reportado
+                {tDet("labels.mensajeReportado")}
               </span>
 
               <div className="detalle-reporte-modal__mensaje">
@@ -169,7 +174,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
           {/* Publicación vinculada */}
           {r.publicacion && (
             <div className="detalle-reporte-modal__field">
-              <span className="detalle-reporte-modal__label">Publicación vinculada</span>
+              <span className="detalle-reporte-modal__label">{tDet("labels.publicacionVinculada")}</span>
               <div className="detalle-reporte-modal__publicacion-row">
                 <span className="detalle-reporte-modal__val">{r.publicacion.titulo}</span>
                 <button
@@ -178,7 +183,11 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                   onClick={handleTogglePublicacion}
                   disabled={cargandoPublicacion}
                 >
-                  {cargandoPublicacion ? "Cargando…" : mostrarPanelPublicacion ? "Ocultar publicación" : "Ver publicación"}
+                  {cargandoPublicacion
+                    ? tDet("cargando")
+                    : mostrarPanelPublicacion
+                    ? tDet("ocultarPublicacion")
+                    : tDet("verPublicacion")}
                 </button>
               </div>
             </div>
@@ -189,7 +198,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
           {/* Usuarios */}
           <div className="detalle-reporte-modal__grid">
             <div className="detalle-reporte-modal__field">
-              <span className="detalle-reporte-modal__label">Reportó</span>
+              <span className="detalle-reporte-modal__label">{tDet("labels.reporto")}</span>
               <div className="tabla-reportes__user-cell" style={{ marginTop: "0.375rem" }}>
                 <div className="tabla-reportes__avatar">
                   <span>{initials(r.emisor.nombre)}</span>
@@ -207,7 +216,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
               </div>
             </div>
             <div className="detalle-reporte-modal__field">
-              <span className="detalle-reporte-modal__label">Reportado</span>
+              <span className="detalle-reporte-modal__label">{tDet("labels.reportado")}</span>
               <div className="tabla-reportes__user-cell" style={{ marginTop: "0.375rem" }}>
                 <div className="tabla-reportes__avatar">
                   <span>{initials(r.receptor.nombre)}</span>
@@ -231,11 +240,11 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
             <>
               <hr className="detalle-reporte-modal__divider" />
               <div className="detalle-reporte-modal__field">
-                <span className="detalle-reporte-modal__label">Evidencia</span>
+                <span className="detalle-reporte-modal__label">{tDet("labels.evidencia")}</span>
                 <div className="detalle-reporte-modal__evidencias">
                   {evidencias.map((url, index) => (
                     <div key={`${url}-${index}`} className="detalle-reporte-modal__img-wrap">
-                      <Image src={url} alt={`Evidencia ${index + 1}`} fill style={{ objectFit: "cover" }} unoptimized />
+                      <Image src={url} alt={tDet("evidenciaAlt", { n: index + 1 })} fill style={{ objectFit: "cover" }} unoptimized />
                     </div>
                   ))}
                 </div>
@@ -247,12 +256,12 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
         {mostrarPanelPublicacion && r.publicacion && (
           <div className="detalle-reporte-modal__publicacion-panel">
             <div className="detalle-reporte-modal__publicacion-panel-header">
-              <h3 className="detalle-reporte-modal__publicacion-panel-title">Publicación</h3>
+              <h3 className="detalle-reporte-modal__publicacion-panel-title">{tDet("panelTitulo")}</h3>
               <button
                 type="button"
                 className="detalle-reporte-modal__publicacion-panel-close"
                 onClick={() => setPublicacionAbierta(false)}
-                aria-label="Cerrar publicación"
+                aria-label={tDet("panelCerrarAria")}
               >
                 <X size={16} />
               </button>
@@ -326,7 +335,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                   <p className="post-modal__description">{publicacionData.descripcion}</p>
 
                   <div className="post-modal__likes">
-                    <span className="post-modal__likes-count">{publicacionData.me_gusta} me gusta</span>
+                    <span className="post-modal__likes-count">{tDet("meGusta", { count: publicacionData.me_gusta })}</span>
                   </div>
                 </div>
               )}
@@ -337,11 +346,11 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
 
         <div className="detalle-reporte-modal__footer">
           <button type="button" className="detalle-reporte-modal__btn-cancel" onClick={onClose}>
-            Cerrar
+            {tDet("cerrar")}
           </button>
           {onMarcarResuelto && r.estadoRel.estado.toLowerCase() === "pendiente" && (
             <button type="button" className="button button--medium" onClick={onMarcarResuelto}>
-              Marcar resuelto
+              {tDet("marcarResuelto")}
             </button>
           )}
         </div>

@@ -107,6 +107,7 @@ export default function DetallePublicacion({
 }: PostModalProps) {
   const t = useTranslations("posts");
   const tSend = useTranslations("sendMessageModal");
+  const tReporte = useTranslations("reporte");
   const locale = useLocale();
   const router = useRouter();
   const guardados = useGuardados();
@@ -344,7 +345,7 @@ export default function DetallePublicacion({
                       type="button"
                       className="post-modal__report"
                       onClick={() => setReportePublicacionAbierto(true)}
-                      aria-label="Reportar publicación"
+                      aria-label={tReporte("moderador.reportarPublicacionAria")}
                     >
                       <Flag size={18} />
                     </button>
@@ -374,7 +375,7 @@ export default function DetallePublicacion({
                     className="button button--medium button--secondary button--full-width"
                     onClick={() => setReportePublicacionAbierto(true)}
                   >
-                    <Flag size={16} /> Reportar
+                    <Flag size={16} /> {tReporte("moderador.reportar")}
                   </button>
                 )}
                 <button
@@ -383,14 +384,14 @@ export default function DetallePublicacion({
                   onClick={() => setAdvertenciaAbierta(true)}
                   disabled={!sellerId}
                 >
-                  <AlertTriangle size={16} /> Advertencia
+                  <AlertTriangle size={16} /> {tReporte("moderador.advertencia")}
                 </button>
                 <button
                   type="button"
                   className="button button--medium button--danger button--full-width"
                   onClick={handleEliminarModerador}
                 >
-                  <Trash2 size={16} /> Eliminar publicación
+                  <Trash2 size={16} /> {tReporte("moderador.eliminarPublicacion")}
                 </button>
               </div>
             )}
@@ -437,8 +438,8 @@ export default function DetallePublicacion({
     <JustificanteModeracionModal
       isOpen={advertenciaAbierta}
       tipoObjetivo="usuario"
-      titulo="Enviar advertencia"
-      pregunta="¿Por qué quieres advertir a este usuario?"
+      titulo={tReporte("moderador.advertenciaTitulo")}
+      pregunta={tReporte("moderador.advertenciaPregunta")}
       enviando={enviandoAdvertencia}
       onClose={() => setAdvertenciaAbierta(false)}
       onSubmit={handleAdvertenciaModerador}

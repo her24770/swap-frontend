@@ -2,6 +2,7 @@
 
 import { ChangeEvent, DragEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 import { CloudUpload, X } from "lucide-react";
 import { useReporte } from "../../../../hooks/useReporte";
 import {
@@ -20,12 +21,6 @@ const MAX_EVIDENCIAS = 3;
 const MAX_TAMANO_IMAGEN = 5 * 1024 * 1024;
 const TIPOS_IMAGEN_PERMITIDOS = ["image/jpeg", "image/png", "image/webp"];
 
-const preguntasPorObjetivo: Record<TipoObjetivoReporte, string> = {
-  usuario: "¿Por qué quieres reportar al usuario?",
-  comentario: "¿Por qué quieres reportar el comentario?",
-  publicacion: "¿Por qué quieres reportar la publicación?",
-};
-
 interface ReporteModalProps {
   isOpen: boolean;
   tipoObjetivo: TipoObjetivoReporte;
@@ -41,6 +36,7 @@ export default function ReporteModal({
   onClose,
   onSuccess,
 }: ReporteModalProps) {
+  const t = useTranslations("reporte");
   const { crearReporte, enviandoReporte } = useReporte();
   const motivos = useMemo(() => motivosReportePorObjetivo[tipoObjetivo], [tipoObjetivo]);
   const [motivoSeleccionado, setMotivoSeleccionado] = useState<MotivoReporte | null>(null);
@@ -95,19 +91,19 @@ export default function ReporteModal({
 
     const espacioDisponible = MAX_EVIDENCIAS - evidencias.length;
     if (espacioDisponible <= 0) {
-      setErrorEvidencias(`Solo puedes adjuntar hasta ${MAX_EVIDENCIAS} imágenes.`);
+      setErrorEvidencias(t("evidencia.errorMax", { max: MAX_EVIDENCIAS }));
       return;
     }
 
     const validas: File[] = [];
     for (const archivo of archivosSeleccionados) {
       if (!TIPOS_IMAGEN_PERMITIDOS.includes(archivo.type)) {
-        setErrorEvidencias("Solo se permiten imágenes JPG, PNG o WEBP.");
+        setErrorEvidencias(t("evidencia.errorType"));
         return;
       }
 
       if (archivo.size > MAX_TAMANO_IMAGEN) {
-        setErrorEvidencias("Cada imagen debe pesar 5MB o menos.");
+        setErrorEvidencias(t("evidencia.errorSize"));
         return;
       }
 
@@ -118,7 +114,7 @@ export default function ReporteModal({
     setEvidencias((actuales) => [...actuales, ...porAgregar]);
     setErrorEvidencias(
       validas.length > espacioDisponible
-        ? `Solo se agregaron ${espacioDisponible} imágenes. El máximo es ${MAX_EVIDENCIAS}.`
+        ? t("evidencia.errorPartial", { added: espacioDisponible, max: MAX_EVIDENCIAS })
         : null
     );
   };
@@ -143,15 +139,15 @@ export default function ReporteModal({
     <div className="modal-overlay reporte-modal__overlay" onClick={onClose}>
       <form className="reporte-modal" onSubmit={handleSubmit} onClick={(event) => event.stopPropagation()}>
         <div className="reporte-modal__header">
-          <h2 className="reporte-modal__title">Reporte</h2>
-          <button type="button" className="reporte-modal__close" onClick={onClose} aria-label="Cerrar reporte">
+          <h2 className="reporte-modal__title">{t("title")}</h2>
+          <button type="button" className="reporte-modal__close" onClick={onClose} aria-label={t("closeAria")}>
             <X size={18} />
           </button>
         </div>
 
         <div className="reporte-modal__body">
           <section className="reporte-modal__section">
-            <h3 className="reporte-modal__question">{preguntasPorObjetivo[tipoObjetivo]}</h3>
+            <h3 className="reporte-modal__question">{t(`preguntas.${tipoObjetivo}`)}</h3>
             <ReporteMotivos<MotivoReporte>
               motivos={motivos}
               motivoSeleccionado={motivoSeleccionado}
@@ -167,7 +163,7 @@ export default function ReporteModal({
 
           {permiteEvidencias && (
             <section className="reporte-modal__section">
-              <h3 className="reporte-modal__section-title">Evidencia opcional</h3>
+              <h3 className="reporte-modal__section-title">{t("evidencia.title")}</h3>
               <div
                 className={`reporte-modal__upload-zone${dragOver ? " reporte-modal__upload-zone--dragover" : ""}${evidencias.length >= MAX_EVIDENCIAS ? " reporte-modal__upload-zone--disabled" : ""}`}
                 onClick={() => {
@@ -184,9 +180,9 @@ export default function ReporteModal({
               >
                 <CloudUpload size={32} strokeWidth={1.5} className="reporte-modal__upload-icon" />
                 <p className="reporte-modal__upload-text">
-                  Adjunta hasta {MAX_EVIDENCIAS} imágenes como evidencia
+                  {t("evidencia.text", { max: MAX_EVIDENCIAS })}
                 </p>
-                <p className="reporte-modal__upload-hint">JPG, PNG o WEBP. Máximo 5MB por imagen.</p>
+                <p className="reporte-modal__upload-hint">{t("evidencia.hint")}</p>
                 <input
                   id="reporte-evidencias-input"
                   type="file"
@@ -204,12 +200,12 @@ export default function ReporteModal({
                 <div className="reporte-modal__previews">
                   {previewUrls.map((src, index) => (
                     <div key={`${src}-${index}`} className="reporte-modal__preview-item">
-                      <img src={src} alt={`Evidencia ${index + 1}`} className="reporte-modal__preview-img" />
+                      <img src={src} alt={t("evidencia.alt", { n: index + 1 })} className="reporte-modal__preview-img" />
                       <button
                         type="button"
                         className="reporte-modal__preview-remove"
                         onClick={() => quitarEvidencia(index)}
-                        aria-label={`Quitar evidencia ${index + 1}`}
+                        aria-label={t("evidencia.removeAria", { n: index + 1 })}
                         disabled={enviandoReporte}
                       >
                         <X size={10} strokeWidth={3} />

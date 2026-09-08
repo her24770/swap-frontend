@@ -25,7 +25,11 @@
 			"theme": "Thème",
 			"themeDesc": "Basculer entre le mode clair et sombre",
 			"language": "Langue",
-			"languageDesc": "Sélectionnez votre langue préférée"
+			"languageDesc": "Sélectionnez votre langue préférée",
+			"closeAria": "Fermer",
+			"tutorial": "Tutoriel",
+			"tutorialDesc": "Revoir le guide de bienvenue",
+			"tutorialButton": "Redémarrer"
 		}
 	},
 	"onboarding": {
@@ -173,7 +177,8 @@
 			"createPublication": "Créer une publication",
 			"editPublication": "Modifier la publication",
 			"publishing": "Publication...",
-			"saving": "Enregistrement..."
+			"saving": "Enregistrement...",
+			"confirm": "Confirmer"
 		},
 		"people": {
 			"anonymous": "Anonyme",
@@ -519,6 +524,75 @@
         "siguiente": "Suivant",
         "paginaInfo": "Page {page} sur {pageCount}"
       }
+    },
+    "reportes": {
+      "title": "Signalements",
+      "searchPlaceholder": "Rechercher",
+      "tabla": {
+        "id": "ID du signalement",
+        "tipo": "Type",
+        "fecha": "Date",
+        "estado": "Statut",
+        "reporto": "Signalé par",
+        "reportado": "Signalé"
+      },
+      "filtros": {
+        "todos": "Tous"
+      },
+      "tipos": {
+        "publicacion": "Publication",
+        "mensaje": "Message",
+        "usuario": "Utilisateur"
+      },
+      "estados": {
+        "pendiente": "En attente",
+        "resuelto": "Résolu",
+        "rechazado": "Rejeté"
+      },
+      "acciones": {
+        "verDetalles": "Voir les détails",
+        "cargando": "Chargement…"
+      },
+      "empty": "Aucun signalement trouvé",
+      "footEmpty": "0 sur 0",
+      "footRange": "{from}–{to} sur {total}",
+      "paginacion": {
+        "anterior": "Précédent",
+        "siguiente": "Suivant"
+      },
+      "errorGenerico": "Erreur",
+      "toasts": {
+        "detalleError": "Impossible de charger les détails du signalement.",
+        "estadoActualizado": "Statut du signalement mis à jour avec succès.",
+        "estadoError": "Impossible de mettre à jour le statut du signalement."
+      },
+      "detalle": {
+        "titulo": "Signalement n°{id}",
+        "cerrarAria": "Fermer",
+        "labels": {
+          "tipo": "Type",
+          "fecha": "Date",
+          "estado": "Statut",
+          "moderador": "Modérateur",
+          "motivo": "Motif",
+          "observaciones": "Observations",
+          "mensajeReportado": "Message signalé",
+          "publicacionVinculada": "Publication liée",
+          "reporto": "Signalé par",
+          "reportado": "Signalé",
+          "evidencia": "Preuve"
+        },
+        "evidenciaAlt": "Preuve {n}",
+        "verPublicacion": "Voir la publication",
+        "ocultarPublicacion": "Masquer la publication",
+        "cargando": "Chargement…",
+        "cerrar": "Fermer",
+        "marcarResuelto": "Marquer comme résolu",
+        "panelTitulo": "Publication",
+        "panelCerrarAria": "Fermer la publication",
+        "meGusta": "{count} j'aime",
+        "toastPublicacionError": "Impossible de charger la publication."
+      }
     }
 	},
 	"forgotPassword": {
@@ -744,7 +818,9 @@
 			"noCert": "Il n'y a pas encore de certifications.",
 			"pdfNotA": "PDF non disponible",
 			"select": "Sélectionnez une certification pour l'afficher",
-			"delete": "Supprimer la certification"
+			"delete": "Supprimer la certification",
+			"show": "Voir les certifications",
+			"hide": "Masquer les certifications"
 		}
 	},
 	"updateProfileModal": {
@@ -1020,5 +1096,104 @@
 		"cancel": "Annuler",
 		"send": "Envoyer",
 		"sending": "Envoi..."
+	},
+	"notificaciones": {
+		"title": "Notifications",
+		"ariaLabel": "Notifications",
+		"markAllAria": "Tout marquer comme lu",
+		"closeAria": "Fermer les notifications",
+		"tabs": {
+			"notificaciones": "Notifications",
+			"solicitudes": "Demandes"
+		},
+		"unread": "{count} non lues",
+		"emptyNotificaciones": "Vos notifications apparaîtront ici",
+		"emptySolicitudes": "Vous n'avez aucune demande en attente"
+	},
+	"anuncioForm": {
+		"titleCreate": "Créer une nouvelle annonce",
+		"titleEdit": "Modifier l'annonce",
+		"fields": {
+			"titulo": "Titre de l'annonce",
+			"tituloPlaceholder": "Quel article souhaitez-vous annoncer ?",
+			"descripcion": "Description",
+			"descripcionPlaceholder": "Décrivez l'état de votre article, ce que vous recherchez en échange, la disponibilité, etc...",
+			"foto": "Photo de l'article",
+			"uploadText": "Glissez une image ou cliquez pour parcourir",
+			"uploadHint": "Formats acceptés : PNG, JPG ou WEBP (max. 5 Mo)",
+			"previewAlt": "Aperçu de l'article",
+			"removeImageAria": "Supprimer l'image"
+		},
+		"errors": {
+			"invalidType": "Le fichier doit être une image valide (PNG, JPG, WEBP).",
+			"tooLarge": "L'image ne doit pas dépasser 5 Mo.",
+			"imageRequired": "L'image de l'annonce est obligatoire pour publier.",
+			"server": "Un problème est survenu lors du traitement de la demande avec le serveur."
+		},
+		"actions": {
+			"cancel": "Annuler",
+			"submitCreate": "Publier l'annonce",
+			"submitEdit": "Enregistrer les modifications",
+			"processing": "Traitement..."
+		}
+	},
+	"reporte": {
+		"title": "Signalement",
+		"closeAria": "Fermer le signalement",
+		"preguntas": {
+			"usuario": "Pourquoi souhaitez-vous signaler cet utilisateur ?",
+			"comentario": "Pourquoi souhaitez-vous signaler ce commentaire ?",
+			"publicacion": "Pourquoi souhaitez-vous signaler cette publication ?"
+		},
+		"detalle": {
+			"title": "Détails supplémentaires",
+			"placeholder": "Donnez-nous plus de détails..."
+		},
+		"evidencia": {
+			"title": "Preuve facultative",
+			"alt": "Preuve {n}",
+			"text": "Joignez jusqu'à {max} images comme preuve",
+			"hint": "JPG, PNG ou WEBP. 5 Mo maximum par image.",
+			"removeAria": "Retirer la preuve {n}",
+			"errorMax": "Vous ne pouvez joindre que {max} images au maximum.",
+			"errorType": "Seules les images JPG, PNG ou WEBP sont autorisées.",
+			"errorSize": "Chaque image doit peser 5 Mo ou moins.",
+			"errorPartial": "Seules {added} images ont été ajoutées. Le maximum est {max}."
+		},
+		"suspension": {
+			"diasLabel": "Jours de suspension",
+			"diasPlaceholder": "Nombre de jours à partir d'aujourd'hui"
+		},
+		"acciones": {
+			"cancelar": "Annuler",
+			"enviar": "Envoyer",
+			"confirmar": "Confirmer"
+		},
+		"moderador": {
+			"reportar": "Signaler",
+			"reportarPublicacionAria": "Signaler la publication",
+			"advertencia": "Avertissement",
+			"eliminarPublicacion": "Supprimer la publication",
+			"advertenciaTitulo": "Envoyer un avertissement",
+			"advertenciaPregunta": "Pourquoi souhaitez-vous avertir cet utilisateur ?"
+		},
+		"motivos": {
+			"No cumplió con fechas": "N'a pas respecté les dates convenues",
+			"Información falsa": "Informations fausses",
+			"Incumple las normas": "Ne respecte pas les règles",
+			"Cuenta falsa o suplantación de identidad": "Faux compte ou usurpation d'identité",
+			"Publica contenido inapropiado": "Publie du contenu inapproprié",
+			"Acoso, amenazas o bullying": "Harcèlement, menaces ou intimidation",
+			"Spam o estafa": "Spam ou arnaque",
+			"Es ofensivo, insultante o usa lenguaje vulgar": "Il est offensant, insultant ou utilise un langage vulgaire",
+			"Es spam, publicidad no deseada o enlace sospechoso": "C'est du spam, de la publicité non désirée ou un lien suspect",
+			"Acoso dirigido a otro usuario en la conversación": "Harcèlement ciblé d'un autre utilisateur dans la conversation",
+			"Revela información personal privada": "Révèle des informations personnelles privées",
+			"Venta o promoción de objetos inapropiados": "Vente ou promotion d'objets inappropriés",
+			"Discurso de odio o símbolos ofensivos": "Discours de haine ou symboles offensants",
+			"Violencia, daño o actividades peligrosas": "Violence, préjudice ou activités dangereuses",
+			"Desnudez o contenido sexual explícito": "Nudité ou contenu sexuel explicite",
+			"Propiedad intelectual o derechos de autor": "Propriété intellectuelle ou droits d'auteur"
+		}
 	}
 }

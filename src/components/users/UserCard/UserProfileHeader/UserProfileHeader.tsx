@@ -238,7 +238,7 @@ export default function UserProfileHeader({
               onClick={() => setShowCerts((v) => !v)}
             >
               <FileText size={18} strokeWidth={1.8} aria-hidden />
-              {showCerts ? "Ocultar certificaciones" : "Ver certificaciones"}
+              {showCerts ? t("certification.hide") : t("certification.show")}
             </button>
         </div>
 
