@@ -64,7 +64,7 @@
 
 .usuarios-moderacion__error {
   margin: 0;
-  color: var(--swap-error-color, #dc2626);
+  color: var(--swap-danger-color);
   font-size: 0.875rem;
 }
 
@@ -90,12 +90,19 @@
   to { transform: rotate(360deg); }
 }
 
-.usuarios-moderacion__table {
+
+.usuarios-moderacion__table-wrap {
   width: 100%;
-  border-collapse: collapse;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--swap-primary-border-color);
   border-radius: 0.75rem;
-  overflow: hidden;
+}
+
+.usuarios-moderacion__table {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
 }
 
 .usuarios-moderacion__table th,
@@ -145,18 +152,18 @@
 }
 
 .usuarios-moderacion__badge--reportes {
-  background-color: rgba(220, 38, 38, 0.12);
-  color: var(--swap-error-color, #dc2626);
+  background-color: var(--swap-danger-background);
+  color: var(--swap-danger-color);
 }
 
 .usuarios-moderacion__badge--activo {
-  background-color: rgba(22, 163, 74, 0.12);
-  color: #16a34a;
+  background-color: var(--swap-success-background);
+  color: var(--swap-success-color);
 }
 
 .usuarios-moderacion__badge--bloqueado {
-  background-color: rgba(220, 38, 38, 0.12);
-  color: #dc2626;
+  background-color: var(--swap-danger-background);
+  color: var(--swap-danger-color);
 }
 
 .usuarios-moderacion__badge--suspendido {
@@ -183,4 +190,36 @@
   font-family: var(--swap-font-textos);
   color: var(--swap-tertiary-text-color);
   font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+/* ── Tablet / móvil ──────────────────────────────────────────────────────── */
+@media (max-width: 64rem) {
+  .usuarios-moderacion__filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .usuarios-moderacion__filters > :first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 40rem) {
+  .usuarios-moderacion {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .usuarios-moderacion__header {
+    flex-direction: column;
+  }
+
+  .usuarios-moderacion__filters {
+    grid-template-columns: 1fr;
+  }
+
+  .usuarios-moderacion__table th,
+  .usuarios-moderacion__table td {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+  }
 }
