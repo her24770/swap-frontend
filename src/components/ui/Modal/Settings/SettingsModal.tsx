@@ -1,5 +1,6 @@
 "use client";
 import { X, SunMoon,  Globe, RotateCcw } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme } from "../../../../context/Themecontext";
 import { useAuthStore } from "../../../../store/authStore";
 import { useRouter } from "../../../../i18n/routing";
@@ -19,6 +20,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { theme, toggle: toggleTheme } = useTheme();
   const usuario = useAuthStore((state) => state.usuario);
   const router = useRouter();
+  const t = useTranslations("layout.settings");
 
   if (!isOpen) return null;
 
@@ -41,12 +43,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="settings-modal" onClick={(e) => e.stopPropagation()}>
         <div className="settings-modal__header">
-          <h3 className="settings-modal__title">Ajustes de la aplicación</h3>
+          <h3 className="settings-modal__title">{t("settings")}</h3>
           <button
             type="button"
             className="settings-modal__close"
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label={t("closeAria")}
           >
             <X size={20} />
           </button>
@@ -57,8 +59,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="settings-modal__info">
                 <SunMoon size={18} className="settings-modal__icon" />
                 <div>
-                    <span className="settings-modal__label">Tema</span>
-                    <p className="settings-modal__sublabel">Cambia entre claro y oscuro</p>
+                    <span className="settings-modal__label">{t("theme")}</span>
+                    <p className="settings-modal__sublabel">{t("themeDesc")}</p>
                 </div>
                 </div>
                 <div className="settings-modal__action">
@@ -72,8 +74,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <div className="settings-modal__info">
               <Globe size={18} className="settings-modal__icon" />
               <div>
-                <span className="settings-modal__label">Idioma</span>
-                <p className="settings-modal__sublabel">Selecciona tu idioma de preferencia</p>
+                <span className="settings-modal__label">{t("language")}</span>
+                <p className="settings-modal__sublabel">{t("languageDesc")}</p>
               </div>
             </div>
             <div className="settings-modal__action">
@@ -89,8 +91,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="settings-modal__info">
                   <RotateCcw size={18} className="settings-modal__icon" />
                   <div>
-                    <span className="settings-modal__label">Tutorial</span>
-                    <p className="settings-modal__sublabel">Vuelve a ver la guía de bienvenida</p>
+                    <span className="settings-modal__label">{t("tutorial")}</span>
+                    <p className="settings-modal__sublabel">{t("tutorialDesc")}</p>
                   </div>
                 </div>
                 <div className="settings-modal__action">
@@ -99,7 +101,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     className="settings-modal__button"
                     onClick={reiniciarTutorial}
                   >
-                    Reiniciar
+                    {t("tutorialButton")}
                   </button>
                 </div>
               </div>

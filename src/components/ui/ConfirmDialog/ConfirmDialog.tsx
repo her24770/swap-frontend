@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useUIStore } from "../../../store/uiStore";
 import "./ConfirmDialog.css";
 
 export default function ConfirmDialog() {
   const { confirm, cerrarConfirm } = useUIStore();
+  const t = useTranslations("common.actions");
 
   if (!confirm.isOpen) return null;
 
@@ -20,10 +22,10 @@ export default function ConfirmDialog() {
         <p className="confirm-dialog__message">{confirm.mensaje}</p>
         <div className="confirm-dialog__footer">
           <button type="button" className="confirm-dialog__btn-cancel" onClick={cerrarConfirm}>
-            Cancelar
+            {t("cancel")}
           </button>
           <button type="button" className="confirm-dialog__btn-confirm button button--medium" onClick={handleConfirm}>
-            Confirmar
+            {t("confirm")}
           </button>
         </div>
       </div>

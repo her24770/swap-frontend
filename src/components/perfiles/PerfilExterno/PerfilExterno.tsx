@@ -35,6 +35,7 @@ interface PerfilExternoProps {
 
 export default function PerfilExterno({ userId, soloLectura = false }: PerfilExternoProps) {
     const t = useTranslations("perfil");
+    const tReporte = useTranslations("reporte");
     const searchParams = useSearchParams();
     const initialMode = searchParams.get("modo") === "tutor" ? "tutor" : "vendedor";
     const [mode, setMode] = useState<PerfilExternoMode>(initialMode);
@@ -245,8 +246,8 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
             <JustificanteModeracionModal
                 isOpen={advertenciaAbierta}
                 tipoObjetivo="usuario"
-                titulo="Enviar advertencia"
-                pregunta="¿Por qué quieres advertir a este usuario?"
+                titulo={tReporte("moderador.advertenciaTitulo")}
+                pregunta={tReporte("moderador.advertenciaPregunta")}
                 enviando={enviandoAdvertencia}
                 onClose={() => setAdvertenciaAbierta(false)}
                 onSubmit={handleEnviarAdvertencia}

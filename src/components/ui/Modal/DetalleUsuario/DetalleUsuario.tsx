@@ -44,6 +44,7 @@ export default function DetalleUsuario({
   onVerPerfil,
 }: DetalleUsuarioProps) {
   const t = useTranslations("posts");
+  const tReporte = useTranslations("reporte");
   const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
 
   if (!isOpen) return null;
@@ -135,7 +136,7 @@ export default function DetalleUsuario({
               onClick={() => setReporteUsuarioAbierto(true)}
             >
               <Flag size={16} />
-              Reportar
+              {tReporte("moderador.reportar")}
             </button>
           )}
 

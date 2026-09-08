@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Search, SlidersHorizontal, Check } from "lucide-react";
 import Image from "next/image";
 import { useToast } from "../../../hooks/useToast";
@@ -33,16 +34,17 @@ const ESTADO_CLASS: Record<string, string> = {
   rechazado: "tabla-reportes__estado--rechazado",
 };
 
+// `value` es el valor que espera el backend en el filtro; `key` indexa la traducción.
 const TIPO_OPTIONS = [
-  { value: "Publicación", label: "Publicación", mod: "pub" },
-  { value: "Mensaje",     label: "Mensaje",     mod: "msg" },
-  { value: "Usuario",     label: "Usuario",     mod: "usr" },
+  { value: "Publicación", key: "publicacion", mod: "pub" },
+  { value: "Mensaje",     key: "mensaje",     mod: "msg" },
+  { value: "Usuario",     key: "usuario",     mod: "usr" },
 ];
 
 const ESTADO_OPTIONS = [
-  { value: "pendiente", label: "Pendiente" },
-  { value: "resuelto",  label: "Resuelto" },
-  { value: "rechazado", label: "Rechazado" },
+  { value: "pendiente", key: "pendiente" },
+  { value: "resuelto",  key: "resuelto" },
+  { value: "rechazado", key: "rechazado" },
 ];
 
 function initials(nombre: string) {
@@ -53,6 +55,12 @@ function getTipoMod(tipo: ReporteTableData["tipo"]): string {
   if (tipo === "Publicación") return "pub";
   if (tipo === "Mensaje") return "msg";
   return "usr";
+}
+
+function getTipoKey(tipo: ReporteTableData["tipo"]): string {
+  if (tipo === "Publicación") return "publicacion";
+  if (tipo === "Mensaje") return "mensaje";
+  return "usuario";
 }
 
 export default function TablaReportes({
@@ -70,6 +78,8 @@ export default function TablaReportes({
   onVerPublicacion,
 }: TablaReportesProps) {
   const toast = useToast();
+  const t = useTranslations("moderacion.reportes");
+  const locale = useLocale();
   const [search, setSearch] = useState("");
   const [listaReportes, setListaReportes] = useState<ReporteTableData[]>(reportes);
   const [detalleReporte, setDetalleReporte] = useState<ReporteDetalle | null>(null);
@@ -128,7 +138,7 @@ export default function TablaReportes({
       const detalle = await onVerDetalles(id);
       setDetalleReporte(detalle);
     } catch (error: any) {
-      toast.error(error?.message ?? "No fue posible cargar el detalle del reporte.", "Error");
+      toast.error(error?.message ?? t("toasts.detalleError"), t("errorGenerico"));
     } finally {
       setCargandoDetalleId(null);
     }
@@ -153,14 +163,14 @@ export default function TablaReportes({
 
     try {
       await reporteService.actualizarEstadoReporte(id_reporte, nuevoEstado);
-      toast.success("Estado del reporte actualizado correctamente.");
+      toast.success(t("toasts.estadoActualizado"));
     } catch (error: any) {
       setListaReportes((prev) =>
         prev.map((r) =>
           r.id_reporte === id_reporte ? { ...r, estado: estadoAnterior } : r
         )
       );
-      toast.error(error?.message ?? "No fue posible actualizar el estado del reporte.", "Error");
+      toast.error(error?.message ?? t("toasts.estadoError"), t("errorGenerico"));
     } finally {
       setActualizandoEstadoId(null);
     }
@@ -170,12 +180,12 @@ export default function TablaReportes({
     <>
       <div className="tabla-reportes">
         <div className="tabla-reportes__top">
-          <h1 className="tabla-reportes__title">Reportes</h1>
+          <h1 className="tabla-reportes__title">{t("title")}</h1>
           <div className="tabla-reportes__search">
             <Search size={14} className="tabla-reportes__search-icon" />
             <input
               type="text"
-              placeholder="Buscar"
+              placeholder={t("searchPlaceholder")}
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
               className="tabla-reportes__search-input"
@@ -187,7 +197,7 @@ export default function TablaReportes({
           <table className="tabla-reportes__table">
             <thead>
               <tr>
-                <th>ID Reporte</th>
+                <th>{t("tabla.id")}</th>
                 <th>
                   <div className="tabla-reportes__filter-wrap" ref={tipoFilterRef}>
                     <button
@@ -195,7 +205,7 @@ export default function TablaReportes({
                       className={`tabla-reportes__th-filter${tipoFilter ? " tabla-reportes__th-filter--active" : ""}`}
                       onClick={() => setOpenFilter(openFilter === "tipo" ? null : "tipo")}
                     >
-                      Tipo <SlidersHorizontal size={11} />
+                      {t("tabla.tipo")} <SlidersHorizontal size={11} />
                     </button>
                     {openFilter === "tipo" && (
                       <div className="tabla-reportes__filter-menu">
@@ -204,7 +214,7 @@ export default function TablaReportes({
                           className={`tabla-reportes__filter-option${!tipoFilter ? " tabla-reportes__filter-option--active" : ""}`}
                           onClick={() => handleTipoFilter(null)}
                         >
-                          Todos {!tipoFilter && <Check size={12} />}
+                          {t("filtros.todos")} {!tipoFilter && <Check size={12} />}
                         </button>
                         {TIPO_OPTIONS.map((opt) => (
                           <button
@@ -213,14 +223,14 @@ export default function TablaReportes({
                             className={`tabla-reportes__filter-option${tipoFilter === opt.value ? " tabla-reportes__filter-option--active" : ""}`}
                             onClick={() => handleTipoFilter(opt.value)}
                           >
-                            {opt.label} {tipoFilter === opt.value && <Check size={12} />}
+                            {t(`tipos.${opt.key}`)} {tipoFilter === opt.value && <Check size={12} />}
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
                 </th>
-                <th>Fecha</th>
+                <th>{t("tabla.fecha")}</th>
                 <th>
                   <div className="tabla-reportes__filter-wrap" ref={estadoFilterRef}>
                     <button
@@ -228,7 +238,7 @@ export default function TablaReportes({
                       className={`tabla-reportes__th-filter${estadoFilter ? " tabla-reportes__th-filter--active" : ""}`}
                       onClick={() => setOpenFilter(openFilter === "estado" ? null : "estado")}
                     >
-                      Estado <SlidersHorizontal size={11} />
+                      {t("tabla.estado")} <SlidersHorizontal size={11} />
                     </button>
                     {openFilter === "estado" && (
                       <div className="tabla-reportes__filter-menu">
@@ -237,7 +247,7 @@ export default function TablaReportes({
                           className={`tabla-reportes__filter-option${!estadoFilter ? " tabla-reportes__filter-option--active" : ""}`}
                           onClick={() => handleEstadoFilter(null)}
                         >
-                          Todos {!estadoFilter && <Check size={12} />}
+                          {t("filtros.todos")} {!estadoFilter && <Check size={12} />}
                         </button>
                         {ESTADO_OPTIONS.map((opt) => (
                           <button
@@ -246,15 +256,15 @@ export default function TablaReportes({
                             className={`tabla-reportes__filter-option${estadoFilter === opt.value ? " tabla-reportes__filter-option--active" : ""}`}
                             onClick={() => handleEstadoFilter(opt.value)}
                           >
-                            {opt.label} {estadoFilter === opt.value && <Check size={12} />}
+                            {t(`estados.${opt.key}`)} {estadoFilter === opt.value && <Check size={12} />}
                           </button>
                         ))}
                       </div>
                     )}
                   </div>
                 </th>
-                <th>Reportó</th>
-                <th>Reportado</th>
+                <th>{t("tabla.reporto")}</th>
+                <th>{t("tabla.reportado")}</th>
                 <th />
               </tr>
             </thead>
@@ -270,11 +280,11 @@ export default function TablaReportes({
                     </td>
                     <td>
                       <span className={`tabla-reportes__badge tabla-reportes__badge--${getTipoMod(r.tipo)}`}>
-                        {r.tipo}
+                        {t(`tipos.${getTipoKey(r.tipo)}`)}
                       </span>
                     </td>
                     <td className="tabla-reportes__fecha">
-                      {new Date(r.fecha).toLocaleDateString("es", {
+                      {new Date(r.fecha).toLocaleDateString(locale, {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
@@ -287,9 +297,9 @@ export default function TablaReportes({
                         disabled={estaActualizando}
                         onChange={(e) => handleCambiarEstado(r.id_reporte, e.target.value)}
                       >
-                        <option value="pendiente">Pendiente</option>
-                        <option value="resuelto">Resuelto</option>
-                        <option value="rechazado">Rechazado</option>
+                        <option value="pendiente">{t("estados.pendiente")}</option>
+                        <option value="resuelto">{t("estados.resuelto")}</option>
+                        <option value="rechazado">{t("estados.rechazado")}</option>
                       </select>
                     </td>
                     <td>
@@ -313,7 +323,7 @@ export default function TablaReportes({
                         onClick={() => handleVerDetalles(r.id_reporte)}
                         disabled={cargandoDetalleId === r.id_reporte}
                       >
-                        {cargandoDetalleId === r.id_reporte ? "Cargando…" : "Ver detalles"}
+                        {cargandoDetalleId === r.id_reporte ? t("acciones.cargando") : t("acciones.verDetalles")}
                       </button>
                     </td>
                   </tr>
@@ -323,7 +333,7 @@ export default function TablaReportes({
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={7} className="tabla-reportes__empty">
-                    No se encontraron reportes
+                    {t("empty")}
                   </td>
                 </tr>
               )}
@@ -334,14 +344,20 @@ export default function TablaReportes({
         <div className="tabla-reportes__foot">
           <span className="tabla-reportes__foot-label">
             {total === 0
-              ? "0 de 0"
-              : `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)} de ${total}`}
+              ? t("footEmpty")
+              : t("footRange", {
+                  from: (page - 1) * pageSize + 1,
+                  to: Math.min(page * pageSize, total),
+                  total,
+                })}
           </span>
 
           <Paginacion
             page={page}
             total={totalPages}
             onChange={onPageChange}
+            labelAnterior={t("paginacion.anterior")}
+            labelSiguiente={t("paginacion.siguiente")}
           />
         </div>
       </div>
@@ -387,10 +403,14 @@ function Paginacion({
   page,
   total,
   onChange,
+  labelAnterior,
+  labelSiguiente,
 }: {
   page: number;
   total: number;
   onChange: (p: number) => void;
+  labelAnterior: string;
+  labelSiguiente: string;
 }) {
   const pages: (number | "...")[] = [];
   for (let i = 1; i <= total; i++) {
@@ -404,7 +424,7 @@ function Paginacion({
         className="tabla-reportes__page-btn"
         onClick={() => onChange(page - 1)}
         disabled={page === 1}
-        aria-label="Anterior"
+        aria-label={labelAnterior}
       >
         ‹
       </button>
@@ -427,7 +447,7 @@ function Paginacion({
         className="tabla-reportes__page-btn"
         onClick={() => onChange(page + 1)}
         disabled={page === total}
-        aria-label="Siguiente"
+        aria-label={labelSiguiente}
       >
         ›
       </button>

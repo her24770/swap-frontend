@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import {
   motivosReportePorObjetivo,
@@ -38,6 +39,7 @@ export default function JustificanteModeracionModal({
   onClose,
   onSubmit,
 }: JustificanteModeracionModalProps) {
+  const t = useTranslations("reporte");
   const motivos = useMemo(
     () => motivosPersonalizados ?? motivosReportePorObjetivo[tipoObjetivo],
     [motivosPersonalizados, tipoObjetivo]
@@ -74,7 +76,7 @@ export default function JustificanteModeracionModal({
       <form className="reporte-modal reporte-modal--moderacion" onSubmit={handleSubmit} onClick={(event) => event.stopPropagation()}>
         <div className="reporte-modal__header">
           <h2 className="reporte-modal__title">{titulo}</h2>
-          <button type="button" className="reporte-modal__close" onClick={onClose} aria-label="Cerrar justificante">
+          <button type="button" className="reporte-modal__close" onClick={onClose} aria-label={t("closeAria")}>
             <X size={18} />
           </button>
         </div>
@@ -91,7 +93,7 @@ export default function JustificanteModeracionModal({
 
           {mostrarCampoDias && (
             <label className="reporte-modal__detalle">
-              <span className="reporte-modal__section-title">Días de suspensión</span>
+              <span className="reporte-modal__section-title">{t("suspension.diasLabel")}</span>
               <input
                 type="number"
                 min={1}
@@ -101,7 +103,7 @@ export default function JustificanteModeracionModal({
                   const valor = event.target.value;
                   setDias(valor === "" ? "" : Number(valor));
                 }}
-                placeholder="Cantidad de días desde hoy"
+                placeholder={t("suspension.diasPlaceholder")}
               />
             </label>
           )}
@@ -116,7 +118,7 @@ export default function JustificanteModeracionModal({
             puedeEnviar={Boolean(motivoSeleccionado) && diasValidos}
             enviando={enviando}
             onCancelar={onClose}
-            textoEnviar="Confirmar"
+            textoEnviar={t("acciones.confirmar")}
           />
         </div>
       </form>

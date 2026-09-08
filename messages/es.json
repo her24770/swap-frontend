@@ -25,7 +25,11 @@
 			"theme": "Tema",
 			"themeDesc": "Cambia entre claro y oscuro",
 			"language": "Idioma",
-			"languageDesc": "Selecciona tu idioma de preferencia"
+			"languageDesc": "Selecciona tu idioma de preferencia",
+			"closeAria": "Cerrar",
+			"tutorial": "Tutorial",
+			"tutorialDesc": "Vuelve a ver la guía de bienvenida",
+			"tutorialButton": "Reiniciar"
 		}
 	},
 	"onboarding": {
@@ -173,7 +177,8 @@
 			"createPublication": "Crear publicación",
 			"editPublication": "Editar publicación",
 			"publishing": "Publicando...",
-			"saving": "Guardando..."
+			"saving": "Guardando...",
+			"confirm": "Confirmar"
 		},
 		"people": {
 			"anonymous": "Anónimo",
@@ -541,6 +546,75 @@
         "siguiente": "Siguiente",
         "paginaInfo": "Página {page} de {pageCount}"
       }
+    },
+    "reportes": {
+      "title": "Reportes",
+      "searchPlaceholder": "Buscar",
+      "tabla": {
+        "id": "ID Reporte",
+        "tipo": "Tipo",
+        "fecha": "Fecha",
+        "estado": "Estado",
+        "reporto": "Reportó",
+        "reportado": "Reportado"
+      },
+      "filtros": {
+        "todos": "Todos"
+      },
+      "tipos": {
+        "publicacion": "Publicación",
+        "mensaje": "Mensaje",
+        "usuario": "Usuario"
+      },
+      "estados": {
+        "pendiente": "Pendiente",
+        "resuelto": "Resuelto",
+        "rechazado": "Rechazado"
+      },
+      "acciones": {
+        "verDetalles": "Ver detalles",
+        "cargando": "Cargando…"
+      },
+      "empty": "No se encontraron reportes",
+      "footEmpty": "0 de 0",
+      "footRange": "{from}–{to} de {total}",
+      "paginacion": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente"
+      },
+      "errorGenerico": "Error",
+      "toasts": {
+        "detalleError": "No fue posible cargar el detalle del reporte.",
+        "estadoActualizado": "Estado del reporte actualizado correctamente.",
+        "estadoError": "No fue posible actualizar el estado del reporte."
+      },
+      "detalle": {
+        "titulo": "Reporte #{id}",
+        "cerrarAria": "Cerrar",
+        "labels": {
+          "tipo": "Tipo",
+          "fecha": "Fecha",
+          "estado": "Estado",
+          "moderador": "Moderador",
+          "motivo": "Motivo",
+          "observaciones": "Observaciones",
+          "mensajeReportado": "Mensaje reportado",
+          "publicacionVinculada": "Publicación vinculada",
+          "reporto": "Reportó",
+          "reportado": "Reportado",
+          "evidencia": "Evidencia"
+        },
+        "evidenciaAlt": "Evidencia {n}",
+        "verPublicacion": "Ver publicación",
+        "ocultarPublicacion": "Ocultar publicación",
+        "cargando": "Cargando…",
+        "cerrar": "Cerrar",
+        "marcarResuelto": "Marcar resuelto",
+        "panelTitulo": "Publicación",
+        "panelCerrarAria": "Cerrar publicación",
+        "meGusta": "{count} me gusta",
+        "toastPublicacionError": "No fue posible cargar la publicación."
+      }
     }
   },
 	"forgotPassword": {
@@ -766,7 +840,9 @@
 			"noCert": "No hay certificaciones aún.",
 			"pdfNotA": "PDF no disponible",
 			"select": "Selecciona una certificación para verla",
-			"delete": "Eliminar certificación"
+			"delete": "Eliminar certificación",
+			"show": "Ver certificaciones",
+			"hide": "Ocultar certificaciones"
 		}
 	},
 	"updateProfileModal": {
@@ -1049,5 +1125,104 @@
 		"cancel": "Cancelar",
 		"send": "Enviar",
 		"sending": "Enviando..."
+	},
+	"notificaciones": {
+		"title": "Notificaciones",
+		"ariaLabel": "Notificaciones",
+		"markAllAria": "Marcar todas como leídas",
+		"closeAria": "Cerrar notificaciones",
+		"tabs": {
+			"notificaciones": "Notificaciones",
+			"solicitudes": "Solicitudes"
+		},
+		"unread": "{count} sin leer",
+		"emptyNotificaciones": "Aquí encontrarás tus notificaciones",
+		"emptySolicitudes": "No tienes solicitudes pendientes"
+	},
+	"anuncioForm": {
+		"titleCreate": "Crear nuevo anuncio",
+		"titleEdit": "Editar anuncio",
+		"fields": {
+			"titulo": "Título del anuncio",
+			"tituloPlaceholder": "¿Qué artículo deseas anunciar?",
+			"descripcion": "Descripción",
+			"descripcionPlaceholder": "Detalla el estado de tu artículo, qué buscas a cambio, disponibilidad, etc...",
+			"foto": "Foto del artículo",
+			"uploadText": "Arrastra una imagen o haz clic para buscar",
+			"uploadHint": "Formatos aceptados: PNG, JPG o WEBP (Máx. 5MB)",
+			"previewAlt": "Vista previa del artículo",
+			"removeImageAria": "Eliminar imagen"
+		},
+		"errors": {
+			"invalidType": "El archivo debe ser una imagen válida (PNG, JPG, WEBP).",
+			"tooLarge": "La imagen no debe pesar más de 5MB.",
+			"imageRequired": "La imagen del anuncio es obligatoria para publicar.",
+			"server": "Hubo un problema al procesar la solicitud con el servidor."
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"submitCreate": "Publicar anuncio",
+			"submitEdit": "Guardar cambios",
+			"processing": "Procesando..."
+		}
+	},
+	"reporte": {
+		"title": "Reporte",
+		"closeAria": "Cerrar reporte",
+		"preguntas": {
+			"usuario": "¿Por qué quieres reportar al usuario?",
+			"comentario": "¿Por qué quieres reportar el comentario?",
+			"publicacion": "¿Por qué quieres reportar la publicación?"
+		},
+		"detalle": {
+			"title": "Detalle adicional",
+			"placeholder": "Cuéntanos más detalles..."
+		},
+		"evidencia": {
+			"title": "Evidencia opcional",
+			"alt": "Evidencia {n}",
+			"text": "Adjunta hasta {max} imágenes como evidencia",
+			"hint": "JPG, PNG o WEBP. Máximo 5MB por imagen.",
+			"removeAria": "Quitar evidencia {n}",
+			"errorMax": "Solo puedes adjuntar hasta {max} imágenes.",
+			"errorType": "Solo se permiten imágenes JPG, PNG o WEBP.",
+			"errorSize": "Cada imagen debe pesar 5MB o menos.",
+			"errorPartial": "Solo se agregaron {added} imágenes. El máximo es {max}."
+		},
+		"suspension": {
+			"diasLabel": "Días de suspensión",
+			"diasPlaceholder": "Cantidad de días desde hoy"
+		},
+		"acciones": {
+			"cancelar": "Cancelar",
+			"enviar": "Enviar",
+			"confirmar": "Confirmar"
+		},
+		"moderador": {
+			"reportar": "Reportar",
+			"reportarPublicacionAria": "Reportar publicación",
+			"advertencia": "Advertencia",
+			"eliminarPublicacion": "Eliminar publicación",
+			"advertenciaTitulo": "Enviar advertencia",
+			"advertenciaPregunta": "¿Por qué quieres advertir a este usuario?"
+		},
+		"motivos": {
+			"No cumplió con fechas": "No cumplió con fechas",
+			"Información falsa": "Información falsa",
+			"Incumple las normas": "Incumple las normas",
+			"Cuenta falsa o suplantación de identidad": "Cuenta falsa o suplantación de identidad",
+			"Publica contenido inapropiado": "Publica contenido inapropiado",
+			"Acoso, amenazas o bullying": "Acoso, amenazas o bullying",
+			"Spam o estafa": "Spam o estafa",
+			"Es ofensivo, insultante o usa lenguaje vulgar": "Es ofensivo, insultante o usa lenguaje vulgar",
+			"Es spam, publicidad no deseada o enlace sospechoso": "Es spam, publicidad no deseada o enlace sospechoso",
+			"Acoso dirigido a otro usuario en la conversación": "Acoso dirigido a otro usuario en la conversación",
+			"Revela información personal privada": "Revela información personal privada",
+			"Venta o promoción de objetos inapropiados": "Venta o promoción de objetos inapropiados",
+			"Discurso de odio o símbolos ofensivos": "Discurso de odio o símbolos ofensivos",
+			"Violencia, daño o actividades peligrosas": "Violencia, daño o actividades peligrosas",
+			"Desnudez o contenido sexual explícito": "Desnudez o contenido sexual explícito",
+			"Propiedad intelectual o derechos de autor": "Propiedad intelectual o derechos de autor"
+		}
 	}
 }

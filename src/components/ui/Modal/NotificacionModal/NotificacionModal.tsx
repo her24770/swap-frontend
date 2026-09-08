@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 import { Bell, X, CheckCheck, ClipboardList } from "lucide-react";
 import Notificacion from "./Notificacion/Notificacion";
 import type { NotificacionData } from "./Notificacion/Notificacion";
@@ -43,6 +44,7 @@ export default function NotificacionModal({
   onAceptarSolicitud,
   onRechazarSolicitud,
 }: NotificacionModalProps) {
+  const t = useTranslations("notificaciones");
   const panelRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
   const [position, setPosition] = useState<PanelPosition>({ top: 0, right: 16 });
@@ -117,18 +119,18 @@ export default function NotificacionModal({
       className="notif-modal notif-modal--anchored"
       style={{ top: position.top, right: position.right }}
       role="dialog"
-      aria-label="Notificaciones"
+      aria-label={t("ariaLabel")}
       aria-modal="true"
     >
       <div className="notif-modal__header">
-        <h2 className="notif-modal__title">Notificaciones</h2>
+        <h2 className="notif-modal__title">{t("title")}</h2>
         <div className="notif-modal__header-actions">
           {vista === "notificaciones" && noLeidas > 0 && onMarcarTodasLeidas && (
             <button
               type="button"
               className="notif-modal__mark-all"
               onClick={onMarcarTodasLeidas}
-              title="Marcar todas como leídas"
+              title={t("markAllAria")}
             >
               <CheckCheck size={16} strokeWidth={2} />
             </button>
@@ -137,7 +139,7 @@ export default function NotificacionModal({
             type="button"
             className="notif-modal__close"
             onClick={onClose}
-            aria-label="Cerrar notificaciones"
+            aria-label={t("closeAria")}
           >
             <X size={18} strokeWidth={2} />
           </button>
@@ -152,7 +154,7 @@ export default function NotificacionModal({
           className={`notif-modal__tab${vista === "notificaciones" ? " notif-modal__tab--active" : ""}`}
           onClick={() => setVista("notificaciones")}
         >
-          Notificaciones
+          {t("tabs.notificaciones")}
           {noLeidas > 0 && <span className="notif-modal__tab-badge">{noLeidas > 9 ? "9+" : noLeidas}</span>}
         </button>
         <button
@@ -162,7 +164,7 @@ export default function NotificacionModal({
           className={`notif-modal__tab${vista === "solicitudes" ? " notif-modal__tab--active" : ""}`}
           onClick={() => setVista("solicitudes")}
         >
-          Solicitudes
+          {t("tabs.solicitudes")}
           {solicitudesTutoria.length > 0 && (
             <span className="notif-modal__tab-badge">
               {solicitudesTutoria.length > 9 ? "9+" : solicitudesTutoria.length}
@@ -172,7 +174,7 @@ export default function NotificacionModal({
       </div>
 
       {vista === "notificaciones" && noLeidas > 0 && (
-        <p className="notif-modal__unread-count">{noLeidas} sin leer</p>
+        <p className="notif-modal__unread-count">{t("unread", { count: noLeidas })}</p>
       )}
 
       <div className="notif-modal__body">
@@ -180,7 +182,7 @@ export default function NotificacionModal({
           notificaciones.length === 0 ? (
             <div className="notif-modal__empty">
               <Bell size={56} strokeWidth={1} className="notif-modal__empty-icon" />
-              <p className="notif-modal__empty-title">Aquí encontrarás tus notificaciones</p>
+              <p className="notif-modal__empty-title">{t("emptyNotificaciones")}</p>
             </div>
           ) : (
             <div className="notif-modal__list">
@@ -198,7 +200,7 @@ export default function NotificacionModal({
         ) : solicitudesTutoria.length === 0 ? (
           <div className="notif-modal__empty">
             <ClipboardList size={56} strokeWidth={1} className="notif-modal__empty-icon" />
-            <p className="notif-modal__empty-title">No tienes solicitudes pendientes</p>
+            <p className="notif-modal__empty-title">{t("emptySolicitudes")}</p>
           </div>
         ) : (
           <div className="notif-modal__list">

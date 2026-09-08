@@ -25,7 +25,11 @@
 			"theme": "Theme",
 			"themeDesc": "Switch between light and dark",
 			"language": "Language",
-			"languageDesc": "Select your preferred language"
+			"languageDesc": "Select your preferred language",
+			"closeAria": "Close",
+			"tutorial": "Tutorial",
+			"tutorialDesc": "Watch the welcome guide again",
+			"tutorialButton": "Restart"
 		}
 	},
 	"onboarding": {
@@ -173,7 +177,8 @@
 			"createPublication": "Create post",
 			"editPublication": "Edit post",
 			"publishing": "Publishing...",
-			"saving": "Saving..."
+			"saving": "Saving...",
+			"confirm": "Confirm"
 		},
 		"people": {
 			"anonymous": "Anonymous",
@@ -519,6 +524,75 @@
         "siguiente": "Next",
         "paginaInfo": "Page {page} of {pageCount}"
       }
+    },
+    "reportes": {
+      "title": "Reports",
+      "searchPlaceholder": "Search",
+      "tabla": {
+        "id": "Report ID",
+        "tipo": "Type",
+        "fecha": "Date",
+        "estado": "Status",
+        "reporto": "Reported by",
+        "reportado": "Reported"
+      },
+      "filtros": {
+        "todos": "All"
+      },
+      "tipos": {
+        "publicacion": "Post",
+        "mensaje": "Message",
+        "usuario": "User"
+      },
+      "estados": {
+        "pendiente": "Pending",
+        "resuelto": "Resolved",
+        "rechazado": "Rejected"
+      },
+      "acciones": {
+        "verDetalles": "View details",
+        "cargando": "Loading…"
+      },
+      "empty": "No reports found",
+      "footEmpty": "0 of 0",
+      "footRange": "{from}–{to} of {total}",
+      "paginacion": {
+        "anterior": "Previous",
+        "siguiente": "Next"
+      },
+      "errorGenerico": "Error",
+      "toasts": {
+        "detalleError": "The report details could not be loaded.",
+        "estadoActualizado": "Report status updated successfully.",
+        "estadoError": "The report status could not be updated."
+      },
+      "detalle": {
+        "titulo": "Report #{id}",
+        "cerrarAria": "Close",
+        "labels": {
+          "tipo": "Type",
+          "fecha": "Date",
+          "estado": "Status",
+          "moderador": "Moderator",
+          "motivo": "Reason",
+          "observaciones": "Notes",
+          "mensajeReportado": "Reported message",
+          "publicacionVinculada": "Linked post",
+          "reporto": "Reported by",
+          "reportado": "Reported",
+          "evidencia": "Evidence"
+        },
+        "evidenciaAlt": "Evidence {n}",
+        "verPublicacion": "View post",
+        "ocultarPublicacion": "Hide post",
+        "cargando": "Loading…",
+        "cerrar": "Close",
+        "marcarResuelto": "Mark as resolved",
+        "panelTitulo": "Post",
+        "panelCerrarAria": "Close post",
+        "meGusta": "{count} likes",
+        "toastPublicacionError": "The post could not be loaded."
+      }
     }
 	},
 	"forgotPassword": {
@@ -744,7 +818,9 @@
 			"noCert": "There are no certifications yet.",
 			"pdfNotA": "Pdf is not available",
 			"select": "Select a certification to view",
-			"delete": "Delete certification"
+			"delete": "Delete certification",
+			"show": "View certifications",
+			"hide": "Hide certifications"
 		}
 	},
 	"updateProfileModal": {
@@ -1020,5 +1096,104 @@
 		"cancel": "Cancel",
 		"send": "Send",
 		"sending": "Sending..."
+	},
+	"notificaciones": {
+		"title": "Notifications",
+		"ariaLabel": "Notifications",
+		"markAllAria": "Mark all as read",
+		"closeAria": "Close notifications",
+		"tabs": {
+			"notificaciones": "Notifications",
+			"solicitudes": "Requests"
+		},
+		"unread": "{count} unread",
+		"emptyNotificaciones": "Your notifications will appear here",
+		"emptySolicitudes": "You have no pending requests"
+	},
+	"anuncioForm": {
+		"titleCreate": "Create new ad",
+		"titleEdit": "Edit ad",
+		"fields": {
+			"titulo": "Ad title",
+			"tituloPlaceholder": "What item do you want to advertise?",
+			"descripcion": "Description",
+			"descripcionPlaceholder": "Describe your item's condition, what you want in exchange, availability, etc...",
+			"foto": "Item photo",
+			"uploadText": "Drag an image or click to browse",
+			"uploadHint": "Accepted formats: PNG, JPG or WEBP (max. 5MB)",
+			"previewAlt": "Item preview",
+			"removeImageAria": "Remove image"
+		},
+		"errors": {
+			"invalidType": "The file must be a valid image (PNG, JPG, WEBP).",
+			"tooLarge": "The image must not exceed 5MB.",
+			"imageRequired": "The ad image is required to publish.",
+			"server": "There was a problem processing the request with the server."
+		},
+		"actions": {
+			"cancel": "Cancel",
+			"submitCreate": "Publish ad",
+			"submitEdit": "Save changes",
+			"processing": "Processing..."
+		}
+	},
+	"reporte": {
+		"title": "Report",
+		"closeAria": "Close report",
+		"preguntas": {
+			"usuario": "Why do you want to report this user?",
+			"comentario": "Why do you want to report this comment?",
+			"publicacion": "Why do you want to report this post?"
+		},
+		"detalle": {
+			"title": "Additional details",
+			"placeholder": "Tell us more..."
+		},
+		"evidencia": {
+			"title": "Optional evidence",
+			"alt": "Evidence {n}",
+			"text": "Attach up to {max} images as evidence",
+			"hint": "JPG, PNG or WEBP. Maximum 5MB per image.",
+			"removeAria": "Remove evidence {n}",
+			"errorMax": "You can only attach up to {max} images.",
+			"errorType": "Only JPG, PNG or WEBP images are allowed.",
+			"errorSize": "Each image must be 5MB or less.",
+			"errorPartial": "Only {added} images were added. The maximum is {max}."
+		},
+		"suspension": {
+			"diasLabel": "Suspension days",
+			"diasPlaceholder": "Number of days from today"
+		},
+		"acciones": {
+			"cancelar": "Cancel",
+			"enviar": "Send",
+			"confirmar": "Confirm"
+		},
+		"moderador": {
+			"reportar": "Report",
+			"reportarPublicacionAria": "Report post",
+			"advertencia": "Warning",
+			"eliminarPublicacion": "Delete post",
+			"advertenciaTitulo": "Send warning",
+			"advertenciaPregunta": "Why do you want to warn this user?"
+		},
+		"motivos": {
+			"No cumplió con fechas": "Did not meet the agreed dates",
+			"Información falsa": "False information",
+			"Incumple las normas": "Breaks the rules",
+			"Cuenta falsa o suplantación de identidad": "Fake account or impersonation",
+			"Publica contenido inapropiado": "Posts inappropriate content",
+			"Acoso, amenazas o bullying": "Harassment, threats or bullying",
+			"Spam o estafa": "Spam or scam",
+			"Es ofensivo, insultante o usa lenguaje vulgar": "It is offensive, insulting or uses vulgar language",
+			"Es spam, publicidad no deseada o enlace sospechoso": "It is spam, unwanted advertising or a suspicious link",
+			"Acoso dirigido a otro usuario en la conversación": "Targeted harassment of another user in the conversation",
+			"Revela información personal privada": "Reveals private personal information",
+			"Venta o promoción de objetos inapropiados": "Sale or promotion of inappropriate items",
+			"Discurso de odio o símbolos ofensivos": "Hate speech or offensive symbols",
+			"Violencia, daño o actividades peligrosas": "Violence, harm or dangerous activities",
+			"Desnudez o contenido sexual explícito": "Nudity or explicit sexual content",
+			"Propiedad intelectual o derechos de autor": "Intellectual property or copyright"
+		}
 	}
 }
