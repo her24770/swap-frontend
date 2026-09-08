@@ -17,7 +17,8 @@
   height: min(38rem, 90vh);
 }
 
-@media (max-width: 40rem) {
+
+@media (max-width: 64rem) {
   .detalle-reporte-modal--expanded {
     max-width: 32rem;
     height: auto;
@@ -69,12 +70,6 @@
 .detalle-reporte-modal--expanded .detalle-reporte-modal__content {
   flex-direction: row;
   align-items: stretch;
-}
-
-@media (max-width: 40rem) {
-  .detalle-reporte-modal--expanded .detalle-reporte-modal__content {
-    flex-direction: column;
-  }
 }
 
 .detalle-reporte-modal__body {
@@ -165,7 +160,7 @@
   animation: detalle-reporte-modal-panel-in 0.2s ease;
 }
 
-@media (max-width: 40rem) {
+@media (max-width: 64rem) {
   .detalle-reporte-modal__publicacion-panel {
     border-left: none;
     border-top: 1px solid var(--swap-primary-border-color);
@@ -290,4 +285,18 @@
 
 .detalle-reporte-modal__btn-cancel:hover {
   color: var(--swap-primary-text-color);
+}
+
+@media (max-width: 64rem) {
+  .detalle-reporte-modal--expanded .detalle-reporte-modal__content {
+    flex-direction: column;
+  }
+
+  .detalle-reporte-modal--expanded .detalle-reporte-modal__body,
+  .detalle-reporte-modal__publicacion-panel,
+  .detalle-reporte-modal__publicacion-panel-body {
+    overflow-y: visible;
+    flex: none;
+    min-height: 0;
+  }
 }
