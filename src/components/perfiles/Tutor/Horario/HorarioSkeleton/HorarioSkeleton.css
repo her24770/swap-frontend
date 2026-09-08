@@ -68,3 +68,19 @@
   width: 100%;
   border-radius: 0.3125rem;
 }
+
+@media (max-width: 32rem) {
+  .horario-sk {
+    padding: 0.85rem;
+  }
+
+  .horario-sk__grid {
+    grid-template-columns: 1.9rem repeat(7, minmax(0, 1fr));
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .horario-sk__slot {
+    height: 1.75rem;
+  }
+}
