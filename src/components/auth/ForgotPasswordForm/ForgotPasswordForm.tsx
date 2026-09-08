@@ -32,6 +32,10 @@ export default function ForgotPasswordForm() {
   const normalizedEmail = email.trim().toLowerCase();
 
   const handleEmailSubmit = async () => {
+    if (!/^[^\s@]+@uvg\.edu\.gt$/i.test(normalizedEmail)) {
+      setServerError(t("validation.emailInstitutional"));
+      return;
+    }
     await apiClient.post("/api/auth/forgot-password", { email: normalizedEmail });
     toast.success(t("toast.codeSent"));
     setStep("code");

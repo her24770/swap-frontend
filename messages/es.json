@@ -269,10 +269,11 @@
 	},
 	"login": {
 		"title": "Iniciar Sesión",
-		"subtitle": "¿Eres nuevo? Ingresa tus credenciales para ingresar.",
+		"subtitle": "Ingresa tus credenciales si ya tienes una cuenta.",
 		"emailLabel": "Correo electrónico",
 		"emailPlaceholder": "ejemplo@uvg.edu.gt",
 		"passwordLabel": "Contraseña",
+		"passwordPlaceholder": "Ingresa tu contraseña",
 		"forgotPassword": "Olvidé mi contraseña",
 		"togglePasswordAria": "Mostrar u ocultar contraseña",
 		"submit": "Continuar",
@@ -292,6 +293,7 @@
 		"validation": {
 			"emailRequired": "El correo es requerido",
 			"emailInvalid": "Correo no válido",
+			"emailInstitutional": "Usa tu correo institucional @uvg.edu.gt",
 			"passwordRequired": "La contraseña es requerida",
 			"passwordMin": "Mínimo 6 caracteres"
 		}
@@ -301,8 +303,9 @@
       "title": "Panel de Moderación",
       "subtitle": "Ingresa tus credenciales de moderador.",
       "usuarioLabel": "Usuario",
-      "usuarioPlaceholder": "usuario.moderador",
+      "usuarioPlaceholder": "Ingresa tu usuario",
       "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
       "togglePasswordAria": "Mostrar u ocultar contraseña",
       "submit": "Ingresar",
       "submitting": "Ingresando...",
@@ -575,7 +578,8 @@
 			"errorFallback": "No fue posible completar la recuperación"
 		},
 		"validation": {
-			"passwordMismatch": "Las contraseñas no coinciden."
+			"passwordMismatch": "Las contraseñas no coinciden.",
+			"emailInstitutional": "Usa tu correo institucional @uvg.edu.gt"
 		}
 	},
 	"registro": {

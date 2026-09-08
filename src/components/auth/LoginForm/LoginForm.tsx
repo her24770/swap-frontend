@@ -101,8 +101,8 @@ export default function LoginForm() {
             {...register("email", {
               required: tValidation('emailRequired'),
               pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: tValidation('emailInvalid'),
+                value: /^[^\s@]+@uvg\.edu\.gt$/i,
+                message: tValidation('emailInstitutional'),
               },
             })}
             className={`login-form__input${errors.email ? " login-form__input--error" : ""}`}
@@ -123,6 +123,7 @@ export default function LoginForm() {
           <div className="login-form__input-wrapper">
             <input
               type={showPassword ? "text" : "password"}
+              placeholder={t('passwordPlaceholder')}
               {...register("password", {
                 required: tValidation('passwordRequired'),
               })}

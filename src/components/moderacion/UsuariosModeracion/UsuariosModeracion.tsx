@@ -188,6 +188,7 @@ export default function UsuariosModeracion() {
       ) : usuarios.length === 0 ? (
         <div className="usuarios-moderacion__empty">{t("empty")}</div>
       ) : (
+        <div className="usuarios-moderacion__table-wrap">
         <table className="usuarios-moderacion__table">
           <thead>
             <tr>
@@ -315,6 +316,7 @@ export default function UsuariosModeracion() {
             })}
           </tbody>
         </table>
+        </div>
       )}
 
       <div className="usuarios-moderacion__pagination">

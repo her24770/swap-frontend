@@ -98,3 +98,43 @@
   top: 2rem;
   left: 2rem;
 }
+
+@media (max-width: 48rem) {
+  .registro-page__content {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .registro-page__main-container .registro-link {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: 1.25rem;
+  }
+
+  .registro__arrow {
+    height: 1.75rem;
+  }
+}
+
+
+@media (min-width: 100rem) {
+  .registro-page__content {
+    padding: 4rem 3rem;
+  }
+
+  .registro-page__wrapper,
+  .registro-page__main-container {
+    max-width: 76rem;
+  }
+
+  .registro-page__wrapper {
+    gap: 6rem;
+  }
+
+  .registro-page__title {
+    font-size: 2.25rem;
+  }
+
+  .registro-page__description {
+    font-size: 1.0625rem;
+  }
+}

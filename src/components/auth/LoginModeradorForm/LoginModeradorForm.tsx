@@ -82,6 +82,7 @@ export default function LoginModeradorForm() {
           <div className="login-moderador-form__input-wrapper">
             <input
               type={showPassword ? "text" : "password"}
+              placeholder={t("passwordPlaceholder")}
               {...register("password", {
                 required: tValidation("passwordRequired"),
               })}

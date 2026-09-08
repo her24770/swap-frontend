@@ -10,14 +10,14 @@ interface HorarioSemanalProps {
   onToggleSlot?: (dia: DiaHorario, hora: number) => void;
 }
 
-const DIAS: { key: DiaHorario; label: string }[] = [
-  { key: "lunes", label: "Lunes" },
-  { key: "martes", label: "Martes" },
-  { key: "miercoles", label: "Miércoles" },
-  { key: "jueves", label: "Jueves" },
-  { key: "viernes", label: "Viernes" },
-  { key: "sabado", label: "Sábado" },
-  { key: "domingo", label: "Domingo" },
+const DIAS: { key: DiaHorario; label: string; abbr: string }[] = [
+  { key: "lunes", label: "Lunes", abbr: "L" },
+  { key: "martes", label: "Martes", abbr: "M" },
+  { key: "miercoles", label: "Miércoles", abbr: "X" },
+  { key: "jueves", label: "Jueves", abbr: "J" },
+  { key: "viernes", label: "Viernes", abbr: "V" },
+  { key: "sabado", label: "Sábado", abbr: "S" },
+  { key: "domingo", label: "Domingo", abbr: "D" },
 ];
 const HORAS = [7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20];
 
@@ -64,7 +64,10 @@ export default function HorarioSemanal({
           </div>
           {DIAS.map((dia) => (
             <div key={dia.key} className="horario__col-header">
-              {dia.label}
+              <span className="horario__col-header-full">{dia.label}</span>
+              <span className="horario__col-header-abbr" aria-hidden="true">
+                {dia.abbr}
+              </span>
             </div>
           ))}
 

@@ -269,10 +269,11 @@
 	},
 	"login": {
 		"title": "Connexion",
-		"subtitle": "Nouveau ici ? Saisissez vos identifiants pour vous connecter.",
+		"subtitle": "Saisissez vos identifiants si vous avez déjà un compte.",
 		"emailLabel": "E-mail",
 		"emailPlaceholder": "exemple@uvg.edu.gt",
 		"passwordLabel": "Mot de passe",
+		"passwordPlaceholder": "Saisissez votre mot de passe",
 		"forgotPassword": "J'ai oublié mon mot de passe",
 		"togglePasswordAria": "Afficher ou masquer le mot de passe",
 		"submit": "Continuer",
@@ -292,6 +293,7 @@
 		"validation": {
 			"emailRequired": "L'e-mail est requis",
 			"emailInvalid": "E-mail invalide",
+			"emailInstitutional": "Utilisez votre e-mail institutionnel @uvg.edu.gt",
 			"passwordRequired": "Le mot de passe est requis",
 			"passwordMin": "Minimum 6 caractères"
 		}
@@ -301,8 +303,9 @@
 			"title": "Panneau de modération",
 			"subtitle": "Entrez vos identifiants de modérateur.",
 			"usuarioLabel": "Utilisateur",
-			"usuarioPlaceholder": "utilisateur.moderateur",
+			"usuarioPlaceholder": "Saisissez votre utilisateur",
 			"passwordLabel": "Mot de passe",
+			"passwordPlaceholder": "Saisissez votre mot de passe",
 			"togglePasswordAria": "Afficher ou masquer le mot de passe",
 			"submit": "Se connecter",
 			"submitting": "Connexion...",
@@ -553,7 +556,8 @@
 			"errorFallback": "Impossible de terminer la récupération"
 		},
 		"validation": {
-			"passwordMismatch": "Les mots de passe ne correspondent pas."
+			"passwordMismatch": "Les mots de passe ne correspondent pas.",
+			"emailInstitutional": "Utilisez votre e-mail institutionnel @uvg.edu.gt"
 		}
 	},
 	"registro": {
