@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaRegistro, type RegistroFormData } from "../schemas/zodSchemas";
 import { apiClient } from "../lib/apiClient";
+import { unwrapAuthResponse } from "../lib/authResponse";
 import { useAuthStore } from "../store/authStore";
 
 export function useFormRegistro() {
@@ -19,6 +20,7 @@ export function useFormRegistro() {
       confirmar_password: "",
       url_foto_perfil: "",
       descripcion: "",
+      etiquetas: [],
     },
   });
 
@@ -32,18 +34,20 @@ export function useFormRegistro() {
     }
 
     const carnet = Number(match[1]);
-    const respuesta = await apiClient.post<{ token: string; usuario: any; rol: any }>(
+    const respuesta = await apiClient.post<{ usuario: any; rol: any }>(
       "/api/auth/register",
       {
         nombre: `${data.nombre} ${data.apellido}`.trim(),
         carnet,
         email_institucional: data.email_institucional,
         password: data.password,
-        url_foto_perfil: data.url_foto_perfil || "https://i.pravatar.cc/150?u=vendedor",
+        url_foto_perfil: data.url_foto_perfil || process.env.NEXT_PUBLIC_DEFAULT_AVATAR_URL || "",
         descripcion: data.descripcion || "Sin descripción",
+        etiquetas: data.etiquetas,
       }
     );
-    login(respuesta.usuario, respuesta.token, respuesta.rol);
+    const sesion = unwrapAuthResponse(respuesta);
+    login(sesion.usuario, sesion.rol);
   });
 
   return { form, onSubmit };

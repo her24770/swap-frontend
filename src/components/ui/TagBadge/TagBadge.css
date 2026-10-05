@@ -5,7 +5,7 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: 9999rem;
   font-family: var(--swap-font-textos);
   font-size: 0.7rem;
   font-weight: 600;
@@ -13,9 +13,21 @@
   white-space: nowrap;
   line-height: 1.4;
   border: 1px solid transparent;
-  transition: filter 0.15s ease, transform 0.15s ease;
+  transition: filter 1.5s ease, transform 1.5s ease, max-width 1s ease-in-out;
   cursor: default;
   user-select: none;
+}
+
+.tag-badge--parent {
+  background-color: var(--swap-tag-padre-bg);
+  color: var(--swap-tag-padre-text);
+  border-color: var(--swap-tag-padre-border);
+}
+
+.tag-badge--child {
+  background-color: var(--swap-tag-hija-bg);
+  color: var(--swap-tag-hija-text);
+  border-color: var(--swap-tag-hija-border);
 }
 
 /* Variante clickeable (para filtros) */
@@ -43,4 +55,18 @@
 .tag-badge--lg {
   font-size: 0.75rem;
   padding: 0.25rem 0.8rem;
+  display: inline-flex; 
+  justify-content: center;
+  align-items: center;
+  height: 2.1rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-badge--lg:hover {
+  max-width: 500px; 
+  transition: max-width 0.25s ease-in-out;
+
 }

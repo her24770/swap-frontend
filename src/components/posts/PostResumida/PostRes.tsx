@@ -2,7 +2,9 @@
 
 import { useRef, useState } from "react";
 import { Camera, ChevronRight, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { imagenService } from "../../../services/imagenService";
+import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Button/Button.css";
 import "./PostRes.css";
 import PostImage from "../PostCard/PostImage/PostImage";
@@ -15,6 +17,9 @@ interface PostResProps {
 }
 
 export default function PostRes({ title, price, images, publicacionId }: PostResProps) {
+  const t = useTranslations("posts");
+  const { mostrarConfirm, agregarNotificacion } = useUIStore();
+
   const [displayImages, setDisplayImages] = useState<string[]>(images);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -24,32 +29,55 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
     console.log(`Ver detalles de: ${title}`);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || publicacionId === undefined) return;
-
-    const allowed = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowed.includes(file.type)) {
-      setUploadError("Solo se permiten JPG, PNG o WEBP");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Máximo 5 MB");
-      return;
-    }
+  const uploadImage = async (file: File) => {
+    if (publicacionId === undefined) return;
 
     setIsUploading(true);
     setUploadError(null);
 
     try {
-      const url = await imagenService.uploadFotoPublicacion(publicacionId, file);
-      setDisplayImages([url, ...displayImages.slice(1)]);
-    } catch (err: any) {
-      setUploadError(err.message || "Error al subir la imagen");
+      const { urlsNuevas } = await imagenService.actualizarPublicacion(publicacionId, { imagenes: [file] });
+      if (urlsNuevas[0]) setDisplayImages((prev) => [...prev, urlsNuevas[0]]);
+      agregarNotificacion({
+        tipo: "success",
+        mensaje: "La imagen de la publicación fue actualizada exitosamente.",
+      });
+    } catch (err) {
+      const error = err as Error;
+      const message = error.message || t("uploadErrors.generic");
+      setUploadError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
     } finally {
       setIsUploading(false);
-      e.target.value = "";
     }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || publicacionId === undefined) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      const message = t("uploadErrors.invalidType");
+      setUploadError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      const message = t("uploadErrors.tooLarge");
+      setUploadError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+      return;
+    }
+
+    mostrarConfirm({
+      titulo: "Actualizar imagen",
+      mensaje: "¿Deseas reemplazar la imagen de esta publicación?",
+      onConfirm: () => {
+        void uploadImage(file);
+      },
+    });
   };
 
   return (
@@ -63,7 +91,7 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
                 className="post-res-card__upload-overlay"
                 onClick={() => !isUploading && fileInputRef.current?.click()}
                 role="button"
-                aria-label="Subir imagen"
+                aria-label={t("aria.uploadImage")}
               >
                 {isUploading
                   ? <Loader2 size={20} className="post-res-card__upload-spinner" />
@@ -98,7 +126,7 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
             className="button button--small"
             onClick={handleDetailsClick}
           >
-            Detalles <ChevronRight size={14} />
+            {t("actions.details")} <ChevronRight size={14} />
           </button>
         </div>
       </div>

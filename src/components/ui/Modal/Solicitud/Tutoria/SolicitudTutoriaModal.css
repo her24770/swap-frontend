@@ -1,0 +1,158 @@
+.solicitud-tutoria__overlay {
+  padding: 1rem;
+  z-index: 10001;
+}
+
+.solicitud-tutoria {
+  width: min(100%, 34rem);
+  max-height: 90dvh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 1rem;
+  background: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+  box-shadow: 0 1.5rem 4rem rgba(15, 23, 42, 0.2);
+}
+
+.solicitud-tutoria__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.solicitud-tutoria__header h2,
+.solicitud-tutoria__header p {
+  margin: 0;
+}
+
+.solicitud-tutoria__header h2 {
+  margin-top: 0.2rem;
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.25rem;
+}
+
+.solicitud-tutoria__header div > p:last-child:not(.solicitud-tutoria__eyebrow) {
+  margin-top: 0.35rem;
+  color: var(--swap-tertiary-text-color);
+  font-size: 0.8125rem;
+}
+
+.solicitud-tutoria__eyebrow {
+  color: var(--swap-primary-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.solicitud-tutoria__close {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--swap-tertiary-text-color);
+  cursor: pointer;
+}
+
+.solicitud-tutoria__close:hover {
+  background: var(--swap-secondary-background);
+  color: var(--swap-primary-text-color);
+}
+
+.solicitud-tutoria__form,
+.solicitud-tutoria__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.solicitud-tutoria__form {
+  gap: 1rem;
+}
+
+.solicitud-tutoria__schedule {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.solicitud-tutoria__field {
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.solicitud-tutoria__field > span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.solicitud-tutoria__field input,
+.solicitud-tutoria__field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.625rem;
+  outline: none;
+  background: var(--swap-secondary-background);
+  color: var(--swap-primary-text-color);
+  font: inherit;
+}
+
+.solicitud-tutoria__field textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+}
+
+.solicitud-tutoria__field input:focus,
+.solicitud-tutoria__field textarea:focus {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 3px var(--swap-active-color);
+}
+
+.solicitud-tutoria__field input::placeholder,
+.solicitud-tutoria__field textarea::placeholder {
+  color: var(--swap-tertiary-text-color);
+}
+
+.solicitud-tutoria__field [aria-invalid="true"] {
+  border-color: var(--swap-danger-color);
+}
+
+.solicitud-tutoria__field small {
+  color: var(--swap-danger-color);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.solicitud-tutoria__trigger,
+.solicitud-tutoria__submit {
+  min-height: 2.75rem;
+}
+
+.solicitud-tutoria__submit {
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 480px) {
+  .solicitud-tutoria {
+    padding: 1.25rem;
+  }
+
+  .solicitud-tutoria__schedule {
+    grid-template-columns: 1fr;
+  }
+}

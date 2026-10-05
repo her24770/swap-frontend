@@ -1,0 +1,26 @@
+.h-carousel__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  user-select: none;
+}
+
+.h-carousel__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--swap-primary-color, #7c3aed);
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.h-carousel__dot--active {
+  background-color: var(--swap-primary-color, #7c3aed);
+  transform: scale(1.2);
+}

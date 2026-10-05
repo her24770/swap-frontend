@@ -1,0 +1,5 @@
+.contactar-usuario-modal {
+  width: 100%;
+  max-width: 28rem;
+  height: min(26rem, 85vh);
+}

@@ -78,3 +78,12 @@
   display: flex;
   gap: 0.75rem;
 }
+
+.comment-form__api-error{
+  background-color: var(--swap-error-background);
+  border: 1px solid var(--swap-error-border);
+  color:var(--swap-danger-color);
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}

@@ -1,0 +1,35 @@
+/* Tutor detail modal — reuses .post-modal / seller row from DetallePublicacion.css */
+
+.detalle-usuario.post-modal {
+  max-width: 26rem;
+}
+
+.detalle-usuario__temas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detalle-usuario__temas-label {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.detalle-usuario__temas-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detalle-usuario__tema-item {
+  font-family: var(--swap-font-textos);
+  font-size: 0.9375rem;
+  color: var(--swap-tertiary-text-color);
+  line-height: 1.5;
+}

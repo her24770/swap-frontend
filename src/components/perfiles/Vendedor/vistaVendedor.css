@@ -1,0 +1,56 @@
+.vendedor-view__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  overflow: visible;
+}
+
+.vendedor-view__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vendedor-view__title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.vendedor-view__new-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-family: var(--swap-font-textos);
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--swap-primary-color);
+  border-radius: 0.5rem;
+  color: var(--swap-primary-color);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.vendedor-view__new-btn:hover {
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+}
+
+.vendedor-view__divider {
+  border: none;
+  border-top: 0.0625rem solid var(--swap-tertiary-background);
+  margin: 0;
+}
+
+.vendedor-view__modal {
+  width: 100%;
+  max-width: 40rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 1rem;
+}

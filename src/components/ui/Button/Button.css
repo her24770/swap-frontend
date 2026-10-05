@@ -81,3 +81,12 @@
 .button--full-width {
   width: 100%;
 }
+
+.button--warning {
+  background-color: #f59e0b;
+  color: #ffffff;
+}
+
+.button--warning:hover:not(:disabled) {
+  background-color: #d97706;
+}

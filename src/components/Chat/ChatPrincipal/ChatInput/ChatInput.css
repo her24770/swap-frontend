@@ -1,0 +1,103 @@
+.chat-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  border-top: 1px solid var(--swap-primary-border-color);
+  background-color: var(--swap-primary-background);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.chat-input__emoji-picker {
+  position: relative;
+}
+
+.chat-input__emoji-menu {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.35rem;
+  padding: 0.5rem;
+  width: 13rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.9rem;
+  background-color: var(--swap-primary-background);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+}
+
+.chat-input__emoji-item {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.chat-input__emoji-item:hover {
+  background-color: var(--swap-secondary-background);
+}
+
+.chat-input__field {
+  flex: 1;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  border: 1px solid var(--swap-primary-border-color);
+  background-color: var(--swap-secondary-background);
+  font-size: 0.8125rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-primary-text-color);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.chat-input__field::placeholder {
+  color: var(--swap-tertiary-text-color);
+}
+
+.chat-input__field:focus {
+  border-color: var(--swap-primary-color);
+}
+
+.chat-input__icon-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--swap-secondary-background);
+  color: var(--swap-tertiary-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.chat-input__file-input {
+  display: none;
+}
+
+.chat-input__icon-btn:hover {
+  background-color: var(--swap-tertiary-background);
+  color: var(--swap-primary-text-color);
+}
+
+.chat-input__icon-btn--send {
+  background-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+}
+
+.chat-input__icon-btn--send:hover {
+  opacity: 0.9;
+}
+
+.chat-input__icon-btn--send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

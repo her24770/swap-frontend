@@ -1,23 +1,28 @@
-import { useAuthStore } from "../store/authStore";
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-
-function authHeader(): HeadersInit {
-  const token = useAuthStore.getState().token;
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
 
 export interface CrearPublicacionPayload {
   titulo: string;
   descripcion: string;
   precio?: string;
-  tipo_publicacion: number;
-  imagen?: File;
+  tipo_publicacion: string;
+  imagenes?: File[];
+  estado?: string;
 }
 
 export interface CrearPublicacionResult {
   id_publicacion: number;
-  imagen_url: string;
+  imagenes: string[];
+}
+
+export interface ActualizarPublicacionPayload {
+  titulo?: string;
+  descripcion?: string;
+  precio?: string;
+  tipo_publicacion?: string;
+  estado?: string | number;
+  etiquetas?: number[];
+  imagenes?: File[];
+  imagenesEliminar?: string[];
 }
 
 export const imagenService = {
@@ -25,23 +30,57 @@ export const imagenService = {
     const formData = new FormData();
     formData.append("titulo", payload.titulo);
     formData.append("descripcion", payload.descripcion);
-    formData.append("precio", payload.precio ? payload.precio : "0");
-    formData.append("tipo_publicacion", String(payload.tipo_publicacion));
-    if (payload.imagen) formData.append("imagen", payload.imagen);
+    formData.append("precio", payload.precio ?? "0");
+    formData.append("tipo_publicacion", payload.tipo_publicacion);
+    formData.append("estado", payload.estado ?? "activo");
+
+    for (const file of payload.imagenes ?? []) {
+      formData.append("imagenes", file);
+    }
 
     const res = await fetch(`${BASE_URL}/api/publicacion/`, {
       method: "POST",
-      headers: authHeader(),
+      credentials: "include",
       body: formData,
     });
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? `Error ${res.status} al crear publicación`);
+      throw new Error(body.message ?? body.error ?? `Error ${res.status} al crear publicación`);
     }
 
     const json = await res.json();
     return json.data as CrearPublicacionResult;
+  },
+
+  async actualizarPublicacion(id: number, payload: ActualizarPublicacionPayload): Promise<{ urlsNuevas: string[] }> {
+    const formData = new FormData();
+
+    if (payload.titulo !== undefined)           formData.append("titulo", payload.titulo);
+    if (payload.descripcion !== undefined)      formData.append("descripcion", payload.descripcion);
+    if (payload.precio !== undefined)           formData.append("precio", payload.precio);
+    if (payload.tipo_publicacion !== undefined) formData.append("tipo_publicacion", payload.tipo_publicacion);
+    if (payload.estado !== undefined)           formData.append("estado", String(payload.estado));
+    if (payload.etiquetas !== undefined)        formData.append("etiquetas", JSON.stringify(payload.etiquetas));
+    if (payload.imagenesEliminar?.length)       formData.append("imagenesEliminar", JSON.stringify(payload.imagenesEliminar));
+
+    for (const file of payload.imagenes ?? []) {
+      formData.append("imagenes", file);
+    }
+
+    const res = await fetch(`${BASE_URL}/api/publicacion/${id}`, {
+      method: "PUT",
+      credentials: "include",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.message ?? body.error ?? `Error ${res.status} al actualizar publicación`);
+    }
+
+    const json = await res.json();
+    return { urlsNuevas: json.data?.urlsNuevas ?? [] };
   },
 
   async uploadFotoPerfil(usuarioId: number, file: File): Promise<string> {
@@ -50,35 +89,16 @@ export const imagenService = {
 
     const res = await fetch(`${BASE_URL}/api/imagen/perfil/${usuarioId}`, {
       method: "PUT",
-      headers: authHeader(),
+      credentials: "include",
       body: formData,
     });
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? `Error ${res.status} al subir foto de perfil`);
+      throw new Error(body.message ?? body.error ?? `Error ${res.status} al subir foto de perfil`);
     }
 
     const data = await res.json();
-    return data.url as string;
-  },
-
-  async uploadFotoPublicacion(publicacionId: number, file: File): Promise<string> {
-    const formData = new FormData();
-    formData.append("imagen", file);
-
-    const res = await fetch(`${BASE_URL}/api/imagen/publicacion/${publicacionId}`, {
-      method: "PUT",
-      headers: authHeader(),
-      body: formData,
-    });
-
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      throw new Error(body.message ?? `Error ${res.status} al subir imagen`);
-    }
-
-    const data = await res.json();
-    return data.url as string;
+    return data.data as string;
   },
 };

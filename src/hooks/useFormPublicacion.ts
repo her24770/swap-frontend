@@ -1,9 +1,12 @@
 "use client";
- 
-import { useForm, UseFormReturn  } from "react-hook-form";
+
+import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useState, useCallback, useEffect } from "react";
+import { type ApiError } from "../lib/apiClient";
+import { imagenService } from "../services/imagenService";
+import { useUIStore } from "../store/uiStore";
 import {
   schemaCrearPublicacion,
   schemaEditarPublicacion,
@@ -12,28 +15,28 @@ import {
   type TipoPublicacion,
   TIPOS_PUBLICACION,
 } from "../schemas/zodSchemas";
-import { apiClient, type ApiError} from "../lib/apiClient";
-import { imagenService } from "../services/imagenService";
+const { agregarNotificacion } = useUIStore.getState();
 
- 
-// ─── Helpers internos ─────────────────────────────────────────────────────────
- 
-/**
- * Convierte el string del tipo ("material"  "tutoria"  "negocio")
- * en el id_tipo_perfil que espera el backend consultando primero
- * el mapa local.
- */
-const TIPO_ID_MAP: Record<TipoPublicacion, number> = {
-  material: 1,
-  tutoria: 2,
-  negocio: 3,
+const CONFIRMACIONES_PUBLICACION = {
+  crear: {
+    titulo: "Crear publicación",
+    mensaje: "¿Deseas crear esta publicación con la información ingresada?",
+  },
+  actualizar: {
+    titulo: "Actualizar publicación",
+    mensaje: "¿Deseas guardar los cambios de esta publicación?",
+  },
 };
- 
+
+
+
+// ─── Helpers internos ─────────────────────────────────────────────────────────
+
 /** Genera URLs de objeto para preview y las devuelve junto con sus URLs. */
 function crearPreviews(files: File[]): string[] {
   return files.map((f) => URL.createObjectURL(f));
 }
- 
+
 /** Libera las URLs de objeto creadas para el preview de imágenes. */
 function revocarPreviews(urls: string[]): void {
   urls.forEach((url) => URL.revokeObjectURL(url));
@@ -56,9 +59,12 @@ export interface UseFormCrearPublicacionReturn {
 }
 
 
-export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
+export function useFormCrearPublicacion(
+  defaultTipoPublicacion: TipoPublicacion = "material"
+): UseFormCrearPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const form = useForm<CrearPublicacionFormData>({
@@ -67,7 +73,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
       titulo: "",
       descripcion: "",
       precio: "",
-      tipo_publicacion: "material",
+      tipo_publicacion: defaultTipoPublicacion,
       categorias: [],
       imagenes: [],
       destacado: false,
@@ -83,7 +89,7 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
- 
+
 
   // ── Manejo de imágenes ──────────────────────────────────────────────────────
 
@@ -91,29 +97,29 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     (files: FileList | File[]) => {
       const filesArray = Array.from(files);
       const current = form.getValues("imagenes") ?? [];
- 
+
       // Limita a 5 imágenes en total
       const available = 5 - current.length;
       if (available <= 0) return;
- 
+
       const toAdd = filesArray.slice(0, available);
       const updated = [...current, ...toAdd];
- 
+
       form.setValue("imagenes", updated, { shouldValidate: true, shouldDirty: true });
- 
+
       // Genera previews solo para las nuevas
       const newPreviews = crearPreviews(toAdd);
       setImagePreviews((prev) => [...prev, ...newPreviews]);
     },
     [form]
   );
- 
+
   const removeImage = useCallback(
     (index: number) => {
       const current = form.getValues("imagenes") ?? [];
       const updated = current.filter((_, i) => i !== index);
       form.setValue("imagenes", updated, { shouldValidate: true, shouldDirty: true });
- 
+
       setImagePreviews((prev) => {
         URL.revokeObjectURL(prev[index]);
         return prev.filter((_, i) => i !== index);
@@ -121,34 +127,55 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     },
     [form]
   );
- 
+
 
   // ── Envío al backend
 
-  const onSubmit = form.handleSubmit(async (data: CrearPublicacionFormData) => {
+  const crearPublicacion = useCallback(async (data: CrearPublicacionFormData) => {
     setServerError(null);
     setIsSuccess(false);
+    setIsSubmitting(true);
 
     try {
-      const imagen = data.imagenes?.[0];
-      await imagenService.crearPublicacion({
+      const resultado = await imagenService.crearPublicacion({
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
-        tipo_publicacion: TIPO_ID_MAP[data.tipo_publicacion],
-        imagen,
+        tipo_publicacion: data.tipo_publicacion,
+        imagenes: data.imagenes ?? [],
       });
+
+      if (data.categorias?.length) {
+        await imagenService.actualizarPublicacion(resultado.id_publicacion, {
+          etiquetas: data.categorias,
+        });
+      }
 
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       form.reset();
+      agregarNotificacion({ tipo: "success", mensaje: "Tu publicación fue creada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(apiError.message || "No fue posible crear la publicación. Intenta de nuevo.");
+      const message = apiError.message || "No fue posible crear la publicación.";
+      setServerError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+    } finally {
+      setIsSubmitting(false);
     }
+  }, [form, imagePreviews]);
+
+  const onSubmit = form.handleSubmit((data: CrearPublicacionFormData) => {
+    const { mostrarConfirm } = useUIStore.getState();
+    mostrarConfirm({
+      ...CONFIRMACIONES_PUBLICACION.crear,
+      onConfirm: () => {
+        void crearPublicacion(data);
+      },
+    });
   });
- 
+
   const resetForm = useCallback(() => {
     revocarPreviews(imagePreviews);
     setImagePreviews([]);
@@ -156,11 +183,11 @@ export function useFormCrearPublicacion(): UseFormCrearPublicacionReturn  {
     setIsSuccess(false);
     form.reset();
   }, [form, imagePreviews]);
- 
+
   return {
     form,
     onSubmit,
-    isSubmitting: form.formState.isSubmitting,
+    isSubmitting: form.formState.isSubmitting || isSubmitting,
     serverError,
     isSuccess,
     imagePreviews,
@@ -181,17 +208,23 @@ export interface UseFormEditarPublicacionReturn {
   serverError: string | null;
   isSuccess: boolean;
   imagePreviews: string[];
+  imagenesExistentes: string[];
   addImages: (files: FileList | File[]) => void;
   removeImage: (index: number) => void;
+  removeExistingImage: (url: string) => void;
 }
- 
-export function useFormEditarPublicacion(id: number,
-  /** Valores iniciales cargados desde el servidor */
-  defaults?: Partial<EditarPublicacionFormData>
-): UseFormEditarPublicacionReturn{
+
+export function useFormEditarPublicacion(
+  id: number,
+  defaults?: Partial<EditarPublicacionFormData>,
+  imagenesIniciales: string[] = []
+): UseFormEditarPublicacionReturn {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [imagenesExistentes, setImagenesExistentes] = useState<string[]>(imagenesIniciales);
+  const [imagenesAEliminar, setImagenesAEliminar] = useState<string[]>([]);
 
   const form = useForm<EditarPublicacionFormData>({
     resolver: zodResolver(schemaEditarPublicacion),
@@ -203,6 +236,7 @@ export function useFormEditarPublicacion(id: number,
       categorias: defaults?.categorias ?? [],
       imagenesNuevas: [],
       destacado: defaults?.destacado ?? false,
+      estado: defaults?.estado ?? undefined,
     },
     mode: "onTouched",
   });
@@ -219,21 +253,21 @@ export function useFormEditarPublicacion(id: number,
   const addImages = useCallback(
     (files: FileList | File[]) => {
       const filesArray = Array.from(files);
-      const current = form.getValues("imagenesNuevas") ?? [];
-      const available = 5 - current.length;
+      const nuevas = form.getValues("imagenesNuevas") ?? [];
+      const available = 5 - imagenesExistentes.length - nuevas.length;
       if (available <= 0) return;
- 
+
       const toAdd = filesArray.slice(0, available);
-      form.setValue("imagenesNuevas", [...current, ...toAdd], {
+      form.setValue("imagenesNuevas", [...nuevas, ...toAdd], {
         shouldValidate: true,
         shouldDirty: true,
       });
- 
+
       setImagePreviews((prev) => [...prev, ...crearPreviews(toAdd)]);
     },
-    [form]
+    [form, imagenesExistentes]
   );
- 
+
   const removeImage = useCallback(
     (index: number) => {
       const current = form.getValues("imagenesNuevas") ?? [];
@@ -242,7 +276,7 @@ export function useFormEditarPublicacion(id: number,
         current.filter((_, i) => i !== index),
         { shouldValidate: true, shouldDirty: true }
       );
- 
+
       setImagePreviews((prev) => {
         URL.revokeObjectURL(prev[index]);
         return prev.filter((_, i) => i !== index);
@@ -250,48 +284,66 @@ export function useFormEditarPublicacion(id: number,
     },
     [form]
   );
- 
+
+  const removeExistingImage = useCallback((url: string) => {
+    setImagenesExistentes((prev) => prev.filter((u) => u !== url));
+    setImagenesAEliminar((prev) => [...prev, url]);
+  }, []);
+
   // ── Envío al backend ────────────────────────────────────────────────────────
- 
-  const onSubmit = form.handleSubmit(async (data: EditarPublicacionFormData) => {
+
+  const actualizarPublicacion = useCallback(async (data: EditarPublicacionFormData) => {
     setServerError(null);
     setIsSuccess(false);
+    setIsSubmitting(true);
 
     try {
-      // Solo incluye los campos que el usuario realmente modificó
-      const payload: Record<string, unknown> = {};
- 
-      if (data.titulo !== undefined) payload.titulo = data.titulo;
-      if (data.descripcion !== undefined) payload.descripcion = data.descripcion;
-      if (data.precio !== undefined && data.precio !== "")
-        payload.precio = parseFloat(data.precio);
-      if (data.tipo_publicacion !== undefined)
-        payload.tipo_publicacion = TIPO_ID_MAP[data.tipo_publicacion];
-      if (data.categorias !== undefined && data.categorias.length > 0)
-        payload.etiquetas = data.categorias;
-      if (data.destacado !== undefined) payload.destacado = data.destacado;
- 
-      await apiClient.put(`/api/publicacion/${id}`, payload);
- 
+      await imagenService.actualizarPublicacion(id, {
+        titulo: data.titulo,
+        descripcion: data.descripcion,
+        precio: data.precio,
+        tipo_publicacion: data.tipo_publicacion,
+        estado: data.estado,
+        etiquetas: data.categorias?.length ? data.categorias : undefined,
+        imagenes: data.imagenesNuevas ?? [],
+        imagenesEliminar: imagenesAEliminar.length ? imagenesAEliminar : undefined,
+      });
+
       setIsSuccess(true);
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
+      setImagenesAEliminar([]);
+      agregarNotificacion({ tipo: "success", mensaje: "Publicación actualizada exitosamente." });
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(
-        apiError.message || "No fue posible actualizar la publicación. Intenta de nuevo."
-      );
+      const message = apiError.message || "No fue posible actualizar la publicación.";
+      setServerError(message);
+      agregarNotificacion({ tipo: "error", mensaje: message });
+    } finally {
+      setIsSubmitting(false);
     }
+  }, [id, imagePreviews, imagenesAEliminar]);
+
+  const onSubmit = form.handleSubmit((data: EditarPublicacionFormData) => {
+    const { mostrarConfirm } = useUIStore.getState();
+    mostrarConfirm({
+      ...CONFIRMACIONES_PUBLICACION.actualizar,
+      onConfirm: () => {
+        void actualizarPublicacion(data);
+      },
+    });
   });
- 
+
   return {
     form,
     onSubmit,
-    isSubmitting: form.formState.isSubmitting,
+    isSubmitting: form.formState.isSubmitting || isSubmitting,
     serverError,
     isSuccess,
     imagePreviews,
+    imagenesExistentes,
     addImages,
     removeImage,
+    removeExistingImage,
   };
 }

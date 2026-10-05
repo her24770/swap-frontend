@@ -5,6 +5,7 @@ import type { Publicacion, PublicacionFilters } from "../../types/publicacion";
 export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
   const { publicacion: service } = useServices();
   const [data, setData] = useState<Publicacion[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,10 +13,32 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
     try {
       setLoading(true);
       setError(null);
-      const result = await service.getAll(filters);
-      setData(result);
+      let result: Publicacion[];
+      if (filters.recommended) {
+        result = await service.getGlobalRecommendations(filters.tipo);
+        setTotal(result.length);
+      } else if (filters.personalized) {
+        try {
+          const personalizedResult = await service.getPersonalizedRecommendations();
+          if (personalizedResult && personalizedResult.length > 0) {
+            result = personalizedResult;
+          } else {
+            result = await service.getGlobalRecommendations(filters.tipo);
+          }
+        } catch {
+          result = await service.getGlobalRecommendations(filters.tipo);
+        }
+        setTotal(result.length);
+      } else {
+        const response = await service.getAll(filters);
+        result = response.data;
+        setTotal(response.total);
+      }
+      setData(Array.isArray(result) ? result : []);
     } catch (err: any) {
       console.error(err);
+      setData([]);
+      setTotal(0);
       setError(err.message || "Error al cargar publicaciones");
     } finally {
       setLoading(false);
@@ -26,5 +49,5 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
     fetchPublicaciones(initialFilters);
   }, [JSON.stringify(initialFilters), fetchPublicaciones]);
 
-  return { data, loading, error, refetch: () => fetchPublicaciones(initialFilters) };
+  return { data, total, loading, error, refetch: () => fetchPublicaciones(initialFilters) };
 }

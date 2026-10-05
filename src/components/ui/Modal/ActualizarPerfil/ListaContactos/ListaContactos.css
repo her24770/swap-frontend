@@ -42,6 +42,11 @@
 }
 
 .lista-contactos__select {
+  position: relative;
+}
+
+.lista-contactos__select-trigger {
+  width: 100%;
   border: 1px solid var(--swap-primary-border-color);
   border-radius: 0.375rem;
   padding: 0.5rem 0.625rem;
@@ -51,11 +56,86 @@
   background-color: var(--swap-primary-background);
   outline: none;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.375rem;
+  box-sizing: border-box;
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.lista-contactos__select:focus {
+.lista-contactos__select-trigger--open {
   border-color: var(--swap-primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 115, 41, 0.12);
+}
+
+.lista-contactos__select-trigger--placeholder .lista-contactos__select-value {
+  color: var(--swap-tertiary-text-color);
+}
+
+.lista-contactos__select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lista-contactos__select-chevron {
+  flex-shrink: 0;
+  color: var(--swap-tertiary-text-color);
+  transition: transform 0.2s ease;
+}
+
+.lista-contactos__select-chevron--open {
+  transform: rotate(180deg);
+}
+
+.lista-contactos__select-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: var(--swap-primary-background);
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+  overflow: hidden;
+}
+
+.lista-contactos__select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  cursor: pointer;
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  color: var(--swap-primary-text-color);
+  background: none;
+  border: none;
+  text-align: left;
+  transition: background-color 0.12s ease;
+  user-select: none;
+}
+
+.lista-contactos__select-option:hover {
+  background-color: var(--swap-tertiary-background);
+}
+
+.lista-contactos__select-option--selected {
+  color: var(--swap-primary-color);
+  font-weight: 500;
+}
+
+.lista-contactos__select-check {
+  flex-shrink: 0;
+  color: var(--swap-primary-color);
 }
 
 .lista-contactos__input {

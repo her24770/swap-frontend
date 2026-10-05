@@ -1,0 +1,319 @@
+.post-modal {
+  background-color: var(--swap-primary-background);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 32rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--swap-primary-border-color) transparent;
+  transition: max-width 0.25s ease, height 0.25s ease;
+}
+
+.post-modal--expanded {
+  max-width: 58rem;
+  height: min(42rem, 90vh);
+}
+
+.post-modal__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.post-modal--expanded .post-modal__body {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+.post-modal__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.post-modal--expanded .post-modal__detail {
+  overflow-y: auto;
+  min-height: 0;
+  padding-right: 0.25rem;
+}
+
+.post-modal__message-panel {
+  min-width: 0;
+  display: flex;
+  animation: post-modal-message-in 0.2s ease;
+}
+
+.post-modal--expanded .post-modal__message-panel {
+  min-height: 0;
+}
+
+@keyframes post-modal-message-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 40rem) {
+  .post-modal--expanded .post-modal__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.post-modal::-webkit-scrollbar {
+  width: 5px;
+}
+
+.post-modal::-webkit-scrollbar-thumb {
+  background-color: var(--swap-primary-border-color);
+  border-radius: 9999px;
+}
+
+/* ── Cerrar ── */
+.post-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--swap-primary-background);
+  border: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 1;
+}
+
+.post-modal__close:hover {
+  color: var(--swap-primary-text-color);
+  background-color: var(--swap-secondary-background);
+}
+
+.post-modal__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-right: 2rem;
+}
+
+.post-modal__seller {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  border-radius: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.post-modal__seller--clickable {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.post-modal__seller--clickable:hover {
+  background-color: var(--swap-secondary-background);
+}
+
+.post-modal__seller:disabled {
+  cursor: default;
+}
+
+.post-modal__seller-avatar {
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: var(--swap-secondary-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-modal__seller-placeholder {
+  color: var(--swap-primary-border-color);
+}
+
+.post-modal__seller-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.post-modal__seller-name {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-modal__stars {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.post-modal__star {
+  font-size: 0.9rem;
+  color: var(--swap-primary-border-color);
+}
+
+.post-modal__star--filled {
+  color: #f59e0b;
+}
+
+.post-modal__estado {
+  flex-shrink: 0;
+}
+
+/* ── Carrusel ── */
+.post-modal__carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--swap-primary-border-color);
+  background-color: var(--swap-secondary-background);
+}
+
+/* ── Tags ── */
+.post-modal__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+/* ── Precio + título ── */
+.post-modal__price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.post-modal__title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--swap-primary-text-color);
+  margin: 0;
+}
+
+.post-modal__price {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--swap-primary-color);
+  flex-shrink: 0;
+}
+
+/* ── Descripción ── */
+.post-modal__description {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  color: var(--swap-tertiary-text-color);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Acciones ── */
+.post-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Likes / guardado ── */
+.post-modal__likes {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  justify-content: flex-end;
+}
+
+.post-modal__likes-count {
+  font-size: 0.75rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-tertiary-text-color);
+}
+
+.post-modal__save {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-primary-border-color);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.post-modal__report {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-primary-border-color);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.post-modal__report:hover {
+  color: var(--swap-primary-color);
+}
+
+.post-modal__save:hover {
+  color: var(--swap-primary-color);
+}
+
+.post-modal__save--saved {
+  color: var(--swap-primary-color);
+}
+
+.post-modal__save--saved svg {
+  fill: var(--swap-primary-color);
+}
+
+.post-modal__save:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.post-modal__save-spinner {
+  animation: spin 0.8s linear infinite;
+}

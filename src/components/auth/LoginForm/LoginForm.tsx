@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
+import { useTranslations } from 'next-intl';
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "../../../i18n/routing";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
+import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { useAuthStore } from "../../../store/authStore";
+import { useToast } from "../../../hooks/useToast";
 import type { AuthResponse } from "../../../types/usuario";
 import "../../ui/Button/Button.css"
+import {LogoCompleto} from "../../ui/Icono/Logo";
 import "./LoginForm.css";
 
 interface LoginFormData {
@@ -16,10 +20,17 @@ interface LoginFormData {
   password: string;
 }
 
+// correo temporal para probar notificacion
+const EMAIL_PRUEBA_BLOQUEADA = "bloqueado@uvg.edu.gt";
+
 export default function LoginForm() {
+  const t = useTranslations('login');
+  const tValidation = useTranslations('login.validation');
+  const tCommon = useTranslations('common');
+
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-
+  const toast = useToast();
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
 
@@ -32,40 +43,66 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setServerError(null);
+
+      // Para pruebas
+      if (data.email.trim().toLowerCase() === EMAIL_PRUEBA_BLOQUEADA) {
+        const blockedMessage = t('toast.accountBlocked');
+        setServerError(blockedMessage);
+        toast.warning(blockedMessage, t('toast.accountBlockedTitle'));
+        return;
+      }
+
       const response = await apiClient.post<AuthResponse>("/api/auth/login", {
         email_institucional: data.email,
         password: data.password,
       });
-      login(response.usuario, response.token, response.rol);
-      router.push("/");
+      const sesion = unwrapAuthResponse(response);
+      login(sesion.usuario, sesion.rol);
+      toast.success(t('toast.welcomeBack'));
+      router.replace("/");
       router.refresh();
     } catch (error) {
       const apiError = error as ApiError;
-      setServerError(apiError.message || "No fue posible iniciar sesión");
+
+      // Contrato esperado del backend para cuenta bloqueada: status 401 con { "code": "CUENTA_BLOQUEADA" } en el body
+      if (apiError.code === "CUENTA_BLOQUEADA") {
+        const blockedMessage = t('toast.accountBlocked');
+        setServerError(blockedMessage);
+        toast.warning(blockedMessage, t('toast.accountBlockedTitle'));
+        return;
+      }
+
+      const message =
+        apiError.status === 401
+          ? t('toast.invalidCredentials')
+          : apiError.message || t('toast.loginErrorFallback');
+
+      setServerError(message);
+      toast.error(message);
     }
   };
 
   return (
     <div className="login-form">
-      <span className="login-form__brand">SWAP</span>
+      <LogoCompleto className="login-form__brand"/>
 
-      <h1 className="login-form__title">Iniciar Sesión</h1>
+      <h1 className="login-form__title">{t('title')}</h1>
       <p className="login-form__subtitle">
-        ¿Eres nuevo? Ingresa tus credenciales para ingresar.
+        {t('subtitle')}
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="login-form__fields">
         {/* Email */}
         <div className="login-form__field">
-          <label className="login-form__label">Correo electrónico</label>
+          <label className="login-form__label">{t('emailLabel')}</label>
           <input
             type="email"
-            placeholder="ejemplo@uvg.edu.gt"
+            placeholder={t('emailPlaceholder')}
             {...register("email", {
-              required: "El correo es requerido",
+              required: tValidation('emailRequired'),
               pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Correo no válido",
+                value: /^[^\s@]+@uvg\.edu\.gt$/i,
+                message: tValidation('emailInstitutional'),
               },
             })}
             className={`login-form__input${errors.email ? " login-form__input--error" : ""}`}
@@ -78,17 +115,17 @@ export default function LoginForm() {
         {/* Password */}
         <div className="login-form__field">
           <div className="login-form__password-header">
-            <label className="login-form__label">Contraseña</label>
+            <label className="login-form__label">{t('passwordLabel')}</label>
             <Link href="/forgot-password" className="login-form__forgot">
-              Olvidé mi contraseña
+              {t('forgotPassword')}
             </Link>
           </div>
           <div className="login-form__input-wrapper">
             <input
               type={showPassword ? "text" : "password"}
+              placeholder={t('passwordPlaceholder')}
               {...register("password", {
-                required: "La contraseña es requerida",
-                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                required: tValidation('passwordRequired'),
               })}
               className={`login-form__input login-form__input--password${errors.password ? " login-form__input--error" : ""}`}
             />
@@ -96,7 +133,7 @@ export default function LoginForm() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="login-form__toggle-password"
-              aria-label="Toggle password visibility"
+              aria-label={t('togglePasswordAria')}
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -115,16 +152,17 @@ export default function LoginForm() {
           disabled={isSubmitting}
           className="button button--large button--full-width"
         >
-          {isSubmitting ? "Ingresando..." : "Continuar"}
+          {isSubmitting ? t('submitting') : t('submit')}
         </button>
       </form>
 
-      <p className="login-form__footer">
-        No tienes una cuenta?{" "}
-        <Link href="/registro" className="login-form__register-link">
-          Regístrate aquí
-        </Link>
-      </p>
+      <div className="login-form__divider">
+        <span>{t("footer.noAccount")}</span>
+      </div>
+      <Link href="/registro" className="login-form__register-btn">
+        <UserPlus size={15} strokeWidth={1.8} aria-hidden />
+        {t("footer.createAccount")}
+      </Link>
     </div>
   );
 }

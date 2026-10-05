@@ -1,0 +1,40 @@
+.moderacion-login-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Mismo esqueleto que login-page (LoginPage.css): fondo en ::before, overlay
+   en ::after, tarjeta centrada encima con z-index. Acá el fondo es un
+   degradado oscuro de marca en vez de la foto del campus — mismo efecto
+   visual, pero distingue el panel de moderación de la app de usuarios. */
+.moderacion-login-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(0, 115, 41, 0.35), transparent 55%),
+    linear-gradient(160deg, #0F172A 0%, #1E293B 55%, #0F172A 100%);
+  z-index: 0;
+}
+
+.moderacion-login-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+}
+
+.moderacion-login-page__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}

@@ -39,6 +39,12 @@ export const schemaRegistro = z.object({
     .string()
     .max(500, "La descripción no puede superar 500 caracteres.")
     .optional(),
+
+  /** IDs de etiquetas de interés — solo se asignan al registrarse. */
+  etiquetas: z
+    .array(z.coerce.number().int().positive("ID de etiqueta inválido."))
+    .min(1, "Selecciona al menos una categoría.")
+    .max(10, "No puedes seleccionar más de 10 categorías."),
 }).refine(
   (data) => data.password === data.confirmar_password,
   {
@@ -86,18 +92,15 @@ export const schemaCrearPublicacion = z.object({
   precio: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido.")
+    .refine((v) => !v || parseFloat(v) <= 999.99, "El precio no puede superar Q999.99.")
     .optional()
     .or(z.literal("")),
-
-  // tipo_publicacion: z
-  //   .string()
-  //   .min(1, "Selecciona un tipo de publicación."),
 
   tipo_publicacion: z.enum(TIPOS_PUBLICACION, {
     required_error: "Selecciona el tipo de publicación.",
     invalid_type_error: "Tipo de publicación inválido.",
   }),
- 
+
   /**
    * IDs de las etiquetas/categorías seleccionadas.
    * El backend recibe números; el formulario envía strings desde <select>
@@ -106,13 +109,13 @@ export const schemaCrearPublicacion = z.object({
     .array(z.coerce.number().int().positive("ID de categoría inválido."))
     .min(1, "Selecciona al menos una categoría.")
     .max(10, "No puedes seleccionar más de 10 categorías."),
- 
+
   imagenes: z
     .array(schemaImagen)
     .max(5, "Puedes subir un máximo de 5 imágenes.")
     .optional()
     .default([]),
- 
+
   destacado: z.boolean().optional().default(false),
 });
 
@@ -132,16 +135,18 @@ export const schemaEditarPublicacion = z.object({
   precio: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "El precio debe ser un número válido.")
+    .refine((v) => !v || parseFloat(v) <= 999.99, "El precio no puede superar Q999.99.")
     .optional()
     .or(z.literal("")),
 
   tipo_publicacion: z
-    .enum(TIPOS_PUBLICACION, { invalid_type_error: "Tipo de publicación inválido." })
+    .enum(TIPOS_PUBLICACION, {
+      invalid_type_error: "Tipo de publicación inválido.",
+    })
     .optional(),
 
   categorias: z
-    .array(z.coerce.number().int().positive())
-    .max(10, "No puedes seleccionar más de 10 categorías.")
+    .array(z.coerce.number().int().positive("ID de categoría inválido."))
     .optional(),
 
   imagenesNuevas: z
@@ -150,8 +155,18 @@ export const schemaEditarPublicacion = z.object({
     .optional()
     .default([]),
 
-  destacado: z.boolean().optional(),
-  })
+  destacado: z
+    .boolean()
+    .optional(),
+
+  // Solo los estados que el usuario puede seleccionar desde el formulario.
+  // "eliminado" queda excluido intencionalmente.
+  estado: z
+    .enum(["disponible", "vendido", "reservado", "activo", "inactivo"], {
+      invalid_type_error: "El estado debe ser disponible, vendido o reservado.",
+    })
+    .optional(),
+})
   .refine((data) => Object.keys(data).some((k) => data[k as keyof typeof data] !== undefined), {
     message: "Debes modificar al menos un campo.",
   });
@@ -163,6 +178,16 @@ export const schemaEditarPerfil = z.object({
     .string()
     .min(2, "El nombre debe tener al menos 2 caracteres.")
     .max(100, "El nombre no puede superar 100 caracteres.")
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras y espacios.")
+    .optional(),
+
+  apellido: z
+    .string()
+    .min(2, "El apellido debe tener al menos 2 caracteres.")
+    .max(100, "El apellido no puede superar 100 caracteres.")
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El apellido solo puede contener letras y espacios.")
     .optional(),
 
   url_foto_perfil: z
@@ -174,8 +199,44 @@ export const schemaEditarPerfil = z.object({
   descripcion: z
     .string()
     .max(500, "La descripción no puede superar 500 caracteres.")
+    .nullable()
     .optional(),
 });
+
+// Certificacion
+
+const MAX_PDF_SIZE_BYTES = 5 * 1024 * 1024; // Límite de 5 MB según contrato de moderación
+const ACCEPTED_PDF_TYPE = "application/pdf";
+
+export const schemaCertificacion = z.object({
+  nombre: z
+    .string()
+    .min(3, "El nombre debe tener al menos 3 caracteres.")
+    .max(100, "El nombre no puede superar 100 caracteres."),
+
+  lugar_emision: z
+    .string()
+    .min(3, "El lugar de emisión debe tener al menos 3 caracteres.")
+    .max(100, "El lugar de emisión no puede superar 100 caracteres."),
+
+  id_etiqueta: z.coerce
+    .number({ message: "La etiqueta es obligatoria." })
+    .int("El ID de etiqueta debe ser un entero.")
+    .positive("Debes seleccionar una etiqueta válida."),
+});
+
+/**
+ * Valida que el archivo cumpla con formato PDF y el tamaño máximo permitido (5MB).
+ */
+export function validateCertificacionPdf(file: File): string | null {
+  if (file.type !== ACCEPTED_PDF_TYPE) {
+    return "El archivo debe ser un PDF válido.";
+  }
+  if (file.size > MAX_PDF_SIZE_BYTES) {
+    return "El PDF no debe pesar más de 5MB.";
+  }
+  return null;
+}
 
 // ─── Horario / Disponibilidad ─────────────────────────────────────────────────
 
@@ -198,6 +259,29 @@ export const schemaHorario = z.object({
   }
 );
 
+// ─── Solicitud de tutoría ────────────────────────────────────────────────────
+
+export const schemaSolicitudTutoria = z.object({
+  fecha: z
+    .string()
+    .min(1, "La fecha es obligatoria.")
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "La fecha no es válida."),
+  hora: z
+    .string()
+    .min(1, "La hora es obligatoria.")
+    .regex(/^\d{2}:\d{2}$/, "La hora no es válida."),
+  lugar: z
+    .string()
+    .trim()
+    .min(3, "El lugar o enlace debe tener al menos 3 caracteres.")
+    .max(255, "El lugar o enlace no puede superar 255 caracteres."),
+  tema: z
+    .string()
+    .trim()
+    .min(10, "El tema debe tener al menos 10 caracteres.")
+    .max(500, "El tema no puede superar 500 caracteres."),
+});
+
 // ─── Tipos inferidos ──────────────────────────────────────────────────────────
 
 export type RegistroFormData = z.infer<typeof schemaRegistro>;
@@ -206,10 +290,12 @@ export type CrearPublicacionFormData = z.infer<typeof schemaCrearPublicacion>;
 export type EditarPublicacionFormData = z.infer<typeof schemaEditarPublicacion>;
 export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
+export type SolicitudTutoriaFormData = z.infer<typeof schemaSolicitudTutoria>;
+export type CertificacionFormData = z.infer<typeof schemaCertificacion>;
 export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
- 
+
 /** Tamaño máximo por imagen: 5 MB */
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
- 
+
 /** Tipos MIME aceptados */
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"] as const;

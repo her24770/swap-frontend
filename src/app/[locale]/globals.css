@@ -1,0 +1,22 @@
+@import url("../../styles/variables.css");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--swap-font-textos);
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

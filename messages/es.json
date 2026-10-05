@@ -1,0 +1,1228 @@
+{
+	"layout": {
+		"meta": {
+			"title": "SWAP",
+			"description": "Sitio de intercambio entre estudiantes de la UVG"
+		},
+		"navbar": {
+			"ariaToggleMenu": "Abrir menú",
+			"ariaUserProfile": "Perfil de usuario",
+			"logo": "SWAP",
+			"viewProfile": "Ver perfil",
+			"myStore": "Mi tienda",
+			"logout": "Cerrar sesión"
+		},
+		"sidebar": {
+			"descubre": "Descubre",
+			"tutorias": "Tutorías",
+			"materiales": "Materiales",
+			"negocios": "Negocios",
+			"mensajes": "Mensajes",
+			"guardados": "Guardados"
+		},
+		"settings": {
+			"settings": "Ajustes de la aplicación",
+			"theme": "Tema",
+			"themeDesc": "Cambia entre claro y oscuro",
+			"language": "Idioma",
+			"languageDesc": "Selecciona tu idioma de preferencia",
+			"closeAria": "Cerrar",
+			"tutorial": "Tutorial",
+			"tutorialDesc": "Vuelve a ver la guía de bienvenida",
+			"tutorialButton": "Reiniciar"
+		}
+	},
+	"onboarding": {
+		"welcome": {
+			"title": "¡Bienvenido, {nombre}!",
+			"body": "SWAP es la plataforma para compartir, vender y conectar con personas de tu universidad. Recuerda mantener siempre el respeto dentro de la comunidad.",
+			"start": "Comenzar recorrido",
+			"skip": "Saltar"
+		},
+		"sidebar": {
+			"descubre": {
+				"title": "Descubre",
+				"body": "Aquí encontrarás todas las publicaciones recientes, populares y recomendadas para ti."
+			},
+			"tutorias": {
+				"title": "Tutorías",
+				"body": "Ofrece o solicita tutorías con otros estudiantes de tu universidad."
+			},
+			"materiales": {
+				"title": "Materiales",
+				"body": "Compra, vende o intercambia materiales de estudio como libros y apuntes."
+			},
+			"negocios": {
+				"title": "Negocios",
+				"body": "Descubre los negocios y emprendimientos de la comunidad universitaria."
+			},
+			"mensajes": {
+				"title": "Mensajes",
+				"body": "Aquí puedes chatear con otros usuarios sobre tus publicaciones y acuerdos."
+			}
+		},
+		"navbar": {
+			"menu": {
+				"title": "Menú lateral",
+				"body": "Usa este botón para expandir o contraer el menú de navegación."
+			},
+			"settings": {
+				"title": "Configuraciones",
+				"body": "Cambia el tema o el idioma de la plataforma desde aquí."
+			},
+			"notifications": {
+				"title": "Notificaciones",
+				"body": "Revisa tus notificaciones y solicitudes de tutoría en tiempo real."
+			},
+			"profile": {
+				"title": "Tu perfil",
+				"body": "Accede a tu perfil o cierra sesión desde este menú."
+			}
+		},
+		"fab": {
+			"title": "Crear publicación",
+			"body": "Usa este botón para publicar una tutoría, un material de estudio o un negocio."
+		},
+		"controls": {
+			"back": "Atrás",
+			"next": "Siguiente",
+			"finish": "Finalizar",
+			"skip": "Saltar",
+			"stepOf": "{current} de {total}",
+			"close": "Cerrar"
+		}
+	},
+	"locales": {
+		"en": "EN",
+		"es": "ES",
+		"fr": "FR"
+	},
+	"common": {
+		"brand": "SWAP",
+		"search": {
+			"placeholder": "Buscar...",
+			"searching": "Buscando...",
+			"filterAria": "Filtrar publicaciones",
+			"closeFiltersAria": "Cerrar filtros"
+		},
+		"filtros": {
+			"title": "Filtros",
+			"ariaLabel": "Filtros de publicaciones",
+			"close": "Cerrar filtros",
+			"modalidad": "Modalidad",
+			"tipo": "Tipo",
+			"etiquetas": "Etiquetas",
+			"precio": "Precio",
+			"horario": "Horario",
+			"dias": "Días",
+			"calificacion": "Calificación",
+			"aplicar": "Aplicar filtros",
+			"limpiar": "Limpiar todo",
+			"loading": "Cargando...",
+			"categoriesEmpty": "Selecciona categorías",
+			"categoriesOne": "1 categoría seleccionada",
+			"categoriesMany": "{count} categorías seleccionadas",
+			"timeFrom": "De",
+			"timeTo": "a",
+			"removeTagAria": "Quitar {name}",
+			"starsAria": "{count} estrellas",
+			"currencyMin": "Q0",
+			"currencyMax": "Q{amount}",
+			"modalidadOptions": {
+				"virtual": "Virtual",
+				"presencial": "Presencial"
+			},
+			"materialOptions": {
+				"compra": "Compra",
+				"alquiler": "Alquiler"
+			},
+			"negocioOptions": {
+				"producto": "Producto",
+				"servicio": "Servicio"
+			},
+			"daysShort": {
+				"lunes": "L",
+				"martes": "M",
+				"miercoles": "Mi",
+				"jueves": "J",
+				"viernes": "V",
+				"sabado": "S",
+				"domingo": "D"
+			},
+			"daysAria": {
+				"lunes": "Lunes",
+				"martes": "Martes",
+				"miercoles": "Miércoles",
+				"jueves": "Jueves",
+				"viernes": "Viernes",
+				"sabado": "Sábado",
+				"domingo": "Domingo"
+			}
+		},
+		"empty": {
+			"noResultsFor": "No se encontraron resultados para \"{query}\"",
+			"description": "No hay publicaciones"
+		},
+		"tags": {
+			"material": "Material",
+			"tutoria": "Tutoría",
+			"negocio": "Negocio"
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"continue": "Continuar",
+			"send": "Enviar",
+			"save": "Guardar",
+			"saveChanges": "Guardar cambios",
+			"createPublication": "Crear publicación",
+			"editPublication": "Editar publicación",
+			"publishing": "Publicando...",
+			"saving": "Guardando...",
+			"confirm": "Confirmar"
+		},
+		"people": {
+			"anonymous": "Anónimo",
+			"you": "Tú"
+		},
+		"time": {
+			"justNow": "Ahora mismo"
+		},
+		"aria": {
+			"visitProfile": "Visitar perfil de {platform}"
+		}
+	},
+	"home": {
+		"title": "DESCUBRE",
+		"loading": "Cargando negocios...",
+		"empty": {
+			"title": "No hay negocios disponibles",
+			"description": "Aún no hay negocios estudiantiles publicados."
+		}
+	},
+	"negocios": {
+		"title": "NEGOCIOS",
+		"loading": "Cargando negocios...",
+		"errorFallback": "No fue posible obtener los negocios",
+		"empty": {
+			"title": "No hay negocios disponibles",
+			"description": "Aún no hay negocios estudiantiles publicados. ¡Sé el primero en publicar el tuyo!"
+		}
+	},
+	"materiales": {
+		"title": "MATERIALES",
+		"loading": "Cargando materiales...",
+		"errorFallback": "No fue posible obtener los materiales",
+		"empty": {
+			"title": "No hay materiales disponibles",
+			"description": "Aún no se han publicado materiales académicos. ¡Sé el primero en compartir!"
+		}
+	},
+	"tutorias": {
+		"title": "TUTORÍAS",
+		"loading": "Cargando tutorías...",
+		"empty": {
+			"title": "No hay tutorías disponibles",
+			"description": "Aún no hay tutorías estudiantiles publicadas."
+		},
+		"solicitud": "Solicitud de Tutoría",
+		"fecha": "Fecha de tutoría",
+		"hora": "Hora de tutoría",
+		"modalidad": "Modalidad",
+		"lugar": "Lugar",
+		"tema": "Tema",
+		"rechazar": "Rechazar",
+		"aceptar": "Aceptar",
+		"formulario": {
+			"nuevaSolicitud": "Nueva solicitud de tutoría",
+			"titulo": "Solicitud de tutoría",
+			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
+			"fecha": "Fecha",
+			"hora": "Hora",
+			"modalidad": "Modalidad",
+			"lugar": "Lugar",
+			"tema": "Tema",
+			"enviarSolicitud": "Enviar solicitud",
+			"placeholderTema": "Describe el tema de la tutoría",
+			"placeholderLugar": "Ej. Plaza Paiz, UVG"
+		}
+	},
+	"descubre": {
+		"title": "Descubre",
+		"placeholderTitle": "Descubre",
+		"placeholderDescription": "Página de descubrimiento de publicaciones - Por desarrollar"
+	},
+	"seccion": {
+		"reciente": "Publicaciones Recientes",
+		"recomendado": "Publicaciones Recomendadas",
+		"explorar": "Explorar más",
+		"ads": "Anuncios",
+		"populares": "Publicaciones Populares",
+		"tutores": "Tutores",
+		"personalizedRecommendationsButton": "Recomendados para ti",
+		"resultsTitle": "Resultados ({count})",
+		"pagination": {
+			"previous": "Página anterior",
+			"next": "Página siguiente",
+			"results": "Paginación de resultados",
+			"filteredResults": "Paginación de resultados filtrados",
+			"posts": "Paginación de publicaciones"
+		},
+		"loadingTutores": "Cargando tutores...",
+		"tutorFallbackName": "Tutor SWAP",
+		"noTutores": "No hay tutores para mostrar todavía.",
+		"error_loading_section": "No fue posible cargar esta sección"
+	},
+	"login": {
+		"title": "Iniciar Sesión",
+		"subtitle": "Ingresa tus credenciales si ya tienes una cuenta.",
+		"emailLabel": "Correo electrónico",
+		"emailPlaceholder": "ejemplo@uvg.edu.gt",
+		"passwordLabel": "Contraseña",
+		"passwordPlaceholder": "Ingresa tu contraseña",
+		"forgotPassword": "Olvidé mi contraseña",
+		"togglePasswordAria": "Mostrar u ocultar contraseña",
+		"submit": "Continuar",
+		"submitting": "Ingresando...",
+		"footer": {
+			"noAccount": "No tienes una cuenta?",
+			"register": "Regístrate aquí",
+			"createAccount": "Crear cuenta"
+		},
+		"toast": {
+			"welcomeBack": "¡Bienvenido de nuevo!",
+			"invalidCredentials": "Credenciales incorrectas.",
+			"loginErrorFallback": "No fue posible iniciar sesión",
+			"accountBlockedTitle": "Cuenta bloqueada",
+			"accountBlocked": "Tu cuenta ha sido bloqueada. Contacta a soporte para más información."
+		},
+		"validation": {
+			"emailRequired": "El correo es requerido",
+			"emailInvalid": "Correo no válido",
+			"emailInstitutional": "Usa tu correo institucional @uvg.edu.gt",
+			"passwordRequired": "La contraseña es requerida",
+			"passwordMin": "Mínimo 6 caracteres"
+		}
+	},
+	"moderacion": {
+    "login": {
+      "title": "Panel de Moderación",
+      "subtitle": "Ingresa tus credenciales de moderador.",
+      "usuarioLabel": "Usuario",
+      "usuarioPlaceholder": "Ingresa tu usuario",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Ingresa tu contraseña",
+      "togglePasswordAria": "Mostrar u ocultar contraseña",
+      "submit": "Ingresar",
+      "submitting": "Ingresando...",
+      "toast": {
+        "welcomeBack": "Sesión de moderador iniciada",
+        "invalidCredentials": "Usuario o contraseña incorrectos.",
+        "loginErrorFallback": "No fue posible iniciar sesión"
+      },
+      "validation": {
+        "usuarioRequired": "El usuario es requerido",
+        "passwordRequired": "La contraseña es requerida"
+      }
+    },
+    "panel": {
+      "greeting": "Hola, {usuario}",
+      "nivelModerador": "Moderador",
+      "nivelSuperadmin": "Superadmin",
+      "logout": "Cerrar sesión",
+      "loading": "Verificando sesión...",
+      "comingSoon": "Próximamente",
+      "sections": {
+        "publicaciones": {
+          "title": "Publicaciones",
+          "description": "Visualizar y moderar publicaciones de la plataforma."
+        },
+        "reportes": {
+          "title": "Reportes",
+          "description": "Revisar y resolver reportes de usuarios."
+        },
+        "moderadores": {
+          "title": "Moderadores",
+          "description": "Gestionar cuentas de moderador."
+        },
+        "palabras": {
+          "title": "Palabras restringidas",
+          "description": "Gestionar el listado de palabras restringidas."
+        },
+        "usuarios": {
+			"title": "Usuarios",
+			"subtitle": "Ver y buscar usuarios de la plataforma.",
+			"searchPlaceholder": "Buscar por nombre, correo o carnet...",
+			"resultsCount": "{count} usuarios",
+			"loading": "Cargando usuarios...",
+			"empty": "No se encontraron usuarios.",
+			"errorCarga": "No fue posible cargar los usuarios.",
+			"filtros": { "conReportes": "Solo con reportes" },
+			"sort": {
+				"nombreAsc": "Nombre (A-Z)", "nombreDesc": "Nombre (Z-A)",
+				"reportesDesc": "Más reportados",
+				"calificacionAsc": "Calificación (menor a mayor)", "calificacionDesc": "Calificación (mayor a menor)"
+			},
+			"tabla": { "usuario": "Usuario", "carnet": "Carnet", "correo": "Correo", "calificacion": "Calificación", "reportes": "Reportes", "acciones": "Acciones", "sinCalificacion": "Sin calificación" },
+			"acciones": { "verPerfil": "Ver perfil" },
+			"pagination": { "anterior": "Anterior", "siguiente": "Siguiente", "paginaInfo": "Página {page} de {pageCount}" }
+		}
+      }
+    },
+    "publicaciones": {
+      "title": "Publicaciones",
+      "subtitle": "Visualiza, filtra y modera publicaciones de toda la plataforma.",
+      "resultsCount": "{count, plural, =1 {1 resultado} other {# resultados}}",
+      "searchPlaceholder": "Buscar por título, descripción, usuario o correo",
+      "tipos": {
+        "todos": "Todos los tipos",
+        "negocio": "Negocios",
+        "material": "Materiales",
+        "tutoria": "Tutorías"
+      },
+      "estados": {
+        "todos": "Todos los estados",
+        "activo": "Activo",
+        "inactivo": "Inactivo",
+        "disponible": "Disponible",
+        "reservado": "Reservado",
+        "vendido": "Vendido"
+      },
+      "sort": {
+        "fechaDesc": "Más recientes",
+        "fechaAsc": "Más antiguas",
+        "meGustaDesc": "Más likes",
+        "precioDesc": "Mayor precio",
+        "precioAsc": "Menor precio"
+      },
+      "motivosReactivacion": {
+        "errorModeracion": "Error de moderación",
+        "revisadaPermitida": "Publicación revisada y permitida",
+        "correccionUsuario": "Corrección aplicada por el usuario"
+      },
+      "acciones": {
+        "reactivar": "Reactivar",
+        "bajar": "Bajar publicación",
+        "eliminar": "Eliminar",
+        "detalle": "Detalle"
+      },
+      "card": {
+        "sinImagen": "Sin imagen",
+        "sinTipo": "Sin tipo",
+        "usuarioDesconocido": "Usuario desconocido",
+        "sinCorreo": "Sin correo",
+        "estadoFallback": "Estado {estado}"
+      },
+      "loading": "Cargando publicaciones...",
+      "empty": "No hay publicaciones que coincidan con los filtros.",
+      "errorCarga": "No fue posible cargar publicaciones.",
+      "errorAccion": "No fue posible completar la acción.",
+      "toasts": {
+        "bajadaSuccess": "Publicación bajada exitosamente.",
+        "reactivadaSuccess": "Publicación reactivada exitosamente.",
+        "eliminadaSuccess": "Publicación eliminada exitosamente."
+      },
+      "pagination": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente",
+        "paginaInfo": "Página {page} de {pageCount}"
+      },
+      "justificante": {
+        "titulos": {
+          "bajar": "Bajar publicación",
+          "reactivar": "Reactivar publicación",
+          "eliminar": "Eliminar publicación"
+        },
+        "preguntas": {
+          "bajar": "¿Por qué quieres bajar la publicación?",
+          "reactivar": "¿Por qué quieres reactivar la publicación?",
+          "eliminar": "¿Por qué quieres eliminar la publicación?"
+        }
+      }
+    },
+    "palabras": {
+      "title": "Palabras restringidas",
+      "subtitle": "Gestionar el listado de palabras no permitidas en la plataforma.",
+      "searchPlaceholder": "Buscar palabra...",
+      "loading": "Cargando palabras...",
+      "empty": "No hay palabras restringidas todavía.",
+      "errorCarga": "No fue posible cargar las palabras restringidas.",
+      "errorAccion": "No fue posible completar la acción.",
+      "tabla": {
+        "palabra": "Palabra",
+        "acciones": "Acciones"
+      },
+      "acciones": {
+        "agregar": "Agregar",
+        "editar": "Editar",
+        "eliminar": "Eliminar"
+      },
+      "modal": {
+        "tituloCrear": "Agregar palabra restringida",
+        "tituloEditar": "Editar palabra restringida",
+        "label": "Palabra",
+        "placeholder": "Escribe la palabra...",
+        "cancelar": "Cancelar",
+        "guardar": "Guardar",
+        "cerrar": "Cerrar"
+      },
+      "confirmar": {
+        "titulo": "Eliminar palabra",
+        "mensaje": "¿Seguro que quieres eliminar \"{palabra}\" de la lista de palabras restringidas?"
+      },
+      "toasts": {
+        "creadaSuccess": "Palabra agregada exitosamente.",
+        "editadaSuccess": "Palabra actualizada exitosamente.",
+        "eliminadaSuccess": "Palabra eliminada exitosamente."
+      }
+    },
+    "usuarios": {
+      "title": "Usuarios",
+      "subtitle": "Ver y buscar usuarios de la plataforma.",
+      "searchPlaceholder": "Buscar por nombre, correo o carnet...",
+      "resultsCount": "{count} usuarios",
+      "loading": "Cargando usuarios...",
+      "empty": "No se encontraron usuarios.",
+      "errorCarga": "No fue posible cargar los usuarios.",
+      "filtros": {
+        "conReportes": "Solo con reportes"
+      },
+      "sort": {
+        "nombreAsc": "Nombre (A-Z)",
+        "nombreDesc": "Nombre (Z-A)",
+        "reportesDesc": "Más reportados",
+        "calificacionAsc": "Calificación (menor a mayor)",
+        "calificacionDesc": "Calificación (mayor a menor)"
+      },
+      "tabla": {
+        "usuario": "Usuario",
+        "carnet": "Carnet",
+        "correo": "Correo",
+        "calificacion": "Calificación",
+        "reportes": "Reportes",
+        "estado": "Estado",
+        "acciones": "Acciones",
+        "sinCalificacion": "Sin calificación"
+      },
+      "estado": {
+        "activo": "Activo",
+        "bloqueado": "Bloqueado",
+        "suspendidoHasta": "Suspendido hasta {fecha}"
+      },
+      "acciones": {
+        "verPerfil": "Ver perfil",
+        "advertir": "Advertir",
+        "bloquear": "Bloquear",
+        "suspender": "Suspender",
+        "reactivar": "Reactivar"
+      },
+      "justificante": {
+        "titulos": {
+          "advertencia": "Enviar advertencia",
+          "bloquear": "Bloquear cuenta",
+          "suspender": "Suspender cuenta",
+          "reactivar": "Reactivar cuenta"
+        },
+        "preguntas": {
+          "advertencia": "¿Por qué quieres advertir a este usuario?",
+          "bloquear": "¿Por qué quieres bloquear esta cuenta?",
+          "suspender": "¿Por qué quieres suspender esta cuenta?",
+          "reactivar": "¿Por qué quieres reactivar esta cuenta?"
+        },
+        "motivosReactivacion": {
+          "suspensionCumplida": "Suspensión cumplida",
+          "apelacionAprobada": "Apelación aprobada",
+          "correccionUsuario": "Corrección realizada por el usuario"
+        }
+      },
+      "errorAccion": "No fue posible completar la acción.",
+      "toasts": {
+        "advertenciaSuccess": "Advertencia enviada exitosamente.",
+        "bloquearSuccess": "Cuenta bloqueada exitosamente.",
+        "suspenderSuccess": "Cuenta suspendida exitosamente.",
+        "reactivarSuccess": "Cuenta reactivada exitosamente."
+      },
+      "pagination": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente",
+        "paginaInfo": "Página {page} de {pageCount}"
+      }
+    },
+    "reportes": {
+      "title": "Reportes",
+      "searchPlaceholder": "Buscar",
+      "tabla": {
+        "id": "ID Reporte",
+        "tipo": "Tipo",
+        "fecha": "Fecha",
+        "estado": "Estado",
+        "reporto": "Reportó",
+        "reportado": "Reportado"
+      },
+      "filtros": {
+        "todos": "Todos"
+      },
+      "tipos": {
+        "publicacion": "Publicación",
+        "mensaje": "Mensaje",
+        "usuario": "Usuario"
+      },
+      "estados": {
+        "pendiente": "Pendiente",
+        "resuelto": "Resuelto",
+        "rechazado": "Rechazado"
+      },
+      "acciones": {
+        "verDetalles": "Ver detalles",
+        "cargando": "Cargando…"
+      },
+      "empty": "No se encontraron reportes",
+      "footEmpty": "0 de 0",
+      "footRange": "{from}–{to} de {total}",
+      "paginacion": {
+        "anterior": "Anterior",
+        "siguiente": "Siguiente"
+      },
+      "errorGenerico": "Error",
+      "toasts": {
+        "detalleError": "No fue posible cargar el detalle del reporte.",
+        "estadoActualizado": "Estado del reporte actualizado correctamente.",
+        "estadoError": "No fue posible actualizar el estado del reporte."
+      },
+      "detalle": {
+        "titulo": "Reporte #{id}",
+        "cerrarAria": "Cerrar",
+        "labels": {
+          "tipo": "Tipo",
+          "fecha": "Fecha",
+          "estado": "Estado",
+          "moderador": "Moderador",
+          "motivo": "Motivo",
+          "observaciones": "Observaciones",
+          "mensajeReportado": "Mensaje reportado",
+          "publicacionVinculada": "Publicación vinculada",
+          "reporto": "Reportó",
+          "reportado": "Reportado",
+          "evidencia": "Evidencia"
+        },
+        "evidenciaAlt": "Evidencia {n}",
+        "verPublicacion": "Ver publicación",
+        "ocultarPublicacion": "Ocultar publicación",
+        "cargando": "Cargando…",
+        "cerrar": "Cerrar",
+        "marcarResuelto": "Marcar resuelto",
+        "panelTitulo": "Publicación",
+        "panelCerrarAria": "Cerrar publicación",
+        "meGusta": "{count} me gusta",
+        "toastPublicacionError": "No fue posible cargar la publicación."
+      }
+    }
+  },
+	"forgotPassword": {
+		"title": "Recuperar contraseña",
+		"emailLabel": "Correo electrónico",
+		"emailPlaceholder": "ejemplo@uvg.edu.gt",
+		"codeLabel": "Código de verificación",
+		"codePlaceholder": "000000",
+		"newPasswordLabel": "Nueva contraseña",
+		"confirmPasswordLabel": "Confirmar contraseña",
+		"passwordPlaceholder": "Al menos 8 caracteres",
+		"togglePasswordAria": "Mostrar u ocultar contraseña",
+		"backToLogin": "Volver a iniciar sesión",
+		"steps": {
+			"email": {
+				"subtitle": "Ingresa tu correo institucional para recibir un código.",
+				"submit": "Enviar código",
+				"submitting": "Enviando..."
+			},
+			"code": {
+				"subtitle": "Escribe el código de 6 dígitos que enviamos a tu correo.",
+				"submit": "Verificar código",
+				"submitting": "Verificando..."
+			},
+			"password": {
+				"subtitle": "Crea una nueva contraseña para tu cuenta.",
+				"submit": "Actualizar contraseña",
+				"submitting": "Actualizando..."
+			}
+		},
+		"toast": {
+			"codeSent": "Si el correo existe, recibirás un código.",
+			"codeValid": "Código verificado.",
+			"passwordUpdated": "Contraseña actualizada correctamente.",
+			"errorFallback": "No fue posible completar la recuperación"
+		},
+		"validation": {
+			"passwordMismatch": "Las contraseñas no coinciden.",
+			"emailInstitutional": "Usa tu correo institucional @uvg.edu.gt"
+		}
+	},
+	"registro": {
+		"page": {
+			"title": "Crea una cuenta en SWAP",
+			"description1": "Regístrate con tu correo de la Universidad del Valle de Guatemala.",
+			"description2": "Entérate de todos los productos y servicios que brindan los estudiantes dentro de la Universidad."
+		},
+		"form": {
+			"firstNameLabel": "Nombre",
+			"lastNameLabel": "Apellido",
+			"emailLabel": "Correo electrónico",
+			"passwordLabel": "Crea una contraseña",
+			"confirmPasswordLabel": "Confirmar contraseña",
+			"firstNamePlaceholder": "Michael",
+			"lastNamePlaceholder": "Pérez",
+			"emailPlaceholder": "per0000@uvg.edu.gt",
+			"tagsLabel": "Tus intereses",
+			"tagsPlaceholder": "Selecciona al menos 1 categoría",
+			"tagsLoading": "Cargando categorías...",
+			"passwordPlaceholder": "Al menos 8 caracteres",
+			"confirmPasswordPlaceholder": "Al menos 8 caracteres",
+			"verificationTitle": "Verifica tu correo",
+			"verificationDescription": "Ingresa el código de 6 dígitos que enviamos a tu correo institucional.",
+			"verificationCodeLabel": "Código de verificación",
+			"verificationCodePlaceholder": "000000",
+			"verificationCodeInvalid": "El código debe tener 6 dígitos.",
+			"verificationSessionExpired": "Vuelve a completar el formulario para solicitar un nuevo código.",
+			"changeEmail": "Cambiar correo",
+			"emailInvalid": "El correo no es válido",
+			"sendingCode": "Enviando código...",
+			"submitting": "Registrando...",
+			"submit": "Continuar",
+			"submitWithCode": "Crear cuenta",
+			"tagsCountMin": "Selecciona al menos 3 interés",
+			"tagsCountMax": "Puedes seleccionar hasta 20 intereses",
+			"termsPrefix": "Acepto los",
+			"termsLinkText": "Términos y Condiciones y la Política de Privacidad",
+			"termsRequired": "Debes aceptar los Términos y Condiciones para continuar.",
+			"toast": {
+				"success": "¡Registro exitoso! Bienvenido a SWAP.",
+				"codeSent": "Te enviamos un código a tu correo institucional.",
+				"errorFallback": "No fue posible registrarse"
+			}
+		}
+	},
+	"perfil": {
+		"loading": "Cargando perfil...",
+		"mode": {
+			"consumer": "Consumidor",
+			"seller": "Vendedor",
+			"tutor": "Tutor"
+		},
+		"sections": {
+			"saved": "Tus Guardados",
+			"purchases": "Tus Compras",
+			"tutoringHistory": "Tutorías tomadas",
+			"catalog": "Tu Catálogo",
+			"catalogMaterial": "Tu Catálogo de Material",
+			"catalogNegocio": "Tu Catálogo de Negocio",
+			"schedule": "Tu Horario",
+			"ads": "Anuncios",
+			"comments": "Comentarios y Reseñas",
+			"featured": "Publicaciones Destacadas"
+		},
+		"history": {
+			"emptyProducts": "Aún no tienes productos comprados.",
+			"emptyTutoring": "Aún no tienes tutorías tomadas.",
+			"error": "No fue posible cargar tu historial.",
+			"unknownUser": "Usuario de SWAP",
+			"provider": "Proveedor",
+			"date": "Fecha",
+			"place": "Lugar",
+			"viewAll": "Ver todo",
+			"details": "Detalles",
+			"backToProfile": "Volver al perfil",
+			"searchPlaceholder": "Buscar en el historial...",
+			"filters": {
+				"aria": "Filtrar compras",
+				"all": "Todos",
+				"materials": "Materiales",
+				"businesses": "Negocios"
+			}
+		},
+		"actions": {
+			"newPublication": "Nueva publicación",
+			"changeAd": "Cambiar anuncio",
+			"createAd": "Nuevo anuncio",
+			"editAd": "Editar anuncio",
+			"editSchedule": "Editar Horario",
+			"newPostMaterial": "Nuevo material",
+			"newPostNegocio": "Nuevo negocio",
+			"newPostTutoria": "Nueva tutoría"
+		},
+		"modal": {
+			"createPublicationAria": "Crear publicación",
+			"editPublicationAria": "Editar publicación"
+		}
+	},
+	"vendedor": {
+		"loading": "Cargando perfil...",
+		"sections": {
+			"catalog": "Catálogo",
+			"ads": "Anuncios",
+			"comments": "Comentarios y Reseñas"
+		},
+		"actions": {
+			"newPublication": "Nueva publicación"
+		}
+	},
+	"posts": {
+		"actions": {
+			"details": "Detalles",
+			"edit": "Editar",
+			"acordar": "Acordar Compra",
+			"certificado": "Ver certificados",
+			"viewProfile": "Ver perfil"
+		},
+		"save": {
+			"addAria": "Guardar publicación",
+			"removeAria": "Eliminar de guardados"
+		},
+		"tutorTopicsLabel": "Temas de tutorías",
+		"aria": {
+			"uploadImage": "Subir imagen"
+		},
+		"uploadErrors": {
+			"invalidType": "Solo se permiten imágenes JPG, PNG o WEBP",
+			"tooLarge": "La imagen no puede superar los 5 MB",
+			"generic": "Error al subir la imagen"
+		},
+		"estado": {
+			"activo": "Activo",
+			"disponible": "Disponible",
+			"reservado": "Reservado",
+			"vendido": "Vendido",
+			"inactivo": "Inactivo",
+			"1": "Disponible",
+			"2": "Leído",
+			"3": "Reservado",
+			"4": "Vendido",
+			"5": "Enviado",
+			"6": "Pendiente",
+			"7": "Activo",
+			"8": "Inactivo",
+			"9": "Cancelado",
+			"10": "Completado"
+		}
+	},
+	"comments": {
+		"empty": "Aún no hay comentarios.",
+		"actions": {
+			"edit": "Editar comentario",
+			"delete": "Eliminar comentario",
+			"editPrompt": "Edita tu comentario:",
+			"deleteConfirm": "¿Seguro que deseas eliminar este comentario?"
+		},
+		"form": {
+			"starsAria": "{count} estrellas",
+			"placeholder": "Deja un comentario a {name}",
+			"sendAnonymous": "Enviar como anónimo"
+		},
+		"title": "Comentarios y Reseñas"
+	},
+	"profileHeader": {
+		"toast": {
+			"updateSuccess": "Perfil actualizado exitosamente",
+			"updateErrorFallback": "No fue posible actualizar el perfil"
+		},
+		"actions": {
+			"editProfile": "Editar perfil",
+			"editTags": "Etiquetas"
+		},
+		"aria": {
+			"editProfile": "Editar perfil"
+		},
+		"labels": {
+			"paymentMethod": "Método de pago:",
+			"contact": "Contacto"
+		},
+		"certification": {
+			"title": "Certificaciones",
+			"add": "Agregar certificación",
+			"noCert": "No hay certificaciones aún.",
+			"pdfNotA": "PDF no disponible",
+			"select": "Selecciona una certificación para verla",
+			"delete": "Eliminar certificación",
+			"show": "Ver certificaciones",
+			"hide": "Ocultar certificaciones"
+		}
+	},
+	"updateProfileModal": {
+		"title": "Actualizar perfil",
+		"photoLabel": "Foto de perfil",
+		"actions": {
+			"cancel": "Cancelar",
+			"update": "Actualizar",
+			"saving": "Guardando..."
+		},
+		"confirm": {
+			"submit": {
+				"title": "Confirmar cambios",
+				"message": "\u00bfSeguro que deseas actualizar tu perfil con estos cambios?"
+			},
+			"discard": {
+				"title": "Salir sin guardar",
+				"message": "Tienes cambios sin guardar. \u00bfDeseas salir de todos modos?"
+			},
+			"actions": {
+				"back": "Volver",
+				"confirmSave": "S\u00ed, actualizar",
+				"confirmDiscard": "S\u00ed, salir"
+			}
+		},
+		"form": {
+			"firstName": "Nombre",
+			"lastName": "Apellido",
+			"description": "Descripción",
+			"descriptionPlaceholder": "Agrega una descripción"
+		},
+		"contacts": {
+			"label": "Contactos",
+			"addAria": "Agregar contacto",
+			"removeAria": "Eliminar contacto",
+			"typePlaceholder": "Seleccionar tipo",
+			"valuePlaceholder": "contacto",
+			"types": {
+				"phone": "Teléfono",
+				"whatsapp": "WhatsApp",
+				"instagram": "Instagram",
+				"email": "Correo"
+			}
+		},
+		"imageUpload": {
+			"text": "Haz clic o arrastra imágenes para subir",
+			"hint": "PNG o JPG",
+			"previewAlt": "Vista previa",
+			"currentImageAlt": "Imagen actual"
+		}
+	},
+	"solicitudAcuerdoModal": {
+		"title": "Solicitar acuerdo",
+		"triggerButton": "Solicitar acuerdo",
+		"fields": {
+			"objeto": "Objeto",
+			"costo": "Costo",
+			"lugar": "Lugar de entrega",
+			"lugarPlaceholder": "Ej. Plaza Ceibal, UVG",
+			"fecha": "Fecha",
+			"hora": "Hora",
+			"detalles": "Detalles",
+			"detallesPlaceholder": "Agrega detalles del acuerdo"
+		},
+		"errors": {
+			"required": "Este campo es obligatorio",
+			"pastDate": "La fecha y hora deben ser futuras"
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"send": "Enviar solicitud",
+			"sending": "Enviando..."
+		},
+		"exito": "Solicitud de acuerdo enviada",
+		"errorGenerico": "No se pudo enviar la solicitud. Intenta de nuevo."
+	},
+	"accionesAcuerdo": {
+		"aceptar": "Aceptar",
+		"aceptando": "Aceptando...",
+		"rechazar": "Rechazar",
+		"rechazando": "Rechazando...",
+		"confirmRechazar": {
+			"title": "Rechazar solicitud",
+			"message": "¿Seguro que deseas rechazar esta solicitud de acuerdo?"
+		}
+	},
+	"acuerdoPendienteBadge": {
+		"label": "Acuerdo pendiente"
+	},
+	"recordatorioAcuerdo": {
+		"title": "Acuerdo agendado",
+		"overdue": "Vencido",
+		"marcarCompletado": "Marcar como completado",
+		"completando": "Completando..."
+	},
+	"solicitudConversacionBanner": {
+		"texto": "Esta persona quiere iniciar una conversación contigo",
+		"aceptar": "Aceptar",
+		"aceptando": "Aceptando...",
+		"bloquear": "Bloquear",
+		"bloqueando": "Bloqueando...",
+		"errorGenerico": "No se pudo procesar la solicitud. Intenta de nuevo.",
+		"confirmBloquear": {
+			"title": "Bloquear conversación",
+			"message": "¿Seguro que deseas bloquear esta solicitud de conversación?"
+		}
+	},
+	"seccionAcuerdosConversacion": {
+		"cargando": "Cargando acuerdos...",
+		"error": "No se pudieron cargar los acuerdos de esta conversación",
+		"solicitudPendiente": "Solicitud de acuerdo por {objeto}",
+		"errorAccion": "No se pudo procesar la acción. Intenta de nuevo."
+	},
+	"loading": "Cargando publicaciones...",
+	"publicacionForm": {
+		"titleCreate": "Crear Publicación",
+		"titleEdit": "Editar Publicación",
+		"fields": {
+			"status": "Estado",
+			"statusAvailable": "Disponible",
+			"statusSold": "Vendido",
+			"statusReserved": "Reservado",
+			"productName": "Nombre del Producto",
+			"productNamePlaceholder": "ej. Tutoría de Cálculo Diferencial",
+			"description": "Descripción",
+			"descriptionPlaceholder": "Describe las características y beneficios clave...",
+			"price": "Precio",
+			"type": "Tipo de publicación",
+			"typePlaceholder": "Seleccionar tipo",
+			"category": "Categoría",
+			"categoryTriggerEmpty": "Seleccionar categoría",
+			"categoryTriggerOne": "1 categoría seleccionada",
+			"categoryTriggerMany": "{count} categorías seleccionadas",
+			"featured": "Publicación Destacada",
+			"photo": "Foto del Producto",
+			"uploadText": "Haz clic o arrastra una imagen para subir",
+			"uploadHint": "PNG, JPG o WEBP (máx. 5MB)",
+			"removeImageAria": "Eliminar imagen",
+			"removeTagAria": "Eliminar {tag}"
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"create": "Crear Publicación",
+			"publishing": "Publicando...",
+			"saveChanges": "Guardar Cambios",
+			"saving": "Guardando..."
+		},
+		"estado": {
+			"activo": "Activo",
+			"disponible": "Disponible",
+			"reservado": "Reservado",
+			"vendido": "Vendido",
+			"inactivo": "Inactivo"
+		}
+	},
+	"certificacionForm": {
+		"titleCreate": "Agregar certificación",
+		"titleEdit": "Editar certificación",
+		"fields": {
+			"name": "Nombre de la certificación",
+			"namePlaceholder": "Ej: Diploma de electricidad INTECAP",
+			"lugarEmision": "Lugar de emisión",
+			"lugarEmisionPlaceholder": "Ej: Universidad del Valle de Guatemala",
+			"etiqueta": "Área o categoría",
+			"etiquetaPlaceholder": "Selecciona una categoría",
+			"pdf": "Archivo PDF",
+			"pdfEditHint": " (opcional — mantiene el anterior si no subes uno nuevo)",
+			"existingPdf": "PDF existente",
+			"uploadText": "Haz clic o arrastra un PDF para subir",
+			"uploadMaxReached": "Ya tienes un PDF seleccionado. Quítalo para subir otro.",
+			"uploadHint": "Solo archivos PDF (máx. 5MB)",
+			"removePdfAria": "Quitar archivo PDF"
+		},
+		"errors": {
+			"pdfRequired": "El archivo PDF es obligatorio."
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"create": "Agregar certificación",
+			"saveChanges": "Guardar cambios",
+			"saving": "Guardando..."
+		}
+	},
+	"chat": {
+		"empty": {
+			"selectConversation": "Selecciona una conversación"
+		},
+		"header": {
+			"back": "Volver a conversaciones",
+			"options": "Opciones",
+			"viewProfile": "Ver perfil"
+		},
+		"menu": {
+			"agreementHistory": "Historial de acuerdos",
+			"createAgreement": "Crear acuerdo",
+			"report": "Reportar"
+		},
+		"agreement": {
+			"notes": "Observaciones",
+			"accept": "Aceptar",
+			"sendNew": "Hacer contraoferta",
+			"reject": "Rechazar",
+			"pendingResponse": "Tu propuesta de acuerdo está pendiente de respuesta.",
+			"markCompleted": "Marcar como completado"
+		},
+		"banner": {
+			"noAgreement": "Sin acuerdo acordado",
+			"createAgreement": "+ Crear acuerdo",
+			"pendingProposalReceived": "Tienes una propuesta de acuerdo",
+			"pendingProposalSent": "Tu propuesta de acuerdo está pendiente",
+			"nextAgreement": "Próximo acuerdo",
+			"details": "Detalles"
+		},
+		"post": {
+			"about": "Sobre esta publicación",
+			"viewPost": "Ver publicación"
+		},
+		"input": {
+			"emoji": "Emoji",
+			"placeholder": "Escribe un mensaje",
+			"attach": "Adjuntar",
+			"send": "Enviar"
+		},
+		"messages": {
+			"today": "HOY",
+			"yesterday": "AYER",
+			"avatarAlt": "avatar"
+		},
+		"panel": {
+			"close": "Cerrar panel",
+			"titles": {
+				"agreement": "Detalle del acuerdo",
+				"post": "Publicación",
+				"options": "Opciones",
+				"history": "Historial de acuerdos"
+			}
+		},
+		"history": {
+			"empty": "Aún no hay acuerdos con este usuario.",
+			"error": "No fue posible cargar el historial de acuerdos.",
+			"unknownUser": "Usuario de SWAP",
+			"groups": {
+				"pendiente": "Pendientes",
+				"activo": "En curso",
+				"completado": "Cumplidos"
+			}
+		},
+		"sidebar": {
+			"title": "Mensajes",
+			"subtitle": "Conversaciones activas",
+			"confirm": "Confirmar",
+			"delete": "Eliminar",
+			"tabs": {
+				"all": "Todas",
+				"sales": "Ventas",
+				"purchases": "Compras"
+			}
+		},
+		"system": {
+			"attachedImageMessage": "Imagen adjunta:",
+			"imagePreview": "Imagen:",
+			"agreementAccepted": "Acuerdo aceptado.",
+			"agreementRejected": "Propuesta de acuerdo rechazada.",
+			"newAgreementProposalSent": "Enviaste una nueva propuesta de acuerdo.",
+			"agreementCompleted": "Acuerdo marcado como completado.",
+			"agreementActionError": "No se pudo procesar la acción. Intenta de nuevo.",
+			"noPublicationForAgreement": "Esta conversación aún no tiene una publicación asociada para crear un acuerdo."
+		}
+	},
+	"sendMessageModal": {
+		"title": "Enviar mensaje a {name}",
+		"close": "Cerrar",
+		"back": "Volver",
+		"requestTutoring": "Acordar tutoría",
+		"suggestionsLabel": "Sugerencias",
+		"selectSuggestion": "Selecciona un mensaje sugerido",
+		"messageLabel": "Escribe tu mensaje",
+		"placeholder": "Escribe algo...",
+		"hint": "No compartas información sensible",
+		"cancel": "Cancelar",
+		"send": "Enviar",
+		"sending": "Enviando..."
+	},
+	"notificaciones": {
+		"title": "Notificaciones",
+		"ariaLabel": "Notificaciones",
+		"markAllAria": "Marcar todas como leídas",
+		"closeAria": "Cerrar notificaciones",
+		"tabs": {
+			"notificaciones": "Notificaciones",
+			"solicitudes": "Solicitudes"
+		},
+		"unread": "{count} sin leer",
+		"emptyNotificaciones": "Aquí encontrarás tus notificaciones",
+		"emptySolicitudes": "No tienes solicitudes pendientes"
+	},
+	"anuncioForm": {
+		"titleCreate": "Crear nuevo anuncio",
+		"titleEdit": "Editar anuncio",
+		"fields": {
+			"titulo": "Título del anuncio",
+			"tituloPlaceholder": "¿Qué artículo deseas anunciar?",
+			"descripcion": "Descripción",
+			"descripcionPlaceholder": "Detalla el estado de tu artículo, qué buscas a cambio, disponibilidad, etc...",
+			"foto": "Foto del artículo",
+			"uploadText": "Arrastra una imagen o haz clic para buscar",
+			"uploadHint": "Formatos aceptados: PNG, JPG o WEBP (Máx. 5MB)",
+			"previewAlt": "Vista previa del artículo",
+			"removeImageAria": "Eliminar imagen"
+		},
+		"errors": {
+			"invalidType": "El archivo debe ser una imagen válida (PNG, JPG, WEBP).",
+			"tooLarge": "La imagen no debe pesar más de 5MB.",
+			"imageRequired": "La imagen del anuncio es obligatoria para publicar.",
+			"server": "Hubo un problema al procesar la solicitud con el servidor."
+		},
+		"actions": {
+			"cancel": "Cancelar",
+			"submitCreate": "Publicar anuncio",
+			"submitEdit": "Guardar cambios",
+			"processing": "Procesando..."
+		}
+	},
+	"reporte": {
+		"title": "Reporte",
+		"closeAria": "Cerrar reporte",
+		"preguntas": {
+			"usuario": "¿Por qué quieres reportar al usuario?",
+			"comentario": "¿Por qué quieres reportar el comentario?",
+			"publicacion": "¿Por qué quieres reportar la publicación?"
+		},
+		"detalle": {
+			"title": "Detalle adicional",
+			"placeholder": "Cuéntanos más detalles..."
+		},
+		"evidencia": {
+			"title": "Evidencia opcional",
+			"alt": "Evidencia {n}",
+			"text": "Adjunta hasta {max} imágenes como evidencia",
+			"hint": "JPG, PNG o WEBP. Máximo 5MB por imagen.",
+			"removeAria": "Quitar evidencia {n}",
+			"errorMax": "Solo puedes adjuntar hasta {max} imágenes.",
+			"errorType": "Solo se permiten imágenes JPG, PNG o WEBP.",
+			"errorSize": "Cada imagen debe pesar 5MB o menos.",
+			"errorPartial": "Solo se agregaron {added} imágenes. El máximo es {max}."
+		},
+		"suspension": {
+			"diasLabel": "Días de suspensión",
+			"diasPlaceholder": "Cantidad de días desde hoy"
+		},
+		"acciones": {
+			"cancelar": "Cancelar",
+			"enviar": "Enviar",
+			"confirmar": "Confirmar"
+		},
+		"moderador": {
+			"reportar": "Reportar",
+			"reportarPublicacionAria": "Reportar publicación",
+			"advertencia": "Advertencia",
+			"eliminarPublicacion": "Eliminar publicación",
+			"advertenciaTitulo": "Enviar advertencia",
+			"advertenciaPregunta": "¿Por qué quieres advertir a este usuario?"
+		},
+		"motivos": {
+			"No cumplió con fechas": "No cumplió con fechas",
+			"Información falsa": "Información falsa",
+			"Incumple las normas": "Incumple las normas",
+			"Cuenta falsa o suplantación de identidad": "Cuenta falsa o suplantación de identidad",
+			"Publica contenido inapropiado": "Publica contenido inapropiado",
+			"Acoso, amenazas o bullying": "Acoso, amenazas o bullying",
+			"Spam o estafa": "Spam o estafa",
+			"Es ofensivo, insultante o usa lenguaje vulgar": "Es ofensivo, insultante o usa lenguaje vulgar",
+			"Es spam, publicidad no deseada o enlace sospechoso": "Es spam, publicidad no deseada o enlace sospechoso",
+			"Acoso dirigido a otro usuario en la conversación": "Acoso dirigido a otro usuario en la conversación",
+			"Revela información personal privada": "Revela información personal privada",
+			"Venta o promoción de objetos inapropiados": "Venta o promoción de objetos inapropiados",
+			"Discurso de odio o símbolos ofensivos": "Discurso de odio o símbolos ofensivos",
+			"Violencia, daño o actividades peligrosas": "Violencia, daño o actividades peligrosas",
+			"Desnudez o contenido sexual explícito": "Desnudez o contenido sexual explícito",
+			"Propiedad intelectual o derechos de autor": "Propiedad intelectual o derechos de autor"
+		}
+	}
+}

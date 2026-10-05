@@ -3,16 +3,24 @@
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../store/authStore";
 
-// Hook que expone los datos de sesión y maneja el logout con redirección
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+
 export function useAuth() {
   const router = useRouter();
-  const { usuario, token, rol, login, logout: limpiarSesion } = useAuthStore();
+  const { usuario, rol, login, logout: limpiarSesion } = useAuthStore();
 
-  // Limpia la sesión y redirige al login
-  function logout() {
+  async function logout() {
+    try {
+      await fetch(`${BASE_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // Si el request falla igual limpiamos el estado local
+    }
     limpiarSesion();
     router.push("/login");
   }
 
-  return { usuario, token, rol, login, logout };
+  return { usuario, rol, login, logout };
 }

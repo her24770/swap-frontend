@@ -1,0 +1,48 @@
+.moderacion-dashboard {
+  padding: 2rem 1.5rem;
+}
+
+.moderacion-dashboard__greeting {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0 0 1.5rem;
+}
+
+.moderacion-dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.moderacion-dashboard__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.75rem;
+  background-color: var(--swap-secondary-background);
+  color: var(--swap-primary-color);
+  text-decoration: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.moderacion-dashboard__card:hover {
+  border-color: var(--swap-primary-color);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.moderacion-dashboard__card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  font-family: var(--swap-font-subtitulos);
+}
+
+.moderacion-dashboard__card-description {
+  font-size: 0.8125rem;
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+}

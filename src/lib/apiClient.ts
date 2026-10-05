@@ -2,25 +2,26 @@
  * apiClient.ts
  * Cliente HTTP base para comunicación con el backend de Swap.
  *
- * - Lee el token JWT desde el authStore de Zustand.
- * - Inyecta automáticamente el token en el header Authorization.
+ * - El token JWT viaja en cookie HttpOnly — el navegador lo incluye automáticamente.
+ * - credentials: "include" en cada request para que la cookie se envíe cross-origin.
  * - En error 401: limpia la sesión y redirige a /login.
- * - En error 403: llama al handler de permisos (configurable, por defecto
- *   lanza un error tipado que el componente puede mostrar al usuario).
+ * - En error 403: llama al handler de permisos (configurable).
  */
 
 import { useAuthStore } from "../store/authStore";
-
-// ─── Tipos ────────────────────────────────────────────────────────────────────
+import { useModeradorAuthStore } from "../store/moderadorAuthStore";
 
 export interface ApiError {
   status: number;
   message: string;
+  // Codigo que manda el backend en el body { "code": "CUENTA_BLOQUEADA" }
+  code?: string;
 }
 
-// Permite a la app registrar un handler global para errores 403
-// (por ejemplo, mostrar un toast). Si no se registra nada, el
-// error simplemente se propaga como excepción.
+interface HandleResponseOptions {
+  skipUnauthorizedRedirect?: boolean;
+}
+
 type ForbiddenHandler = (message: string) => void;
 let onForbidden: ForbiddenHandler | null = null;
 
@@ -28,38 +29,65 @@ export function setForbiddenHandler(handler: ForbiddenHandler): void {
   onForbidden = handler;
 }
 
-// ─── Helpers internos ─────────────────────────────────────────────────────────
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
-function getToken(): string | null {
-  // Zustand almacena el estado en memoria; getState() funciona fuera de
-  // componentes React sin violar las reglas de hooks.
-  return useAuthStore.getState().token;
-}
-
 function buildHeaders(extra?: HeadersInit): Headers {
-  const headers = new Headers({
+  return new Headers({
     "Content-Type": "application/json",
     ...(extra as Record<string, string>),
   });
-
-  const token = getToken();
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  return headers;
 }
 
-async function handleResponse<T>(response: Response): Promise<T> {
-  // 401 — sesión expirada o token inválido
-  if (response.status === 401) {
-    useAuthStore.getState().logout();
+async function parseErrorBody(response: Response, fallback: string): Promise<{ message: string; code?: string }> {
+  try {
+    const body = await response.json();
+    return { message: body.message ?? body.error ?? fallback, code: body.code };
+  } catch {
+    return { message: fallback };
+  }
+}
 
-    if (typeof window !== "undefined") {
-      window.location.href = "/login";
+let cerrandoSesion = false;
+
+async function forzarCierreSesion(destino: "usuario" | "moderador"): Promise<void> {
+  if (cerrandoSesion || typeof window === "undefined") return;
+  cerrandoSesion = true;
+
+  // Limpia la cookie httpOnly en el servidor — antes solo se limpiaba el
+  // estado de Zustand en el navegador, dejando la cookie intacta (firma
+  // válida, versión de sesión vieja), lista para volver a fallar en la
+  // siguiente petición autenticada que se disparara en la página de destino.
+  // /api/auth/logout sirve para ambos tipos de cuenta: solo opera sobre la
+  // cookie swap-token, que es la misma para usuario y moderador — no existe
+  // (ni hace falta) un /api/moderador/logout aparte.
+  try {
+    await fetch(`${BASE_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+  } catch {
+    // si falla la llamada, igual seguimos limpiando el estado local y redirigiendo
+  }
+
+  if (destino === "moderador") {
+    useModeradorAuthStore.getState().logout();
+    window.location.href = "/moderacion/login";
+  } else {
+    useAuthStore.getState().logout();
+    window.location.href = "/login";
+  }
+}
+
+async function handleResponse<T>(
+  response: Response,
+  options: HandleResponseOptions = {}
+): Promise<T> {
+  if (response.status === 401) {
+    if (options.skipUnauthorizedRedirect) {
+      const { message, code } = await parseErrorBody(response, "Error 401");
+      const err: ApiError = { status: 401, message, code };
+      throw err;
     }
+
+    const esModeracion = typeof window !== "undefined" && window.location.pathname.includes("/moderacion");
+    void forzarCierreSesion(esModeracion ? "moderador" : "usuario");
 
     const err: ApiError = {
       status: 401,
@@ -68,32 +96,19 @@ async function handleResponse<T>(response: Response): Promise<T> {
     throw err;
   }
 
-  // 403 — autenticado pero sin permisos
   if (response.status === 403) {
     const message = "No tienes permisos para realizar esta acción.";
-
-    if (onForbidden) {
-      onForbidden(message);
-    }
-
+    if (onForbidden) onForbidden(message);
     const err: ApiError = { status: 403, message };
     throw err;
   }
 
-  // Otros errores HTTP
   if (!response.ok) {
-    let message = `Error ${response.status}`;
-    try {
-      const body = await response.json();
-      message = body.message ?? message;
-    } catch {
-      // respuesta sin cuerpo JSON — se usa el mensaje por defecto
-    }
-    const err: ApiError = { status: response.status, message };
+    const { message, code } = await parseErrorBody(response, `Error ${response.status}`);
+    const err: ApiError = { status: response.status, message, code };
     throw err;
   }
 
-  // 204 No Content
   if (response.status === 204) {
     return undefined as unknown as T;
   }
@@ -101,53 +116,54 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-// ─── Métodos públicos ─────────────────────────────────────────────────────────
+interface ApiClientRequestOptions extends RequestInit {
+  skipUnauthorizedRedirect?: boolean;
+}
 
-async function get<T>(path: string, options?: RequestInit): Promise<T> {
+async function get<T>(path: string, options?: ApiClientRequestOptions): Promise<T> {
+  const { skipUnauthorizedRedirect, ...fetchOptions } = options ?? {};
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "GET",
-    headers: buildHeaders(options?.headers),
-    ...options,
+    headers: buildHeaders(fetchOptions?.headers),
+    credentials: "include",
+    ...fetchOptions,
   });
-  return handleResponse<T>(response);
+  return handleResponse<T>(response, { skipUnauthorizedRedirect });
 }
 
-async function post<T>(
-  path: string,
-  body?: unknown,
-  options?: RequestInit
-): Promise<T> {
+async function post<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+  const isFormData = body instanceof FormData; // Para permitir enviar FormData 
+
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "POST",
-    headers: buildHeaders(options?.headers),
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    headers: isFormData ? options?.headers : buildHeaders(options?.headers), // No setear Content-Type si es FormData, el navegador lo hará automáticamente
+    credentials: "include",
+    body: isFormData ? (body as FormData) : body !== undefined ? JSON.stringify(body) : undefined, // Si es FormData, usarlo directamente.
     ...options,
   });
-  return handleResponse<T>(response);
+  return handleResponse<T>(response, {
+    skipUnauthorizedRedirect: path === "/api/auth/login" || path === "/api/moderador/login",
+  });
 }
 
-async function put<T>(
-  path: string,
-  body?: unknown,
-  options?: RequestInit
-): Promise<T> {
+async function put<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
+  const isFormData = body instanceof FormData;
+
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "PUT",
-    headers: buildHeaders(options?.headers),
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    headers: isFormData ? options?.headers : buildHeaders(options?.headers),
+    credentials: "include",
+    body: isFormData ? (body as FormData) : body !== undefined ? JSON.stringify(body) : undefined,
     ...options,
   });
   return handleResponse<T>(response);
 }
 
-async function patch<T>(
-  path: string,
-  body?: unknown,
-  options?: RequestInit
-): Promise<T> {
+async function patch<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "PATCH",
     headers: buildHeaders(options?.headers),
+    credentials: "include",
     body: body !== undefined ? JSON.stringify(body) : undefined,
     ...options,
   });
@@ -158,6 +174,7 @@ async function del<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${BASE_URL}${path}`, {
     method: "DELETE",
     headers: buildHeaders(options?.headers),
+    credentials: "include",
     ...options,
   });
   return handleResponse<T>(response);

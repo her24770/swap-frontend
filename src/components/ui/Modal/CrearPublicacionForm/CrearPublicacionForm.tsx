@@ -2,23 +2,62 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
-import { useFormCrearPublicacion } from "../../../../hooks/useFormPublicacion";
-import { TAGS_MATERIAS } from "../../../../lib/tags";
+import { useTranslations } from "next-intl";
+import { useFormCrearPublicacion, useFormEditarPublicacion, type UseFormEditarPublicacionReturn } from "../../../../hooks/useFormPublicacion";
+import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
+import { useEstados } from "../../../../hooks/useEstados";
+import ImageCropper from "../ActualizarPerfil/SubirImagen/ImageCropper";
 import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
+import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion, TIPOS_PUBLICACION } from "../../../../schemas/zodSchemas";
+import { UseFormReturn } from "react-hook-form";
 
-const TIPO_LABELS: Record<string, string> = {
-  material:  "Material",
-  tutoria:   "Tutoría",
-  negocio:   "Negocio",
-};
+type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
 
-interface CrearPublicacionFormProps {
+interface BasePublicacionFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPublicacionFormProps) {
+interface CrearPublicacionFormProps extends BasePublicacionFormProps {
+  mode: "crear";
+  tipoPublicacion?: TipoPublicacion;
+}
+
+interface EditarPublicacionFormProps extends BasePublicacionFormProps {
+  mode: "editar";
+  publicacionId: number;
+  defaultValues?: Partial<EditarPublicacionFormData>;
+  imagenesExistentes?: string[];
+}
+
+type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormProps;
+
+export default function CrearPublicacionForm(props: PublicacionFormProps) {
+  const t = useTranslations("publicacionForm");
+  const tTags = useTranslations("common.tags");
+  const testado = useTranslations("posts.estado");
+
+  const { onSuccess } = props;
+  const isEditing = props.mode === "editar";
+  const tipoPublicacionProp = !isEditing ? (props as CrearPublicacionFormProps).tipoPublicacion : undefined;
+  const tipoPublicacionSeleccionada = isEditing
+    ? ((props as EditarPublicacionFormProps).defaultValues?.tipo_publicacion ?? "material")
+    : (tipoPublicacionProp ?? "material");
+  const showTipoSelector = !isEditing && !tipoPublicacionProp;
+  const createHook = useFormCrearPublicacion(tipoPublicacionSeleccionada);
+  const editHook = useFormEditarPublicacion(
+    isEditing ? props.publicacionId : 0,
+    isEditing ? props.defaultValues : undefined,
+    isEditing ? (props as EditarPublicacionFormProps).imagenesExistentes ?? [] : []
+  );
+
+  const { etiquetas: etiquetasBD } = useTodasEtiquetas();
+  const tipoEditar = isEditing ? (props as { defaultValues?: { tipo_publicacion?: string } }).defaultValues?.tipo_publicacion ?? "material" : "material";
+  const estadosDisponibles = useEstados(tipoEditar);
+
+  const { resetForm } = createHook;
+
   const {
     form,
     onSubmit,
@@ -27,15 +66,19 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
     isSuccess,
     imagePreviews,
     addImages,
-    removeImage,
-    tiposPublicacion,
-    resetForm,
-  } = useFormCrearPublicacion();
+    removeImage
+  } = isEditing ? editHook : createHook;
 
-  const { register, formState: { errors }, setValue, watch } = form;
+  const { imagenesExistentes = [], removeExistingImage } = isEditing
+    ? (editHook as UseFormEditarPublicacionReturn)
+    : { imagenesExistentes: [], removeExistingImage: undefined };
+
+  const { register, formState: { errors }, setValue, watch } = form as UseFormReturn<FormFields>;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [pendingCropFiles, setPendingCropFiles] = useState<File[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +98,7 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
   // Notifica al padre cuando la creación fue exitosa
   useEffect(() => {
     if (isSuccess) onSuccess?.();
-  }, [isSuccess]);
+  }, [isSuccess, onSuccess]);
 
   const toggleCategoria = (id: number) => {
     const next = selectedCategorias.includes(id)
@@ -66,27 +109,98 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
 
   const triggerLabel =
     selectedCategorias.length === 0
-      ? "Seleccionar categoría"
-      : `${selectedCategorias.length} categoría${selectedCategorias.length > 1 ? "s" : ""} seleccionada${selectedCategorias.length > 1 ? "s" : ""}`;
+      ? t("fields.categoryTriggerEmpty")
+      : selectedCategorias.length === 1
+        ? t("fields.categoryTriggerOne")
+        : t("fields.categoryTriggerMany", { count: selectedCategorias.length });
+
+  const watchedTipo = (watch("tipo_publicacion") as TipoPublicacion | undefined) ?? tipoPublicacionSeleccionada;
+  const tipoPublicacionLabel =
+    watchedTipo === "material"
+      ? tTags("material")
+      : watchedTipo === "tutoria"
+        ? tTags("tutoria")
+        : tTags("negocio");
+
+  const fileToDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("No fue posible leer la imagen"));
+      reader.readAsDataURL(file);
+    });
+
+  const beginCropFlow = async (files: FileList | File[]) => {
+    try {
+      const filesArray = Array.from(files).filter((file) => file.type.startsWith("image/"));
+      if (filesArray.length === 0) return;
+
+      const [firstFile, ...restFiles] = filesArray;
+      setPendingCropFiles(restFiles);
+      const src = await fileToDataUrl(firstFile);
+      setImageToCrop(src);
+    } catch (error) {
+      console.error(error);
+      setImageToCrop(null);
+      setPendingCropFiles([]);
+    }
+  };
+
+  const handleCropCancel = () => {
+    setImageToCrop(null);
+    setPendingCropFiles([]);
+  };
+
+  const handleCropComplete = async (croppedFile: File) => {
+    try {
+      addImages([croppedFile]);
+
+      if (pendingCropFiles.length === 0) {
+        setImageToCrop(null);
+        return;
+      }
+
+      const [nextFile, ...restFiles] = pendingCropFiles;
+      setPendingCropFiles(restFiles);
+      const src = await fileToDataUrl(nextFile);
+      setImageToCrop(src);
+    } catch (error) {
+      console.error(error);
+      setImageToCrop(null);
+      setPendingCropFiles([]);
+    }
+  };
 
   return (
+
     <div className="crear-publicacion">
       <div className="crear-publicacion__header">
         <div className="crear-publicacion__header-icon">
           <SquarePlus size={18} strokeWidth={1.8} />
         </div>
-        <h2 className="crear-publicacion__title">Crear Publicación</h2>
+        <h2 className="crear-publicacion__title">{isEditing ? t("titleEdit") : t("titleCreate")}</h2>
       </div>
 
       <form onSubmit={onSubmit} noValidate>
         <div className="crear-publicacion__fields">
 
+          {isEditing && (
+            <div className="crear-publicacion__field">
+              <label className="crear-publicacion__label">{t("fields.status")}</label>
+              <select {...register("estado")} className="crear-publicacion__select">
+                {estadosDisponibles.map((e) => (
+                  <option key={e.id_estado} value={e.estado}>{testado(e.estado)}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Título */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Nombre del Producto</label>
+            <label className="crear-publicacion__label">{t("fields.productName")}</label>
             <input
               type="text"
-              placeholder="ej. Tutoría de Cálculo Diferencial"
+              placeholder={t("fields.productNamePlaceholder")}
               {...register("titulo")}
               className={`crear-publicacion__input${errors.titulo ? " crear-publicacion__input--error" : ""}`}
             />
@@ -95,9 +209,9 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
 
           {/* Descripción */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Descripción</label>
+            <label className="crear-publicacion__label">{t("fields.description")}</label>
             <textarea
-              placeholder="Describe las características y beneficios clave..."
+              placeholder={t("fields.descriptionPlaceholder")}
               {...register("descripcion")}
               className={`crear-publicacion__textarea${errors.descripcion ? " crear-publicacion__textarea--error" : ""}`}
             />
@@ -106,7 +220,7 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
 
           {/* Precio */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Precio</label>
+            <label className="crear-publicacion__label">{t("fields.price")}</label>
             <div className="crear-publicacion__price-wrapper">
               <span className="crear-publicacion__price-prefix">Q</span>
               <input
@@ -122,22 +236,30 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
 
           {/* Tipo de publicación */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Tipo de publicación</label>
-            <select
-              {...register("tipo_publicacion")}
-              className={`crear-publicacion__input${errors.tipo_publicacion ? " crear-publicacion__input--error" : ""}`}
-            >
-              <option value="">Seleccionar tipo</option>
-              {tiposPublicacion.map((tipo) => (
-                <option key={tipo} value={tipo}>{TIPO_LABELS[tipo]}</option>
-              ))}
-            </select>
-            {errors.tipo_publicacion && <span className="crear-publicacion__error">{errors.tipo_publicacion.message}</span>}
+            <label className="crear-publicacion__label">{t("fields.type")}</label>
+            {showTipoSelector ? (
+              <div className="crear-publicacion__tipo-selector">
+                {TIPOS_PUBLICACION.map((tipo) => (
+                  <button
+                    key={tipo}
+                    type="button"
+                    className={`crear-publicacion__tipo-btn${watchedTipo === tipo ? " crear-publicacion__tipo-btn--active" : ""}`}
+                    onClick={() => setValue("tipo_publicacion", tipo, { shouldValidate: true })}
+                  >
+                    {tipo === "material" ? tTags("material") : tipo === "tutoria" ? tTags("tutoria") : tTags("negocio")}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="crear-publicacion__readonly-value" aria-readonly="true">
+                {tipoPublicacionLabel}
+              </div>
+            )}
           </div>
 
           {/* Categorías */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Categoría</label>
+            <label className="crear-publicacion__label">{t("fields.category")}</label>
             <div className="crear-publicacion__categories-dropdown" ref={dropdownRef}>
               <button
                 type="button"
@@ -158,19 +280,19 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
 
               {dropdownOpen && (
                 <div className="crear-publicacion__categories-menu">
-                  {TAGS_MATERIAS.map((tag) => {
-                    const selected = selectedCategorias.includes(tag.id);
+                  {etiquetasBD.map((etiqueta) => {
+                    const selected = selectedCategorias.includes(etiqueta.id_etiqueta);
                     return (
                       <button
-                        key={tag.id}
+                        key={etiqueta.id_etiqueta}
                         type="button"
-                        onClick={() => toggleCategoria(tag.id)}
+                        onClick={() => toggleCategoria(etiqueta.id_etiqueta)}
                         className={`crear-publicacion__categories-option${selected ? " crear-publicacion__categories-option--selected" : ""}`}
                       >
                         <span className={`crear-publicacion__categories-checkbox${selected ? " crear-publicacion__categories-checkbox--checked" : ""}`}>
                           {selected && <Check size={11} strokeWidth={3} color="white" />}
                         </span>
-                        {tag.name}
+                        {etiqueta.nombre}
                       </button>
                     );
                   })}
@@ -181,15 +303,15 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
             {selectedCategorias.length > 0 && (
               <div className="crear-publicacion__categories-tags">
                 {selectedCategorias.map((id) => {
-                  const tag = TAGS_MATERIAS.find((t) => t.id === id);
-                  return tag ? (
+                  const etiqueta = etiquetasBD.find((e) => e.id_etiqueta === id);
+                  return etiqueta ? (
                     <span key={id} className="crear-publicacion__categories-tag">
-                      {tag.name}
+                      {etiqueta.nombre}
                       <button
                         type="button"
                         onClick={() => toggleCategoria(id)}
                         className="crear-publicacion__categories-tag-remove"
-                        aria-label={`Eliminar ${tag.name}`}
+                        aria-label={t("fields.removeTagAria", { tag: etiqueta.nombre })}
                       >
                         <X size={11} strokeWidth={2.5} />
                       </button>
@@ -211,13 +333,13 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
                 <input type="checkbox" {...register("destacado")} className="crear-publicacion__toggle-input" />
                 <span className="crear-publicacion__toggle-track" />
               </label>
-              <span className="crear-publicacion__toggle-label">Publicación Destacada</span>
+              <span className="crear-publicacion__toggle-label">{t("fields.featured")}</span>
             </div>
           </div>
 
           {/* Imagen */}
           <div className="crear-publicacion__field">
-            <label className="crear-publicacion__label">Foto del Producto</label>
+            <label className="crear-publicacion__label">{t("fields.photo")}</label>
             <div
               className={`crear-publicacion__upload-zone${dragOver ? " crear-publicacion__upload-zone--dragover" : ""}`}
               onClick={() => fileInputRef.current?.click()}
@@ -226,23 +348,40 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
               onDrop={(e) => {
                 e.preventDefault();
                 setDragOver(false);
-                addImages(e.dataTransfer.files);
+                void beginCropFlow(e.dataTransfer.files);
               }}
             >
               <CloudUpload size={40} strokeWidth={1.5} className="crear-publicacion__upload-icon" />
-              <p className="crear-publicacion__upload-text">Haz clic o arrastra una imagen para subir</p>
-              <p className="crear-publicacion__upload-hint">PNG, JPG o WEBP (máx. 5MB)</p>
+              <p className="crear-publicacion__upload-text">{t("fields.uploadText")}</p>
+              <p className="crear-publicacion__upload-hint">{t("fields.uploadHint")}</p>
               <input
                 ref={fileInputRef}
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 className="crear-publicacion__upload-input"
-                onChange={(e) => { if (e.target.files) addImages(e.target.files); }}
+                onChange={(e) => {
+                  if (!e.target.files) return;
+                  void beginCropFlow(e.target.files);
+                  e.currentTarget.value = "";
+                }}
               />
             </div>
 
-            {imagePreviews.length > 0 && (
+            {(imagenesExistentes.length > 0 || imagePreviews.length > 0) && (
               <div className="crear-publicacion__previews">
+                {imagenesExistentes.map((url) => (
+                  <div key={url} className="crear-publicacion__preview-item">
+                    <img src={url} alt="imagen-existente" className="crear-publicacion__preview-img" />
+                    <button
+                      type="button"
+                      onClick={() => removeExistingImage?.(url)}
+                      className="crear-publicacion__preview-remove"
+                      aria-label={t("fields.removeImageAria")}
+                    >
+                      <X size={10} strokeWidth={3} />
+                    </button>
+                  </div>
+                ))}
                 {imagePreviews.map((src, i) => (
                   <div key={i} className="crear-publicacion__preview-item">
                     <img src={src} alt={`preview-${i}`} className="crear-publicacion__preview-img" />
@@ -250,7 +389,7 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
                       type="button"
                       onClick={() => removeImage(i)}
                       className="crear-publicacion__preview-remove"
-                      aria-label="Eliminar imagen"
+                      aria-label={t("fields.removeImageAria")}
                     >
                       <X size={10} strokeWidth={3} />
                     </button>
@@ -267,16 +406,32 @@ export default function CrearPublicacionForm({ onSuccess, onCancel }: CrearPubli
         <div className="crear-publicacion__footer">
           <button
             type="button"
-            onClick={() => { resetForm(); onCancel?.(); }}
+            onClick={() => { if (!isEditing) resetForm(); props.onCancel?.(); }}
             className="crear-publicacion__btn-cancel"
           >
-            Cancelar
+            {t("actions.cancel")}
           </button>
           <button type="submit" disabled={isSubmitting} className="button button--medium">
-            {isSubmitting ? "Publicando..." : "Crear Publicación"} <ChevronRight size={16} />
+            {isSubmitting 
+              ? (isEditing ? t("actions.saving") : t("actions.publishing"))
+              : (isEditing ? t("actions.saveChanges") : t("actions.create"))
+            } 
+            <ChevronRight size={16} />
           </button>
         </div>
       </form>
+
+      {imageToCrop && (
+        <ImageCropper
+          imageSrc={imageToCrop}
+          onCropComplete={(file) => {
+            void handleCropComplete(file);
+          }}
+          onCancel={handleCropCancel}
+          cropShape="rect"
+          aspect={1}
+        />
+      )}
     </div>
   );
 }

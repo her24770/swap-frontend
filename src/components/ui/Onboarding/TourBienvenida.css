@@ -1,0 +1,176 @@
+.onboarding-root {
+  position: fixed;
+  inset: 0;
+  z-index: 10500;
+}
+
+.onboarding-veil {
+  position: fixed;
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: auto;
+  transition: top 0.25s ease, left 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.onboarding-veil--full {
+  inset: 0;
+}
+
+.onboarding-veil--center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.onboarding-highlight {
+  position: fixed;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 3px var(--swap-primary-color), 0 0 20px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transition: top 0.25s ease, left 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.onboarding-card {
+  background-color: var(--swap-primary-background);
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 1.25rem 1.25rem 1rem;
+  position: relative;
+  animation: onboarding-pop 0.2s ease-out;
+}
+
+.onboarding-card--welcome {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.onboarding-card--floating {
+  position: fixed;
+  width: 18rem;
+  z-index: 2;
+  transition: top 0.2s ease, left 0.2s ease;
+}
+
+@keyframes onboarding-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.onboarding-card__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--swap-tertiary-text-color);
+  display: flex;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.onboarding-card__close:hover {
+  color: var(--swap-primary-text-color);
+  background-color: var(--swap-secondary-background);
+}
+
+.onboarding-card__title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--swap-primary-text-color);
+  margin: 0 1.5rem 0.5rem 0;
+}
+
+.onboarding-card__body {
+  font-family: var(--swap-font-textos);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--swap-primary-text-color);
+  margin: 0 0 1rem;
+}
+
+.onboarding-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.onboarding-card__progress {
+  font-size: 0.75rem;
+  color: var(--swap-tertiary-text-color);
+  font-family: var(--swap-font-textos);
+  white-space: nowrap;
+}
+
+.onboarding-card__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.onboarding-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--swap-font-textos);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
+}
+
+.onboarding-btn--primary {
+  background-color: var(--swap-primary-color);
+  color: #ffffff;
+}
+
+.onboarding-btn--primary:hover {
+  filter: brightness(1.08);
+}
+
+.onboarding-btn--ghost {
+  background-color: transparent;
+  color: var(--swap-tertiary-text-color);
+}
+
+.onboarding-btn--ghost:hover {
+  background-color: var(--swap-secondary-background);
+  color: var(--swap-primary-text-color);
+}
+
+.onboarding-card__arrow {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background-color: var(--swap-primary-background);
+  transform: rotate(45deg);
+}
+
+.onboarding-card__arrow--top {
+  top: -7px;
+}
+
+.onboarding-card__arrow--left {
+  left: -7px;
+}
+
+.onboarding-card__arrow--right {
+  right: -7px;
+}
+
+@media (max-width: 480px) {
+  .onboarding-card--floating {
+    width: calc(100vw - 24px);
+  }
+}

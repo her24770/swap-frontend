@@ -1,21 +1,27 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Pencil, CreditCard } from "lucide-react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { Pencil, CreditCard, FileText, Camera, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { useTranslations } from "next-intl";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
+import UserTagsModal from "../UserTagsModal/UserTagsModal";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
 import { apiClient } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
-import {
-  contactosToUpsertBody,
-  reemplazarContactosUsuario,
-} from "../../../../lib/contactosUsuario";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
-import type { Tag } from "../../../../types/tag";
+import type { Tag, UserTag } from "../../../../types/tag";
+import type { Certificacion } from "../../../../types/certificacion";
+import { useToast } from "../../../../hooks/useToast";
+import { useSocket } from "../../../../hooks/useSocket";
+import type { NotificacionApi } from "../../../../services/notificacionService";
+import { usePerspectivaInterna } from "../../../../context/PerspectivaInternaContext";
+import { useUIStore } from "../../../../store/uiStore";
+import { contactosToUpsertBody, reemplazarContactosUsuario } from "../../../../lib/contactosUsuario";
 import "./UserProfileHeader.css";
+import Certificaciones from "../../../users/Certificaciones/Certificaciones";
 
 interface UserProfileHeaderProps {
   user: UserProfileData;
@@ -26,13 +32,114 @@ export default function UserProfileHeader({
   user,
   onSave,
 }: UserProfileHeaderProps) {
+  const t = useTranslations('profileHeader');
+
   const [modalOpen, setModalOpen] = useState(false);
+  const [tagsModalOpen, setTagsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(user.imageUrl);
-
+  const [displayTags, setDisplayTags] = useState<UserTag[]>(user.tags ?? []);
+  const [showAllTags, setShowAllTags] = useState(false);
+  const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
+  const [showCerts, setShowCerts] = useState(false);
+  const toast = useToast();
+  const socket = useSocket();
+  const { canEditProfile } = usePerspectivaInterna();
+  const { mostrarConfirm } = useUIStore();
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingFoto, setIsUploadingFoto] = useState(false);
   const [nombre, ...resto] = user.name.split(" ");
   const apellido = resto.join(" ");
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const allowed = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      toast.error("Formato no válido. Usa JPG, PNG o WebP.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("La imagen supera el límite de 5 MB.");
+      return;
+    }
+
+    mostrarConfirm({
+      titulo: "Cambiar foto de perfil",
+      mensaje: "¿Deseas actualizar tu foto de perfil?",
+      onConfirm: async () => {
+        try {
+          setIsUploadingFoto(true);
+          const urlFoto = await imagenService.uploadFotoPerfil(user.id_usuario, file);
+          await apiClient.patch(`/api/user/${user.id_usuario}`, { url_foto_perfil: urlFoto });
+          setDisplayImageUrl(`${urlFoto}?t=${Date.now()}`);
+          toast.success("Foto de perfil actualizada exitosamente.");
+        } catch (err: any) {
+          toast.error(err.message || "No fue posible actualizar la foto de perfil.");
+        } finally {
+          setIsUploadingFoto(false);
+        }
+      },
+    });
+  };
+
+  /**
+   * Consulta las certificaciones asociadas al usuario desde la API.
+   */
+  const fetchCertificaciones = useCallback(async () => {
+    if (!user.id_usuario) return;
+    try {
+      const res = await apiClient.get<{ data: Certificacion[] }>(`/api/certificacion/user/${user.id_usuario}`);
+      setCertificaciones(res.data ?? []);
+    } catch {
+      setCertificaciones([]);
+    }
+  }, [user.id_usuario]);
+
+  useEffect(() => {
+    fetchCertificaciones();
+  }, [fetchCertificaciones]);
+
+  /**
+   * Escucha eventos de WebSocket ("notificacion:nueva").
+   * Cuando el worker en segundo plano aprueba una certificación,
+   * se refresca automáticamente la lista de certificaciones en tiempo real.
+   */
+  useEffect(() => {
+    function alRecibirNotificacion(notificacion: NotificacionApi) {
+      if (
+        notificacion?.mensaje &&
+        notificacion.mensaje.includes("ha sido validada y aprobada exitosamente")
+      ) {
+        void fetchCertificaciones();
+      }
+    }
+
+    socket.on("notificacion:nueva", alRecibirNotificacion);
+    return () => {
+      socket.off("notificacion:nueva", alRecibirNotificacion);
+    };
+  }, [socket, fetchCertificaciones]);
+
+  useEffect(() => {
+    setDisplayTags(user.tags ?? []);
+  }, [user.tags]);
+
+  const sortedTags = useMemo(() => {
+    return [...displayTags].sort((a, b) => {
+      const pesoA = a.peso ?? 0;
+      const pesoB = b.peso ?? 0;
+      return pesoB - pesoA;
+    });
+  }, [displayTags]);
+
+  const tagsToShow = useMemo(() => {
+    if (showAllTags) return sortedTags;
+    return sortedTags.slice(0, 5);
+  }, [sortedTags, showAllTags]);
 
   const initialModalContacts = useMemo(
     () =>
@@ -82,11 +189,16 @@ export default function UserProfileHeader({
       });
 
       setModalOpen(false);
+      toast.success(t('toast.updateSuccess'));
     } catch (err: any) {
-      setSaveError(err.message || "No fue posible actualizar el perfil");
+      toast.error(err.message || t('toast.updateErrorFallback'));
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleTagsSaved = (tags: Tag[]) => {
+    setDisplayTags(tags);
   };
 
   return (
@@ -94,22 +206,69 @@ export default function UserProfileHeader({
       <div className="user-profile-header">
 
         <div className="user-profile-header__avatar-col">
-          <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
-          <UserRating score={user.rating} totalReviews={user.totalReviews} />
+          <div className="user-profile-header__avatar-wrapper">
+            <ProfilePicture imageUrl={displayImageUrl} userName={user.name} size="lg" />
+            {canEditProfile && (
+              <>
+                <div
+                  className="user-profile-header__photo-overlay"
+                  onClick={() => !isUploadingFoto && photoInputRef.current?.click()}
+                  role="button"
+                  aria-label="Cambiar foto de perfil"
+                >
+                  {isUploadingFoto
+                    ? <Loader2 size={28} className="user-profile-header__upload-spinner" />
+                    : <Camera size={28} />
+                  }
+                </div>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  hidden
+                  onChange={handlePhotoUpload}
+                />
+              </>
+            )}
+          </div>
+          <UserRating score={user.calificacion ?? 0} totalReviews={user.totalResenas ?? 0} />
+            <button
+              type="button"
+              className="certificacion-btn"
+              onClick={() => setShowCerts((v) => !v)}
+            >
+              <FileText size={18} strokeWidth={1.8} aria-hidden />
+              {showCerts ? t("certification.hide") : t("certification.show")}
+            </button>
         </div>
 
         <div className="user-profile-header__info-col">
           <div className="user-profile-header__name-row">
             <h1 className="user-profile-header__name">{nombre} {apellido}</h1>
-            <button
-              type="button"
-              className="user-profile-header__edit-btn"
-              onClick={() => setModalOpen(true)}
-              aria-label="Editar perfil"
-            >
-              <Pencil size={12} />
-              Editar perfil
-            </button>
+            {canEditProfile && (
+              <button
+                type="button"
+                className="user-profile-header__edit-btn"
+                onClick={() => setModalOpen(true)}
+                aria-label={t('aria.editProfile')}
+              >
+                <Pencil size={12} />
+                {t('actions.editProfile')}
+              </button>
+              
+            )}
+
+            {/* {Botón para administrar las etiquetas del usuario} */}
+            {canEditProfile && (
+              <button
+                type="button"
+                className="etiquetas-btn"
+                onClick={() => setTagsModalOpen(true)}
+              >
+                <Pencil size={12} strokeWidth={1.8} aria-hidden />
+                {t('actions.editTags')}
+              </button>
+            )}
           </div>
 
           <p className="user-profile-header__description">{user.description}</p>
@@ -118,7 +277,7 @@ export default function UserProfileHeader({
             <div className="user-profile-header__payment">
               <CreditCard size={16} className="user-profile-header__payment-icon" />
               <span>
-                <strong>Metodo de pago:</strong> {user.paymentMethod}
+                <strong>{t('labels.paymentMethod')}</strong> {user.paymentMethod}
               </span>
             </div>
           )}
@@ -130,22 +289,44 @@ export default function UserProfileHeader({
         </div>
 
         <div className="user-profile-header__side-col">
-          {user.tags && user.tags.length > 0 && (
+          {sortedTags.length > 0 && (
             <div className="user-profile-header__tags">
-              {user.tags.map((tag) => (
+              {tagsToShow.map((tag) => (
                 <TagBadge key={tag.id} tag={tag} size="lg" />
               ))}
+              {sortedTags.length > 5 && (
+                <button
+                  type="button"
+                  className="user-profile-header__tags-toggle-btn"
+                  onClick={() => setShowAllTags((prev) => !prev)}
+                  aria-expanded={showAllTags}
+                >
+                  <span>{showAllTags ? "Ver menos" : `Ver más (+${sortedTags.length - 5})`}</span>
+                  {showAllTags ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+              )}
             </div>
           )}
           <div className="user-profile-header__contact-block">
-            <p className="user-profile-header__contact-label">Contacto</p>
+            <p className="user-profile-header__contact-label">{t('labels.contact')}</p>
             <UserContact contacts={user.contacts} />
           </div>
         </div>
-
       </div>
+      {showCerts && (
+        <div className="user-profile-header__certs-panel">
+          <hr className="perfil-page__divider" />
+          <section className="perfil-page__section">
+            <Certificaciones
+              certificaciones={certificaciones}
+              canEdit={canEditProfile}
+              onRefresh={fetchCertificaciones}
+            />
+          </section>
+        </div>
+      )}
 
-      {modalOpen && (
+      {canEditProfile && modalOpen && (
         <ActualizarPerfilModal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
@@ -153,9 +334,20 @@ export default function UserProfileHeader({
           initialApellido={apellido}
           initialDescripcion={user.description}
           initialContacts={initialModalContacts}
+          initialFoto={displayImageUrl ?? null}
           onSubmit={handleSave}
           onCancel={() => setModalOpen(false)}
           isSaving={isSaving}
+        />
+      )}
+
+      {canEditProfile && tagsModalOpen && (
+        <UserTagsModal
+          isOpen={tagsModalOpen}
+          userId={user.id_usuario}
+          currentTags={displayTags}
+          onClose={() => setTagsModalOpen(false)}
+          onSaved={handleTagsSaved}
         />
       )}
     </>

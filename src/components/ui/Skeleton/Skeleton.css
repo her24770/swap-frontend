@@ -1,0 +1,24 @@
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--swap-tertiary-background)    0%,
+    var(--swap-secondary-background)  45%,
+    var(--swap-tertiary-background)  100%
+  );
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.6s ease-in-out infinite;
+  display: block;
+}
+
+.skeleton--rect   { border-radius: 6px; }
+.skeleton--circle { border-radius: 50%; }
+.skeleton--text   { border-radius: 4px; height: 1em; }
+
+@keyframes sk-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; opacity: 0.55; }
+}

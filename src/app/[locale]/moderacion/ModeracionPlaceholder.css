@@ -1,0 +1,23 @@
+.moderacion-placeholder {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 4rem 1rem;
+  color: var(--swap-tertiary-text-color);
+  text-align: center;
+}
+
+.moderacion-placeholder__title {
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1.125rem;
+  color: var(--swap-primary-text-color);
+  margin: 0.25rem 0 0;
+}
+
+.moderacion-placeholder__text {
+  font-size: 0.875rem;
+  margin: 0;
+}
