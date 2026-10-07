@@ -1,0 +1,16 @@
+{
+  "$schema": "https://github.com/IBM/audit-ci/raw/main/docs/schema.json",
+  "package-manager": "npm",
+  "high": true,
+  "report-type": "full",
+  "retry-count": 3,
+  "allowlist": [
+    {
+      "GHSA-vfj7-8cjw-p6xm": {
+        "active": true,
+        "expiry": "2026-11-05",
+        "notes": "SWAP-610: braces solo llega por eslint-config-next en tooling de lint; npm no ofrece parche compatible para Next 16 y propone bajar a Next 14. Revisar semanalmente y retirar al publicarse el parche."
+      }
+    }
+  ]
+}
