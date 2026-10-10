@@ -381,6 +381,7 @@
       },
       "estados": {
         "todos": "Todos los estados",
+        "pendiente": "Pendiente",
         "activo": "Activo",
         "inactivo": "Inactivo",
         "disponible": "Disponible",
@@ -400,8 +401,9 @@
         "correccionUsuario": "Corrección aplicada por el usuario"
       },
       "acciones": {
+        "aprobar": "Aprobar",
         "reactivar": "Reactivar",
-        "bajar": "Bajar publicación",
+        "bajar": "Bajar",
         "eliminar": "Eliminar",
         "detalle": "Detalle"
       },
@@ -791,6 +793,7 @@
 			"reservado": "Reservado",
 			"vendido": "Vendido",
 			"inactivo": "Inactivo",
+			"pendiente": "Pendiente",
 			"1": "Disponible",
 			"2": "Leído",
 			"3": "Reservado",
