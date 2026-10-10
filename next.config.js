@@ -1,9 +1,6 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || apiUrl;
-
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
@@ -27,22 +24,7 @@ const nextConfig = {
                     { key: 'X-Frame-Options', value: 'DENY' },
                     { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
                     { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
-                    {
-                        key: 'Content-Security-Policy',
-                        value: [
-                            "default-src 'self'",
-                            // Next.js necesita 'unsafe-inline' para los estilos que inyecta;
-                            // 'unsafe-eval' solo aplica en dev (hot reload / react-refresh).
-                            `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV !== 'production' ? " 'unsafe-eval'" : ''}`,
-                            "style-src 'self' 'unsafe-inline'",
-                            `img-src 'self' data: https: blob:`,
-                            `connect-src 'self' ${apiUrl} ${socketUrl} wss: https:`,
-                            `frame-src 'self' ${apiUrl} https://*.r2.dev blob: data:`,
-                            "frame-ancestors 'none'",
-                            "base-uri 'self'",
-                            "form-action 'self'",
-                        ].join('; '),
-                    },
+                    // CSP en proxy.ts para generar nonce en cada request
                 ],
             },
         ];
