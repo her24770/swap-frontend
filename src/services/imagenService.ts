@@ -12,6 +12,16 @@ export interface CrearPublicacionPayload {
 export interface CrearPublicacionResult {
   id_publicacion: number;
   imagenes: string[];
+  // Estado devuelto por backend (ej: "pendiente" si aplica fail-closed)
+  estado_nombre?: string;
+  // Mensaje informativo del servidor
+  message?: string;
+}
+
+export interface ActualizarPublicacionResult {
+  urlsNuevas: string[];
+  estado_nombre?: string;
+  message?: string;
 }
 
 export interface ActualizarPublicacionPayload {
@@ -50,10 +60,15 @@ export const imagenService = {
     }
 
     const json = await res.json();
-    return json.data as CrearPublicacionResult;
+    // Preservar datos, estado y mensaje retornado por el backend
+    return {
+      ...(json.data as CrearPublicacionResult),
+      estado_nombre: json.data?.estado_nombre,
+      message: json.message,
+    };
   },
 
-  async actualizarPublicacion(id: number, payload: ActualizarPublicacionPayload): Promise<{ urlsNuevas: string[] }> {
+  async actualizarPublicacion(id: number, payload: ActualizarPublicacionPayload): Promise<ActualizarPublicacionResult> {
     const formData = new FormData();
 
     if (payload.titulo !== undefined)           formData.append("titulo", payload.titulo);
@@ -80,7 +95,11 @@ export const imagenService = {
     }
 
     const json = await res.json();
-    return { urlsNuevas: json.data?.urlsNuevas ?? [] };
+    return {
+      urlsNuevas: json.data?.urlsNuevas ?? [],
+      estado_nombre: json.data?.estado_nombre,
+      message: json.message,
+    };
   },
 
   async uploadFotoPerfil(usuarioId: number, file: File): Promise<string> {
