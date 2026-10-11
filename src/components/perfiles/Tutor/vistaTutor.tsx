@@ -297,7 +297,7 @@ export default function VistaTutor({
         {loading && <PerfilPostCarouselSkeleton count={4} />}
 
         {error && (
-          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+          <p className="perfil-page__coming-soon perfil-page__coming-soon--error">
             {error}
           </p>
         )}
@@ -462,7 +462,7 @@ export default function VistaTutor({
         </div>
         {horarioLoading && <HorarioSkeleton />}
         {horarioError && (
-          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+          <p className="perfil-page__coming-soon perfil-page__coming-soon--error">
             {horarioError}
           </p>
         )}

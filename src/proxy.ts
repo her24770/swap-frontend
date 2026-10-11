@@ -25,9 +25,7 @@ function buildCsp(nonce: string) {
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'${process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""}`,
-    // style-src sigue usando unsafe-inline, los nonces no cubren el atributo
-    // style="...", y se usa varios estilos inline dinamicos
-    "style-src 'self' 'unsafe-inline'",
+    `style-src 'self' 'nonce-${nonce}'`,
     `img-src 'self' data: blob: ${imageHosts.join(" ")} ${apiUrl}`,
     `connect-src 'self' ${connectHosts.join(" ")}`,
     `frame-src 'self' ${apiUrl} https://*.r2.dev blob: data:`,
