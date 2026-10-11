@@ -36,8 +36,7 @@ export default function ProfilePicture({ imageUrl, userName, size = 'md' }: Prof
             src={imageUrl as string}
             alt={`Foto de perfil de ${userName}`}
             fill
-            className="profile-picture__image"
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            className="profile-picture__image img-cover-center"
             unoptimized
             onError={() => setHasError(true)}
             />

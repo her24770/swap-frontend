@@ -199,7 +199,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
           <div className="detalle-reporte-modal__grid">
             <div className="detalle-reporte-modal__field">
               <span className="detalle-reporte-modal__label">{tDet("labels.reporto")}</span>
-              <div className="tabla-reportes__user-cell" style={{ marginTop: "0.375rem" }}>
+              <div className="tabla-reportes__user-cell">
                 <div className="tabla-reportes__avatar">
                   <span>{initials(r.emisor.nombre)}</span>
                 </div>
@@ -217,7 +217,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
             </div>
             <div className="detalle-reporte-modal__field">
               <span className="detalle-reporte-modal__label">{tDet("labels.reportado")}</span>
-              <div className="tabla-reportes__user-cell" style={{ marginTop: "0.375rem" }}>
+              <div className="tabla-reportes__user-cell">
                 <div className="tabla-reportes__avatar">
                   <span>{initials(r.receptor.nombre)}</span>
                 </div>
@@ -244,7 +244,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                 <div className="detalle-reporte-modal__evidencias">
                   {evidencias.map((url, index) => (
                     <div key={`${url}-${index}`} className="detalle-reporte-modal__img-wrap">
-                      <Image src={url} alt={tDet("evidenciaAlt", { n: index + 1 })} fill style={{ objectFit: "cover" }} unoptimized />
+                      <Image src={url} alt={tDet("evidenciaAlt", { n: index + 1 })} fill className="img-cover" unoptimized />
                     </div>
                   ))}
                 </div>
@@ -287,8 +287,7 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                             src={publicacionData.usuario.url_foto_perfil}
                             alt={publicacionData.usuario.nombre}
                             fill
-                            className="post-modal__seller-img"
-                            style={{ objectFit: "cover" }}
+                            className="post-modal__seller-img img-cover"
                             unoptimized
                           />
                         ) : (

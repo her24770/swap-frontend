@@ -22,8 +22,7 @@ export default function PostImage({ images, alt, compact = false }: PostImagePro
           src={mainImage}
           alt={alt}
           fill
-          className="product-image__content"
-          style={{ objectFit: 'cover' }}
+          className="product-image__content img-cover"
           onError={() => setImgError(true)}
           unoptimized
         />

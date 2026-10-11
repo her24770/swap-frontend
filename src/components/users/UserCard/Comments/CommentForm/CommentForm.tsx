@@ -133,7 +133,7 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
 
       {/* Footer y Botones de Acción */}
       <div className="comment-form__footer">
-        <div className="comment-form__actions" style={{ marginLeft: "auto" }}> 
+        <div className="comment-form__actions">
           <button
             type="button"
             className="button button--medium button--danger"

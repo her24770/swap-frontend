@@ -20,3 +20,17 @@ body {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Utilidades compartidas para evitar style={{...}} inline (CSP style-src sin unsafe-inline) */
+.img-cover {
+  object-fit: cover;
+}
+
+.img-cover-center {
+  object-fit: cover;
+  object-position: center;
+}
+
+.hidden-input {
+  display: none;
+}

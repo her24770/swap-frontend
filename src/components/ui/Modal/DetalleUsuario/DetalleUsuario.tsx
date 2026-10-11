@@ -79,8 +79,7 @@ export default function DetalleUsuario({
                   src={userImageUrl}
                   alt={userName}
                   fill
-                  className="post-modal__seller-img"
-                  style={{ objectFit: "cover" }}
+                  className="post-modal__seller-img img-cover"
                   unoptimized
                 />
               ) : (
