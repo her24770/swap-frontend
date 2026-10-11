@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CheckCircle2, XCircle, Info, AlertTriangle, X } from "lucide-react";
 import { useUIStore } from "../../../store/uiStore";
+import { useNonceStyle } from "../../../hooks/useNonceStyle";
 import "./Toast.css";
 
 const DURATION = 4000;
@@ -43,6 +44,11 @@ function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }:
     return () => clearTimeout(timer);
   }, []);
 
+  useNonceStyle(
+    `toast-progress-${id}`,
+    `[data-toast-id="${id}"] { animation-duration: ${duracion}ms; }`
+  );
+
   return (
     <div
       className={`toast toast--${tipo}${exiting ? " toast--exiting" : ""}`}
@@ -67,7 +73,7 @@ function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }:
 
       <div
         className="toast__progress"
-        style={{ animationDuration: `${duracion}ms` }}
+        data-toast-id={id}
       />
     </div>
   );

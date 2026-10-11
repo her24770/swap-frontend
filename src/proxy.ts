@@ -39,6 +39,8 @@ function buildCsp(nonce: string) {
 
 export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  
+  request.headers.set("x-nonce", nonce);
 
   const authRedirect = checkAuth(request);
   const response = authRedirect ?? intlMiddleware(request);
