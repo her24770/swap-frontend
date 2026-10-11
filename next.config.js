@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
     output: 'standalone',
+    poweredByHeader: false,
     images: {
         remotePatterns: [
             { protocol: 'https', hostname: 'i.pravatar.cc' },

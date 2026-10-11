@@ -6,6 +6,9 @@ import { checkAuth } from "./proxy/authProxy";
 const intlMiddleware = createIntlMiddleware({
   locales: ["es", "en", "fr"],
   defaultLocale: "es",
+  localeCookie: {
+    secure: true,
+  },
 });
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
