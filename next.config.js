@@ -8,6 +8,7 @@ const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || apiUrl;
 
 const nextConfig = {
     output: 'standalone',
+    generateBuildId: async () => process.env.BUILD_ID || 'local',
     images: {
         remotePatterns: [
             { protocol: 'https', hostname: 'i.pravatar.cc' },
