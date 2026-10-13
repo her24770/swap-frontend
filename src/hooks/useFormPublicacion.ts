@@ -155,7 +155,15 @@ export function useFormCrearPublicacion(
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       form.reset();
-      agregarNotificacion({ tipo: "success", mensaje: "Tu publicación fue creada exitosamente." });
+
+      // Si el backend aplico fail-closed, notificar al usuario sobre la revision manual
+      const esPendiente = resultado.estado_nombre === "pendiente";
+      agregarNotificacion({
+        tipo: esPendiente ? "info" : "success",
+        mensaje: esPendiente
+          ? (resultado.message || "Tu contenido está en revisión manual antes de publicarse debido a una verificación de seguridad.")
+          : (resultado.message || "Tu publicación fue creada exitosamente."),
+      });
     } catch (error) {
       const apiError = error as ApiError;
       const message = apiError.message || "No fue posible crear la publicación.";
@@ -298,7 +306,7 @@ export function useFormEditarPublicacion(
     setIsSubmitting(true);
 
     try {
-      await imagenService.actualizarPublicacion(id, {
+      const resultado = await imagenService.actualizarPublicacion(id, {
         titulo: data.titulo,
         descripcion: data.descripcion,
         precio: data.precio,
@@ -313,7 +321,15 @@ export function useFormEditarPublicacion(
       revocarPreviews(imagePreviews);
       setImagePreviews([]);
       setImagenesAEliminar([]);
-      agregarNotificacion({ tipo: "success", mensaje: "Publicación actualizada exitosamente." });
+
+      // Si la edicion requirio revision manual de seguridad
+      const esPendiente = resultado.estado_nombre === "pendiente";
+      agregarNotificacion({
+        tipo: esPendiente ? "info" : "success",
+        mensaje: esPendiente
+          ? (resultado.message || "Tu contenido está en revisión manual antes de publicarse debido a una verificación de seguridad.")
+          : (resultado.message || "Publicación actualizada exitosamente."),
+      });
     } catch (error) {
       const apiError = error as ApiError;
       const message = apiError.message || "No fue posible actualizar la publicación.";

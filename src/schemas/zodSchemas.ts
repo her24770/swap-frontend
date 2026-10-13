@@ -159,11 +159,10 @@ export const schemaEditarPublicacion = z.object({
     .boolean()
     .optional(),
 
-  // Solo los estados que el usuario puede seleccionar desde el formulario.
-  // "eliminado" queda excluido intencionalmente.
+  // Estados validos para edicion (incluye "pendiente" para publicaciones retenidas por fail-closed)
   estado: z
-    .enum(["disponible", "vendido", "reservado", "activo", "inactivo"], {
-      invalid_type_error: "El estado debe ser disponible, vendido o reservado.",
+    .enum(["disponible", "vendido", "reservado", "activo", "inactivo", "pendiente"], {
+      invalid_type_error: "El estado proporcionado no es válido.",
     })
     .optional(),
 })

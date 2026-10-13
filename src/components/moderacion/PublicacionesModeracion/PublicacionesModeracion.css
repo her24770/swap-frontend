@@ -166,6 +166,11 @@
   color: #dc2626;
 }
 
+.moderacion-publicaciones__estado--pendiente {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
 .moderacion-publicaciones__estado--activo,
 .moderacion-publicaciones__estado--disponible {
   background-color: rgba(22, 163, 74, 0.12);
@@ -244,7 +249,9 @@
 }
 
 .moderacion-publicaciones__actions {
+  display: flex;
   align-items: stretch;
+  gap: 0.5rem;
   border-top: 1px solid var(--swap-primary-border-color);
   padding-top: 0.7rem;
 }
@@ -252,6 +259,20 @@
 .moderacion-publicaciones__actions .button {
   flex: 1;
   justify-content: center;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+/* Grilla para estado pendiente: Aprobar arriba a ancho completo, Bajar y Eliminar abajo */
+.moderacion-publicaciones__actions--pendiente {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.moderacion-publicaciones__actions--pendiente .moderacion-publicaciones__btn-aprobar {
+  grid-column: 1 / -1;
+  font-weight: 600;
 }
 
 .moderacion-publicaciones__danger-btn {
@@ -295,5 +316,13 @@
 
   .moderacion-publicaciones__actions {
     flex-direction: column;
+  }
+
+  .moderacion-publicaciones__actions--pendiente {
+    grid-template-columns: 1fr;
+  }
+
+  .moderacion-publicaciones__actions--pendiente .moderacion-publicaciones__btn-aprobar {
+    grid-column: auto;
   }
 }

@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig = {
     output: 'standalone',
+    generateBuildId: async () => process.env.BUILD_ID || 'local',
     poweredByHeader: false,
     images: {
         remotePatterns: [
