@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Eye, Loader2, Trash2, Ban, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Loader2, Trash2, Ban, RotateCcw, Check } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import SearchBar from "../../ui/SearchBar/SearchBar";
 import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublicacion";
@@ -26,6 +26,7 @@ const TIPOS = [
 
 const ESTADOS = [
   { value: "", labelKey: "estados.todos" },
+  { value: "pendiente", labelKey: "estados.pendiente" },
   { value: "activo", labelKey: "estados.activo" },
   { value: "inactivo", labelKey: "estados.inactivo" },
   { value: "disponible", labelKey: "estados.disponible" },
@@ -63,11 +64,13 @@ interface AccionesPublicacionProps {
 
 function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, busy }: AccionesPublicacionProps) {
   const t = useTranslations("moderacion.publicaciones");
-  const estaInactiva = publicacion.estadoRel?.estado === "inactivo";
+  const estadoActual = publicacion.estadoRel?.estado?.toLowerCase();
+  const esInactiva = estadoActual === "inactivo";
+  const esPendiente = estadoActual === "pendiente";
 
   return (
     <div className="moderacion-publicaciones__actions">
-      {estaInactiva ? (
+      {esInactiva ? (
         <button
           type="button"
           className="button button--medium"
@@ -77,6 +80,28 @@ function AccionesPublicacion({ publicacion, onBajar, onReactivar, onEliminar, bu
           {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <RotateCcw size={16} />}
           {t("acciones.reactivar")}
         </button>
+      ) : esPendiente ? (
+        <>
+          {/* Permite aprobar la publicacion retenida por fail-closed */}
+          <button
+            type="button"
+            className="button button--medium button--success"
+            onClick={() => onReactivar(publicacion)}
+            disabled={busy}
+          >
+            {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <Check size={16} />}
+            {t("acciones.aprobar")}
+          </button>
+          <button
+            type="button"
+            className="button button--medium button--warning"
+            onClick={() => onBajar(publicacion)}
+            disabled={busy}
+          >
+            {busy ? <Loader2 size={16} className="moderacion-publicaciones__spinner" /> : <Ban size={16} />}
+            {t("acciones.bajar")}
+          </button>
+        </>
       ) : (
         <button
           type="button"

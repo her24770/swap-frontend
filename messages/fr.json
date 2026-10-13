@@ -359,6 +359,7 @@
 			},
 			"estados": {
 				"todos": "Tous les statuts",
+				"pendiente": "En attente",
 				"activo": "Actif",
 				"inactivo": "Inactif",
 				"disponible": "Disponible",
@@ -378,8 +379,9 @@
 				"correccionUsuario": "Correction appliquée par l'utilisateur"
 			},
 			"acciones": {
+				"aprobar": "Approuver",
 				"reactivar": "Réactiver",
-				"bajar": "Retirer la publication",
+				"bajar": "Retirer",
 				"eliminar": "Supprimer",
 				"detalle": "Détail"
 			},
@@ -769,6 +771,7 @@
 			"reservado": "Réservé",
 			"vendido": "Vendu",
 			"inactivo": "Inactif",
+			"pendiente": "En attente",
 			"1": "Disponible",
 			"2": "Lu",
 			"3": "Réservé",
