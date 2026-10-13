@@ -28,6 +28,16 @@ const nextConfig = {
                     // CSP en proxy.ts para generar nonce en cada request
                 ],
             },
+            {
+                // robots.txt y sitemap.xml no tienen ruta real 
+                source: '/:path(robots\\.txt|sitemap\\.xml)',
+                headers: [
+                    {
+                        key: 'Content-Security-Policy',
+                        value: "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+                    },
+                ],
+            },
         ];
     },
 };
