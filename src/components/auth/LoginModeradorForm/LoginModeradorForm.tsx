@@ -61,7 +61,7 @@ export default function LoginModeradorForm() {
       <h1 className="login-moderador-form__title">{t("title")}</h1>
       <p className="login-moderador-form__subtitle">{t("subtitle")}</p>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="login-moderador-form__fields">
+      <form onSubmit={handleSubmit(onSubmit)} method="post" noValidate className="login-moderador-form__fields">
         <div className="login-moderador-form__field">
           <label className="login-moderador-form__label">{t("usuarioLabel")}</label>
           <input
