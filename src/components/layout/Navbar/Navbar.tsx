@@ -8,6 +8,7 @@ import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { useAuth } from "../../../hooks/useAuth";
 import {LogoCompleto} from "../../ui/Icono/Logo";
+import { Tooltip } from "../../ui/Tooltip/Tooltip";
 import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
 import NotificacionModal from "../../ui/Modal/NotificacionModal/NotificacionModal";
 import type { NotificacionData } from "../../ui/Modal/NotificacionModal/Notificacion/Notificacion";
@@ -99,16 +100,18 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
     <header className="navbar">
       <div className="navbar__left">
         {!isAuthRoute && (
-          <button
-            ref={menuButtonRef}
-            onClick={onMenuToggle}
-            aria-label={t('ariaToggleMenu')}
-            type="button"
-            data-tour="navbar-menu"
-            className="navbar__menu-btn"
-          >
-            <Menu size={28} strokeWidth={2} />
-          </button>
+          <Tooltip label={t('ariaToggleMenu')} position="bottom">
+            <button
+              ref={menuButtonRef}
+              onClick={onMenuToggle}
+              aria-label={t('ariaToggleMenu')}
+              type="button"
+              data-tour="navbar-menu"
+              className="navbar__menu-btn"
+            >
+              <Menu size={28} strokeWidth={2} />
+            </button>
+          </Tooltip>
         )}
         <Link href="/" className="navbar__logo-link" aria-label="Ir a descubre" title="Ir a descubre">
           <LogoCompleto className="navbar__logo"/>
@@ -118,40 +121,42 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
       <div className="navbar__right">
         {!isAuthRoute && (
           <>
-            <button
-              onClick={() => {
-                setNotifOpen(false);
-                setIsSettingsOpen(true);
-              }}
-              aria-label="Abrir configuraciones"
-              type="button"
-              title="Configuraciones"
-              data-tour="navbar-settings"
-              className="navbar__menu-btn"
-            >
-              <Settings size={25} strokeWidth={2} />
-            </button>
+            <Tooltip label="Configuraciones" position="bottom">
+              <button
+                onClick={() => {
+                  setNotifOpen(false);
+                  setIsSettingsOpen(true);
+                }}
+                aria-label="Abrir configuraciones"
+                type="button"
+                data-tour="navbar-settings"
+                className="navbar__menu-btn"
+              >
+                <Settings size={25} strokeWidth={2} />
+              </button>
+            </Tooltip>
 
             <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
             <div ref={notifWrapperRef} className="navbar__notif">
-              <button
-                ref={bellRef}
-                onClick={toggleNotificaciones}
-                aria-label="Abrir notificaciones"
-                aria-expanded={notifOpen}
-                type="button"
-                title="Notificaciones"
-                data-tour="navbar-notif"
-                className="navbar__menu-btn navbar__menu-btn--bell"
-              >
-                <Bell size={25} strokeWidth={2} />
-                {unreadCount > 0 && (
-                  <span className="navbar__notif-badge" aria-hidden>
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </button>
+              <Tooltip label="Notificaciones" position="bottom">
+                <button
+                  ref={bellRef}
+                  onClick={toggleNotificaciones}
+                  aria-label="Abrir notificaciones"
+                  aria-expanded={notifOpen}
+                  type="button"
+                  data-tour="navbar-notif"
+                  className="navbar__menu-btn navbar__menu-btn--bell"
+                >
+                  <Bell size={25} strokeWidth={2} />
+                  {unreadCount > 0 && (
+                    <span className="navbar__notif-badge" aria-hidden>
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
+                </button>
+              </Tooltip>
 
               <NotificacionModal
                 isOpen={notifOpen}
@@ -183,19 +188,20 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
             </div>
 
             <div ref={dropdownRef} className="navbar__profile">
-              <button
-                aria-label={t('ariaUserProfile')}
-                type="button"
-                title= "Perfil"
-                onClick={() => {
-                  setNotifOpen(false);
-                  setProfileOpen((prev) => !prev);
-                }}
-                data-tour="navbar-profile"
-                className="navbar__profile-btn"
-              >
-                <UserCircle2 size={28} strokeWidth={1.5} />
-              </button>
+              <Tooltip label={t('ariaUserProfile')} position="bottom">
+                <button
+                  aria-label={t('ariaUserProfile')}
+                  type="button"
+                  onClick={() => {
+                    setNotifOpen(false);
+                    setProfileOpen((prev) => !prev);
+                  }}
+                  data-tour="navbar-profile"
+                  className="navbar__profile-btn"
+                >
+                  <UserCircle2 size={28} strokeWidth={1.5} />
+                </button>
+              </Tooltip>
 
               {profileOpen && (
                 <div className="navbar__dropdown">
