@@ -88,7 +88,7 @@ export default function ForgotPasswordForm() {
       <h1 className="login-form__title">{t("title")}</h1>
       <p className="login-form__subtitle">{t(`steps.${step}.subtitle`)}</p>
 
-      <form onSubmit={onSubmit} noValidate className="login-form__fields">
+      <form onSubmit={onSubmit} method="post" noValidate className="login-form__fields">
         {step === "email" && (
           <div className="login-form__field">
             <label className="login-form__label">{t("emailLabel")}</label>

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
+import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import type { Certificacion } from "../../../types/certificacion";
 import { useUIStore } from "../../../store/uiStore";
 import "../../ui/Modal/Modal.css";
@@ -98,14 +99,24 @@ export default function Certificaciones({
         <div className="certificaciones__header">
           <h2 className="certificaciones__title">{t("title")}</h2>
           {canEdit && (
-            <button
-              type="button"
-              className="certificaciones__btn-add"
-              onClick={() => setCertModalOpen(true)}
-            >
-              <Plus size={15} strokeWidth={2.5} />
-              {t("add")}
-            </button>
+            <div className="certificaciones__header-actions">
+              <button
+                type="button"
+                className="certificaciones__btn-add"
+                onClick={() => setCertModalOpen(true)}
+              >
+                <Plus size={15} strokeWidth={2.5} />
+                {t("add")}
+              </button>
+              <InfoHint
+                ariaLabel="Ayuda sobre los íconos de certificaciones"
+                items={[
+                  { icon: <Trash2 size={16} strokeWidth={2} />, label: `${t("delete")}: la quita de tu lista, te pide confirmar antes de borrarla.` },
+                  { icon: <ExternalLink size={16} />, label: "Abrir PDF: abre el certificado en una pestaña nueva." },
+                  { icon: <Maximize2 size={16} />, label: "Pantalla completa: expande el visor del PDF para verlo más grande." },
+                ]}
+              />
+            </div>
           )}
         </div>
 

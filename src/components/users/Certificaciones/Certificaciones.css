@@ -16,6 +16,12 @@
   gap: 1rem;
 }
 
+.certificaciones__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
 .certificaciones__title {
   font-family: var(--swap-font-titulos);
   font-size: 1.25rem;

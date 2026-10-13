@@ -186,7 +186,7 @@ export default function RegistroForm() {
 
   if (verificationStep) {
     return (
-      <form onSubmit={handleVerificationSubmit} noValidate className="registro-form registro-form--verification">
+      <form onSubmit={handleVerificationSubmit} method="post" noValidate className="registro-form registro-form--verification">
         <div className="registro-form__verification-header">
           <h2 className="registro-form__verification-title">{t('verificationTitle')}</h2>
           <p className="registro-form__verification-description">
@@ -238,7 +238,7 @@ export default function RegistroForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="registro-form">
+    <form onSubmit={handleSubmit(onSubmit)} method="post" noValidate className="registro-form">
 
       {/* Nombre y Apellido */}
       <div className="registro-form__row">
