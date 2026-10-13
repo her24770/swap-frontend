@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Pencil, Save, SquarePlus, X, Pin, SquarePen, Trash2, Heart, Bookmark } from "lucide-react";
+import { Pencil, Save, SquarePlus, X, Pin, SquarePen, Trash2, Heart, Bookmark, MousePointerClick, Eye } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
@@ -24,6 +24,13 @@ import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacione
 import { useServices } from "../../../services/context/ServiceContext";
 import { PerfilPostCarouselSkeleton } from "../perfilLoading";
 import { HorarioSkeleton } from "./Horario/HorarioSkeleton/HorarioSkeleton";
+
+const horarioInfoItems = [
+  { icon: <Pencil size={16} strokeWidth={2} />, label: "Editar horario: activa el modo de edición de la cuadrícula." },
+  { icon: <MousePointerClick size={16} strokeWidth={2} />, label: "Toca cada casilla para marcarla como disponible o quitarla." },
+  { icon: <Save size={16} strokeWidth={2} />, label: "Guardar cambios: confirma los espacios que marcaste." },
+  { icon: <Eye size={16} strokeWidth={2} />, label: "Este horario es visible para todos los demás usuarios de la app." },
+];
 
 const postCardInfoItems = [
   { icon: <Pin size={16} strokeWidth={2} />, label: "Destacar: resalta la publicación en tu catálogo." },
@@ -439,36 +446,41 @@ export default function VistaTutor({
       <section className="perfil-page__section">
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.schedule")}</h2>
-          {canCreatePublication && !horarioEditando && (
-            <button
-              type="button"
-              className="perfil-page__new-publication-btn"
-              onClick={() => setHorarioEditando(true)}
-            >
-              <Pencil size={18} strokeWidth={1.8} aria-hidden />
-              {t('actions.editSchedule')}
-            </button>
-          )}
-          {canCreatePublication && horarioEditando && (
-            <div className="perfil-page__schedule-actions">
-              <button
-                type="button"
-                className="perfil-page__secondary-btn"
-                onClick={handleCancelarHorario}
-                disabled={horarioGuardando}
-              >
-                <X size={18} strokeWidth={1.8} aria-hidden />
-                Cancelar
-              </button>
-              <button
-                type="button"
-                className="perfil-page__new-publication-btn"
-                onClick={handleGuardarHorario}
-                disabled={horarioGuardando || cambiosPendientes.size === 0}
-              >
-                <Save size={18} strokeWidth={1.8} aria-hidden />
-                {horarioGuardando ? "Guardando..." : "Guardar cambios"}
-              </button>
+          {canCreatePublication && (
+            <div className="perfil-page__catalog-bar-actions">
+              {!horarioEditando && (
+                <button
+                  type="button"
+                  className="perfil-page__new-publication-btn"
+                  onClick={() => setHorarioEditando(true)}
+                >
+                  <Pencil size={18} strokeWidth={1.8} aria-hidden />
+                  {t('actions.editSchedule')}
+                </button>
+              )}
+              {horarioEditando && (
+                <div className="perfil-page__schedule-actions">
+                  <button
+                    type="button"
+                    className="perfil-page__secondary-btn"
+                    onClick={handleCancelarHorario}
+                    disabled={horarioGuardando}
+                  >
+                    <X size={18} strokeWidth={1.8} aria-hidden />
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    className="perfil-page__new-publication-btn"
+                    onClick={handleGuardarHorario}
+                    disabled={horarioGuardando || cambiosPendientes.size === 0}
+                  >
+                    <Save size={18} strokeWidth={1.8} aria-hidden />
+                    {horarioGuardando ? "Guardando..." : "Guardar cambios"}
+                  </button>
+                </div>
+              )}
+              <InfoHint ariaLabel="Ayuda sobre cómo editar tu horario" items={horarioInfoItems} />
             </div>
           )}
         </div>
