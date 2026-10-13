@@ -8,7 +8,6 @@ import Notificacion from "./Notificacion/Notificacion";
 import type { NotificacionData } from "./Notificacion/Notificacion";
 import TarjetaNotificacionSolicitud from "./Solicitud/Tutoria/TutoriaNotificacion";
 import type { SolicitudTutoriaNotificacion } from "./Solicitud/Tutoria/TutoriaNotificacion";
-import { useNonceStyle } from "../../../../hooks/useNonceStyle";
 import "./NotificacionModal.css";
 
 interface NotificacionModalProps {
@@ -112,20 +111,13 @@ export default function NotificacionModal({
     };
   }, [isOpen, onClose, anchorRef]);
 
-  // Los nonces de CSP no cubren el atributo style="...", la posicion
-  // calculada en runtime (anclada al boton de notificaciones) se vuelca a
-  // una hoja <style> con nonce en vez de style={{...}}.
-  useNonceStyle(
-    "notif-modal-dynamic-style",
-    isOpen ? `.notif-modal--anchored { top: ${position.top}px; right: ${position.right}px; }` : ""
-  );
-
   if (!isOpen || !mounted) return null;
 
   const panel = (
     <div
       ref={panelRef}
       className="notif-modal notif-modal--anchored"
+      style={{ top: position.top, right: position.right }}
       role="dialog"
       aria-label={t("ariaLabel")}
       aria-modal="true"

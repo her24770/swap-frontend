@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useId, useRef } from "react";
-import { useNonceStyle } from "../../../../../../hooks/useNonceStyle";
+import { useCallback, useRef } from "react";
 import "./RangoSlider.css";
 
 interface RangoSliderProps {
@@ -24,7 +23,6 @@ export default function RangoSlider({
   formatLabel,
 }: RangoSliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const sliderId = useId();
 
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
 
@@ -49,14 +47,6 @@ export default function RangoSlider({
   const leftPct = pct(valueMin);
   const rightPct = pct(valueMax);
 
-  // Los nonces de CSP no cubren el atributo style="...", el porcentaje
-  // calculado en runtime se vuelca a una hoja <style> con nonce, scopeada
-  // por id porque puede haber mas de un RangoSlider montado a la vez.
-  useNonceStyle(
-    `range-slider-dynamic-${sliderId}`,
-    `[data-slider-id="${sliderId}"] { left: ${leftPct}%; width: ${rightPct - leftPct}%; }`
-  );
-
   return (
     <div className="range-slider">
       <div className="range-slider__track" ref={trackRef}>
@@ -65,7 +55,7 @@ export default function RangoSlider({
         {/* Segmento activo */}
         <div
           className="range-slider__fill"
-          data-slider-id={sliderId}
+          style={{ left: `${leftPct}%`, width: `${rightPct - leftPct}%` }}
         />
         {/* Input mínimo */}
         <input

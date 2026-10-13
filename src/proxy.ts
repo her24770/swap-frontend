@@ -25,7 +25,10 @@ function buildCsp(nonce: string) {
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'${process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""}`,
-    `style-src 'self' 'nonce-${nonce}'`,
+    // style-src utiliza unsafe-inline: se probo nonce (script-src lo usa), pero el split style-src/style-src-attr
+    // rompe el panel de notificaciones y el tour de bienvenida por sus <style> dinamicos no pasaban la validacion en
+    // en el navegador al abrirse. Se revierte a unsafe-inline y script-src se mantiene con nonce esto mitiga XSS.
+    "style-src 'self' 'unsafe-inline'",
     `img-src 'self' data: blob: ${imageHosts.join(" ")} ${apiUrl}`,
     `connect-src 'self' ${connectHosts.join(" ")}`,
     `frame-src 'self' ${apiUrl} https://*.r2.dev blob: data:`,

@@ -1,10 +1,9 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Usuario } from "../../../types/usuario";
-import { useNonceStyle } from "../../../hooks/useNonceStyle";
 import "./TourBienvenida.css";
 
 interface TourBienvenidaProps {
@@ -69,34 +68,6 @@ function computePosition(rect: DOMRect, placement: Placement, size: { width: num
     top: clamp(top, 12, vh - size.height - 12),
     left: clamp(left, 12, vw - size.width - 12),
   };
-}
-
-function buildTourCss({
-  pos,
-  arrowOffset,
-  rect,
-}: {
-  pos: { top: number; left: number } | null;
-  arrowOffset: { prop: "top" | "left"; value: number } | null;
-  rect: DOMRect | null;
-}): string {
-  const rules: string[] = [];
-
-  if (pos) {
-    rules.push(`.onboarding-card--floating { top: ${pos.top}px; left: ${pos.left}px; }`);
-  }
-  if (arrowOffset) {
-    rules.push(`.onboarding-card__arrow { ${arrowOffset.prop}: ${arrowOffset.value}px; }`);
-  }
-  if (rect) {
-    rules.push(`.onboarding-veil--dyn-top { top: 0; left: 0; right: 0; height: ${Math.max(rect.top - PAD, 0)}px; }`);
-    rules.push(`.onboarding-veil--dyn-bottom { top: ${rect.bottom + PAD}px; left: 0; right: 0; bottom: 0; }`);
-    rules.push(`.onboarding-veil--dyn-left { top: ${Math.max(rect.top - PAD, 0)}px; left: 0; width: ${Math.max(rect.left - PAD, 0)}px; height: ${rect.height + PAD * 2}px; }`);
-    rules.push(`.onboarding-veil--dyn-right { top: ${Math.max(rect.top - PAD, 0)}px; left: ${rect.right + PAD}px; right: 0; height: ${rect.height + PAD * 2}px; }`);
-    rules.push(`.onboarding-highlight { top: ${rect.top - PAD}px; left: ${rect.left - PAD}px; width: ${rect.width + PAD * 2}px; height: ${rect.height + PAD * 2}px; }`);
-  }
-
-  return rules.join(" ");
 }
 
 export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienvenidaProps) {
@@ -186,34 +157,6 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
     }
   }, [stepIndex, active, rect]);
 
-  const isWelcome = step.target === null;
-  const placement = step.placement ?? "bottom";
-  const pos = !isWelcome && rect ? computePosition(rect, placement, tooltipSize) : null;
-
-  let arrowSide: "left" | "right" | "top" = "top";
-  let arrowOffset: { prop: "top" | "left"; value: number } | null = null;
-  if (pos && rect) {
-    if (placement === "right") {
-      arrowSide = "left";
-      arrowOffset = { prop: "top", value: clamp(rect.top + rect.height / 2 - pos.top, 20, tooltipSize.height - 20) };
-    } else if (placement === "left") {
-      arrowSide = "right";
-      arrowOffset = { prop: "top", value: clamp(rect.top + rect.height / 2 - pos.top, 20, tooltipSize.height - 20) };
-    } else {
-      arrowSide = "top";
-      arrowOffset = { prop: "left", value: clamp(rect.left + rect.width / 2 - pos.left, 20, tooltipSize.width - 20) };
-    }
-  }
-
-  // Los nonces de CSP no cubren el atributo style="...", asi que las
-  // posiciones calculadas en runtime (overlay, highlight, flecha, tarjeta
-  // flotante) se vuelcan a una unica hoja <style> con nonce en vez de
-  // style={{...}} por elemento.
-  useNonceStyle(
-    "onboarding-tour-dynamic-style",
-    active ? buildTourCss({ pos, arrowOffset, rect }) : ""
-  );
-
   if (!active || !usuario) return null;
 
   function finish() {
@@ -240,15 +183,34 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
     setStepIndex((i) => Math.max(0, i - 1));
   }
 
+  const isWelcome = step.target === null;
   const isLast = stepIndex === STEPS.length - 1;
+  const placement = step.placement ?? "bottom";
+  const pos = !isWelcome && rect ? computePosition(rect, placement, tooltipSize) : null;
+
+  let arrowSide: "left" | "right" | "top" = "top";
+  let arrowStyle: CSSProperties = {};
+  if (pos && rect) {
+    if (placement === "right") {
+      arrowSide = "left";
+      arrowStyle = { top: clamp(rect.top + rect.height / 2 - pos.top, 20, tooltipSize.height - 20) };
+    } else if (placement === "left") {
+      arrowSide = "right";
+      arrowStyle = { top: clamp(rect.top + rect.height / 2 - pos.top, 20, tooltipSize.height - 20) };
+    } else {
+      arrowSide = "top";
+      arrowStyle = { left: clamp(rect.left + rect.width / 2 - pos.left, 20, tooltipSize.width - 20) };
+    }
+  }
 
   const card = (
     <div
       ref={cardRef}
       className={`onboarding-card ${isWelcome ? "onboarding-card--welcome" : "onboarding-card--floating"}`}
+      style={!isWelcome && pos ? { top: pos.top, left: pos.left } : undefined}
     >
       {!isWelcome && pos && (
-        <div className={`onboarding-card__arrow onboarding-card__arrow--${arrowSide}`} />
+        <div className={`onboarding-card__arrow onboarding-card__arrow--${arrowSide}`} style={arrowStyle} />
       )}
       <button type="button" className="onboarding-card__close" onClick={finish} aria-label={t("controls.close")}>
         <X size={16} />
@@ -296,11 +258,41 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
         <>
           {rect ? (
             <>
-              <div className="onboarding-veil onboarding-veil--dyn-top" />
-              <div className="onboarding-veil onboarding-veil--dyn-bottom" />
-              <div className="onboarding-veil onboarding-veil--dyn-left" />
-              <div className="onboarding-veil onboarding-veil--dyn-right" />
-              <div className="onboarding-highlight" />
+              <div
+                className="onboarding-veil"
+                style={{ top: 0, left: 0, right: 0, height: Math.max(rect.top - PAD, 0) }}
+              />
+              <div
+                className="onboarding-veil"
+                style={{ top: rect.bottom + PAD, left: 0, right: 0, bottom: 0 }}
+              />
+              <div
+                className="onboarding-veil"
+                style={{
+                  top: Math.max(rect.top - PAD, 0),
+                  left: 0,
+                  width: Math.max(rect.left - PAD, 0),
+                  height: rect.height + PAD * 2,
+                }}
+              />
+              <div
+                className="onboarding-veil"
+                style={{
+                  top: Math.max(rect.top - PAD, 0),
+                  left: rect.right + PAD,
+                  right: 0,
+                  height: rect.height + PAD * 2,
+                }}
+              />
+              <div
+                className="onboarding-highlight"
+                style={{
+                  top: rect.top - PAD,
+                  left: rect.left - PAD,
+                  width: rect.width + PAD * 2,
+                  height: rect.height + PAD * 2,
+                }}
+              />
             </>
           ) : (
             <div className="onboarding-veil onboarding-veil--full" />
