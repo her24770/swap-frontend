@@ -2,10 +2,11 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { SquarePlus } from "lucide-react";
+import { SquarePlus, Pin, SquarePen, Trash2, Heart, Bookmark } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
 import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
+import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useEstados } from "../../../hooks/useEstados";
@@ -25,6 +26,19 @@ import { useServices } from "../../../services/context/ServiceContext";
 import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
 import type { TipoPublicacion } from "../../../schemas/zodSchemas";
 import { PerfilAdBannerSkeleton, PerfilPostCarouselSkeleton } from "../perfilLoading";
+
+const postCardInfoItems = [
+  { icon: <Pin size={16} strokeWidth={2} />, label: "Destacar: resalta la publicación en tu catálogo." },
+  { icon: <SquarePen size={16} strokeWidth={2} />, label: "Editar: modifica los datos de la publicación." },
+  { icon: <Trash2 size={16} strokeWidth={2} />, label: "Eliminar: la borra de forma permanente, pide confirmar antes." },
+  { icon: <Heart size={16} strokeWidth={2} />, label: "Dar like: indica que la publicación te interesa." },
+  { icon: <Bookmark size={16} strokeWidth={2} />, label: "Guardar: la agrega a tu lista de publicaciones guardadas." },
+];
+
+const adBannerInfoItems = [
+  { icon: <SquarePen size={16} strokeWidth={2} />, label: "Editar: modifica los datos del anuncio." },
+  { icon: <Trash2 size={16} strokeWidth={2} />, label: "Eliminar: lo borra de forma permanente, pide confirmar antes." },
+];
 
 interface CatalogPost {
   id: number;
@@ -222,17 +236,20 @@ export default function VistaVendedor({
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.ads")}</h2>
           {canCreatePublication && (
-            <button 
-              type="button" 
-              className="perfil-page__new-publication-btn" 
-              onClick={() => {
-                setAnuncioEditando(null); 
-                setAnuncioModalOpen(true);
-              }}
-            >
-              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.createAd")}
-            </button>
+            <div className="perfil-page__catalog-bar-actions">
+              <button
+                type="button"
+                className="perfil-page__new-publication-btn"
+                onClick={() => {
+                  setAnuncioEditando(null);
+                  setAnuncioModalOpen(true);
+                }}
+              >
+                <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+                {t("actions.createAd")}
+              </button>
+              <InfoHint ariaLabel="Ayuda sobre los íconos de los anuncios" items={adBannerInfoItems} />
+            </div>
           )}
         </div>
 
@@ -272,17 +289,20 @@ export default function VistaVendedor({
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogMaterial")}</h2>
           {canCreatePublication && (
-            <button
-              type="button"
-              className="perfil-page__new-publication-btn"
-              onClick={() => {
-                setCrearTipoPublicacion("material");
-                setCrearOpen(true);
-              }}
-            >
-              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.newPostMaterial")}
-            </button>
+            <div className="perfil-page__catalog-bar-actions">
+              <button
+                type="button"
+                className="perfil-page__new-publication-btn"
+                onClick={() => {
+                  setCrearTipoPublicacion("material");
+                  setCrearOpen(true);
+                }}
+              >
+                <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+                {t("actions.newPostMaterial")}
+              </button>
+              <InfoHint ariaLabel="Ayuda sobre los íconos de las publicaciones" items={postCardInfoItems} />
+            </div>
           )}
         </div>
 
@@ -347,17 +367,20 @@ export default function VistaVendedor({
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalogNegocio")}</h2>
           {canCreatePublication && (
-            <button
-              type="button"
-              className="perfil-page__new-publication-btn"
-              onClick={() => {
-                setCrearTipoPublicacion("negocio");
-                setCrearOpen(true);
-              }}
-            >
-              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.newPostNegocio")}
-            </button>
+            <div className="perfil-page__catalog-bar-actions">
+              <button
+                type="button"
+                className="perfil-page__new-publication-btn"
+                onClick={() => {
+                  setCrearTipoPublicacion("negocio");
+                  setCrearOpen(true);
+                }}
+              >
+                <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+                {t("actions.newPostNegocio")}
+              </button>
+              <InfoHint ariaLabel="Ayuda sobre los íconos de las publicaciones" items={postCardInfoItems} />
+            </div>
           )}
         </div>
 

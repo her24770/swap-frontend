@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Pencil, Save, SquarePlus, X} from "lucide-react";
+import { Pencil, Save, SquarePlus, X, Pin, SquarePen, Trash2, Heart, Bookmark } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
+import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
 import HorarioSemanal from "./Horario/Horario";
 import { usePerspectivaInterna } from "../../../context/PerspectivaInternaContext";
@@ -23,6 +24,14 @@ import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacione
 import { useServices } from "../../../services/context/ServiceContext";
 import { PerfilPostCarouselSkeleton } from "../perfilLoading";
 import { HorarioSkeleton } from "./Horario/HorarioSkeleton/HorarioSkeleton";
+
+const postCardInfoItems = [
+  { icon: <Pin size={16} strokeWidth={2} />, label: "Destacar: resalta la publicación en tu catálogo." },
+  { icon: <SquarePen size={16} strokeWidth={2} />, label: "Editar: modifica los datos de la publicación." },
+  { icon: <Trash2 size={16} strokeWidth={2} />, label: "Eliminar: la borra de forma permanente, pide confirmar antes." },
+  { icon: <Heart size={16} strokeWidth={2} />, label: "Dar like: indica que la publicación te interesa." },
+  { icon: <Bookmark size={16} strokeWidth={2} />, label: "Guardar: la agrega a tu lista de publicaciones guardadas." },
+];
 
 interface CatalogPost {
   id: number;
@@ -283,14 +292,17 @@ export default function VistaTutor({
         <div className="perfil-page__catalog-bar">
           <h2 className="perfil-page__catalog-bar-title">{t("sections.catalog")}</h2>
           {canCreatePublication && (
-            <button
-              type="button"
-              className="perfil-page__new-publication-btn"
-              onClick={() => setCrearOpen(true)}
-            >
-              <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
-              {t("actions.newPostTutoria")}
-            </button>
+            <div className="perfil-page__catalog-bar-actions">
+              <button
+                type="button"
+                className="perfil-page__new-publication-btn"
+                onClick={() => setCrearOpen(true)}
+              >
+                <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
+                {t("actions.newPostTutoria")}
+              </button>
+              <InfoHint ariaLabel="Ayuda sobre los íconos de las publicaciones" items={postCardInfoItems} />
+            </div>
           )}
         </div>
 

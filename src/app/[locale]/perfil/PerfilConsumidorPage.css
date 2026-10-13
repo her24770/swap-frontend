@@ -189,6 +189,21 @@
   }
 }
 
+.perfil-page__catalog-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 47.99rem) {
+  /* Si el título de la sección es largo, el grupo de botones envuelve a su
+     propia línea; sin esto queda pegado a la izquierda en vez de a la derecha. */
+  .perfil-page__catalog-bar-actions {
+    margin-left: auto;
+  }
+}
+
 .perfil-page__catalog-bar-title {
   font-family: var(--swap-font-subtitulos);
   font-size: 1.125rem;
