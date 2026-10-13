@@ -310,3 +310,7 @@
   text-align: center;
   padding: 3rem 0;
 }
+
+.perfil-page__coming-soon--error {
+  color: var(--swap-danger-color);
+}

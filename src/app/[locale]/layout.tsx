@@ -1,3 +1,4 @@
+import { headers } from 'next/headers';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import Layout from '../../components/layout/Layout/layout';
@@ -33,10 +34,12 @@ export default async function RootLayout({
 }) {
   const { locale } = await params;
   const messages = await getMessages();
+  const nonce = (await headers()).get('x-nonce');
   return (
     <html
       lang={locale}
       className={`${jockey.variable} ${palanquin.variable} ${lato.variable}`}
+      data-csp-nonce={nonce ?? undefined}
     >
       <body>
         <NextIntlClientProvider messages={messages}>

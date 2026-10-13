@@ -28,9 +28,8 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
           src={imageUrl} 
           alt={title || "Anuncio del vendedor"} 
           fill 
-          className="ad-banner__img" 
-          style={{ objectFit: 'cover' }} 
-          unoptimized 
+          className="ad-banner__img img-cover"
+          unoptimized
         />
       )}
       <div className="ad-banner__overlay">

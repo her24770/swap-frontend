@@ -68,7 +68,7 @@ export default function SubirImagen({ onFileChange, previewUrl, currentProfileIm
           ref={fileInputRef}
           type="file"
           accept="image/png,image/jpeg"
-          style={{ display: "none" }}
+          className="hidden-input"
           onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
         />
       </div>
@@ -81,12 +81,12 @@ export default function SubirImagen({ onFileChange, previewUrl, currentProfileIm
             className="profile-image-upload__img"
           />
         ) : currentProfileImage ? (
-          <div style={{ position: 'relative', width: '7rem', height: '7rem', borderRadius: '50%', overflow: 'hidden', border: '1px solid var(--swap-primary-border-color)' }}>
+          <div className="profile-image-upload__current">
             <Image
               src={currentProfileImage}
               alt={t("currentImageAlt")}
               fill
-              style={{ objectFit: 'cover' }}
+              className="img-cover"
               unoptimized
             />
           </div>

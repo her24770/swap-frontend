@@ -241,7 +241,7 @@ export default function VistaVendedor({
         )}
 
         {anunciosError && (
-          <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>
+          <p className="perfil-page__coming-soon perfil-page__coming-soon--error">
             {anunciosError}
           </p>
         )}
@@ -287,7 +287,7 @@ export default function VistaVendedor({
         </div>
 
         {loading && <PerfilPostCarouselSkeleton count={4} />}
-        {error && <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>{error}</p>}
+        {error && <p className="perfil-page__coming-soon perfil-page__coming-soon--error">{error}</p>}
 
         {!loading && !error && catalogMaterial.length === 0 && (
           <p className="perfil-page__coming-soon">Aún no tienes publicaciones de materiales.</p>
@@ -362,7 +362,7 @@ export default function VistaVendedor({
         </div>
 
         {loading && <PerfilPostCarouselSkeleton count={4} />}
-        {error && <p className="perfil-page__coming-soon" style={{ color: "var(--swap-danger-color)" }}>{error}</p>}
+        {error && <p className="perfil-page__coming-soon perfil-page__coming-soon--error">{error}</p>}
 
         {!loading && !error && catalogNegocio.length === 0 && (
           <p className="perfil-page__coming-soon">Aún no tienes publicaciones de negocio.</p>

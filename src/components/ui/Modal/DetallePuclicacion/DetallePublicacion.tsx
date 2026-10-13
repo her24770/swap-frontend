@@ -244,8 +244,7 @@ export default function DetallePublicacion({
                       src={sellerImageUrl}
                       alt={sellerName}
                       fill
-                      className="post-modal__seller-img"
-                      style={{ objectFit: "cover" }}
+                      className="post-modal__seller-img img-cover"
                       unoptimized
                     />
                   ) : (
