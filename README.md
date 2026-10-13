@@ -6,14 +6,14 @@ Frontend client for **Swap** — a platform for student tutoring, academic mater
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 15 |
+| Framework | Next.js 16 |
 | Language | TypeScript |
 | Styling | CSS (BEM methodology) |
 | State Management | Zustand |
 | Forms | React Hook Form |
 | Date Utilities | date-fns |
 | Real-time | Socket.io Client |
-| Containerization | Docker + Docker Compose |
+| Containerization | Docker |
 
 ## Project Structure
 
@@ -28,7 +28,6 @@ swap-frontend/
 │   └── styles/          # Global CSS and BEM modules
 ├── public/              # Static assets
 ├── Dockerfile
-├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
@@ -37,13 +36,14 @@ swap-frontend/
 
 | Container | Image | Port |
 |---|---|---|
-| `frontend` | node:20-alpine | 3000 |
+| `frontend` | node:22.22.3-alpine3.22 | 3000 |
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Docker](https://www.docker.com/) and Docker Compose installed
+- Node.js 22 and npm for local development
+- [Docker](https://www.docker.com/) with Buildx for container builds
 - `swap-backend` running (see backend repo)
 
 ### Setup
@@ -59,9 +59,10 @@ swap-frontend/
    cp .env.example .env
    ```
 
-3. Start the frontend:
+3. Install the exact dependencies and run locally:
    ```bash
-   docker compose up --build
+   npm ci
+   npm run dev
    ```
 
 4. The app will be available at `http://localhost:3000`
@@ -73,7 +74,12 @@ See `.env.example` for all required variables. Key ones:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_SOCKET_URL=http://localhost:3001
+NEXT_PUBLIC_DEFAULT_AVATAR_URL=https://i.pravatar.cc/150?u=vendedor
 ```
+
+Docker builds, immutable dependency updates and the two-build reproducibility
+check are documented in
+[`docs/builds-reproducibles.md`](docs/builds-reproducibles.md).
 
 ## Pages
 
