@@ -11,6 +11,13 @@
         "expiry": "2026-11-05",
         "notes": "SWAP-610: braces solo llega por eslint-config-next en tooling de lint; npm no ofrece parche compatible para Next 16 y propone bajar a Next 14. Revisar semanalmente y retirar al publicarse el parche."
       }
+    },
+    {
+      "GHSA-mrhx-c7xc-m3w5": {
+        "active": true,
+        "expiry": "2026-11-30",
+        "notes": "zod 3 solo valida formularios en el navegador (no hay server actions ni rutas API): un array enorme solo afecta al navegador de quien lo envía. La corrección exige migrar a zod 4."
+      }
     }
   ]
 }
