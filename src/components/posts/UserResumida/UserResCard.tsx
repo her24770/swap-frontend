@@ -34,8 +34,7 @@ export default function UserResCard({
             src={userImageUrl}
             alt={userName}
             fill
-            className="user-res-card__avatar-img"
-            style={{ objectFit: "cover" }}
+            className="user-res-card__avatar-img img-cover"
             unoptimized
           />
         ) : (

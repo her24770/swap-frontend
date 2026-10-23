@@ -67,7 +67,7 @@ export default function AcuerdoBanner({
             src={imagenPrincipal}
             alt={acuerdo.publicacion.titulo}
             fill
-            style={{ objectFit: "cover" }}
+            className="img-cover"
             unoptimized
           />
         ) : (

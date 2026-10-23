@@ -62,3 +62,12 @@
 .profile-image-upload__placeholder {
   color: var(--swap-primary-border-color);
 }
+
+.profile-image-upload__current {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--swap-primary-border-color);
+}

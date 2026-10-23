@@ -91,7 +91,7 @@ export default function LoginForm() {
         {t('subtitle')}
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="login-form__fields">
+      <form onSubmit={handleSubmit(onSubmit)} method="post" noValidate className="login-form__fields">
         {/* Email */}
         <div className="login-form__field">
           <label className="login-form__label">{t('emailLabel')}</label>

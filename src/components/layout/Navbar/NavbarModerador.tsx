@@ -7,6 +7,7 @@ import { useRouter } from "../../../i18n/routing";
 import { useModeradorSesion } from "../../../hooks/useModeradorSesion";
 import { LogoCompleto } from "../../ui/Icono/Logo";
 import SettingsModal from "../../ui/Modal/Settings/SettingsModal";
+import { Tooltip } from "../../ui/Tooltip/Tooltip";
 import "./Navbar.css";
 
 interface NavbarModeradorProps {
@@ -43,44 +44,48 @@ export default function NavbarModerador({ onMenuToggle, menuButtonRef }: NavbarM
   return (
     <header className="navbar">
       <div className="navbar__left">
-        <button
-          ref={menuButtonRef}
-          onClick={onMenuToggle}
-          aria-label={t("ariaToggleMenu")}
-          type="button"
-          className="navbar__menu-btn"
-        >
-          <Menu size={28} strokeWidth={2} />
-        </button>
+        <Tooltip label={t("ariaToggleMenu")} position="bottom">
+          <button
+            ref={menuButtonRef}
+            onClick={onMenuToggle}
+            aria-label={t("ariaToggleMenu")}
+            type="button"
+            className="navbar__menu-btn"
+          >
+            <Menu size={28} strokeWidth={2} />
+          </button>
+        </Tooltip>
         <Link href="/moderacion" className="navbar__logo-link" aria-label="Ir al panel de moderación" title="Ir al panel de moderación">
           <LogoCompleto className="navbar__logo" />
         </Link>
       </div>
 
       <div className="navbar__right">
-        <button
-          onClick={() => setIsSettingsOpen(true)}
-          aria-label="Abrir configuraciones"
-          type="button"
-          title="Configuraciones"
-          className="navbar__menu-btn"
-        >
-          <Settings size={25} strokeWidth={2} />
-        </button>
+        <Tooltip label="Configuraciones" position="bottom">
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            aria-label="Abrir configuraciones"
+            type="button"
+            className="navbar__menu-btn"
+          >
+            <Settings size={25} strokeWidth={2} />
+          </button>
+        </Tooltip>
 
         <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
         {moderador && (
           <div ref={dropdownRef} className="navbar__profile">
-            <button
-              aria-label={t("ariaUserProfile")}
-              type="button"
-              title={moderador.usuario}
-              onClick={() => setProfileOpen((prev) => !prev)}
-              className="navbar__profile-btn"
-            >
-              <UserCircle2 size={28} strokeWidth={1.5} />
-            </button>
+            <Tooltip label={moderador.usuario} position="bottom">
+              <button
+                aria-label={t("ariaUserProfile")}
+                type="button"
+                onClick={() => setProfileOpen((prev) => !prev)}
+                className="navbar__profile-btn"
+              >
+                <UserCircle2 size={28} strokeWidth={1.5} />
+              </button>
+            </Tooltip>
 
             {profileOpen && (
               <div className="navbar__dropdown">

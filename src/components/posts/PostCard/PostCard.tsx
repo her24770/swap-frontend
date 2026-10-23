@@ -272,7 +272,7 @@ export default function PostCard({
               <SquarePen size={24} strokeWidth={2} />
             </button>
           )}
-          
+
           {canEditCards && onDeleteClick && (
             <button
               type="button"
@@ -284,7 +284,6 @@ export default function PostCard({
               <Trash2 size={24} strokeWidth={2} />
             </button>
           )}
-
         </div>
       </header>
 

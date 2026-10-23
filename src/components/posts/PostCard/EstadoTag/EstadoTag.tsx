@@ -13,6 +13,7 @@ const COLOR_MAP: Record<string, string> = {
   reservado: "gray",
   vendido:   "blue",
   inactivo:  "gray",
+  pendiente: "orange",
 };
 
 const getColor = (estado: string) => COLOR_MAP[estado.toLowerCase()] ?? "gray";
@@ -34,6 +35,7 @@ export default function EstadoTag({
   const estadoStr = String(estado).toLowerCase();
   const color = getColor(estadoStr);
   const t = useTranslations("posts.estado");
+  const estadoLabel = t.has(estadoStr) ? t(estadoStr) : estadoStr;
 
   const handleEstadoChange = (nuevoEstado: string) => {
     onEstadoChange?.(nuevoEstado);
@@ -43,7 +45,7 @@ export default function EstadoTag({
   if (!canEditCards || !onEstadoChange || estadosDisponibles.length === 0) {
     return (
       <span className={`estado-tag estado-tag--${color}`} title={estadoStr}>
-        {t(estadoStr)}
+        {estadoLabel}
       </span>
     );
   }
@@ -57,7 +59,7 @@ export default function EstadoTag({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        {t(estadoStr)}
+        {estadoLabel}
         <ChevronDown size={14} className="estado-tag__chevron" />
       </button>
 
@@ -72,6 +74,7 @@ export default function EstadoTag({
               }`}
               onClick={() => handleEstadoChange(opt.estado)}
               role="option"
+              aria-selected={opt.estado === estadoStr}
             >
               <span className={`estado-tag__dot estado-tag__dot--${getColor(opt.estado)}`} />
               {t(opt.estado)}

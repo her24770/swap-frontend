@@ -359,6 +359,7 @@
 			},
 			"estados": {
 				"todos": "All statuses",
+				"pendiente": "Pending",
 				"activo": "Active",
 				"inactivo": "Inactive",
 				"disponible": "Available",
@@ -378,8 +379,9 @@
 				"correccionUsuario": "Correction applied by user"
 			},
 			"acciones": {
+				"aprobar": "Approve",
 				"reactivar": "Reactivate",
-				"bajar": "Take down post",
+				"bajar": "Take down",
 				"eliminar": "Delete",
 				"detalle": "Detail"
 			},
@@ -769,6 +771,7 @@
 			"reservado": "Reserved",
 			"vendido": "Sold",
 			"inactivo": "Inactive",
+			"pendiente": "Pending",
 			"1": "Available",
 			"2": "Read",
 			"3": "Reserved",

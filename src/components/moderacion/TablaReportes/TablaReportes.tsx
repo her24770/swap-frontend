@@ -386,7 +386,7 @@ function UsuarioCell({
     <div className="tabla-reportes__user-cell">
       <div className="tabla-reportes__avatar">
         {foto ? (
-          <Image src={foto} alt={nombre} fill style={{ objectFit: "cover" }} unoptimized />
+          <Image src={foto} alt={nombre} fill className="img-cover" unoptimized />
         ) : (
           <span>{initials(nombre)}</span>
         )}
