@@ -42,6 +42,8 @@ export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   
   request.headers.set("x-nonce", nonce);
+  const locale = request.nextUrl.pathname.split("/")[1];
+  request.headers.set("x-swap-locale", ["es", "en", "fr"].includes(locale) ? locale : "es");
 
   const authRedirect = checkAuth(request);
   const response = authRedirect ?? intlMiddleware(request);
