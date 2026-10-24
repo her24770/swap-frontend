@@ -51,7 +51,18 @@ jobs:
           node-version: "20"
           cache: npm
       - run: npm ci
-      - run: npm run test:run
+      - run: npm run test:coverage
+      - name: Resumir cobertura
+        if: always()
+        run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+      - name: Publicar reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-frontend-${{ github.run_id }}
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
 
   build:
     name: Build
