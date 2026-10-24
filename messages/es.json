@@ -1,4 +1,11 @@
 {
+	"systemPages": {
+		"error": { "eyebrow": "Algo salió mal", "title": "No pudimos cargar esta página", "description": "Ocurrió un problema inesperado. Puedes intentarlo de nuevo o volver al inicio." },
+		"notFound": { "eyebrow": "Error 404", "title": "No encontramos esta página", "description": "Puede que la dirección haya cambiado o que la página ya no exista." },
+		"loading": { "title": "Cargando contenido", "description": "Estamos preparando la página para ti." },
+		"retry": "Intentar de nuevo",
+		"home": "Volver al inicio"
+	},
 	"layout": {
 		"meta": {
 			"title": "SWAP",
