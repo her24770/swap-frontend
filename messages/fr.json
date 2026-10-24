@@ -593,7 +593,12 @@
         "panelTitulo": "Publication",
         "panelCerrarAria": "Fermer la publication",
         "meGusta": "{count} j'aime",
-        "toastPublicacionError": "Impossible de charger la publication."
+        "toastPublicacionError": "Impossible de charger la publication.",
+        "publicacionEliminada": {
+          "titulo": "Publication supprimée par l'auteur",
+          "descripcion": "Le signalement a été automatiquement résolu lors de la suppression de la publication.",
+          "registroHistorico": "Enregistrement historique capturé :"
+        }
       }
     }
 	},

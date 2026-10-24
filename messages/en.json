@@ -593,7 +593,12 @@
         "panelTitulo": "Post",
         "panelCerrarAria": "Close post",
         "meGusta": "{count} likes",
-        "toastPublicacionError": "The post could not be loaded."
+        "toastPublicacionError": "The post could not be loaded.",
+        "publicacionEliminada": {
+          "titulo": "Post deleted by author",
+          "descripcion": "The report was automatically resolved when the post was deleted.",
+          "registroHistorico": "Captured historical record:"
+        }
       }
     }
 	},
