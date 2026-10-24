@@ -20,6 +20,7 @@ import AdBanner from "../../perfiles/Vendedor/AdBanner/AdBanner";
 import FiltrosModal, { FiltroValues, TipoFiltro } from "../../ui/Modal/FiltrosModal/FiltrosModal";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import { useServices } from "../../../services/context/ServiceContext";
+import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Button/Button.css";
 import "./PublicacionesList.css";
 import UserResCard from "../../posts/UserResumida/UserResCard";
@@ -89,6 +90,7 @@ export default function PublicacionesList({
     const tSearch = useTranslations("common.search");
     const router = useRouter();
     const { publicacion: service } = useServices();
+    const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -128,17 +130,20 @@ export default function PublicacionesList({
     const showingSearchResults = searchQuery.trim().length > 0;
     const showingFilteredTutores = !showingSearchResults && tipo === "tutoria" && filteredTutores !== null;
     const showingFiltered = !showingSearchResults && !showingFilteredTutores && filteredResults !== null;
-    const safeRecommendedPublicaciones = Array.isArray(recommendedPublicaciones) ? recommendedPublicaciones : [];
-    const safeRecentsPublicaciones = Array.isArray(recentsPublicaciones) ? recentsPublicaciones : [];
-    const safeMorePublicaciones = Array.isArray(morePublicaciones) ? morePublicaciones : [];
-    const safePopularPublicaciones = Array.isArray(popularPublicaciones) ? popularPublicaciones : [];
+    const sinPropias = (items: Publicacion[]) => items.filter((item) => item.id_usuario !== idUsuarioActual);
+    const safeRecommendedPublicaciones = sinPropias(Array.isArray(recommendedPublicaciones) ? recommendedPublicaciones : []);
+    const safeRecentsPublicaciones = sinPropias(Array.isArray(recentsPublicaciones) ? recentsPublicaciones : []);
+    const safeMorePublicaciones = sinPropias(Array.isArray(morePublicaciones) ? morePublicaciones : []);
+    const safePopularPublicaciones = sinPropias(Array.isArray(popularPublicaciones) ? popularPublicaciones : []);
+    const safeSearchResults = sinPropias(searchResults);
+    const safeFilteredResults = sinPropias(filteredResults ?? []);
     const safeAds = Array.isArray(Ads) ? Ads : [];
     const safeTutores = Array.isArray(tutores) ? tutores : [];
 
     const mainSectionData = showingSearchResults
-        ? searchResults
+        ? safeSearchResults
         : showingFiltered
-            ? filteredResults!
+            ? safeFilteredResults
             : safeMorePublicaciones;
 
     const usesServerPagination = !showingSearchResults && !showingFiltered && totalPublicaciones !== undefined;
@@ -390,11 +395,11 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">
                             {isSearchLoading
                                 ? tSearch("searching")
-                                : t("resultsTitle", { count: searchResults.length })}
+                                : t("resultsTitle", { count: safeSearchResults.length })}
                         </h2>
                         {isSearchLoading ? (
                             <PublicacionesGridSkeleton count={itemsPerPage} />
-                        ) : searchResults.length === 0 ? (
+                        ) : safeSearchResults.length === 0 ? (
                             <div className="publicaciones-list__empty">
                                 <p>{tEmpty("noResultsFor", { query: searchQuery })}</p>
                             </div>
@@ -449,11 +454,11 @@ export default function PublicacionesList({
                         <h2 className="publicaciones-list__section-title">
                             {filterLoading
                                 ? tSearch("searching")
-                                : t("resultsTitle", { count: filteredResults!.length })}
+                                : t("resultsTitle", { count: safeFilteredResults.length })}
                         </h2>
                         {filterLoading ? (
                             <PublicacionesGridSkeleton count={itemsPerPage} />
-                        ) : filteredResults!.length === 0 ? (
+                        ) : safeFilteredResults.length === 0 ? (
                             <div className="publicaciones-list__empty">
                                 <p>{tEmpty("description")}</p>
                             </div>
@@ -635,7 +640,11 @@ export default function PublicacionesList({
                         handleClose();
                         router.push(`${perfilBasePath}/${sellerId}?modo=tutor`);
                     }}
-                    onVerCertificados={() => console.log("ver certificados")}
+                    onVerCertificados={() => {
+                        const sellerId = selectedPublicacion.usuario.id_usuario;
+                        handleClose();
+                        router.push(`${perfilBasePath}/${sellerId}?modo=tutor&certificaciones=1`);
+                    }}
                     onSolicitarTutoria={() => console.log("solicitar tutoría")}
                 />
             )}
