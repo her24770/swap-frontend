@@ -240,6 +240,7 @@
 		"rechazar": "Reject",
 		"aceptar": "Accept",
 		"formulario": {
+			"cerrarModal": "Close tutoring request",
 			"nuevaSolicitud": "New tutoring request",
 			"titulo": "Tutoring request",
 			"descripcion": "Please complete the form to request tutoring.",

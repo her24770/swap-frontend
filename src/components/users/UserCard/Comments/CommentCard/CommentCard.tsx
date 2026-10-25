@@ -5,7 +5,7 @@ import ReporteModal from "../../../../ui/Modal/Reporte/ReporteModal";
 import { useAuthStore } from "../../../../../store/authStore";
 import { SquarePen, Star, Trash2, Flag } from "lucide-react";
 import "./CommentCard.css";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useNow, useTranslations } from "next-intl";
 import { useResena } from "../../../../../hooks/useResena";
 import EditCommentModal, {
   type EditCommentData,
@@ -32,8 +32,9 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
   const { editarResenaExistente, eliminarResena, loading, error, setError } = useResena();
   const t = useTranslations('comments.actions');
   const [modalAction, setModalAction] = useState<ResenaAction | null>(null);
-  const format = useFormatter(); 
-  const formattedTimeAgo = format.relativeTime(new Date(timeAgo));
+  const format = useFormatter();
+  const now = useNow();
+  const formattedTimeAgo = format.relativeTime(new Date(timeAgo), now);
 
 
 

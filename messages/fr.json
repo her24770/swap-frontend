@@ -240,6 +240,7 @@
 		"rechazar": "Refuser",
 		"aceptar": "Accepter",
 		"formulario": {
+			"cerrarModal": "Fermer la demande de tutorat",
 			"nuevaSolicitud": "Nouvelle demande de tutorat",
 			"titulo": "Demande de tutorat",
 			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",

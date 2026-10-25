@@ -240,6 +240,7 @@
 		"rechazar": "Rechazar",
 		"aceptar": "Aceptar",
 		"formulario": {
+			"cerrarModal": "Cerrar solicitud de tutoría",
 			"nuevaSolicitud": "Nueva solicitud de tutoría",
 			"titulo": "Solicitud de tutoría",
 			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
