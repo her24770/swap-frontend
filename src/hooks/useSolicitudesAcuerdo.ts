@@ -19,12 +19,17 @@ export function useSolicitudesAcuerdo({ isOpen = false }: UseSolicitudesAcuerdoO
   const socket = useSocket();
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
 
+  const [idPrevio, setIdPrevio] = useState(idUsuarioActual);
+
+  // Al cerrar sesión se vacían las solicitudes (durante el render, sin efecto)
+  if (idPrevio !== idUsuarioActual) {
+    setIdPrevio(idUsuarioActual);
+    if (!idUsuarioActual) setSolicitudes([]);
+  }
+
   // Carga inicial y actualización al abrir el modal de notificaciones
   useEffect(() => {
-    if (!idUsuarioActual) {
-      setSolicitudes([]);
-      return;
-    }
+    if (!idUsuarioActual) return;
 
     acuerdoService
       .getSolicitudesPendientesUsuario(idUsuarioActual)

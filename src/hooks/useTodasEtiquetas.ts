@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { apiClient } from "../lib/apiClient";
 
 export interface EtiquetaBD {
@@ -15,29 +15,24 @@ interface UseTodasEtiquetasOptions {
 }
 
 export function useTodasEtiquetas(options: UseTodasEtiquetasOptions = {}) {
-  const [etiquetas, setEtiquetas] = useState<EtiquetaBD[]>([]);
+  const [todas, setTodas] = useState<EtiquetaBD[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-
     apiClient
       .get<{ data: EtiquetaBD[] }>("/api/etiqueta", { skipUnauthorizedRedirect: true })
-      .then((res) => {
-        const list = res.data ?? [];
-        setEtiquetas(
-          options.soloPadres
-            ? list.filter((e) => e.id_etiqueta_padre == null)
-            : list
-        );
-      })
+      .then((res) => setTodas(res.data ?? []))
       .catch(() => {
         setError("No fue posible cargar las categorías.");
       })
       .finally(() => setLoading(false));
-  }, [options.soloPadres]);
+  }, []);
+
+  const etiquetas = useMemo(
+    () => (options.soloPadres ? todas.filter((e) => e.id_etiqueta_padre == null) : todas),
+    [todas, options.soloPadres]
+  );
 
   return { etiquetas, loading, error };
 }

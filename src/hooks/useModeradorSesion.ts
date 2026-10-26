@@ -30,7 +30,8 @@ export function useModeradorSesion(
   const moderador = useModeradorAuthStore((s) => s.moderador);
   const login = useModeradorAuthStore((s) => s.login);
   const limpiarSesion = useModeradorAuthStore((s) => s.logout);
-  const [cargando, setCargando] = useState(enabled && !moderador);
+  const [cargandoSesion, setCargando] = useState(enabled && !moderador);
+  const cargando = cargandoSesion && enabled && !moderador;
   const [error, setError] = useState<string | null>(null);
 
   async function logout() {
@@ -43,15 +44,7 @@ export function useModeradorSesion(
   }
 
   useEffect(() => {
-    if (!enabled) {
-      setCargando(false);
-      return;
-    }
-
-    if (moderador) {
-      setCargando(false);
-      return;
-    }
+    if (!enabled || moderador) return;
 
     let cancelado = false;
 

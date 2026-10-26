@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useServices } from '../../services/context/ServiceContext';
 import type { Resena } from "../../types/resena";
+import type { ApiError } from "../../lib/apiClient";
 
 /**
  * Hook personalizado para obtener y sincronizar las reseñas de un usuario en SWAP.
@@ -12,32 +13,60 @@ export function useResenas(idUsuario: number, tipoResena: string) {
     const [data, setData] = useState<Resena[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [consultaPrevia, setConsultaPrevia] = useState({ idUsuario, tipoResena });
+
+    // Al cambiar la consulta se reinicia el estado de carga durante el render
+    if (consultaPrevia.idUsuario !== idUsuario || consultaPrevia.tipoResena !== tipoResena) {
+        setConsultaPrevia({ idUsuario, tipoResena });
+        setLoading(true);
+        setError(null);
+    }
 
     const fetchResenas = useCallback(async () => {
         if (!idUsuario || !tipoResena) return;
 
         try {
-        setLoading(true);
-        setError(null);
-        
-        const result = await service.obtenerResenasUsuario(idUsuario, tipoResena);
-        setData(result);
-        } catch (err: any) {
-        console.error("Error al obtener reseñas del usuario:", err);
-        setError(err.message || "Error al cargar las reseñas del estudiante");
+            setLoading(true);
+            setError(null);
+
+            const result = await service.obtenerResenasUsuario(idUsuario, tipoResena);
+            setData(result);
+        } catch (err) {
+            console.error("Error al obtener reseñas del usuario:", err);
+            setError((err as ApiError).message || "Error al cargar las reseñas del estudiante");
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     }, [idUsuario, tipoResena, service]);
 
     useEffect(() => {
-        fetchResenas();
-    }, [idUsuario, tipoResena, fetchResenas]);
+        if (!idUsuario || !tipoResena) return;
 
-    return { 
-        data, 
-        loading, 
-        error, 
-        refetch: fetchResenas 
+        let cancelado = false;
+
+        service
+            .obtenerResenasUsuario(idUsuario, tipoResena)
+            .then((result) => {
+                if (!cancelado) setData(result);
+            })
+            .catch((err) => {
+                if (cancelado) return;
+                console.error("Error al obtener reseñas del usuario:", err);
+                setError((err as ApiError).message || "Error al cargar las reseñas del estudiante");
+            })
+            .finally(() => {
+                if (!cancelado) setLoading(false);
+            });
+
+        return () => {
+            cancelado = true;
+        };
+    }, [idUsuario, tipoResena, service]);
+
+    return {
+        data,
+        loading,
+        error,
+        refetch: fetchResenas
     };
 }
