@@ -8,6 +8,7 @@
  * - En error 403: llama al handler de permisos (configurable).
  */
 
+import { redirect, routing } from "../i18n/routing";
 import { useAuthStore } from "../store/authStore";
 import { useModeradorAuthStore } from "../store/moderadorAuthStore";
 
@@ -49,6 +50,12 @@ async function parseErrorBody(response: Response, fallback: string): Promise<{ m
 
 let cerrandoSesion = false;
 
+/** Locale de la URL actual (primer segmento), o el predeterminado si no es válido. */
+function localeActual(): (typeof routing.locales)[number] {
+  const segmento = window.location.pathname.split("/")[1];
+  return routing.locales.find((l) => l === segmento) ?? routing.defaultLocale;
+}
+
 async function forzarCierreSesion(destino: "usuario" | "moderador"): Promise<void> {
   if (cerrandoSesion || typeof window === "undefined") return;
   cerrandoSesion = true;
@@ -68,10 +75,10 @@ async function forzarCierreSesion(destino: "usuario" | "moderador"): Promise<voi
 
   if (destino === "moderador") {
     useModeradorAuthStore.getState().logout();
-    window.location.href = "/moderacion/login";
+    redirect({ href: "/moderacion/login", locale: localeActual() });
   } else {
     useAuthStore.getState().logout();
-    window.location.href = "/login";
+    redirect({ href: "/login", locale: localeActual() });
   }
 }
 

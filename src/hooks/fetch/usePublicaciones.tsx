@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useServices } from '../../services/context/ServiceContext';
 import type { Publicacion, PublicacionFilters } from "../../types/publicacion";
+import type { ApiError } from '../../lib/apiClient';
 
 export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
   const { publicacion: service } = useServices();
@@ -35,11 +36,11 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
         setTotal(response.total);
       }
       setData(Array.isArray(result) ? result : []);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setData([]);
       setTotal(0);
-      setError(err.message || "Error al cargar publicaciones");
+      setError((err as ApiError).message || "Error al cargar publicaciones");
     } finally {
       setLoading(false);
     }

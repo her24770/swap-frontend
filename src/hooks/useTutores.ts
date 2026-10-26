@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { apiClient } from "../lib/apiClient";
+import { apiClient, type ApiError } from "../lib/apiClient";
+import type { TutorFiltrado } from "../types/publicacion";
 
 export function useTutores() {
 
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<TutorFiltrado[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -16,18 +17,18 @@ export function useTutores() {
                 setLoading(true);
                 setError(null);
 
-                const response = await apiClient.get<any>(
+                const response = await apiClient.get<{ data: TutorFiltrado[] }>(
                     "/api/recomendacion/tutores"
                 );
 
                 setData(response.data || []);
 
-            } catch (err: any) {
+            } catch (err) {
 
                 console.error(err);
 
                 setError(
-                    err.message ||
+                    (err as ApiError).message ||
                     "Error al cargar tutores"
                 );
 

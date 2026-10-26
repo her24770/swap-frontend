@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useServices } from '../../services/context/ServiceContext';
 import type { Anuncio } from '../../types/anuncio';
+import type { ApiError } from '../../lib/apiClient';
 
 export function useAnunciosUsuario(userId: number) {
     const { anuncio: anuncioService } = useServices();
@@ -17,13 +18,13 @@ export function useAnunciosUsuario(userId: number) {
             
             const result = await anuncioService.getAnunciosdeUsuario(userId);
             setData(result);
-        } catch (err: any) {
+        } catch (err) {
             console.error("Error en useAnunciosUsuario:", err);
-            setError(err.message || "Error al cargar los anuncios del usuario.");
+            setError((err as ApiError).message || "Error al cargar los anuncios del usuario.");
         } finally {
             setLoading(false);
         }
-    }, [userId]); 
+    }, [userId, anuncioService]); 
 
     useEffect(() => {
         fetchAnunciosUsuario();

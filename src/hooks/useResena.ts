@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useServices } from "../services/context/ServiceContext"; 
 import { ResenaInput, ResenaUpdateInput } from "../schemas/schemaResenas";
 import { Resena } from "../types/resena";
-import { set } from "date-fns";
+import type { ApiError } from "../lib/apiClient";
 
 export function useResena() {
     const { resena: resenaService } = useServices();
@@ -19,9 +19,9 @@ export function useResena() {
         try {
             const resultado = await resenaService.crearResena(payload);
             return resultado;
-        } catch (err: any) {
-            // Captura el mensaje estructurado de error que envía tu backend o Axios
-            const mensajeError = err?.response?.data?.message || err.message || "Error al enviar la reseña";
+        } catch (err) {
+            // apiClient lanza un ApiError { status, message, code? }
+            const mensajeError = (err as ApiError).message || "Error al enviar la reseña";
             setError(mensajeError);
             return null;
         } finally {
@@ -38,8 +38,8 @@ export function useResena() {
         try {
             const resultado = await resenaService.editarResena(idResena, payload);
             return resultado;
-        } catch (err: any) {
-            const mensajeError = err?.response?.data?.message || err.message || "Error al actualizar la reseña";
+        } catch (err) {
+            const mensajeError = (err as ApiError).message || "Error al actualizar la reseña";
             setError(mensajeError);
             return null;
         } finally {
@@ -54,8 +54,8 @@ export function useResena() {
         try {
             await resenaService.eliminarResena(idResena);
             return true;
-        } catch (err: any) {
-            const mensajeError = err?.response?.data?.message || err.message || "Error al eliminar la reseña";
+        } catch (err) {
+            const mensajeError = (err as ApiError).message || "Error al eliminar la reseña";
             setError(mensajeError);
             return false;
         } finally {

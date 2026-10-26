@@ -6,6 +6,8 @@ import { schemaLogin, type LoginFormData } from "../schemas/zodSchemas";
 import { apiClient } from "../lib/apiClient";
 import { unwrapAuthResponse } from "../lib/authResponse";
 import { useAuthStore } from "../store/authStore";
+import type { ApiResult } from "../types/ApiResult";
+import type { AuthResponse } from "../types/usuario";
 
 export function useFormLogin() {
   const login = useAuthStore((s) => s.login);
@@ -19,7 +21,7 @@ export function useFormLogin() {
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const respuesta = await apiClient.post<{ usuario: any; rol: any }>(
+    const respuesta = await apiClient.post<ApiResult<AuthResponse> | AuthResponse>(
       "/api/auth/login",
       data
     );
