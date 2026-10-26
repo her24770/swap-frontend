@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import CommentSection from "../../../../../src/components/users/UserCard/Comments/CommentSection";
 import { resenaService } from "../../../../../src/services/resenaService";
 import { useAuthStore } from "../../../../../src/store/authStore";
+import type { Usuario } from "../../../../../src/types/usuario";
 import type { Resena } from "../../../../../src/types/resena";
 import { render, screen, userEvent, waitFor, within } from "../../../../utils/render";
 
@@ -43,7 +44,7 @@ describe("CommentSection", () => {
       contenido: "Comentario actualizado",
     });
     vi.spyOn(resenaService, "eliminarResena").mockResolvedValue(undefined);
-    useAuthStore.setState({ usuario: { id_usuario: 10 } as any });
+    useAuthStore.setState({ usuario: { id_usuario: 10 } as Usuario });
 
     render(
       <CommentSection
