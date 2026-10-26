@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { Pencil, CreditCard, FileText, Camera, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
@@ -42,7 +43,8 @@ export default function UserProfileHeader({
   const [displayTags, setDisplayTags] = useState<UserTag[]>(user.tags ?? []);
   const [showAllTags, setShowAllTags] = useState(false);
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
-  const [showCerts, setShowCerts] = useState(false);
+  const searchParams = useSearchParams();
+  const [showCerts, setShowCerts] = useState(searchParams.get("certificados") === "1");
   const toast = useToast();
   const socket = useSocket();
   const { canEditProfile } = usePerspectivaInterna();

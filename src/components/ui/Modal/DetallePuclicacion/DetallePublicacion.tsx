@@ -66,7 +66,7 @@ interface PostModalProps {
   onEstadoChange?: (nuevoEstado: string) => void;
   onAcordarCompra?: () => void;
   onSolicitarTutoria?: () => void;
-  onVerCertificados?: () => void;
+  onVerCertificados?: (sellerId: number) => void;
   onSellerClick?: (sellerId: number) => void;
   onToggleSave?: () => void;
   isSaved?: boolean;
@@ -315,13 +315,6 @@ export default function DetallePublicacion({
                 )}
                 {type === "tutoria" && (
                   <>
-                    <button
-                      type="button"
-                      className="button button--medium button--warning button--full-width"
-                      onClick={onVerCertificados}
-                    >
-                      {t("actions.certificado")}
-                    </button>
                     {!esPropiaPublicacion && !expandido && (
                       <button
                         type="button"
@@ -331,6 +324,15 @@ export default function DetallePublicacion({
                         {tSend("requestTutoring")} <ChevronRight size={16} />
                       </button>
                     )}
+
+                    <button
+                      type="button"
+                      className="button button--medium button--warning button--full-width"
+                      onClick={() => { if (sellerId) onVerCertificados?.(sellerId); }}
+                      disabled={!onVerCertificados || !sellerId}
+                    >
+                      {t("actions.certificado")}
+                    </button>
                   </>
                 )}
               </div>

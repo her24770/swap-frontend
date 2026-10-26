@@ -189,9 +189,9 @@ export default function PublicacionesList({
     const isMoreGridLoading = Boolean(loading.more) && visibleGridData.length === 0;
     const isSearchLoading = showingSearchResults && searchLoading;
 
-    const navigateToTutorProfile = (userId: number) => {
+    const navigateToTutorProfile = (userId: number, verCertificados = false) => {
         setSelectedTutor(null);
-        router.push(`${perfilBasePath}/${userId}?modo=tutor`);
+        router.push(`${perfilBasePath}/${userId}?modo=tutor${verCertificados ? "&certificados=1" : ""}`);
     };
 
     const RenderError = ({ error }: { error: any }) =>
@@ -635,7 +635,10 @@ export default function PublicacionesList({
                         handleClose();
                         router.push(`${perfilBasePath}/${sellerId}?modo=tutor`);
                     }}
-                    onVerCertificados={() => console.log("ver certificados")}
+                    onVerCertificados={(sellerId) => {
+                        handleClose();
+                        router.push(`${perfilBasePath}/${sellerId}?modo=tutor&certificados=1`);
+                    }}
                     onSolicitarTutoria={() => console.log("solicitar tutoría")}
                 />
             )}
@@ -660,8 +663,8 @@ export default function PublicacionesList({
                             parentId: e.etiqueta.id_etiqueta_padre,
                         })) || []),
                     ]}
-                    onVerCertificados={() => navigateToTutorProfile(selectedTutor.id_usuario)}
-                    onVerPerfil={navigateToTutorProfile}
+                    onVerCertificados={() => navigateToTutorProfile(selectedTutor.id_usuario, true)}
+                    onVerPerfil={(id) => navigateToTutorProfile(id)}
                 />
             )}
         </div>
