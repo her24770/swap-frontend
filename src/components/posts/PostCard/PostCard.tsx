@@ -3,7 +3,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2} from "lucide-react";
 import { useTranslations } from "next-intl";
-import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
@@ -48,8 +47,6 @@ export default function PostCard({
   price,
   description,
   images,
-  tags,
-  onTagClick,
   publicacionId,
   estado,
   estadosDisponibles = [],

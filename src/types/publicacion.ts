@@ -16,6 +16,7 @@ export interface PublicacionEtiquetaRel {
 }
 
 export interface Publicacion {
+  is_pinned?: boolean;
   id_publicacion: number;
   titulo: string;
   descripcion: string;

@@ -24,7 +24,6 @@ export default function CommentSection({
   comments,
   onSuccessSubmit,
   onCancel,
-  soloLectura = false,
 }: CommentSectionProps) {
 
   const t = useTranslations('comments');

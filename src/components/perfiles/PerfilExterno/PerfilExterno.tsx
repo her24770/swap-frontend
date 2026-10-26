@@ -44,7 +44,7 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
     const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
     const [advertenciaAbierta, setAdvertenciaAbierta] = useState(false);
     const [enviandoAdvertencia, setEnviandoAdvertencia] = useState(false);
-    const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, mode);
+    const { data: ResenasUsuario, refetch: refetchResenas } = useResenas(userId, mode);
     const { agregarNotificacion } = useUIStore();
 
     const handleEnviarAdvertencia = async (payload: { motivo: string; detalle: string }) => {

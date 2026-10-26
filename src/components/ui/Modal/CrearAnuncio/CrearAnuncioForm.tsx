@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaAnuncio, AnuncioInput } from "../../../../schemas/schemaAnuncios";
 import { anuncioService } from "../../../../services/anuncioService";
 import type { Anuncio } from "../../../../types/anuncio"; // Ajusta la ruta a tus tipos
+import type { ApiError } from "../../../../lib/apiClient";
 
 interface CrearAnuncioFormProps {
     anuncio?: Anuncio | null; // ◄— Recibe el objeto completo para activar el modo edición
@@ -123,8 +124,8 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
             setVistaPreviaUrl(null);
             
             if (onAnuncioProcesado) onAnuncioProcesado();
-        } catch (error: any) {
-            setErrorServidor(error.message || t("errors.server"));
+        } catch (error) {
+            setErrorServidor((error as ApiError).message || t("errors.server"));
         } finally {
             setCargando(false);
         }

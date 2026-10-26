@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Pencil, Save, SquarePlus, X, Pin, SquarePen, Trash2, Heart, Bookmark, MousePointerClick, Eye } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
@@ -20,8 +20,6 @@ import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublica
 import type { DiaHorario, EspacioHorario, EstadoHorario } from "../../../types/horario";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
-import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
-import { useServices } from "../../../services/context/ServiceContext";
 import { PerfilPostCarouselSkeleton } from "../perfilLoading";
 import { HorarioSkeleton } from "./Horario/HorarioSkeleton/HorarioSkeleton";
 
@@ -73,12 +71,6 @@ export default function VistaTutor({
   const idUsuario = userId ?? authUserId;
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
   const estadosTutoria = useEstados("tutoria");
-  const { publicacion: publicacionService } = useServices();
-  const { data: publicacionesDestacadas, refetch: refetchDestacadas } = usePublicacionesDestacadas(idUsuario);
-  const publicacionesDestacadasIds = useMemo(
-    () => new Set(publicacionesDestacadas.map((pub) => pub.id_publicacion)),
-    [publicacionesDestacadas]
-  );
 
   const [catalogTutorias, setCatalogTutorias] = useState<CatalogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +111,7 @@ export default function VistaTutor({
           estado: pub.estadoRel?.estado ?? "activo",
           images: pub.imagenes?.map((img) => img.url_imagen) || [],
           categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
-          isPinned: (pub as any).is_pinned ?? false,
+          isPinned: pub.is_pinned ?? false,
         }));
 
       // Pinned first
@@ -193,25 +185,6 @@ export default function VistaTutor({
       );
     });
   }, []);
-  const handleToggleDestacado = useCallback(async (pub: CatalogPost) => {
-    const destacar = !publicacionesDestacadasIds.has(pub.id);
-
-    try {
-      await publicacionService.actualizarDestacadasUsuario(pub.id, destacar);
-      agregarNotificacion({
-        tipo: "success",
-        mensaje: destacar ? "La tutoría fue destacada." : "La tutoría ya no está destacada.",
-      });
-      await refetchDestacadas();
-
-    } catch (err) {
-      const apiError = err as ApiError;
-      agregarNotificacion({
-        tipo: "error",
-        mensaje: apiError.message || "No fue posible actualizar el destacado.",
-      });
-    }
-  }, [agregarNotificacion, publicacionesDestacadasIds, publicacionService, refetchDestacadas]);
 
   useEffect(() => {
     fetchPublicaciones();
