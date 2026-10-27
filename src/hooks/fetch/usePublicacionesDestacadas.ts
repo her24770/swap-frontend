@@ -36,7 +36,6 @@ export function usePublicacionesDestacadas(userId: number | undefined | null) {
             const result = await service.getDestacadasUsuario(idValido);
             setData(result);
         } catch (err) {
-            console.error("Error en usePublicacionesDestacadas:", err);
             setError((err as ApiError).message || "Error al cargar las publicaciones destacadas");
         } finally {
             setLoading(false);
@@ -56,7 +55,6 @@ export function usePublicacionesDestacadas(userId: number | undefined | null) {
             })
             .catch((err) => {
                 if (cancelado) return;
-                console.error("Error en usePublicacionesDestacadas:", err);
                 setError((err as ApiError).message || "Error al cargar las publicaciones destacadas");
             })
             .finally(() => {

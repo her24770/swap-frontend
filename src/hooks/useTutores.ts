@@ -25,8 +25,6 @@ export function useTutores() {
 
             } catch (err) {
 
-                console.error(err);
-
                 setError(
                     (err as ApiError).message ||
                     "Error al cargar tutores"

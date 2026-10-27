@@ -19,7 +19,6 @@ export function useAnuncios() {
             const result = await anuncioService.getAnuncios();
             setData(result);
         } catch (err) {
-            console.error("Error en useAnuncios:", err);
             setError((err as ApiError).message || "Error al cargar los anuncios.");
         } finally {
             setLoading(false);
@@ -37,7 +36,6 @@ export function useAnuncios() {
             })
             .catch((err) => {
                 if (cancelado) return;
-                console.error("Error en useAnuncios:", err);
                 setError((err as ApiError).message || "Error al cargar los anuncios.");
             })
             .finally(() => {

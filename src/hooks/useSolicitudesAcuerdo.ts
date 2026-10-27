@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useSocket } from "./useSocket";
+import { useToast } from "./useToast";
 import { useAuthStore } from "../store/authStore";
 import { acuerdoService, mapAcuerdoToSolicitud } from "../services/acuerdoService";
 import type { SolicitudTutoriaNotificacion } from "../components/ui/Modal/NotificacionModal/Solicitud/Tutoria/TutoriaNotificacion";
@@ -17,6 +19,8 @@ interface UseSolicitudesAcuerdoOptions {
 export function useSolicitudesAcuerdo({ isOpen = false }: UseSolicitudesAcuerdoOptions = {}) {
   const [solicitudes, setSolicitudes] = useState<SolicitudTutoriaNotificacion[]>([]);
   const socket = useSocket();
+  const t = useTranslations("tutorias");
+  const toast = useToast();
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
 
   const [idPrevio, setIdPrevio] = useState(idUsuarioActual);
@@ -59,8 +63,8 @@ export function useSolicitudesAcuerdo({ isOpen = false }: UseSolicitudesAcuerdoO
           const filtradas = prev.filter((s) => s.id_conversacion !== idConversacion);
           return [...solicitudesActualizadas, ...filtradas];
         });
-      } catch (error) {
-        console.error("Error al sincronizar acuerdos por socket:", error);
+      } catch {
+        // Sincronización en segundo plano: la próxima carga o evento la reintenta.
       }
     }
 
@@ -75,22 +79,20 @@ export function useSolicitudesAcuerdo({ isOpen = false }: UseSolicitudesAcuerdoO
     try {
       await acuerdoService.actualizarEstado(idAcuerdo, "activo");
       setSolicitudes((prev) => prev.filter((solicitud) => solicitud.id !== idAcuerdo));
-    } catch (err) {
-      console.error("Error al aceptar solicitud:", err);
-      throw err;
+    } catch {
+      toast.error(t("errorAccion"));
     }
-  }, []);
+  }, [toast, t]);
 
   // Rechazar solicitud de acuerdo y actualizar estado local
   const rechazarSolicitud = useCallback(async (idAcuerdo: number) => {
     try {
       await acuerdoService.actualizarEstado(idAcuerdo, "cancelado");
       setSolicitudes((prev) => prev.filter((solicitud) => solicitud.id !== idAcuerdo));
-    } catch (err) {
-      console.error("Error al rechazar solicitud:", err);
-      throw err;
+    } catch {
+      toast.error(t("errorAccion"));
     }
-  }, []);
+  }, [toast, t]);
 
   return {
     solicitudes,

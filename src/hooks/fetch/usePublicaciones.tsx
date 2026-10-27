@@ -61,7 +61,6 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
       setData(resultado.items);
       setTotal(resultado.total);
     } catch (err) {
-      console.error(err);
       setData([]);
       setTotal(0);
       setError((err as ApiError).message || "Error al cargar publicaciones");
@@ -81,7 +80,6 @@ export function usePublicaciones(initialFilters: PublicacionFilters = {}) {
       })
       .catch((err) => {
         if (cancelado) return;
-        console.error(err);
         setData([]);
         setTotal(0);
         setError((err as ApiError).message || "Error al cargar publicaciones");

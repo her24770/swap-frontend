@@ -225,6 +225,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "Impossible de traiter la demande. Veuillez réessayer.",
 		"title": "TUTORAT",
 		"loading": "Chargement des tutorats...",
 		"empty": {
@@ -764,6 +765,7 @@
 	},
 	"posts": {
 		"saveError": "Impossible de mettre à jour vos enregistrements",
+		"detalleError": "Impossible de charger les détails de la publication",
 		"actions": {
 			"details": "Détails",
 			"edit": "Modifier",

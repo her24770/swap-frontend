@@ -32,7 +32,6 @@ export function useResenas(idUsuario: number, tipoResena: string) {
             const result = await service.obtenerResenasUsuario(idUsuario, tipoResena);
             setData(result);
         } catch (err) {
-            console.error("Error al obtener reseñas del usuario:", err);
             setError((err as ApiError).message || "Error al cargar las reseñas del estudiante");
         } finally {
             setLoading(false);
@@ -51,7 +50,6 @@ export function useResenas(idUsuario: number, tipoResena: string) {
             })
             .catch((err) => {
                 if (cancelado) return;
-                console.error("Error al obtener reseñas del usuario:", err);
                 setError((err as ApiError).message || "Error al cargar las reseñas del estudiante");
             })
             .finally(() => {

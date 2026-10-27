@@ -225,6 +225,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "No se pudo procesar la solicitud. Intenta de nuevo.",
 		"title": "TUTORÍAS",
 		"loading": "Cargando tutorías...",
 		"empty": {
@@ -786,6 +787,7 @@
 	},
 	"posts": {
 		"saveError": "No fue posible actualizar tus guardados",
+		"detalleError": "No fue posible cargar los detalles de la publicación",
 		"actions": {
 			"details": "Detalles",
 			"edit": "Editar",

@@ -10,6 +10,12 @@ const config = [
             "jsx-a11y/alt-text": "error",
         },
     },
+    {
+        files: ["src/**/*.{ts,tsx}"],
+        rules: {
+            "no-console": "error",
+        },
+    },
 ];
 
 export default config;

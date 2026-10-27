@@ -225,6 +225,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "Couldn't process the request. Please try again.",
 		"title": "TUTORING",
 		"loading": "Loading tutoring sessions...",
 		"empty": {
@@ -764,6 +765,7 @@
 	},
 	"posts": {
 		"saveError": "Couldn't update your saved posts",
+		"detalleError": "Couldn't load the post details",
 		"actions": {
 			"details": "Details",
 			"edit": "Edit",

@@ -29,7 +29,6 @@ export function useAnunciosUsuario(userId: number) {
             const result = await anuncioService.getAnunciosdeUsuario(userId);
             setData(result);
         } catch (err) {
-            console.error("Error en useAnunciosUsuario:", err);
             setError((err as ApiError).message || "Error al cargar los anuncios del usuario.");
         } finally {
             setLoading(false);
@@ -48,7 +47,6 @@ export function useAnunciosUsuario(userId: number) {
             })
             .catch((err) => {
                 if (cancelado) return;
-                console.error("Error en useAnunciosUsuario:", err);
                 setError((err as ApiError).message || "Error al cargar los anuncios del usuario.");
             })
             .finally(() => {
