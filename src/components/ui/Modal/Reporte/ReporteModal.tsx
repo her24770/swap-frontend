@@ -15,6 +15,7 @@ import "./ReporteModal.css";
 import ReporteAcciones from "./ReporteAcciones";
 import ReporteDetalle from "./ReporteDetalle";
 import ReporteMotivos from "./ReporteMotivos";
+import Image from "next/image";
 
 const LIMITE_DETALLE_REPORTE = 500;
 const MAX_EVIDENCIAS = 3;
@@ -200,7 +201,7 @@ export default function ReporteModal({
                 <div className="reporte-modal__previews">
                   {previewUrls.map((src, index) => (
                     <div key={`${src}-${index}`} className="reporte-modal__preview-item">
-                      <img src={src} alt={t("evidencia.alt", { n: index + 1 })} className="reporte-modal__preview-img" />
+                      <Image src={src} alt={t("evidencia.alt", { n: index + 1 })} width={160} height={160} unoptimized className="reporte-modal__preview-img" />
                       <button
                         type="button"
                         className="reporte-modal__preview-remove"

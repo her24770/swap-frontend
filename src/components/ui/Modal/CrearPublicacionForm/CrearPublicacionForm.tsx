@@ -11,6 +11,7 @@ import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
 import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion, TIPOS_PUBLICACION } from "../../../../schemas/zodSchemas";
 import { UseFormReturn } from "react-hook-form";
+import Image from "next/image";
 
 type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
 
@@ -371,7 +372,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
               <div className="crear-publicacion__previews">
                 {imagenesExistentes.map((url) => (
                   <div key={url} className="crear-publicacion__preview-item">
-                    <img src={url} alt="imagen-existente" className="crear-publicacion__preview-img" />
+                    <Image src={url} alt="imagen-existente" width={160} height={160} unoptimized className="crear-publicacion__preview-img" />
                     <button
                       type="button"
                       onClick={() => removeExistingImage?.(url)}
@@ -384,7 +385,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                 ))}
                 {imagePreviews.map((src, i) => (
                   <div key={i} className="crear-publicacion__preview-item">
-                    <img src={src} alt={`preview-${i}`} className="crear-publicacion__preview-img" />
+                    <Image src={src} alt={`preview-${i}`} width={160} height={160} unoptimized className="crear-publicacion__preview-img" />
                     <button
                       type="button"
                       onClick={() => removeImage(i)}

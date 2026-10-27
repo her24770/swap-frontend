@@ -81,18 +81,22 @@ export default function UserContact({ contacts }: UserContactProps) {
                     className="user-contact"
                     aria-label={t("visitProfile", { platform: contact.platform })}
                 >
-                    <img
+                    <Image
                     src={`/icons/${contact.platform}.svg`}
                     alt={contact.platform}
+                    width={20}
+                    height={20}
                     className="user-contact__icon"
                     />
                 </a>
                 ) : (
                 /* Si no se pudo construir un enlace seguro, mostramos solo el icono (sin enlace) y el texto */
                 <div className="user-contact-invalid">
-                    <img
+                    <Image
                     src={`/icons/${contact.platform}.svg`}
                     alt={contact.platform}
+                    width={20}
+                    height={20}
                     className="user-contact__icon" 
                     />
                     <span className="user-contact__text">

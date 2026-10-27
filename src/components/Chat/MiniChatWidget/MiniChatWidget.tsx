@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { X, UserCircle2 } from "lucide-react";
 import ChatInput from "../ChatPrincipal/ChatInput/ChatInput";
 import MensajesBurbuja from "../ChatPrincipal/MensajesBurbuja/MensajesBurbuja";
+import Image from "next/image";
 import { useAuthStore } from "../../../store/authStore";
 import { useMiniChatStore } from "../../../store/miniChatStore";
 import type { Mensaje } from "../../../types/chat";
@@ -39,7 +40,7 @@ export default function MiniChatWidget({ idUsuario, nombre, avatarUrl }: MiniCha
         onClick={() => setMinimizado(idUsuario, false)}
       >
         <span className="mini-chat-widget__bar-avatar">
-          {avatarUrl ? <img src={avatarUrl} alt={nombre} /> : <UserCircle2 size={18} strokeWidth={1.2} />}
+          {avatarUrl ? <Image src={avatarUrl} alt={nombre} width={28} height={28} /> : <UserCircle2 size={18} strokeWidth={1.2} />}
         </span>
         <span className="mini-chat-widget__bar-name">{nombre}</span>
       </button>
@@ -62,7 +63,7 @@ export default function MiniChatWidget({ idUsuario, nombre, avatarUrl }: MiniCha
     <div className="mini-chat-widget">
       <div className="mini-chat-widget__header">
         <span className="mini-chat-widget__header-avatar">
-          {avatarUrl ? <img src={avatarUrl} alt={nombre} /> : <UserCircle2 size={18} strokeWidth={1.2} />}
+          {avatarUrl ? <Image src={avatarUrl} alt={nombre} width={28} height={28} /> : <UserCircle2 size={18} strokeWidth={1.2} />}
         </span>
         <span className="mini-chat-widget__header-name">{nombre}</span>
         <button
