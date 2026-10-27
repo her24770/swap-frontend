@@ -771,7 +771,8 @@
 		},
 		"tutorTopicsLabel": "Thèmes de tutorat",
 		"aria": {
-			"uploadImage": "Téléverser une image"
+			"uploadImage": "Téléverser une image",
+			"adBannerImage": "Image de l’annonce du vendeur"
 		},
 		"uploadErrors": {
 			"invalidType": "Seules les images JPG, PNG ou WEBP sont autorisées",
@@ -974,6 +975,8 @@
 			"photo": "Photo du produit",
 			"uploadText": "Cliquez ou glissez une image pour la téléverser",
 			"uploadHint": "PNG, JPG ou WEBP (max. 5 Mo)",
+			"existingImageAlt": "Image actuelle de la publication {n}",
+			"newImageAlt": "Aperçu de la nouvelle image {n}",
 			"removeImageAria": "Supprimer l'image",
 			"removeTagAria": "Supprimer {tag}"
 		},

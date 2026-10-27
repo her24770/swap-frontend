@@ -771,7 +771,8 @@
 		},
 		"tutorTopicsLabel": "Tutoring topics",
 		"aria": {
-			"uploadImage": "Upload image"
+			"uploadImage": "Upload image",
+			"adBannerImage": "Seller advertisement image"
 		},
 		"uploadErrors": {
 			"invalidType": "Only JPG, PNG, or WEBP images are allowed",
@@ -974,6 +975,8 @@
 			"photo": "Product photo",
 			"uploadText": "Click or drag an image to upload",
 			"uploadHint": "PNG, JPG or WEBP (max 5MB)",
+			"existingImageAlt": "Current post image {n}",
+			"newImageAlt": "New image preview {n}",
 			"removeImageAria": "Remove image",
 			"removeTagAria": "Remove {tag}"
 		},
