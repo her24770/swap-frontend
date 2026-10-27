@@ -369,9 +369,13 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
 
             {(imagenesExistentes.length > 0 || imagePreviews.length > 0) && (
               <div className="crear-publicacion__previews">
-                {imagenesExistentes.map((url) => (
+                {imagenesExistentes.map((url, index) => (
                   <div key={url} className="crear-publicacion__preview-item">
-                    <img src={url} alt="imagen-existente" className="crear-publicacion__preview-img" />
+                    <img
+                      src={url}
+                      alt={t("fields.existingImageAlt", { n: index + 1 })}
+                      className="crear-publicacion__preview-img"
+                    />
                     <button
                       type="button"
                       onClick={() => removeExistingImage?.(url)}
@@ -384,7 +388,11 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                 ))}
                 {imagePreviews.map((src, i) => (
                   <div key={i} className="crear-publicacion__preview-item">
-                    <img src={src} alt={`preview-${i}`} className="crear-publicacion__preview-img" />
+                    <img
+                      src={src}
+                      alt={t("fields.newImageAlt", { n: i + 1 })}
+                      className="crear-publicacion__preview-img"
+                    />
                     <button
                       type="button"
                       onClick={() => removeImage(i)}

@@ -12,7 +12,7 @@ export interface AdBannerData {
   onDeleteClick?: () => void;
 }
 
-interface AdBannerProps extends AdBannerData {}
+type AdBannerProps = AdBannerData;
 
 export default function AdBanner({ imageUrl, title, description, onEditClick, onDeleteClick }: AdBannerProps) {
   const t = useTranslations("posts");
@@ -26,7 +26,7 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
       {tieneImagen && (
         <Image 
           src={imageUrl} 
-          alt={title || "Anuncio del vendedor"} 
+          alt={title || t("aria.adBannerImage")}
           fill 
           className="ad-banner__img img-cover"
           unoptimized

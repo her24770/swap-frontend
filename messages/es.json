@@ -780,7 +780,8 @@
 		},
 		"tutorTopicsLabel": "Temas de tutorías",
 		"aria": {
-			"uploadImage": "Subir imagen"
+			"uploadImage": "Subir imagen",
+			"adBannerImage": "Imagen del anuncio del vendedor"
 		},
 		"uploadErrors": {
 			"invalidType": "Solo se permiten imágenes JPG, PNG o WEBP",
@@ -983,6 +984,8 @@
 			"photo": "Foto del Producto",
 			"uploadText": "Haz clic o arrastra una imagen para subir",
 			"uploadHint": "PNG, JPG o WEBP (máx. 5MB)",
+			"existingImageAlt": "Imagen actual de la publicación {n}",
+			"newImageAlt": "Vista previa de la imagen nueva {n}",
 			"removeImageAria": "Eliminar imagen",
 			"removeTagAria": "Eliminar {tag}"
 		},
