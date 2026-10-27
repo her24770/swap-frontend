@@ -78,10 +78,12 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
         [t]
     );
 
-    useEffect(() => {
+    // useResenas ya vuelve a consultar al cambiar `mode`.
+    const [initialModePrevio, setInitialModePrevio] = useState(initialMode);
+    if (initialModePrevio !== initialMode) {
+        setInitialModePrevio(initialMode);
         setMode(initialMode);
-        refetchResenas();
-    }, [initialMode]);
+    }
     
 
     
@@ -90,8 +92,8 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
         try {
             setError(null);
             setUser(await getPerfilPublico(userId));
-        } catch (err: any) {
-            setError(err.message || "No fue posible cargar el perfil.");
+        } catch (err) {
+            setError((err instanceof Error && err.message) || "No fue posible cargar el perfil.");
         }
         };
 

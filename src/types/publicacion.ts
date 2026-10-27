@@ -159,6 +159,9 @@ export interface TutorFiltrado {
   descripcion: string | null;
   calificacion: number | null;
   publicaciones: Array<{ titulo: string }>;
+  etiquetas?: Array<{
+    etiqueta: { id_etiqueta: number; nombre: string; id_etiqueta_padre?: number | null };
+  }>;
 }
 
 export interface FiltroTutorApiResponse {

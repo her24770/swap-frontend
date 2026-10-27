@@ -30,6 +30,10 @@ import { AdBannerSkeleton } from "../../perfiles/Vendedor/AdBanner/AdBannerSkele
 
 const VISIBLE_PAGINATION_PAGES = 5;
 
+function ErrorInline({ error, message }: { error: unknown; message: string }) {
+    return error ? <p className="publicaciones-list__error-inline">{message}</p> : null;
+}
+
 function toStarRating(calificacion: number | null | undefined): number {
     return Math.min(5, Math.max(0, Math.round(calificacion ?? 0)));
 }
@@ -48,15 +52,15 @@ type Props = {
     recentsPublicaciones?: Publicacion[];
     morePublicaciones?: Publicacion[];
     totalPublicaciones?: number;
-    tutores?: any[];
+    tutores?: TutorFiltrado[];
     currentPage?: number;
     onPageChange?: (page: number) => void;
     popularPublicaciones?: Publicacion[];
     tutoriaPublicaciones?: Publicacion[];
     loading: { recents?: boolean; recommended?: boolean; more?: boolean; global?: boolean; ads?: boolean; popular?: boolean; tutores?: boolean };
-    errors: { recents?: any; recommended?: any; more?: any; ads?: any; popular?: any; tutores?: any };
+    errors: { recents?: unknown; recommended?: unknown; more?: unknown; ads?: unknown; popular?: unknown; tutores?: unknown };
     itemsPerPage?: number;
-    tagsForAll?: (tTags: any) => Tag[];
+    tagsForAll?: (tTags: ReturnType<typeof useTranslations<"common.tags">>) => Tag[];
     onDetallesClick?: (p: Publicacion) => void;
     Ads?: Anuncio[];
     soloLectura?: boolean;
@@ -92,7 +96,7 @@ export default function PublicacionesList({
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [selectedTutor, setSelectedTutor] = useState<any | null>(null);
+    const [selectedTutor, setSelectedTutor] = useState<TutorFiltrado | null>(null);
     const filterAnchorRef = useRef<HTMLDivElement>(null);
     const { etiquetas, loading: etiquetasLoading } = useTodasEtiquetas();
     const [filteredResults, setFilteredResults] = useState<Publicacion[] | null>(null);
@@ -171,9 +175,16 @@ export default function PublicacionesList({
 
     const hasPagination = totalItems > itemsPerPage;
 
-    useEffect(() => {
+    // Reinicia la página interna cuando cambian los criterios, sin setState en un effect.
+    const [criteriosPrevios, setCriteriosPrevios] = useState({ searchQuery, itemsPerPage, filteredResults });
+    if (
+        criteriosPrevios.searchQuery !== searchQuery ||
+        criteriosPrevios.itemsPerPage !== itemsPerPage ||
+        criteriosPrevios.filteredResults !== filteredResults
+    ) {
+        setCriteriosPrevios({ searchQuery, itemsPerPage, filteredResults });
         setInternalPage(1);
-    }, [searchQuery, itemsPerPage, filteredResults]);
+    }
 
     const mapTags = (p: Publicacion) =>
         tagsForAll
@@ -193,9 +204,6 @@ export default function PublicacionesList({
         setSelectedTutor(null);
         router.push(`${perfilBasePath}/${userId}?modo=tutor${verCertificados ? "&certificados=1" : ""}`);
     };
-
-    const RenderError = ({ error }: { error: any }) =>
-        error ? <p className="publicaciones-list__error-inline">{t("error_loading_section")}</p> : null;
 
     const findEtiquetaId = useCallback(
         (nombre: string) =>
@@ -471,7 +479,7 @@ export default function PublicacionesList({
                         {showAdsSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t("ads")}</h2>
-                                <RenderError error={errors.ads} />
+                                <ErrorInline message={t("error_loading_section")} error={errors.ads} />
                                 {loading.ads ? (
                                     <AdBannerSkeleton />
                                 ) : (
@@ -495,7 +503,7 @@ export default function PublicacionesList({
                         {showRecommendedSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t("recomendado")}</h2>
-                                <RenderError error={errors.recommended} />
+                                <ErrorInline message={t("error_loading_section")} error={errors.recommended} />
                                 {loading.recommended ? (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <SkeletonHorizontalCarousel count={4} />
@@ -517,7 +525,7 @@ export default function PublicacionesList({
                         {showPopularSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t("populares")}</h2>
-                                <RenderError error={errors.popular} />
+                                <ErrorInline message={t("error_loading_section")} error={errors.popular} />
                                 {loading.popular ? (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <SkeletonHorizontalCarousel count={4} />
@@ -539,7 +547,7 @@ export default function PublicacionesList({
                         {showTutorsSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t("tutores")}</h2>
-                                <RenderError error={errors.tutores ?? errors.popular ?? errors.recents} />
+                                <ErrorInline message={t("error_loading_section")} error={errors.tutores ?? errors.popular ?? errors.recents} />
                                 {tutorsSectionLoading ? (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <SkeletonHorizontalCarousel count={4} renderItem={() => <UserResCardSkeleton />} />
@@ -573,7 +581,7 @@ export default function PublicacionesList({
                         {showRecentsSection && (
                             <section className="publicaciones-list__section">
                                 <h2 className="publicaciones-list__section-title">{t("reciente")}</h2>
-                                <RenderError error={errors.recents} />
+                                <ErrorInline message={t("error_loading_section")} error={errors.recents} />
                                 {loading.recents ? (
                                     <div className="publicaciones-list__carousel-wrap">
                                         <SkeletonHorizontalCarousel count={4} />
@@ -594,7 +602,7 @@ export default function PublicacionesList({
 
                         <section className="publicaciones-list__section">
                             <h2 className="publicaciones-list__section-title">{t("explorar")}</h2>
-                            <RenderError error={errors.more} />
+                            <ErrorInline message={t("error_loading_section")} error={errors.more} />
                             {isMoreGridLoading ? (
                                 <PublicacionesGridSkeleton count={itemsPerPage} />
                             ) : (
@@ -655,9 +663,9 @@ export default function PublicacionesList({
                             ? normalizeImageUrl(selectedTutor.url_foto_perfil)
                             : undefined
                     }
-                    temas={selectedTutor.publicaciones?.map((p: any) => p.titulo) || []}
+                    temas={selectedTutor.publicaciones?.map((p) => p.titulo) || []}
                     tags={[
-                        ...(selectedTutor.etiquetas?.map((e: any) => ({
+                        ...(selectedTutor.etiquetas?.map((e) => ({
                             id: e.etiqueta.id_etiqueta,
                             name: e.etiqueta.nombre,
                             parentId: e.etiqueta.id_etiqueta_padre,

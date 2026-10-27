@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2} from "lucide-react";
 import { useTranslations } from "next-intl";
 import PostImage from "./PostImage/PostImage";
@@ -85,13 +85,12 @@ export default function PostCard({
   );
 
   // Sync pinned state if parent prop changes
-  useEffect(() => {
-    setPinned(isPinned);
-  }, [isPinned]);
-
-  useEffect(() => {
-    setDisplayImages(images);
-  }, [images]);
+  const [propsPrevias, setPropsPrevias] = useState({ isPinned, images });
+  if (propsPrevias.isPinned !== isPinned || propsPrevias.images !== images) {
+    setPropsPrevias({ isPinned, images });
+    if (propsPrevias.isPinned !== isPinned) setPinned(isPinned);
+    if (propsPrevias.images !== images) setDisplayImages(images);
+  }
 
   const handleDetailsClick = () => {
     if (onDetallesClick) {
@@ -151,10 +150,10 @@ export default function PostCard({
               ? "Publicación destacada exitosamente."
               : "Publicación quitada de destacados.",
           });
-        } catch (err: any) {
+        } catch (err) {
           agregarNotificacion({
             tipo: "error",
-            mensaje: err.message || "No fue posible actualizar el estado de destacado.",
+            mensaje: (err instanceof Error && err.message) || "No fue posible actualizar el estado de destacado.",
           });
         } finally {
           setIsPinning(false);

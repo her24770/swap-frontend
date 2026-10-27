@@ -88,8 +88,8 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
     try {
       const data = await onVerPublicacion(r.publicacion.id_publicacion);
       setPublicacionData(data);
-    } catch (error: any) {
-      toast.error(error?.message ?? tDet("toastPublicacionError"), t("errorGenerico"));
+    } catch (error) {
+      toast.error((error instanceof Error ? error.message : undefined) ?? tDet("toastPublicacionError"), t("errorGenerico"));
       setPublicacionAbierta(false);
     } finally {
       setCargandoPublicacion(false);

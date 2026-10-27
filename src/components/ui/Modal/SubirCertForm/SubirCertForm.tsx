@@ -128,8 +128,8 @@ export default function SubirCertForm(props: SubirCertFormProps) {
       setArchivoPdf(null);
       setNombreArchivo(null);
       onSuccess?.();
-    } catch (err: any) {
-      setServerError(err.message || "No fue posible guardar la certificación.");
+    } catch (err) {
+      setServerError((err instanceof Error && err.message) || "No fue posible guardar la certificación.");
     } finally {
       setIsSubmitting(false);
     }

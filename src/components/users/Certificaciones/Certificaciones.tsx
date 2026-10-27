@@ -86,8 +86,8 @@ export default function Certificaciones({
           if (selectedId === id) setSelectedId(null);
           agregarNotificacion({ tipo: "success", mensaje: "Certificación eliminada exitosamente." });
           onRefresh?.();
-        } catch (err: any) {
-          agregarNotificacion({ tipo: "error", mensaje: err.message || "No fue posible eliminar la certificación." });
+        } catch (err) {
+          agregarNotificacion({ tipo: "error", mensaje: (err instanceof Error && err.message) || "No fue posible eliminar la certificación." });
         }
       },
     });
