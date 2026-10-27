@@ -11,7 +11,7 @@ const pageMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../../../src/components/pages/PublicacionesList/PublicacionesList", () => ({
-  default: (props: any) => {
+  default: (props: { title: string }) => {
     pageMocks.publicacionesList(props);
     return <section data-testid="publicaciones-list">{props.title}</section>;
   },

@@ -54,8 +54,6 @@ export default function FiltrosModal({
   const t = useTranslations("common.filtros");
   const [selectedEtiquetas, setSelectedEtiquetas] = useState<number[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [calificacion, setCalificacion] = useState(0);
-  const [hoverStar, setHoverStar] = useState(0);
   const [precioMin, setPrecioMin] = useState(0);
   const [precio, setPrecioMax] = useState(precioMax);
   const [calMin, setCalMin] = useState(0);
@@ -118,8 +116,10 @@ export default function FiltrosModal({
 
   const handleLimpiar = () => {
     setSelectedEtiquetas([]);
+    setPrecioMin(0);
     setPrecioMax(precioMax);
-    setCalificacion(0);
+    setCalMin(0);
+    setCalMax(5);
     setModalidad([]);
     setHoraDesde("07:00");
     setHoraHasta("20:00");

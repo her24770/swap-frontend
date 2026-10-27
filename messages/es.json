@@ -225,6 +225,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "No se pudo procesar la solicitud. Intenta de nuevo.",
 		"title": "TUTORÍAS",
 		"loading": "Cargando tutorías...",
 		"empty": {
@@ -559,6 +560,7 @@
     },
     "reportes": {
       "title": "Reportes",
+      "errorCargar": "No fue posible cargar los reportes",
       "searchPlaceholder": "Buscar",
       "tabla": {
         "id": "ID Reporte",
@@ -765,6 +767,7 @@
 		},
 		"modal": {
 			"createPublicationAria": "Crear publicación",
+			"createAdAria": "Crear anuncio",
 			"editPublicationAria": "Editar publicación"
 		}
 	},
@@ -779,7 +782,12 @@
 			"newPublication": "Nueva publicación"
 		}
 	},
+	"imageCropper": {
+		"cropError": "No fue posible recortar la imagen"
+	},
 	"posts": {
+		"saveError": "No fue posible actualizar tus guardados",
+		"detalleError": "No fue posible cargar los detalles de la publicación",
 		"actions": {
 			"details": "Detalles",
 			"edit": "Editar",
@@ -852,6 +860,7 @@
 			"contact": "Contacto"
 		},
 		"certification": {
+			"fullscreenError": "No fue posible cambiar a pantalla completa",
 			"title": "Certificaciones",
 			"add": "Agregar certificación",
 			"noCert": "No hay certificaciones aún.",
@@ -975,6 +984,7 @@
 	},
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
+		"imageLoadError": "No fue posible cargar la imagen seleccionada",
 		"titleCreate": "Crear Publicación",
 		"titleEdit": "Editar Publicación",
 		"fields": {

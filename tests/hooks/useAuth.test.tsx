@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useAuth } from "../../src/hooks/useAuth";
 import { useAuthStore } from "../../src/store/authStore";
+import type { Usuario } from "../../src/types/usuario";
 import { routerMock } from "../mocks/nextNavigation";
 import { act, renderHook, waitFor } from "../utils/render";
 
@@ -45,7 +46,7 @@ describe("useAuth", () => {
   it("IT-03: limpia el estado local y redirige aunque falle la API", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network error")));
     useAuthStore.setState({
-      usuario: { id_usuario: 1, nombre: "Ana" } as any,
+      usuario: { id_usuario: 1, nombre: "Ana" } as Usuario,
       rol: "usuario",
     });
 

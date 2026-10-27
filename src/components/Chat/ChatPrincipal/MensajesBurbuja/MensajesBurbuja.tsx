@@ -1,6 +1,7 @@
 import { UserCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Mensaje } from "../../../../types/chat";
+import Image from "next/image";
 import "./MensajesBurbuja.css";
 
 interface MensajesBurbujaProps {
@@ -79,7 +80,7 @@ export default function MensajesBurbuja({
               {!esMio && (
                 <div className="mensajes-burbuja__avatar">
                   {avatarUrl ? (
-                    <img src={avatarUrl} alt={t("avatarAlt")} className="mensajes-burbuja__avatar-img" />
+                    <Image src={avatarUrl} alt={t("avatarAlt")} width={28} height={28} className="mensajes-burbuja__avatar-img" />
                   ) : (
                     <UserCircle2 size={18} strokeWidth={1.2} />
                   )}

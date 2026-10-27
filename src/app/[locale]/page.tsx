@@ -1,48 +1,31 @@
 "use client";
 
-import { useEffect, Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { usePublicaciones } from "../../hooks/fetch/usePublicaciones";
 import PublicacionesList from "../../components/pages/PublicacionesList/PublicacionesList";
 import { useToast } from "../../hooks/useToast";
 import {useDetallePublicacion} from "../../hooks/useDetallePublicacion";
-import DetallePublicacion from "../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
-import AnunciosCarousel from "../../components/ui/AnunciosCarousel/AnunciosCarousel";
-import AdBanner from "../../components/perfiles/Vendedor/AdBanner/AdBanner";
-import imagePath from "../../../public/images/uvg.jpg";
 import { useAnuncios } from "../../hooks/fetch/useAnuncios";
 
 import "./seccion.css";
 
 const ITEMS_PER_PAGE = 12;
 
-const MOCK_ADs = [ 
-  {
-    imageUrl: imagePath.src,
-    title: "¡Vende tus productos fácilmente!",
-    description: "Publica tus productos en SWAP y llega a miles de compradores potenciales.",
-  },
-  {
-    imageUrl: imagePath.src,
-    title: "¿Buscas algo específico?",
-    description: "Encuentra lo que necesitas en una sola plataforma.",
-  },
-  {
-    imageUrl: imagePath.src,
-    title: "¡Únete a la comunidad de SWAP!",
-    description: "Conecta con otros vendedores y compradores en nuestra comunidad.",
-  },
-];
 function RegisteredToast() {
   const searchParams = useSearchParams();
   const toast = useToast();
+  const yaMostrado = useRef(false);
 
+  // El toast se muestra una sola vez aunque `toast` cambie de identidad en cada render.
   useEffect(() => {
+    if (yaMostrado.current) return;
     if (searchParams.get("registered") === "true") {
+      yaMostrado.current = true;
       toast.success("¡Registro exitoso! Bienvenido a SWAP.");
     }
-  }, []);
+  }, [searchParams, toast]);
 
   return null;
 }
@@ -50,7 +33,6 @@ function RegisteredToast() {
 export default function HomePage() {
   const t = useTranslations('home');
   const tTags = useTranslations('common.tags');
-  const router = useRouter();
   const [morePage, setMorePage] = useState(1);
 
   const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } = usePublicaciones({ all: true, limit: ITEMS_PER_PAGE, page: morePage });
@@ -77,10 +59,7 @@ export default function HomePage() {
   };
 
   const{
-    selectedPublicacion,
-    loadingDetalle,
     handleDetallesClick,
-    handleClose,
   } = useDetallePublicacion();
 
   return (

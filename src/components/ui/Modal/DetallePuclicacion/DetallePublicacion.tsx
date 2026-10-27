@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
+import { useToast } from "../../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { X, Bookmark, Loader2, ChevronRight, Flag, AlertTriangle, Trash2 } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
@@ -66,7 +67,7 @@ interface PostModalProps {
   onEstadoChange?: (nuevoEstado: string) => void;
   onAcordarCompra?: () => void;
   onSolicitarTutoria?: () => void;
-  onVerCertificados?: () => void;
+  onVerCertificados?: (sellerId: number) => void;
   onSellerClick?: (sellerId: number) => void;
   onToggleSave?: () => void;
   isSaved?: boolean;
@@ -106,6 +107,7 @@ export default function DetallePublicacion({
   onEstadoChange,
 }: PostModalProps) {
   const t = useTranslations("posts");
+  const toast = useToast();
   const tSend = useTranslations("sendMessageModal");
   const tReporte = useTranslations("reporte");
   const locale = useLocale();
@@ -131,10 +133,7 @@ export default function DetallePublicacion({
 
   const MAX_STARS = 5;
   const guardada = publicacionId ? guardados.isSaved(publicacionId) : isSaved;
-  const normalizedImageUrl = useMemo(
-    () => carouselImages[0] ?? normalizeImageUrl(imageUrl ?? ""),
-    [carouselImages, imageUrl],
-  );
+  const normalizedImageUrl = carouselImages[0] ?? normalizeImageUrl(imageUrl ?? "");
 
   const handleToggleSave = async () => {
     if (saving) return;
@@ -147,8 +146,8 @@ export default function DetallePublicacion({
         await guardados.guardarPublicacion(publicacionId);
       }
       onToggleSave?.();
-    } catch (error) {
-      console.error("Error al actualizar guardado:", error);
+    } catch {
+      toast.error(t("saveError"));
     } finally {
       setSaving(false);
     }
@@ -315,13 +314,6 @@ export default function DetallePublicacion({
                 )}
                 {type === "tutoria" && (
                   <>
-                    <button
-                      type="button"
-                      className="button button--medium button--warning button--full-width"
-                      onClick={onVerCertificados}
-                    >
-                      {t("actions.certificado")}
-                    </button>
                     {!esPropiaPublicacion && !expandido && (
                       <button
                         type="button"
@@ -331,6 +323,15 @@ export default function DetallePublicacion({
                         {tSend("requestTutoring")} <ChevronRight size={16} />
                       </button>
                     )}
+
+                    <button
+                      type="button"
+                      className="button button--medium button--warning button--full-width"
+                      onClick={() => { if (sellerId) onVerCertificados?.(sellerId); }}
+                      disabled={!onVerCertificados || !sellerId}
+                    >
+                      {t("actions.certificado")}
+                    </button>
                   </>
                 )}
               </div>

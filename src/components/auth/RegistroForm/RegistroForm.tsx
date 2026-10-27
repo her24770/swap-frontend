@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import type { FormEvent } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Eye, EyeOff, ChevronRight, ChevronDown, Check, X } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useToast } from "../../../hooks/useToast";
@@ -68,7 +68,7 @@ export default function RegistroForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<RegistroFormData>({
     resolver: zodResolver(schemaRegistro),
@@ -84,15 +84,16 @@ export default function RegistroForm() {
     },
   });
 
+  const selectedEtiquetas: number[] = useWatch({ control, name: "etiquetas" }) ?? [];
+
   const toggleEtiqueta = (id: number) => {
-    const current = watch("etiquetas") ?? [];
+    const current = selectedEtiquetas;
     const updated = current.includes(id)
       ? current.filter((tagId) => tagId !== id)
       : [...current, id];
     setValue("etiquetas", updated, { shouldValidate: true, shouldDirty: true });
   };
 
-  const selectedEtiquetas: number[] = watch("etiquetas") ?? [];
 
   const triggerLabel = etiquetasLoading
     ? t("tagsLoading")

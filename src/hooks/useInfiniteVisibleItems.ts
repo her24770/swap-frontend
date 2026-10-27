@@ -6,9 +6,13 @@ export function useInfiniteVisibleItems<T>(items: T[], pageSize = 12) {
   const [visibleCount, setVisibleCount] = useState(pageSize);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  const [previo, setPrevio] = useState({ items, pageSize });
+
+  // Reinicia la paginación cuando cambian los items o el tamaño de página
+  if (previo.items !== items || previo.pageSize !== pageSize) {
+    setPrevio({ items, pageSize });
     setVisibleCount(pageSize);
-  }, [items, pageSize]);
+  }
 
   const visibleItems = useMemo(
     () => items.slice(0, visibleCount),

@@ -51,9 +51,12 @@ export default function ModeracionLayout({ children }: ModeracionLayoutProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
 
-  useEffect(() => {
+  // Cierra el sidebar al cambiar de ruta.
+  const [pathnamePrevio, setPathnamePrevio] = useState(pathname);
+  if (pathnamePrevio !== pathname) {
+    setPathnamePrevio(pathname);
     setSidebarOpen(false);
-  }, [pathname]);
+  }
 
   if (esLogin) {
     return <>{children}</>;

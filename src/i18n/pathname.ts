@@ -10,7 +10,7 @@ export function stripLocalePrefix(pathname: string): string {
   const parts = pathname.split('/');
   const maybeLocale = parts[1];
 
-  if (maybeLocale && routing.locales.includes(maybeLocale as any)) {
+  if (maybeLocale && (routing.locales as readonly string[]).includes(maybeLocale)) {
     const rest = parts.slice(2).join('/');
     return rest ? `/${rest}` : '/';
   }

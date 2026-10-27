@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import CarouselButton from "../CarouselButton/CarouselButton";
 import CarouselIndicator from "../CarouselIndicator/CarouselIndicator";
 import "./AnunciosCarousel.css";
@@ -10,9 +10,15 @@ interface AnunciosCarouselProps {
   autoPlayInterval?: number;
 }
 
+const getStep = (track: HTMLDivElement) => {
+  const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
+  return track.clientWidth + gap;
+};
+
 export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: AnunciosCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const items = React.Children.toArray(children);
+  const itemsCount = items.length;
 
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
@@ -20,10 +26,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
   const [dotsCount, setDotsCount] = useState(0);
   const autoPlayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Si no hay elementos, no renderizamos nada
-  if (items.length === 0) return null;
-
-  const updateScrollState = () => {
+  const updateScrollState = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
 
@@ -36,7 +39,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
     setIsAtEnd(sLeft + cWidth >= sWidth - tolerance);
 
     // En el carrusel de anuncios, cada anuncio ocupa el 100% del contenedor por lo que hay un punto por anuncio
-    const calculatedDotsCount = items.length;
+    const calculatedDotsCount = itemsCount;
     setDotsCount(calculatedDotsCount);
 
     const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
@@ -47,7 +50,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
       Math.max(0, Math.round(sLeft / step))
     );
     setActiveItemIndex(currentIndex);
-  };
+  }, [itemsCount]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -70,14 +73,9 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
       window.removeEventListener("resize", handleUpdate);
       observer.disconnect();
     };
-  }, [children]);
+  }, [children, updateScrollState]);
 
-  const getStep = (track: HTMLDivElement) => {
-    const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
-    return track.clientWidth + gap;
-  };
-
-  const scrollToIndex = (index: number) => {
+  const scrollToIndex = useCallback((index: number) => {
     const track = trackRef.current;
     if (!track) return;
 
@@ -86,7 +84,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
       left: index * step,
       behavior: "smooth",
     });
-  };
+  }, []);
 
   const scroll = (dir: "left" | "right") => {
     const track = trackRef.current;
@@ -101,13 +99,13 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
     scrollToIndex(index);
   };
 
-  const restartAutoPlay = () => {
+  const restartAutoPlay = useCallback(() => {
     if (autoPlayTimerRef.current) {
       clearInterval(autoPlayTimerRef.current);
       autoPlayTimerRef.current = null;
     }
 
-    if (!autoPlayInterval || items.length <= 1) return;
+    if (!autoPlayInterval || itemsCount <= 1) return;
 
     autoPlayTimerRef.current = setInterval(() => {
       const track = trackRef.current;
@@ -118,13 +116,13 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
         ? Math.round(track.scrollLeft / step) + 1
         : 1;
 
-      if (nextIndex >= items.length) {
+      if (nextIndex >= itemsCount) {
         scrollToIndex(0);
       } else {
         scrollToIndex(nextIndex);
       }
     }, autoPlayInterval);
-  };
+  }, [autoPlayInterval, itemsCount, scrollToIndex]);
 
   useEffect(() => {
     restartAutoPlay();
@@ -134,7 +132,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
         autoPlayTimerRef.current = null;
       }
     };
-  }, [items.length, autoPlayInterval]);
+  }, [restartAutoPlay]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -151,7 +149,10 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
       track.removeEventListener("wheel", handleUserInteraction);
       track.removeEventListener("touchstart", handleUserInteraction);
     };
-  }, [items.length, autoPlayInterval]);
+  }, [restartAutoPlay]);
+
+  // Si no hay elementos, no renderizamos nada
+  if (items.length === 0) return null;
 
   return (
     <div className="a-carousel">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Pencil, Save, SquarePlus, X, Pin, SquarePen, Trash2, Heart, Bookmark, MousePointerClick, Eye } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
@@ -20,8 +20,6 @@ import DetallePublicacion from "../../ui/Modal/DetallePuclicacion/DetallePublica
 import type { DiaHorario, EspacioHorario, EstadoHorario } from "../../../types/horario";
 import type { Publicacion, PublicacionesResponse } from "../../../types/publicacion";
 import type { Tag } from "../../../types/tag";
-import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
-import { useServices } from "../../../services/context/ServiceContext";
 import { PerfilPostCarouselSkeleton } from "../perfilLoading";
 import { HorarioSkeleton } from "./Horario/HorarioSkeleton/HorarioSkeleton";
 
@@ -73,12 +71,6 @@ export default function VistaTutor({
   const idUsuario = userId ?? authUserId;
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
   const estadosTutoria = useEstados("tutoria");
-  const { publicacion: publicacionService } = useServices();
-  const { data: publicacionesDestacadas, refetch: refetchDestacadas } = usePublicacionesDestacadas(idUsuario);
-  const publicacionesDestacadasIds = useMemo(
-    () => new Set(publicacionesDestacadas.map((pub) => pub.id_publicacion)),
-    [publicacionesDestacadas]
-  );
 
   const [catalogTutorias, setCatalogTutorias] = useState<CatalogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,16 +87,27 @@ export default function VistaTutor({
   const [horarioGuardando, setHorarioGuardando] = useState(false);
   const [cambiosPendientes, setCambiosPendientes] = useState<Set<string>>(new Set());
 
-  const fetchPublicaciones = useCallback(async () => {
-    if (!idUsuario) {
+  const [idUsuarioPrevio, setIdUsuarioPrevio] = useState(idUsuario);
+  if (idUsuarioPrevio !== idUsuario) {
+    setIdUsuarioPrevio(idUsuario);
+    setError(null);
+    setHorarioError(null);
+    if (idUsuario) {
+      setLoading(true);
+      setHorarioLoading(true);
+    } else {
       setCatalogTutorias([]);
       setLoading(false);
-      return;
+      setHorarioSlots([]);
+      setHorarioOriginal([]);
+      setHorarioLoading(false);
     }
+  }
+
+  const fetchPublicaciones = useCallback(async () => {
+    if (!idUsuario) return;
 
     try {
-      setLoading(true);
-      setError(null);
       const resTutorias = await apiClient.get<PublicacionesResponse>(
         `/api/publicacion/user/${idUsuario}?tipo=tutoria&all=true`
       );
@@ -119,7 +122,7 @@ export default function VistaTutor({
           estado: pub.estadoRel?.estado ?? "activo",
           images: pub.imagenes?.map((img) => img.url_imagen) || [],
           categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
-          isPinned: (pub as any).is_pinned ?? false,
+          isPinned: pub.is_pinned ?? false,
         }));
 
       // Pinned first
@@ -137,16 +140,9 @@ export default function VistaTutor({
   }, [idUsuario]);
 
   const fetchHorario = useCallback(async () => {
-    if (!idUsuario) {
-      setHorarioSlots([]);
-      setHorarioOriginal([]);
-      setHorarioLoading(false);
-      return;
-    }
+    if (!idUsuario) return;
 
     try {
-      setHorarioLoading(true);
-      setHorarioError(null);
       const slots = await obtenerHorarioUsuario(idUsuario);
       setHorarioSlots(slots);
       setHorarioOriginal(slots);
@@ -193,31 +189,15 @@ export default function VistaTutor({
       );
     });
   }, []);
-  const handleToggleDestacado = useCallback(async (pub: CatalogPost) => {
-    const destacar = !publicacionesDestacadasIds.has(pub.id);
 
-    try {
-      await publicacionService.actualizarDestacadasUsuario(pub.id, destacar);
-      agregarNotificacion({
-        tipo: "success",
-        mensaje: destacar ? "La tutoría fue destacada." : "La tutoría ya no está destacada.",
-      });
-      await refetchDestacadas();
-
-    } catch (err) {
-      const apiError = err as ApiError;
-      agregarNotificacion({
-        tipo: "error",
-        mensaje: apiError.message || "No fue posible actualizar el destacado.",
-      });
-    }
-  }, [agregarNotificacion, publicacionesDestacadasIds, publicacionService, refetchDestacadas]);
-
+  // fetchPublicaciones/fetchHorario solo hacen setState después de un await
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchPublicaciones();
   }, [fetchPublicaciones]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHorario();
   }, [fetchHorario]);
 
@@ -516,7 +496,6 @@ export default function VistaTutor({
           sellerName={userName}
           sellerRating={userRating}
           sellerImageUrl={userImageUrl}
-          onSolicitarTutoria={() => console.log("Solicitar tutoría")}
           estado={selectedPost.estado}
         />
       )}

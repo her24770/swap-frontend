@@ -28,10 +28,16 @@ export default function HistorialAcuerdosPanel({ idConversacion }: HistorialAcue
   const [error, setError] = useState<string | null>(null);
   const [selectedAcuerdo, setSelectedAcuerdo] = useState<AcuerdoHistorial | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
+  // Al cambiar de conversación se reinicia la carga durante el render.
+  const [conversacionPrevia, setConversacionPrevia] = useState(idConversacion);
+  if (conversacionPrevia !== idConversacion) {
+    setConversacionPrevia(idConversacion);
     setLoading(true);
     setError(null);
+  }
+
+  useEffect(() => {
+    let isMounted = true;
 
     acuerdoService
       .getPorConversacion(idConversacion)

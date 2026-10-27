@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useToast } from "../../../../hooks/useToast";
 import TablaReportes from "../../../../components/moderacion/TablaReportes/TablaReportes";
 import type { ReporteTableData } from "../../../../types/reporte";
 import { publicacionService } from "../../../../services/publicacionService";
@@ -9,6 +11,8 @@ import "./ReportesPage.css";
 
 
 export default function ModeracionReportesPage() {
+  const toast = useToast();
+  const t = useTranslations("moderacion.reportes");
   const [reportes, setReportes] = useState<ReporteTableData[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -46,12 +50,13 @@ export default function ModeracionReportesPage() {
         setReportes(resultado.reportes);
         setTotal(resultado.total);
         setTotalPages(resultado.totalPages);
-      } catch (error) {
-        console.error("Error al cargar reportes:", error);
+      } catch {
+        toast.error(t("errorCargar"));
       }
     };
 
     cargarReportes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- toast y t se recrean en cada render
   }, [page, tipoFilter, estadoFilter]);
   
   return (
@@ -67,12 +72,10 @@ export default function ModeracionReportesPage() {
         onPageChange={setPage}
         onTipoFilterChange={(tipo) => {
           setTipoFilter(tipo);
-          console.log("Tipo filter changed to:", tipo);
           setPage(1);
         }}
         onEstadoFilterChange={(estado) => {
           setEstadoFilter(estado);
-          console.log("Estado filter changed to:", estado);
           setPage(1);
         }}
         onVerDetalles={reporteService.obtenerReportePorId}

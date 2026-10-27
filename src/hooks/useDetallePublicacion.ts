@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { publicacionService } from "../services/publicacionService";
+import { useToast } from "./useToast";
 import type { Publicacion, PublicacionDetalle } from "../types/publicacion";
 
 export function useDetallePublicacion() {
+  const t = useTranslations("posts");
+  const toast = useToast();
   const [selectedPublicacion, setSelectedPublicacion] = useState<PublicacionDetalle | null>(null);
   const [loadingDetalle, setLoadingDetalle] = useState(false);
 
@@ -11,9 +15,9 @@ export function useDetallePublicacion() {
       setLoadingDetalle(true);
       const detalle = await publicacionService.getById(publicacion.id_publicacion);
       setSelectedPublicacion(detalle);
-    } catch (error){
-      console.error("Error al obtener detalles de la publicación:", error);
-    }finally {
+    } catch {
+      toast.error(t("detalleError"));
+    } finally {
       setLoadingDetalle(false);
     } 
   };

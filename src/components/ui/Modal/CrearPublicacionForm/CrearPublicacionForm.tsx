@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useToast } from "../../../../hooks/useToast";
 import { useFormCrearPublicacion, useFormEditarPublicacion, type UseFormEditarPublicacionReturn } from "../../../../hooks/useFormPublicacion";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useEstados } from "../../../../hooks/useEstados";
@@ -11,6 +12,7 @@ import "../../../ui/Button/Button.css";
 import "./CrearPublicacionForm.css";
 import { CrearPublicacionFormData, EditarPublicacionFormData, type TipoPublicacion, TIPOS_PUBLICACION } from "../../../../schemas/zodSchemas";
 import { UseFormReturn } from "react-hook-form";
+import Image from "next/image";
 
 type FormFields = CrearPublicacionFormData & Pick<EditarPublicacionFormData, "estado">;
 
@@ -35,6 +37,7 @@ type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormPro
 
 export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const t = useTranslations("publicacionForm");
+  const toast = useToast();
   const tTags = useTranslations("common.tags");
   const testado = useTranslations("posts.estado");
 
@@ -139,8 +142,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       setPendingCropFiles(restFiles);
       const src = await fileToDataUrl(firstFile);
       setImageToCrop(src);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      toast.error(t("imageLoadError"));
       setImageToCrop(null);
       setPendingCropFiles([]);
     }
@@ -164,8 +167,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       setPendingCropFiles(restFiles);
       const src = await fileToDataUrl(nextFile);
       setImageToCrop(src);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      toast.error(t("imageLoadError"));
       setImageToCrop(null);
       setPendingCropFiles([]);
     }
@@ -371,11 +374,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
               <div className="crear-publicacion__previews">
                 {imagenesExistentes.map((url, index) => (
                   <div key={url} className="crear-publicacion__preview-item">
-                    <img
-                      src={url}
-                      alt={t("fields.existingImageAlt", { n: index + 1 })}
-                      className="crear-publicacion__preview-img"
-                    />
+                    <Image src={url} alt={t("fields.existingImageAlt", { n: index + 1 })} width={160} height={160} unoptimized className="crear-publicacion__preview-img" />
                     <button
                       type="button"
                       onClick={() => removeExistingImage?.(url)}
@@ -388,11 +387,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
                 ))}
                 {imagePreviews.map((src, i) => (
                   <div key={i} className="crear-publicacion__preview-item">
-                    <img
-                      src={src}
-                      alt={t("fields.newImageAlt", { n: i + 1 })}
-                      className="crear-publicacion__preview-img"
-                    />
+                    <Image src={src} alt={t("fields.newImageAlt", { n: i + 1 })} width={160} height={160} unoptimized className="crear-publicacion__preview-img" />
                     <button
                       type="button"
                       onClick={() => removeImage(i)}

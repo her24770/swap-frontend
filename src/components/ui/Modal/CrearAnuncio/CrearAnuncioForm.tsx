@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaAnuncio, AnuncioInput } from "../../../../schemas/schemaAnuncios";
 import { anuncioService } from "../../../../services/anuncioService";
 import type { Anuncio } from "../../../../types/anuncio"; // Ajusta la ruta a tus tipos
+import type { ApiError } from "../../../../lib/apiClient";
+import Image from "next/image";
 
 interface CrearAnuncioFormProps {
     anuncio?: Anuncio | null; // ◄— Recibe el objeto completo para activar el modo edición
@@ -123,8 +125,8 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
             setVistaPreviaUrl(null);
             
             if (onAnuncioProcesado) onAnuncioProcesado();
-        } catch (error: any) {
-            setErrorServidor(error.message || t("errors.server"));
+        } catch (error) {
+            setErrorServidor((error as ApiError).message || t("errors.server"));
         } finally {
             setCargando(false);
         }
@@ -207,9 +209,12 @@ export function CrearAnuncioForm({ anuncio, onAnuncioProcesado, onCancelar }: Cr
                     {vistaPreviaUrl && (
                         <div className="crear-publicacion__previews">
                             <div className="crear-publicacion__preview-item">
-                                <img
+                                <Image
                                     src={vistaPreviaUrl}
                                     alt={t("fields.previewAlt")}
+                                    width={160}
+                                    height={160}
+                                    unoptimized
                                     className="crear-publicacion__preview-img"
                                 />
                                 <button

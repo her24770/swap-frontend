@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Eye, Loader2, Trash2, Ban, RotateCcw, Check } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
@@ -173,26 +173,38 @@ export default function PublicacionesModeracion() {
     limit: ITEMS_PER_PAGE,
   }), [estado, order, page, q, sort, tipo]);
 
-  const cargarPublicaciones = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await publicacionService.getModeracion(filters);
-      setPublicaciones(response.publicaciones);
-      setTotal(response.total);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : t("errorCarga");
-      setError(message);
-      setPublicaciones([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, t]);
+  // Al cambiar los filtros se reinicia la carga durante el render.
+  const [filtersPrevios, setFiltersPrevios] = useState(filters);
+  if (filtersPrevios !== filters) {
+    setFiltersPrevios(filters);
+    setLoading(true);
+    setError(null);
+  }
 
   useEffect(() => {
-    void cargarPublicaciones();
-  }, [cargarPublicaciones]);
+    let cancelado = false;
+
+    publicacionService
+      .getModeracion(filters)
+      .then((response) => {
+        if (cancelado) return;
+        setPublicaciones(response.publicaciones);
+        setTotal(response.total);
+      })
+      .catch((err) => {
+        if (cancelado) return;
+        setError(err instanceof Error ? err.message : t("errorCarga"));
+        setPublicaciones([]);
+        setTotal(0);
+      })
+      .finally(() => {
+        if (!cancelado) setLoading(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [filters, t]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

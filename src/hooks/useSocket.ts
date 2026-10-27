@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import type { Socket } from "socket.io-client";
 import { conectarSocket } from "../lib/socketClient";
 
@@ -17,11 +16,8 @@ export interface AckRespuesta<T = unknown> {
  * listeners con socket.off(...) en su cleanup.
  */
 export function useSocket(): Socket {
-  const socketRef = useRef<Socket | null>(null);
-  if (!socketRef.current) {
-    socketRef.current = conectarSocket();
-  }
-  return socketRef.current;
+  // conectarSocket() es un singleton: siempre devuelve la misma instancia.
+  return conectarSocket();
 }
 
 /** Emite "conversacion:unirse" y espera el ack del backend (ver socketServer.ts). */
