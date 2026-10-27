@@ -21,5 +21,8 @@ bash security/zap/run-zap.sh down
 
 Playwright inicia el frontend en el puerto 3000 y apunta a la API aislada en
 `http://localhost:3220`. El job `E2E Playwright` del CI realiza estos pasos y
-publica `test-results/` como artefacto si falla algún escenario. El repositorio
-backend debe estar accesible como `her24770/swap-backend` en la rama `develop`.
+publica `test-results/` como artefacto si falla algún escenario. El job usa
+`her24770/swap-backend` desde `develop` cuando ya contiene la exclusión de
+publicaciones propias. Mientras ese cambio esté pendiente de integración,
+usa la rama `fix/CI` del backend para que el escenario compruebe la misma API
+que recibirá el frontend.

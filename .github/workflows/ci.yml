@@ -96,6 +96,15 @@ jobs:
           repository: her24770/swap-backend
           ref: develop
           path: backend
+      - name: Alinear backend con la exclusión de publicaciones propias
+        run: |
+          if git -C ../backend grep -Fq 'where.id_usuario = { not: idUsuario }' -- src/repository/repositorioPublicacion.ts; then
+            echo 'La exclusión ya está integrada en backend/develop.'
+          else
+            git -C ../backend fetch --depth=1 origin refs/heads/fix/CI
+            git -C ../backend checkout --detach FETCH_HEAD
+            git -C ../backend grep -Fq 'where.id_usuario = { not: idUsuario }' -- src/repository/repositorioPublicacion.ts
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: "20"

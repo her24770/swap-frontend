@@ -54,14 +54,17 @@ export const publicacionService = {
     });
     }
 
-    // Solictud al API
-    const response = await apiClient.get<PublicacionesResponse_Explorar>(`/api/publicacion?${params.toString()}`);
-    
-    
-    return {
-      data: response.data.publicaciones,
-      total: response.data.total ?? response.data.publicaciones.length,
-    };
+    try {
+      const response = await apiClient.get<PublicacionesResponse_Explorar>(`/api/publicacion?${params.toString()}`);
+      return {
+        data: response.data.publicaciones,
+        total: response.data.total ?? response.data.publicaciones.length,
+      };
+    } catch (error) {
+      // El backend responde 404 cuando no hay publicaciones ajenas para listar.
+      if (isNotFoundError(error)) return { data: [], total: 0 };
+      throw error;
+    }
   },
 
   async getGlobalRecommendations(tipo?: string): Promise<Publicacion[]> {
