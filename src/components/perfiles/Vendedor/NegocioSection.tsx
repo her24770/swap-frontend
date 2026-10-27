@@ -1,9 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useTranslations } from "next-intl";
 import PostCard from "../../posts/PostCard/PostCard";
-import { apiClient, type ApiError } from "../../../lib/apiClient";
-import { useUIStore } from "../../../store/uiStore";
 import type { CatalogPost } from "./catalogoVendedor";
+import { useCambiarEstadoPost } from "./useCambiarEstadoPost";
 import CatalogoSection from "./CatalogoSection";
 
 interface NegocioSectionProps {
@@ -35,7 +34,7 @@ export default function NegocioSection({
   onDetalles,
 }: NegocioSectionProps) {
   const t = useTranslations("perfil");
-  const { agregarNotificacion } = useUIStore();
+  const cambiarEstado = useCambiarEstadoPost(setPosts);
 
   return (
     <CatalogoSection
@@ -61,19 +60,7 @@ export default function NegocioSection({
           onPinChange={(newPinned) => onPinChange(pub.id, newPinned)}
           onEditClick={() => onEditar(pub)}
           onDeleteClick={() => onEliminar(pub.id)}
-          onEstadoChange={async (nuevoEstado) => {
-            try {
-              await apiClient.put(`/api/publicacion/${pub.id}`, { estado: nuevoEstado, etiquetas: [1] });
-              setPosts((prev) =>
-                prev.map((p) => p.id === pub.id ? { ...p, estado: nuevoEstado } : p)
-              );
-            } catch (err) {
-              agregarNotificacion({
-                tipo: "error",
-                mensaje: (err as ApiError).message || "No fue posible cambiar el estado.",
-              });
-            }
-          }}
+          onEstadoChange={(nuevoEstado) => cambiarEstado(pub, nuevoEstado)}
           onDetallesClick={() => onDetalles(pub)}
         />
       )}

@@ -1,9 +1,9 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useTranslations } from "next-intl";
 import PostCard from "../../posts/PostCard/PostCard";
-import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { useEstados } from "../../../hooks/useEstados";
 import type { CatalogPost } from "./catalogoVendedor";
+import { useCambiarEstadoPost } from "./useCambiarEstadoPost";
 import CatalogoSection from "./CatalogoSection";
 
 interface MaterialSectionProps {
@@ -36,6 +36,7 @@ export default function MaterialSection({
 }: MaterialSectionProps) {
   const t = useTranslations("perfil");
   const estadosMaterial = useEstados("material");
+  const cambiarEstado = useCambiarEstadoPost(setPosts);
 
   return (
     <CatalogoSection
@@ -69,17 +70,7 @@ export default function MaterialSection({
               )
             );
           }}
-          onEstadoChange={async (nuevoEstado) => {
-            try {
-              await apiClient.put(`/api/publicacion/${pub.id}`, { estado: nuevoEstado, etiquetas: [1] });
-              setPosts((prev) =>
-                prev.map((p) => p.id === pub.id ? { ...p, estado: nuevoEstado } : p)
-              );
-            } catch (err) {
-              const apiError = err as ApiError;
-              alert(apiError.message || "No fue posible cambiar el estado.");
-            }
-          }}
+          onEstadoChange={(nuevoEstado) => cambiarEstado(pub, nuevoEstado)}
           onDetallesClick={() => onDetalles(pub)}
         />
       )}
