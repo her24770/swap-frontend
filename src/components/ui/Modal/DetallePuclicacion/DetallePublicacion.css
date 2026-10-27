@@ -232,7 +232,7 @@
   font-family: var(--swap-font-subtitulos);
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--swap-primary-color);
+  color: var(--swap-primary-accent-color, var(--swap-primary-color));
   flex-shrink: 0;
 }
 
