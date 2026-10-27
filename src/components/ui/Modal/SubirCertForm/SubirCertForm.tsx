@@ -10,7 +10,7 @@ import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useToast } from "../../../../hooks/useToast";
 import { API_URL } from "../../../../lib/config";
 import "../../../ui/Button/Button.css";
-import "../CrearPublicacionForm/CrearPublicacionForm.css";
+import "../FormularioModal.css";
 import "./SubirCertForm.css";
 
 
