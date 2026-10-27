@@ -112,6 +112,7 @@ export default function VistaTutor({
           soloLectura={soloLectura}
           isOpen={true}
           onClose={() => setSelectedPost(null)}
+          onEliminada={catalogo.fetchPublicaciones}
           type="tutoria"
           title={selectedPost.title}
           price={selectedPost.price}

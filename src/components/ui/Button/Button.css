@@ -90,3 +90,15 @@
 .button--warning:hover:not(:disabled) {
   background-color: #d97706;
 }
+
+/* Variante con borde para distinguirla de .button--warning cuando conviven */
+.button--warning-outline {
+  background-color: transparent;
+  border: 1px solid #f59e0b;
+  color: var(--swap-warning-color);
+}
+
+.button--warning-outline:hover:not(:disabled) {
+  background-color: #f59e0b;
+  color: #ffffff;
+}

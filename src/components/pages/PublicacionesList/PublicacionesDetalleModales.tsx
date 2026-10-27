@@ -11,6 +11,7 @@ type Props = {
     selectedPublicacion: PublicacionDetalle | null;
     loadingDetalle: boolean;
     onClosePublicacion: () => void;
+    onPublicacionEliminada: (idPublicacion: number) => void;
     selectedTutor: TutorFiltrado | null;
     onCloseTutor: () => void;
     soloLectura: boolean;
@@ -22,6 +23,7 @@ export default function PublicacionesDetalleModales({
     selectedPublicacion,
     loadingDetalle,
     onClosePublicacion,
+    onPublicacionEliminada,
     selectedTutor,
     onCloseTutor,
     soloLectura,
@@ -43,6 +45,7 @@ export default function PublicacionesDetalleModales({
                     soloLectura={soloLectura}
                     isOpen={true}
                     onClose={onClosePublicacion}
+                    onEliminada={() => onPublicacionEliminada(selectedPublicacion.id_publicacion)}
                     type={selectedPublicacion.tipoPerfil?.tipo_perfil === "tutoria" ? "tutoria" : "venta"}
                     title={selectedPublicacion.titulo}
                     price={parseFloat(selectedPublicacion.precio)}

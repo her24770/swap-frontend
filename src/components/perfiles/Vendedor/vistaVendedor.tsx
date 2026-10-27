@@ -173,6 +173,7 @@ export default function VistaVendedor({
           soloLectura={soloLectura}
           isOpen={true}
           onClose={() => setSelectedPost(null)}
+          onEliminada={catalogo.fetchPublicaciones}
           type={selectedPost.tipo === "tutoria" ? "tutoria" : "venta"}
           title={selectedPost.title}
           price={selectedPost.price}

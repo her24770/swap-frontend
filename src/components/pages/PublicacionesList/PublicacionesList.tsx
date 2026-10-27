@@ -75,10 +75,14 @@ export default function PublicacionesList({
     const [searchQuery, setSearchQuery] = useState("");
     const [internalPage, setInternalPage] = useState(1);
     const [selectedTutor, setSelectedTutor] = useState<TutorFiltrado | null>(null);
+    // Publicaciones eliminadas por un moderador desde el detalle: se ocultan sin recargar.
+    const [idsEliminados, setIdsEliminados] = useState<Set<number>>(new Set());
+    const sinEliminadas = (list: Publicacion[]) =>
+        idsEliminados.size === 0 ? list : list.filter((p) => !idsEliminados.has(p.id_publicacion));
     const {
         etiquetas,
         etiquetasLoading,
-        filteredResults,
+        filteredResults: filteredResultsRaw,
         filteredTutores,
         filterLoading,
         activeFilters,
@@ -86,7 +90,9 @@ export default function PublicacionesList({
         limpiarFiltros,
     } = usePublicacionesFiltros(tipo);
 
-    const { results: searchResults, loading: searchLoading } = useBusquedaSemantica(searchQuery, tipo);
+    const filteredResults = filteredResultsRaw && sinEliminadas(filteredResultsRaw);
+    const { results: searchResultsRaw, loading: searchLoading } = useBusquedaSemantica(searchQuery, tipo);
+    const searchResults = sinEliminadas(searchResultsRaw);
     const { selectedPublicacion, loadingDetalle, handleDetallesClick, handleClose } = useDetallePublicacion();
 
     const handleCardClick = (p: Publicacion) => {
@@ -97,10 +103,10 @@ export default function PublicacionesList({
     const showingSearchResults = searchQuery.trim().length > 0;
     const showingFilteredTutores = !showingSearchResults && tipo === "tutoria" && filteredTutores !== null;
     const showingFiltered = !showingSearchResults && !showingFilteredTutores && filteredResults !== null;
-    const safeRecommendedPublicaciones = Array.isArray(recommendedPublicaciones) ? recommendedPublicaciones : [];
-    const safeRecentsPublicaciones = Array.isArray(recentsPublicaciones) ? recentsPublicaciones : [];
-    const safeMorePublicaciones = Array.isArray(morePublicaciones) ? morePublicaciones : [];
-    const safePopularPublicaciones = Array.isArray(popularPublicaciones) ? popularPublicaciones : [];
+    const safeRecommendedPublicaciones = sinEliminadas(Array.isArray(recommendedPublicaciones) ? recommendedPublicaciones : []);
+    const safeRecentsPublicaciones = sinEliminadas(Array.isArray(recentsPublicaciones) ? recentsPublicaciones : []);
+    const safeMorePublicaciones = sinEliminadas(Array.isArray(morePublicaciones) ? morePublicaciones : []);
+    const safePopularPublicaciones = sinEliminadas(Array.isArray(popularPublicaciones) ? popularPublicaciones : []);
     const safeAds = Array.isArray(Ads) ? Ads : [];
     const safeTutores = Array.isArray(tutores) ? tutores : [];
 
@@ -141,13 +147,13 @@ export default function PublicacionesList({
     const hasPagination = totalItems > itemsPerPage;
 
     // Reinicia la página interna cuando cambian los criterios, sin setState en un effect.
-    const [criteriosPrevios, setCriteriosPrevios] = useState({ searchQuery, itemsPerPage, filteredResults });
+    const [criteriosPrevios, setCriteriosPrevios] = useState({ searchQuery, itemsPerPage, filteredResults: filteredResultsRaw });
     if (
         criteriosPrevios.searchQuery !== searchQuery ||
         criteriosPrevios.itemsPerPage !== itemsPerPage ||
-        criteriosPrevios.filteredResults !== filteredResults
+        criteriosPrevios.filteredResults !== filteredResultsRaw
     ) {
-        setCriteriosPrevios({ searchQuery, itemsPerPage, filteredResults });
+        setCriteriosPrevios({ searchQuery, itemsPerPage, filteredResults: filteredResultsRaw });
         setInternalPage(1);
     }
 
@@ -378,6 +384,7 @@ export default function PublicacionesList({
                 selectedPublicacion={selectedPublicacion}
                 loadingDetalle={loadingDetalle}
                 onClosePublicacion={handleClose}
+                onPublicacionEliminada={(id) => setIdsEliminados((prev) => new Set(prev).add(id))}
                 selectedTutor={selectedTutor}
                 onCloseTutor={() => setSelectedTutor(null)}
                 soloLectura={soloLectura}

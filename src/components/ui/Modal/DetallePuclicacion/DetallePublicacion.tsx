@@ -24,6 +24,7 @@ import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
 import { usuarioService } from "../../../../services/usuarioService";
+import { publicacionService } from "../../../../services/publicacionService";
 import ModalSolicitudTutoria from "../Solicitud/Tutoria/SolicitudTutoriaModal"
 import ReporteModal from "../Reporte/ReporteModal";
 import JustificanteModeracionModal from "../Reporte/JustificanteModeracionModal";
@@ -73,6 +74,7 @@ interface PostModalProps {
   isSaved?: boolean;
   showActions?: boolean;
   soloLectura?: boolean;
+  onEliminada?: () => void;
   actionsSlot?: ReactNode;
 }
 
@@ -101,6 +103,7 @@ export default function DetallePublicacion({
   isSaved = false,
   showActions = true,
   soloLectura = false,
+  onEliminada,
   actionsSlot,
   estado,
   estadosDisponibles = [],
@@ -110,10 +113,11 @@ export default function DetallePublicacion({
   const toast = useToast();
   const tSend = useTranslations("sendMessageModal");
   const tReporte = useTranslations("reporte");
+  const tModeracion = useTranslations("moderacion.publicaciones");
   const locale = useLocale();
   const router = useRouter();
   const guardados = useGuardados();
-  const { agregarNotificacion, mostrarConfirm } = useUIStore();
+  const { agregarNotificacion } = useUIStore();
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
   const [saving, setSaving] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
@@ -122,6 +126,8 @@ export default function DetallePublicacion({
   const [reportePublicacionAbierto, setReportePublicacionAbierto] = useState(false);
   const [advertenciaAbierta, setAdvertenciaAbierta] = useState(false);
   const [enviandoAdvertencia, setEnviandoAdvertencia] = useState(false);
+  const [eliminarAbierto, setEliminarAbierto] = useState(false);
+  const [eliminando, setEliminando] = useState(false);
 
   if (!isOpen) return null;
 
@@ -173,17 +179,23 @@ export default function DetallePublicacion({
     }
   };
 
-  const handleEliminarModerador = () => {
-    mostrarConfirm({
-      titulo: "Eliminar publicación",
-      mensaje: "¿Seguro que deseas eliminar esta publicación como moderador? Esta acción no se puede deshacer.",
-      onConfirm: () => {
-        agregarNotificacion({
-          tipo: "info",
-          mensaje: "Eliminar publicación: función en desarrollo, aún no disponible.",
-        });
-      },
-    });
+  const handleEliminarModerador = async (payload: { motivo: string; detalle: string }) => {
+    if (!publicacionId) return;
+    try {
+      setEliminando(true);
+      await publicacionService.eliminarModeracion(publicacionId, payload);
+      agregarNotificacion({ tipo: "success", mensaje: tModeracion("toasts.eliminadaSuccess") });
+      setEliminarAbierto(false);
+      onClose();
+      onEliminada?.();
+    } catch (error) {
+      agregarNotificacion({
+        tipo: "error",
+        mensaje: error instanceof Error ? error.message : tModeracion("errorAccion"),
+      });
+    } finally {
+      setEliminando(false);
+    }
   };
 
   const handleOpenMessageModal = (callback?: () => void) => {
@@ -380,19 +392,23 @@ export default function DetallePublicacion({
                 )}
                 <button
                   type="button"
-                  className="button button--medium button--warning button--full-width"
+                  className="button button--medium button--warning-outline button--full-width"
                   onClick={() => setAdvertenciaAbierta(true)}
                   disabled={!sellerId}
                 >
                   <AlertTriangle size={16} /> {tReporte("moderador.advertencia")}
                 </button>
-                <button
-                  type="button"
-                  className="button button--medium button--danger button--full-width"
-                  onClick={handleEliminarModerador}
-                >
-                  <Trash2 size={16} /> {tReporte("moderador.eliminarPublicacion")}
-                </button>
+                {/* Con actionsSlot el padre ya aporta su propio botón de eliminar */}
+                {!actionsSlot && (
+                  <button
+                    type="button"
+                    className="button button--medium button--danger button--full-width"
+                    onClick={() => setEliminarAbierto(true)}
+                    disabled={!publicacionId}
+                  >
+                    <Trash2 size={16} /> {tReporte("moderador.eliminarPublicacion")}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -443,6 +459,15 @@ export default function DetallePublicacion({
       enviando={enviandoAdvertencia}
       onClose={() => setAdvertenciaAbierta(false)}
       onSubmit={handleAdvertenciaModerador}
+    />
+    <JustificanteModeracionModal
+      isOpen={eliminarAbierto}
+      tipoObjetivo="publicacion"
+      titulo={tModeracion("justificante.titulos.eliminar")}
+      pregunta={tModeracion("justificante.preguntas.eliminar")}
+      enviando={eliminando}
+      onClose={() => setEliminarAbierto(false)}
+      onSubmit={handleEliminarModerador}
     />
     </>
   );
