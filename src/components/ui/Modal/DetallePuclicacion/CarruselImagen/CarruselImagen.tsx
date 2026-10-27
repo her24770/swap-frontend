@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import { normalizeImageUrl } from "../../../../../lib/imageUrl";
 import Image from "next/image";
@@ -25,10 +25,13 @@ export default function CarruselImagen({ images, altText }: Props) {
     [normalizedImages, brokenUrls],
   );
 
-  useEffect(() => {
+  const imagesKey = images.join("|");
+  const [prevImagesKey, setPrevImagesKey] = useState(imagesKey);
+  if (prevImagesKey !== imagesKey) {
+    setPrevImagesKey(imagesKey);
     setCurrentIndex(0);
     setBrokenUrls(new Set());
-  }, [images]);
+  }
 
   if (!visibleImages.length) {
     return (

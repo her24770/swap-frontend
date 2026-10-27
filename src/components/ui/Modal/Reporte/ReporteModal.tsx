@@ -43,28 +43,32 @@ export default function ReporteModal({
   const [motivoSeleccionado, setMotivoSeleccionado] = useState<MotivoReporte | null>(null);
   const [detalle, setDetalle] = useState("");
   const [evidencias, setEvidencias] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [errorEvidencias, setErrorEvidencias] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const permiteEvidencias = tipoObjetivo === "usuario";
 
-  useEffect(() => {
+  const resetKey = `${isOpen}|${tipoObjetivo}|${idObjetivo}`;
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+  if (prevResetKey !== resetKey) {
+    setPrevResetKey(resetKey);
     if (isOpen) {
       setMotivoSeleccionado(null);
       setDetalle("");
       setEvidencias([]);
       setErrorEvidencias(null);
     }
-  }, [isOpen, tipoObjetivo, idObjetivo]);
+  }
+
+  const previewUrls = useMemo(
+    () => evidencias.map((archivo) => URL.createObjectURL(archivo)),
+    [evidencias],
+  );
 
   useEffect(() => {
-    const urls = evidencias.map((archivo) => URL.createObjectURL(archivo));
-    setPreviewUrls(urls);
-
     return () => {
-      urls.forEach((url) => URL.revokeObjectURL(url));
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [evidencias]);
+  }, [previewUrls]);
 
   if (!isOpen) return null;
 

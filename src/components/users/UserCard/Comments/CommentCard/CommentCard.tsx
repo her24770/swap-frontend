@@ -116,7 +116,7 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
           </div>
         )}
       </div>
-      <p className="comment-item__text">"{comment}"</p>
+      <p className="comment-item__text">&quot;{comment}&quot;</p>
       {error && <p className="comment-item__error" role="alert">{error}</p>}
       {!esComentarioPropio && (
         <>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronRight, Star } from "lucide-react";
 import { useTranslations } from 'next-intl';
@@ -35,7 +35,7 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
     register,
     handleSubmit,
     setValue, 
-    watch,
+    control,
     reset,
     formState: { errors },
   } = useForm<ResenaInput>({
@@ -60,7 +60,7 @@ export default function CommentForm({ targetName, idReceptor, onSuccess, onCance
     }
   }, [activeProfileMode, setValue]);
 
-  const currentRating = watch("calificacion");
+  const currentRating = useWatch({ control, name: "calificacion" });
 
   const onSubmitForm = async (data: ResenaInput) => {
     const resultado = await crearNuevaResena(data);

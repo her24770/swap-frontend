@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import './ProfilePicture.css';
 
@@ -18,11 +18,8 @@ function getInitials(userName: string): string {
 }
 
 export default function ProfilePicture({ imageUrl, userName, size = 'md' }: ProfilePictureProps) {
-    const [hasError, setHasError] = useState(false);
-
-    useEffect(() => {
-        setHasError(false);
-    }, [imageUrl]);
+    const [failedUrl, setFailedUrl] = useState<string | undefined>();
+    const hasError = failedUrl === imageUrl;
 
     const initials = getInitials(userName);
     const showImage = Boolean(imageUrl) && !hasError;
@@ -38,7 +35,7 @@ export default function ProfilePicture({ imageUrl, userName, size = 'md' }: Prof
             fill
             className="profile-picture__image img-cover-center"
             unoptimized
-            onError={() => setHasError(true)}
+            onError={() => setFailedUrl(imageUrl)}
             />
         ) : (
             <div className="profile-picture__placeholder">

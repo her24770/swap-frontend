@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { X, ChevronRight, MapPin, Calendar, Clock, FileText, Tag, DollarSign } from "lucide-react";
 import "../../Button/Button.css";
@@ -56,31 +56,27 @@ export default function SolicitudAcuerdoModal({
 }: SolicitudAcuerdoModalProps) {
   const t = useTranslations("solicitudAcuerdoModal");
 
-  const [lugar, setLugar] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [hora, setHora] = useState("");
-  const [detalles, setDetalles] = useState("");
+  const fechaInicial = acuerdoInicial ? new Date(acuerdoInicial.fecha_entrega) : null;
+  const [lugar, setLugar] = useState(acuerdoInicial?.lugar_entrega ?? "");
+  const [fecha, setFecha] = useState(fechaInicial?.toISOString().split("T")[0] ?? "");
+  const [hora, setHora] = useState(fechaInicial?.toTimeString().slice(0, 5) ?? "");
+  const [detalles, setDetalles] = useState(acuerdoInicial?.observaciones ?? "");
   const [errores, setErrores] = useState<Record<string, string>>({});
 
   //Resetea el formulario cada vez que se abre
-  useEffect(() => {
-    if(!isOpen) return;
-    if(acuerdoInicial){
-      const fechaAcuerdo = new Date(acuerdoInicial.fecha_entrega);
-
-      setLugar(acuerdoInicial.lugar_entrega);
-      setFecha(fechaAcuerdo.toISOString().split("T")[0]);
-      setHora(fechaAcuerdo.toTimeString().slice(0, 5));
-      setDetalles(acuerdoInicial.observaciones);
-    }else {
-      setLugar("");
-      setFecha("");
-      setHora("");
-      setDetalles("");
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevAcuerdo, setPrevAcuerdo] = useState(acuerdoInicial);
+  if (prevIsOpen !== isOpen || prevAcuerdo !== acuerdoInicial) {
+    setPrevIsOpen(isOpen);
+    setPrevAcuerdo(acuerdoInicial);
+    if (isOpen) {
+      setLugar(acuerdoInicial?.lugar_entrega ?? "");
+      setFecha(fechaInicial?.toISOString().split("T")[0] ?? "");
+      setHora(fechaInicial?.toTimeString().slice(0, 5) ?? "");
+      setDetalles(acuerdoInicial?.observaciones ?? "");
       setErrores({});
     }
-    setErrores({});
-  }, [isOpen, acuerdoInicial]);
+  }
 
   if (!isOpen) return null;
 

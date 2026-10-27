@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Bell, X, CheckCheck, ClipboardList } from "lucide-react";
@@ -46,19 +46,21 @@ export default function NotificacionModal({
 }: NotificacionModalProps) {
   const t = useTranslations("notificaciones");
   const panelRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const [position, setPosition] = useState<PanelPosition>({ top: 0, right: 16 });
   const [vista, setVista] = useState<Vista>("notificaciones");
 
   const noLeidas = notificaciones.filter((n) => !n.leida).length;
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) setVista("notificaciones");
-  }, [isOpen]);
+  }
 
   const updatePosition = useCallback(() => {
     const anchor = anchorRef?.current;

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -131,10 +131,7 @@ export default function DetallePublicacion({
 
   const MAX_STARS = 5;
   const guardada = publicacionId ? guardados.isSaved(publicacionId) : isSaved;
-  const normalizedImageUrl = useMemo(
-    () => carouselImages[0] ?? normalizeImageUrl(imageUrl ?? ""),
-    [carouselImages, imageUrl],
-  );
+  const normalizedImageUrl = carouselImages[0] ?? normalizeImageUrl(imageUrl ?? "");
 
   const handleToggleSave = async () => {
     if (saving) return;
