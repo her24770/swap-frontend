@@ -247,7 +247,7 @@ Usar esta matriz después de corregir los hallazgos. Las rutas protegidas requie
 | [ ] | `/es/tutorias` | Tarjetas de tutor, horarios, filtros y estados vacíos |
 | [ ] | `/es/materiales` | Tarjetas, estados, acciones y detalle de publicación |
 | [ ] | `/es/negocios` | Tarjetas, banners, estados y detalle de publicación |
-| [ ] | `/es/Chat` | Sidebar, mensajes, acuerdos, input y mini-chat en ambos temas |
+| [ ] | `/es/Chat` | Sidebar, mensajes, acuerdos e input en ambos temas |
 | [ ] | `/es/perfil` | Cabecera, tabs/secciones, comentarios, contactos y modales |
 | [ ] | `/es/perfil/historial` | Título, filtros, tarjetas y paginación |
 | [ ] | `/es/moderacion/login` | Relación visual con autenticación de usuario |
