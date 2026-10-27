@@ -75,9 +75,12 @@ export default function SubirImagen({ onFileChange, previewUrl, currentProfileIm
      {/* Preview de la imagen para el perfil */}
       <div className="profile-image-upload__preview">
         {previewUrl ? (
-          <img
+          <Image
             src={previewUrl}
             alt={t("previewAlt")}
+            width={112}
+            height={112}
+            unoptimized
             className="profile-image-upload__img"
           />
         ) : currentProfileImage ? (

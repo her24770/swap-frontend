@@ -1,3 +1,5 @@
+import { getApiUrl } from "./config";
+
 export function normalizeImageUrl(url: string): string {
   const trimmed = url?.trim();
   if (!trimmed) return "";
@@ -6,6 +8,6 @@ export function normalizeImageUrl(url: string): string {
     return trimmed;
   }
 
-  const base = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001").replace(/\/$/, "");
+  const base = getApiUrl().replace(/\/$/, "");
   return trimmed.startsWith("/") ? `${base}${trimmed}` : `${base}/${trimmed}`;
 }

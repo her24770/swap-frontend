@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CheckCircle2, XCircle, Info, AlertTriangle, X } from "lucide-react";
 import { useUIStore } from "../../../store/uiStore";
 import "./Toast.css";
@@ -33,15 +33,15 @@ interface ToastItemProps {
 function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }: ToastItemProps) {
   const [exiting, setExiting] = useState(false);
 
-  const dismiss = () => {
+  const dismiss = useCallback(() => {
     setExiting(true);
     setTimeout(() => onRemove(id), 280);
-  };
+  }, [id, onRemove]);
 
   useEffect(() => {
     const timer = setTimeout(dismiss, duracion);
     return () => clearTimeout(timer);
-  }, []);
+  }, [dismiss, duracion]);
 
   return (
     <div
@@ -77,7 +77,7 @@ export default function ToastContainer() {
   const { notificaciones, eliminarNotificacion } = useUIStore();
 
   return (
-    <div className="toast-container" aria-label="Notificaciones">
+    <div className="toast-container" role="region" aria-label="Notificaciones">
       {notificaciones.map((n) => (
         <ToastItem
           key={n.id}

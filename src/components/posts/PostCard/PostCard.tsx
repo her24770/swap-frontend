@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Bookmark, Camera, ChevronRight, Heart, Loader2, Pin, PinOff, SquarePen, Trash2} from "lucide-react";
 import { useTranslations } from "next-intl";
-import TagBadge from "../../ui/TagBadge/TagBadge";
 import PostImage from "./PostImage/PostImage";
 import EstadoTag from "./EstadoTag/EstadoTag";
 import { imagenService } from "../../../services/imagenService";
@@ -48,8 +47,6 @@ export default function PostCard({
   price,
   description,
   images,
-  tags,
-  onTagClick,
   publicacionId,
   estado,
   estadosDisponibles = [],
@@ -88,13 +85,12 @@ export default function PostCard({
   );
 
   // Sync pinned state if parent prop changes
-  useEffect(() => {
-    setPinned(isPinned);
-  }, [isPinned]);
-
-  useEffect(() => {
-    setDisplayImages(images);
-  }, [images]);
+  const [propsPrevias, setPropsPrevias] = useState({ isPinned, images });
+  if (propsPrevias.isPinned !== isPinned || propsPrevias.images !== images) {
+    setPropsPrevias({ isPinned, images });
+    if (propsPrevias.isPinned !== isPinned) setPinned(isPinned);
+    if (propsPrevias.images !== images) setDisplayImages(images);
+  }
 
   const handleDetailsClick = () => {
     if (onDetallesClick) {
@@ -154,10 +150,10 @@ export default function PostCard({
               ? "Publicación destacada exitosamente."
               : "Publicación quitada de destacados.",
           });
-        } catch (err: any) {
+        } catch (err) {
           agregarNotificacion({
             tipo: "error",
-            mensaje: err.message || "No fue posible actualizar el estado de destacado.",
+            mensaje: (err instanceof Error && err.message) || "No fue posible actualizar el estado de destacado.",
           });
         } finally {
           setIsPinning(false);
@@ -343,7 +339,7 @@ export default function PostCard({
                 className={`post-card__like-button${likeado ? " post-card__like-button--liked" : ""}`}
                 onClick={toggleLike}
                 disabled={likeLoading}
-                aria-label={likeado ? "Quitar like" : "Dar like"}
+                aria-label={`${count} ${likeado ? "Quitar like" : "Dar like"}`}
                 title={likeado ? "Quitar like" : "Dar like"}
               >
                 <Heart size={18} fill={likeado ? "currentColor" : "none"} strokeWidth={2} />

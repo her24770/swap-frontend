@@ -11,6 +11,7 @@ import MensajesBurbuja from "./MensajesBurbuja/MensajesBurbuja";
 import { useAuthStore } from "../../../store/authStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, TipoPanel } from "../../../types/chat";
+import Image from "next/image";
 import "./ChatPrincipal.css";
 
 interface ChatprincipalProps {
@@ -34,7 +35,6 @@ export default function Chatprincipal({
   mensajes,
   acuerdo,
   onEnviar,
-  onEnviarImagen,
   onAceptarAcuerdo,
   onRechazarAcuerdo,
   onEnviarNuevaPropuesta,
@@ -91,9 +91,11 @@ export default function Chatprincipal({
           >
             <div className="chat-principal__avatar">
               {conversacion.avatarUrl ? (
-                <img
+                <Image
                   src={conversacion.avatarUrl}
                   alt={conversacion.nombre}
+                  width={32}
+                  height={32}
                 />
               ) : (
                 <UserCircle2 size={22} strokeWidth={1.2} />

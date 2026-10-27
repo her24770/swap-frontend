@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { SquarePlus, Pin, SquarePen, Trash2, Heart, Bookmark } from "lucide-react";
 import PostCard from "../../posts/PostCard/PostCard";
@@ -23,7 +23,6 @@ import { CrearAnuncioForm } from "../../ui/Modal/CrearAnuncio/CrearAnuncioForm";
 import { useAnunciosUsuario } from "../../../hooks/fetch/useAnunciosUsuario";
 import type { Anuncio } from "../../../types/anuncio";
 import { useServices } from "../../../services/context/ServiceContext";
-import { usePublicacionesDestacadas } from "../../../hooks/fetch/usePublicacionesDestacadas";
 import type { TipoPublicacion } from "../../../schemas/zodSchemas";
 import { PerfilAdBannerSkeleton, PerfilPostCarouselSkeleton } from "../perfilLoading";
 
@@ -74,12 +73,13 @@ export default function VistaVendedor({
   const idUsuario = userId ?? authUserId;
   const estadosMaterial = useEstados("material");
   const { canCreatePublication, canEditCards } = usePerspectivaInterna();
-  const { anuncio: anuncioService, publicacion: publicacionService } = useServices();
+  const { anuncio: anuncioService } = useServices();
 
   const [catalogMaterial, setCatalogMaterial] = useState<CatalogPost[]>([]);
   const [catalogNegocio, setCatalogNegocio] = useState<CatalogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(idUsuario));
   const [error, setError] = useState<string | null>(null);
+  const [idUsuarioPrevio, setIdUsuarioPrevio] = useState(idUsuario);
   const [crearOpen, setCrearOpen] = useState(false);
   const [crearTipoPublicacion, setCrearTipoPublicacion] = useState<TipoPublicacion>("material");
   const [editOpen, setEditOpen] = useState(false);
@@ -96,6 +96,43 @@ export default function VistaVendedor({
     refetch: refetchAnuncios 
   } = useAnunciosUsuario(idUsuario!);
 
+  // Consulta las publicaciones del perfil sin tocar el estado del componente.
+  const cargarPublicaciones = useCallback(async (id: number) => {
+    const [resMaterial, resNegocio] = await Promise.all([
+      apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${id}?tipo=material&all=true`),
+      apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${id}?tipo=negocio&all=true`)
+    ]);
+
+    const mapPublicaciones = (data: Publicacion[], tipoPub: string): CatalogPost[] => {
+      return data.map((pub) => {
+        return {
+          id: pub.id_publicacion,
+          title: pub.titulo,
+          price: typeof pub.precio === 'string' ? parseFloat(pub.precio) : pub.precio,
+          description: pub.descripcion,
+          tags: mapPublicacionEtiquetasToTags(pub.etiquetas, {
+            name: tipoPub === "material" ? "Material" : "Negocio",
+          }),
+          estado: pub.estadoRel?.estado ?? "activo",
+          images: pub.imagenes?.map((img) => img.url_imagen) || [],
+          tipo: tipoPub,
+          categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
+          isPinned: pub.is_pinned ?? false,
+        };
+      });
+    };
+
+    // Sort: pinned first within each list
+    const sortPinned = (list: CatalogPost[]) =>
+      [...list].sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
+
+    return {
+      material: sortPinned(mapPublicaciones(resMaterial.data, "material")),
+      negocio: sortPinned(mapPublicaciones(resNegocio.data, "negocio")),
+    };
+  }, []);
+
+  // Recarga manual (tras eliminar, crear o editar una publicación)
   const fetchPublicaciones = useCallback(async () => {
     if (!idUsuario) {
       setCatalogMaterial([]);
@@ -106,43 +143,16 @@ export default function VistaVendedor({
     try {
       setLoading(true);
       setError(null);
-      const [resMaterial, resNegocio] = await Promise.all([
-        apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${idUsuario}?tipo=material&all=true`),
-        apiClient.get<PublicacionesResponse>(`/api/publicacion/user/${idUsuario}?tipo=negocio&all=true`)
-      ]);
-      
-      const mapPublicaciones = (data: Publicacion[], tipoPub: string): CatalogPost[] => {
-        return data.map((pub) => {
-          return {
-            id: pub.id_publicacion,
-            title: pub.titulo,
-            price: typeof pub.precio === 'string' ? parseFloat(pub.precio) : pub.precio,
-            description: pub.descripcion,
-            tags: mapPublicacionEtiquetasToTags(pub.etiquetas, {
-              name: tipoPub === "material" ? "Material" : "Negocio",
-            }),
-            estado: pub.estadoRel?.estado ?? "activo",
-            images: pub.imagenes?.map((img) => img.url_imagen) || [],
-            tipo: tipoPub,
-            categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],
-            isPinned: (pub as any).is_pinned ?? false,
-          };
-        });
-      };
-
-      // Sort: pinned first within each list
-      const sortPinned = (list: CatalogPost[]) =>
-        [...list].sort((a, b) => Number(b.isPinned) - Number(a.isPinned));
-
-      setCatalogMaterial(sortPinned(mapPublicaciones(resMaterial.data, "material")));
-      setCatalogNegocio(sortPinned(mapPublicaciones(resNegocio.data, "negocio")));
+      const { material, negocio } = await cargarPublicaciones(idUsuario);
+      setCatalogMaterial(material);
+      setCatalogNegocio(negocio);
     } catch (err) {
       const apiError = err as ApiError;
       setError(apiError.message || "No fue posible obtener las publicaciones");
     } finally {
       setLoading(false);
     }
-  }, [idUsuario]);
+  }, [idUsuario, cargarPublicaciones]);
 
   // ── MANEJO DE ELIMINACIÓN DE ANUNCIOS ────────────────────────────────────
   const handleEliminarAnuncio = useCallback((idAnuncio: number) => {
@@ -157,10 +167,10 @@ export default function VistaVendedor({
             mensaje: "Anuncio removido con éxito.",
           });
           refetchAnuncios(); 
-        } catch (err: any) {
+        } catch (err) {
           agregarNotificacion({
             tipo: "error",
-            mensaje: err.message || "No fue posible eliminar el anuncio.",
+            mensaje: (err as ApiError).message || "No fue posible eliminar el anuncio.",
           });
         }
       },
@@ -225,9 +235,41 @@ export default function VistaVendedor({
     []
   );
   
+  // Al cambiar el perfil consultado se reinicia el estado durante el render
+  // (evita llamar setState de forma síncrona dentro del efecto).
+  if (idUsuarioPrevio !== idUsuario) {
+    setIdUsuarioPrevio(idUsuario);
+    setLoading(Boolean(idUsuario));
+    setError(null);
+    if (!idUsuario) {
+      setCatalogMaterial([]);
+      setCatalogNegocio([]);
+    }
+  }
+
   useEffect(() => {
-    fetchPublicaciones();
-  }, [fetchPublicaciones]);
+    if (!idUsuario) return;
+
+    let cancelado = false;
+
+    cargarPublicaciones(idUsuario)
+      .then(({ material, negocio }) => {
+        if (cancelado) return;
+        setCatalogMaterial(material);
+        setCatalogNegocio(negocio);
+      })
+      .catch((err) => {
+        if (cancelado) return;
+        setError((err as ApiError).message || "No fue posible obtener las publicaciones");
+      })
+      .finally(() => {
+        if (!cancelado) setLoading(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [idUsuario, cargarPublicaciones]);
 
   return (
     <>  
@@ -413,9 +455,19 @@ export default function VistaVendedor({
                     setEditOpen(true);
                   }}
                   onDeleteClick={() => handleEliminar(pub.id)}
-                  onEstadoChange={(nuevoEstado) =>
-                    console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
-                  }
+                  onEstadoChange={async (nuevoEstado) => {
+                    try {
+                      await apiClient.put(`/api/publicacion/${pub.id}`, { estado: nuevoEstado, etiquetas: [1] });
+                      setCatalogNegocio((prev) =>
+                        prev.map((p) => p.id === pub.id ? { ...p, estado: nuevoEstado } : p)
+                      );
+                    } catch (err) {
+                      agregarNotificacion({
+                        tipo: "error",
+                        mensaje: (err as ApiError).message || "No fue posible cambiar el estado.",
+                      });
+                    }
+                  }}
                   onDetallesClick={() => setSelectedPost(pub)}
                 />
               </div>
@@ -533,7 +585,6 @@ export default function VistaVendedor({
           sellerId={userId}
           sellerImageUrl={userImageUrl}
           estado={selectedPost.estado}
-          onAcordarCompra={() => console.log("acordar compra")}
         />
       )}
     </>

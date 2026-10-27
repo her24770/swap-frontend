@@ -1,7 +1,6 @@
-import type { Tag, UserTag } from "./tag";
+import type { UserTag } from "./tag";
 import type { Contact } from "./comment";
 import type { UsuarioEtiquetaRel } from "../lib/tags";
-import type { Resena } from "./resena";
 
 export interface UserProfileData {
   id_usuario: number;

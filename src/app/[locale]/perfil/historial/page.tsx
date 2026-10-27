@@ -45,15 +45,21 @@ export default function PerfilHistorialPage() {
     return Number.isInteger(page) && page > 0 ? page : 1;
   }, [searchParams]);
 
-  useEffect(() => {
+  const [idUsuarioStorePrevio, setIdUsuarioStorePrevio] = useState(idUsuarioStore);
+  if (idUsuarioStorePrevio !== idUsuarioStore) {
+    setIdUsuarioStorePrevio(idUsuarioStore);
     if (idUsuarioStore) {
       setIdUsuario(idUsuarioStore);
       setLoadingSession(false);
-      return;
+    } else {
+      setLoadingSession(true);
     }
+  }
+
+  useEffect(() => {
+    if (idUsuarioStore) return;
 
     let isMounted = true;
-    setLoadingSession(true);
     apiClient
       .get<ApiResult<AuthResponse> | AuthResponse>("/api/auth/me")
       .then((response) => {
@@ -74,9 +80,11 @@ export default function PerfilHistorialPage() {
     };
   }, [idUsuarioStore, login, t]);
 
-  useEffect(() => {
+  const [searchQueryPrevio, setSearchQueryPrevio] = useState(searchQuery);
+  if (searchQueryPrevio !== searchQuery) {
+    setSearchQueryPrevio(searchQuery);
     setSearchInput(searchQuery);
-  }, [searchQuery]);
+  }
 
   const title = tipo === "tutoria" ? t("sections.tutoringHistory") : t("sections.purchases");
   const emptyMessage = tipo === "tutoria" ? t("history.emptyTutoring") : t("history.emptyProducts");

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -35,6 +35,8 @@ const STEPS: Step[] = [
 ];
 
 const STORAGE_PREFIX = "swap-onboarding-seen-";
+
+const suscribirseSinCambios = () => () => {};
 const PAD = 8;
 
 const MOSTRAR_TAMBIEN_EN_LOGIN_PARA_PRUEBAS = false; // true para desarrollo, false para producción
@@ -81,9 +83,14 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
   // El botón "Reiniciar tutorial" (en Ajustes) limpia la marca guardada y
   // navega a "/?tour=replay", que este query param detecta.
   const quiereReiniciar = searchParams.get("tour") === "replay";
-  const [active, setActive] = useState(false);
+  const [cerrado, setCerrado] = useState(false);
+  const [reinicioPrevio, setReinicioPrevio] = useState(quiereReiniciar);
+  if (reinicioPrevio !== quiereReiniciar) {
+    setReinicioPrevio(quiereReiniciar);
+    if (quiereReiniciar) setCerrado(false);
+  }
   const [stepIndex, setStepIndex] = useState(0);
-  const [rect, setRect] = useState<DOMRect | null>(null);
+  const [rectMedido, setRect] = useState<DOMRect | null>(null);
   const [tooltipSize, setTooltipSize] = useState({ width: 300, height: 160 });
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -93,19 +100,23 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
   // verlo de nuevo explícitamente desde Ajustes.
   const puedeMostrarse = recienRegistrado || quiereReiniciar || MOSTRAR_TAMBIEN_EN_LOGIN_PARA_PRUEBAS;
 
-  useEffect(() => {
-    if (!usuario || !puedeMostrarse) return;
-    try {
-      if (quiereReiniciar) {
-        // Reinicio explícito: ignora la marca de "ya visto" — para eso está el botón.
-        setActive(true);
-        return;
+  // La marca de "ya visto" se lee con useSyncExternalStore (en servidor se
+  // asume visto) para derivar `active` en el render sin setState en un effect.
+  const yaVisto = useSyncExternalStore(
+    suscribirseSinCambios,
+    () => {
+      if (!usuario) return true;
+      try {
+        return !!window.localStorage.getItem(`${STORAGE_PREFIX}${usuario.id_usuario}`);
+      } catch {
+        return true;
       }
-      const seen = window.localStorage.getItem(`${STORAGE_PREFIX}${usuario.id_usuario}`);
-      if (!seen) setActive(true);
-    } catch {
-    }
-  }, [usuario, recienRegistrado, quiereReiniciar]);
+    },
+    () => true,
+  );
+
+  const active = !cerrado && !!usuario && puedeMostrarse && (quiereReiniciar || !yaVisto);
+  const rect = active && step.target ? rectMedido : null;
 
   useEffect(() => {
     if (!active) return;
@@ -121,6 +132,18 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
     };
   }, [active]);
 
+  const finish = useCallback(() => {
+    try {
+      window.localStorage.setItem(`${STORAGE_PREFIX}${usuario!.id_usuario}`, "1");
+    } catch {
+    }
+    onSidebarNeedOpen(false);
+    setCerrado(true);
+    if (quiereReiniciar) {
+      router.replace(pathname, { scroll: false });
+    }
+  }, [usuario, onSidebarNeedOpen, quiereReiniciar, router, pathname]);
+
   useEffect(() => {
     if (!active) return;
     function onKeyDown(e: KeyboardEvent) {
@@ -128,13 +151,10 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [active]);
+  }, [active, finish]);
 
   useLayoutEffect(() => {
-    if (!active || !step.target) {
-      setRect(null);
-      return;
-    }
+    if (!active || !step.target) return;
     function update() {
       const el = document.querySelector(`[data-tour="${step.target}"]`);//Busca el elemento del paso actual
       if (el) setRect(el.getBoundingClientRect());
@@ -158,18 +178,6 @@ export default function TourBienvenida({ usuario, onSidebarNeedOpen }: TourBienv
   }, [stepIndex, active, rect]);
 
   if (!active || !usuario) return null;
-
-  function finish() {
-    try {
-      window.localStorage.setItem(`${STORAGE_PREFIX}${usuario!.id_usuario}`, "1");
-    } catch {
-    }
-    onSidebarNeedOpen(false);
-    setActive(false);
-    if (quiereReiniciar) {
-      router.replace(pathname, { scroll: false });
-    }
-  }
 
   function goNext() {
     if (stepIndex === STEPS.length - 1) {

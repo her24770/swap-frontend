@@ -1,4 +1,11 @@
 {
+	"systemPages": {
+		"error": { "eyebrow": "Algo salió mal", "title": "No pudimos cargar esta página", "description": "Ocurrió un problema inesperado. Puedes intentarlo de nuevo o volver al inicio." },
+		"notFound": { "eyebrow": "Error 404", "title": "No encontramos esta página", "description": "Puede que la dirección haya cambiado o que la página ya no exista." },
+		"loading": { "title": "Cargando contenido", "description": "Estamos preparando la página para ti." },
+		"retry": "Intentar de nuevo",
+		"home": "Volver al inicio"
+	},
 	"layout": {
 		"meta": {
 			"title": "SWAP",
@@ -218,6 +225,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "No se pudo procesar la solicitud. Intenta de nuevo.",
 		"title": "TUTORÍAS",
 		"loading": "Cargando tutorías...",
 		"empty": {
@@ -233,6 +241,7 @@
 		"rechazar": "Rechazar",
 		"aceptar": "Aceptar",
 		"formulario": {
+			"cerrarModal": "Cerrar solicitud de tutoría",
 			"nuevaSolicitud": "Nueva solicitud de tutoría",
 			"titulo": "Solicitud de tutoría",
 			"descripcion": "Por favor completa el formulario para solicitar la tutoría.",
@@ -551,6 +560,7 @@
     },
     "reportes": {
       "title": "Reportes",
+      "errorCargar": "No fue posible cargar los reportes",
       "searchPlaceholder": "Buscar",
       "tabla": {
         "id": "ID Reporte",
@@ -615,7 +625,12 @@
         "panelTitulo": "Publicación",
         "panelCerrarAria": "Cerrar publicación",
         "meGusta": "{count} me gusta",
-        "toastPublicacionError": "No fue posible cargar la publicación."
+        "toastPublicacionError": "No fue posible cargar la publicación.",
+        "publicacionEliminada": {
+          "titulo": "Publicación eliminada por el autor",
+          "descripcion": "El reporte fue cerrado automáticamente al eliminarse la publicación.",
+          "registroHistorico": "Registro histórico capturado:"
+        }
       }
     }
   },
@@ -752,6 +767,7 @@
 		},
 		"modal": {
 			"createPublicationAria": "Crear publicación",
+			"createAdAria": "Crear anuncio",
 			"editPublicationAria": "Editar publicación"
 		}
 	},
@@ -766,12 +782,17 @@
 			"newPublication": "Nueva publicación"
 		}
 	},
+	"imageCropper": {
+		"cropError": "No fue posible recortar la imagen"
+	},
 	"posts": {
+		"saveError": "No fue posible actualizar tus guardados",
+		"detalleError": "No fue posible cargar los detalles de la publicación",
 		"actions": {
 			"details": "Detalles",
 			"edit": "Editar",
 			"acordar": "Acordar Compra",
-			"certificado": "Ver certificados",
+			"certificado": "Ver certificaciones",
 			"viewProfile": "Ver perfil"
 		},
 		"save": {
@@ -780,7 +801,8 @@
 		},
 		"tutorTopicsLabel": "Temas de tutorías",
 		"aria": {
-			"uploadImage": "Subir imagen"
+			"uploadImage": "Subir imagen",
+			"adBannerImage": "Imagen del anuncio del vendedor"
 		},
 		"uploadErrors": {
 			"invalidType": "Solo se permiten imágenes JPG, PNG o WEBP",
@@ -838,6 +860,7 @@
 			"contact": "Contacto"
 		},
 		"certification": {
+			"fullscreenError": "No fue posible cambiar a pantalla completa",
 			"title": "Certificaciones",
 			"add": "Agregar certificación",
 			"noCert": "No hay certificaciones aún.",
@@ -961,6 +984,7 @@
 	},
 	"loading": "Cargando publicaciones...",
 	"publicacionForm": {
+		"imageLoadError": "No fue posible cargar la imagen seleccionada",
 		"titleCreate": "Crear Publicación",
 		"titleEdit": "Editar Publicación",
 		"fields": {
@@ -983,6 +1007,8 @@
 			"photo": "Foto del Producto",
 			"uploadText": "Haz clic o arrastra una imagen para subir",
 			"uploadHint": "PNG, JPG o WEBP (máx. 5MB)",
+			"existingImageAlt": "Imagen actual de la publicación {n}",
+			"newImageAlt": "Vista previa de la imagen nueva {n}",
 			"removeImageAria": "Eliminar imagen",
 			"removeTagAria": "Eliminar {tag}"
 		},

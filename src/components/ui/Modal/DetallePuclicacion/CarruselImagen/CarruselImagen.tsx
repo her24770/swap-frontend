@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import { normalizeImageUrl } from "../../../../../lib/imageUrl";
+import Image from "next/image";
 import "./CarruselImagen.css";
 
 type Props = {
@@ -24,10 +25,13 @@ export default function CarruselImagen({ images, altText }: Props) {
     [normalizedImages, brokenUrls],
   );
 
-  useEffect(() => {
+  const imagesKey = images.join("|");
+  const [prevImagesKey, setPrevImagesKey] = useState(imagesKey);
+  if (prevImagesKey !== imagesKey) {
+    setPrevImagesKey(imagesKey);
     setCurrentIndex(0);
     setBrokenUrls(new Set());
-  }, [images]);
+  }
 
   if (!visibleImages.length) {
     return (
@@ -61,10 +65,12 @@ export default function CarruselImagen({ images, altText }: Props) {
   return (
     <div className="image-carousel">
       <div className="image-carousel__viewport">
-        <img
+        <Image
           key={currentSrc}
           src={currentSrc}
           alt={`${altText} - ${safeIndex + 1} de ${visibleImages.length}`}
+          width={800}
+          height={600}
           className="image-carousel__img"
           onError={handleImageError}
         />

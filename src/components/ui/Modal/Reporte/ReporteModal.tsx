@@ -15,6 +15,7 @@ import "./ReporteModal.css";
 import ReporteAcciones from "./ReporteAcciones";
 import ReporteDetalle from "./ReporteDetalle";
 import ReporteMotivos from "./ReporteMotivos";
+import Image from "next/image";
 
 const LIMITE_DETALLE_REPORTE = 500;
 const MAX_EVIDENCIAS = 3;
@@ -42,28 +43,32 @@ export default function ReporteModal({
   const [motivoSeleccionado, setMotivoSeleccionado] = useState<MotivoReporte | null>(null);
   const [detalle, setDetalle] = useState("");
   const [evidencias, setEvidencias] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [errorEvidencias, setErrorEvidencias] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const permiteEvidencias = tipoObjetivo === "usuario";
 
-  useEffect(() => {
+  const resetKey = `${isOpen}|${tipoObjetivo}|${idObjetivo}`;
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+  if (prevResetKey !== resetKey) {
+    setPrevResetKey(resetKey);
     if (isOpen) {
       setMotivoSeleccionado(null);
       setDetalle("");
       setEvidencias([]);
       setErrorEvidencias(null);
     }
-  }, [isOpen, tipoObjetivo, idObjetivo]);
+  }
+
+  const previewUrls = useMemo(
+    () => evidencias.map((archivo) => URL.createObjectURL(archivo)),
+    [evidencias],
+  );
 
   useEffect(() => {
-    const urls = evidencias.map((archivo) => URL.createObjectURL(archivo));
-    setPreviewUrls(urls);
-
     return () => {
-      urls.forEach((url) => URL.revokeObjectURL(url));
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [evidencias]);
+  }, [previewUrls]);
 
   if (!isOpen) return null;
 
@@ -200,7 +205,7 @@ export default function ReporteModal({
                 <div className="reporte-modal__previews">
                   {previewUrls.map((src, index) => (
                     <div key={`${src}-${index}`} className="reporte-modal__preview-item">
-                      <img src={src} alt={t("evidencia.alt", { n: index + 1 })} className="reporte-modal__preview-img" />
+                      <Image src={src} alt={t("evidencia.alt", { n: index + 1 })} width={160} height={160} unoptimized className="reporte-modal__preview-img" />
                       <button
                         type="button"
                         className="reporte-modal__preview-remove"

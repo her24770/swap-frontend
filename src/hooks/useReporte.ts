@@ -4,6 +4,7 @@ import { useState } from "react";
 import { reporteService } from "../services/reporteService";
 import { useToast } from "./useToast";
 import type { CrearReportePayload, Reporte } from "../types/reporte";
+import type { ApiError } from "../lib/apiClient";
 
 export function useReporte() {
   const toast = useToast();
@@ -17,8 +18,8 @@ export function useReporte() {
       const reporte = await reporteService.crearReporte(payload);
       toast.success("Tu reporte fue enviado para revisión.", "Reporte enviado");
       return reporte;
-    } catch (error: any) {
-      toast.error(error?.message ?? "No fue posible enviar el reporte.", "Error al reportar");
+    } catch (error) {
+      toast.error((error as ApiError).message ?? "No fue posible enviar el reporte.", "Error al reportar");
       return null;
     } finally {
       setEnviandoReporte(false);

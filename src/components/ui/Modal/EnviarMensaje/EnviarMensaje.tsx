@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import "../../Button/Button.css";
 import "./EnviarMensaje.css";
 
@@ -69,12 +69,14 @@ export default function EnviarMensajePanel({
     () => (SUGERENCIAS_POR_TIPO[publicacion.tipo] ?? SUGERENCIAS_POR_TIPO.venta)(publicacion.titulo),
     [publicacion.tipo, publicacion.titulo],
   );
-  const [mensaje, setMensaje] = useState("");
+  const [mensaje, setMensaje] = useState(sugerencias[0] ?? "");
 
-  useEffect(() => {
+  const [prevSugerencias, setPrevSugerencias] = useState(sugerencias);
+  if (prevSugerencias !== sugerencias) {
+    setPrevSugerencias(sugerencias);
     setMensaje(sugerencias[0] ?? "");
     setDropdownOpen(false);
-  }, [sugerencias]);
+  }
 
   const handleSugerencia = (texto: string) => {
     setMensaje(texto);

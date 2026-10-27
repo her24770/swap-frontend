@@ -8,6 +8,7 @@ installBrowserMocks();
 
 vi.mock("next-intl", async () => await import("../mocks/nextIntl"));
 vi.mock("next/navigation", async () => await import("../mocks/nextNavigation"));
+vi.mock("next-intl/navigation", async () => await import("../mocks/nextNavigation"));
 vi.mock("next/link", async () => await import("../mocks/nextLink"));
 
 afterEach(async () => {

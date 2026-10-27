@@ -9,6 +9,9 @@ import { GuardadosProvider } from '../../context/GuardadosContext';
 import { jockey, palanquin, lato } from '../../styles/fonts';
 import './globals.css';
 
+// Aplica el tema guardado o preferencia del sistema antes del primer pintado,
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}var e=document.documentElement;e.setAttribute('data-theme',t);e.setAttribute('theme',t)}catch(e){}})()`;
+
 export async function generateMetadata({
   params,
 }: {
@@ -40,7 +43,11 @@ export default async function RootLayout({
       lang={locale}
       className={`${jockey.variable} ${palanquin.variable} ${lato.variable}`}
       data-csp-nonce={nonce ?? undefined}
+      suppressHydrationWarning
     >
+      <head>
+        <script nonce={nonce ?? undefined} dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>

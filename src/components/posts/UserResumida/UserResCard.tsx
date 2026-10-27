@@ -17,7 +17,6 @@ interface UserResCardProps {
 const MAX_STARS = 5;
 
 export default function UserResCard({
-  userId,
   userName,
   userRating,
   userImageUrl,

@@ -1,4 +1,11 @@
 {
+	"systemPages": {
+		"error": { "eyebrow": "Something went wrong", "title": "We couldn't load this page", "description": "An unexpected problem occurred. Try again or return to the home page." },
+		"notFound": { "eyebrow": "Error 404", "title": "We couldn't find this page", "description": "The address may have changed or the page may no longer exist." },
+		"loading": { "title": "Loading content", "description": "We're getting this page ready for you." },
+		"retry": "Try again",
+		"home": "Back to home"
+	},
 	"layout": {
 		"meta": {
 			"title": "SWAP",
@@ -218,6 +225,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "Couldn't process the request. Please try again.",
 		"title": "TUTORING",
 		"loading": "Loading tutoring sessions...",
 		"empty": {
@@ -233,6 +241,7 @@
 		"rechazar": "Reject",
 		"aceptar": "Accept",
 		"formulario": {
+			"cerrarModal": "Close tutoring request",
 			"nuevaSolicitud": "New tutoring request",
 			"titulo": "Tutoring request",
 			"descripcion": "Please complete the form to request tutoring.",
@@ -529,6 +538,7 @@
     },
     "reportes": {
       "title": "Reports",
+      "errorCargar": "Couldn't load the reports",
       "searchPlaceholder": "Search",
       "tabla": {
         "id": "Report ID",
@@ -593,7 +603,12 @@
         "panelTitulo": "Post",
         "panelCerrarAria": "Close post",
         "meGusta": "{count} likes",
-        "toastPublicacionError": "The post could not be loaded."
+        "toastPublicacionError": "The post could not be loaded.",
+        "publicacionEliminada": {
+          "titulo": "Post deleted by author",
+          "descripcion": "The report was automatically resolved when the post was deleted.",
+          "registroHistorico": "Captured historical record:"
+        }
       }
     }
 	},
@@ -730,6 +745,7 @@
 		},
 		"modal": {
 			"createPublicationAria": "Create post",
+			"createAdAria": "Create ad",
 			"editPublicationAria": "Edit post"
 		}
 	},
@@ -744,7 +760,12 @@
 			"newPublication": "New post"
 		}
 	},
+	"imageCropper": {
+		"cropError": "Couldn't crop the image"
+	},
 	"posts": {
+		"saveError": "Couldn't update your saved posts",
+		"detalleError": "Couldn't load the post details",
 		"actions": {
 			"details": "Details",
 			"edit": "Edit",
@@ -758,7 +779,8 @@
 		},
 		"tutorTopicsLabel": "Tutoring topics",
 		"aria": {
-			"uploadImage": "Upload image"
+			"uploadImage": "Upload image",
+			"adBannerImage": "Seller advertisement image"
 		},
 		"uploadErrors": {
 			"invalidType": "Only JPG, PNG, or WEBP images are allowed",
@@ -816,6 +838,7 @@
 			"contact": "Contact"
 		},
 		"certification": {
+			"fullscreenError": "Couldn't toggle full screen",
 			"title": "Certification",
 			"add": "Add certification",
 			"noCert": "There are no certifications yet.",
@@ -939,6 +962,7 @@
 	},
 	"loading": "Loading publications...",
 	"publicacionForm": {
+		"imageLoadError": "Couldn't load the selected image",
 		"titleCreate": "Create post",
 		"titleEdit": "Edit post",
 		"fields": {
@@ -961,6 +985,8 @@
 			"photo": "Product photo",
 			"uploadText": "Click or drag an image to upload",
 			"uploadHint": "PNG, JPG or WEBP (max 5MB)",
+			"existingImageAlt": "Current post image {n}",
+			"newImageAlt": "New image preview {n}",
 			"removeImageAria": "Remove image",
 			"removeTagAria": "Remove {tag}"
 		},

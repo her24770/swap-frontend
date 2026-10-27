@@ -24,9 +24,11 @@ function PalabraFormModal({ isOpen, inicial, enviando, onClose, onSubmit }: Pala
   const t = useTranslations("moderacion.palabras");
   const [valor, setValor] = useState("");
 
-  useEffect(() => {
+  const [aperturaPrevia, setAperturaPrevia] = useState({ isOpen, inicial });
+  if (aperturaPrevia.isOpen !== isOpen || aperturaPrevia.inicial !== inicial) {
+    setAperturaPrevia({ isOpen, inicial });
     if (isOpen) setValor(inicial?.palabra ?? "");
-  }, [isOpen, inicial]);
+  }
 
   if (!isOpen) return null;
 
@@ -91,22 +93,25 @@ export default function PalabrasModeracion() {
   const [enviando, setEnviando] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
 
-  const cargarPalabras = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await palabraService.listar();
-      setPalabras(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("errorCarga"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    void cargarPalabras();
-  }, []);
+    let cancelado = false;
+
+    palabraService
+      .listar()
+      .then((data) => {
+        if (!cancelado) setPalabras(data);
+      })
+      .catch((err) => {
+        if (!cancelado) setError(err instanceof Error ? err.message : t("errorCarga"));
+      })
+      .finally(() => {
+        if (!cancelado) setLoading(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [t]);
 
   const palabrasFiltradas = useMemo(() => {
     const query = q.trim().toLowerCase();

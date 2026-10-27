@@ -86,10 +86,13 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
+  // Cierra los menús al cambiar de ruta
+  const [pathnamePrevio, setPathnamePrevio] = useState(pathname);
+  if (pathnamePrevio !== pathname) {
+    setPathnamePrevio(pathname);
     setNotifOpen(false);
     setProfileOpen(false);
-  }, [pathname]);
+  }
 
   const toggleNotificaciones = () => {
     setProfileOpen(false);

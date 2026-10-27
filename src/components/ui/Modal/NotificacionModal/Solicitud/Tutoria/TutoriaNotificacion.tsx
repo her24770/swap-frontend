@@ -2,17 +2,9 @@
 
 import { useState, type ButtonHTMLAttributes, type ElementType, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import {
-  BookOpen,
-  CalendarDays,
-  Check,
-  Clock3,
-  MapPin,
-  UserCircle2,
-  X,
-  Loader2,
-} from "lucide-react";
+import { BookOpen, CalendarDays, Check, Clock3, MapPin, UserCircle2, X, Loader2 } from "lucide-react";
 import "./TutoriaNotificacion.css";
+import Image from "next/image";
 
 export interface SolicitudTutoriaNotificacion {
   id: number;
@@ -108,9 +100,11 @@ export default function TarjetaNotificacionSolicitud({
       <header className="tutoria-notificacion__header">
         <span className="tutoria-notificacion__avatar" aria-hidden="true">
           {solicitud.avatarUrl ? (
-            <img
+            <Image
               src={solicitud.avatarUrl}
               alt={solicitud.alumno}
+              width={40}
+              height={40}
               className="tutoria-notificacion__avatar-img"
             />
           ) : (

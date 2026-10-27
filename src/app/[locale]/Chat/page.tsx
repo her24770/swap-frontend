@@ -168,7 +168,7 @@ export default function ChatPage() {
 
       return obtenerPesoRecencia(b.fecha_ultimo_mensaje) - obtenerPesoRecencia(a.fecha_ultimo_mensaje);
     });
-  }, [conversacionesState, tab]);
+  }, [conversacionesState]);
 
   const acuerdosPendientesPorConversacion = useMemo(() => {
     const mapa: Record<number, number> = {};
@@ -186,19 +186,22 @@ export default function ChatPage() {
   // Carga el historial real de mensajes de la conversacion seleccionada
   // (GET /api/conversacion/:id/mensajes, ST-H44-2/ST-H44-9/SWAP-336/SWAP-338)
   // y se une a la sala de socket de esa conversacion (SWAP-332).
+  const idSeleccionada = selected?.id_conversacion;
+  const estadoSeleccionada = selected?.estado_conversacion;
+
   useEffect(() => {
-    if (!selected) return;
+    if (idSeleccionada === undefined) return;
 
     let cancelado = false;
 
     conversacionService
-      .obtenerMensajes(selected.id_conversacion)
+      .obtenerMensajes(idSeleccionada)
       .then((mensajesConversacion) => {
         if (cancelado) return;
 
         setMensajesPorConversacion((prev) => ({
           ...prev,
-          [selected.id_conversacion]: mensajesConversacion,
+          [idSeleccionada]: mensajesConversacion,
         }));
       })
       .catch(() => {});
@@ -206,7 +209,7 @@ export default function ChatPage() {
     const unirse = () => {
       unirseAConversacion(
         socket,
-        selected.id_conversacion
+        idSeleccionada
       ).catch(() => {});
     };
 
@@ -218,11 +221,8 @@ export default function ChatPage() {
       cancelado = true;
       socket.off("connect", unirse);
     };
-  }, [
-    selected?.id_conversacion,
-    selected?.estado_conversacion,
-    socket,
-  ]);
+    // estadoSeleccionada fuerza volver a unirse a la sala cuando cambia el estado.
+  }, [idSeleccionada, estadoSeleccionada, socket]);
 
   // Escucha "mensaje:nuevo" para todas las conversaciones (SWAP-333): actualiza el
   // historial de la conversacion correspondiente y el preview en el sidebar, sin

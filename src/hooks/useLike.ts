@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { publicacionService } from "../services/publicacionService";
 import { useUIStore } from "../store/uiStore";
 import { useAuthStore } from "../store/authStore";
+import type { ApiError } from "../lib/apiClient";
 
 export function useLike(
     idPublicacion: number,
@@ -16,14 +17,18 @@ export function useLike(
     const { agregarNotificacion } = useUIStore();
     const usuario = useAuthStore((s) => s.usuario);
 
-    // Sincronizar si cambian las props iniciales
-    useEffect(() => {
-        setLikeado(initialLikeado);
-    }, [initialLikeado]);
+    const [likeadoPrevio, setLikeadoPrevio] = useState(initialLikeado);
+    const [countPrevio, setCountPrevio] = useState(initialCount);
 
-    useEffect(() => {
+    // Sincronizar si cambian las props iniciales
+    if (likeadoPrevio !== initialLikeado) {
+        setLikeadoPrevio(initialLikeado);
+        setLikeado(initialLikeado);
+    }
+    if (countPrevio !== initialCount) {
+        setCountPrevio(initialCount);
         setCount(initialCount);
-    }, [initialCount]);
+    }
 
     const toggleLike = async () => {
         if (loading || !idPublicacion || !usuario) return;
@@ -40,7 +45,8 @@ export function useLike(
             } else {
                 await publicacionService.quitarLike(idPublicacion);
             }
-        } catch (error: any) {
+        } catch (err) {
+            const error = err as ApiError;
             // Revertir si falla
             setLikeado(!nuevoEstado);
             setCount((prev) => nuevoEstado ? Math.max(0, prev - 1) : prev + 1);

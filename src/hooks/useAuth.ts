@@ -2,8 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../store/authStore";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+import { API_URL } from "../lib/config";
 
 export function useAuth() {
   const router = useRouter();
@@ -11,7 +10,7 @@ export function useAuth() {
 
   async function logout() {
     try {
-      await fetch(`${BASE_URL}/api/auth/logout`, {
+      await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

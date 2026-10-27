@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useToast } from "../../../hooks/useToast";
+import { API_URL } from "../../../lib/config";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import type { Certificacion } from "../../../types/certificacion";
@@ -13,7 +15,6 @@ import "./Certificaciones.css";
 
 export type { Certificacion };
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 interface CertificacionesProps {
   certificaciones: Certificacion[];
@@ -27,6 +28,7 @@ export default function Certificaciones({
   onRefresh,
 }: CertificacionesProps) {
   const t = useTranslations("profileHeader.certification");
+  const toast = useToast();
   const { mostrarConfirm, agregarNotificacion } = useUIStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(
@@ -64,8 +66,8 @@ export default function Certificaciones({
       } else {
         await document.exitFullscreen();
       }
-    } catch (err) {
-      console.error("Error toggling fullscreen:", err);
+    } catch {
+      toast.error(t("fullscreenError"));
     }
   };
 
@@ -75,7 +77,7 @@ export default function Certificaciones({
       mensaje: "¿Estás seguro de que deseas eliminar esta certificación? Esta acción no se puede deshacer.",
       onConfirm: async () => {
         try {
-          const res = await fetch(`${BASE_URL}/api/certificacion/${id}`, {
+          const res = await fetch(`${API_URL}/api/certificacion/${id}`, {
             method: "DELETE",
             credentials: "include",
           });
@@ -86,8 +88,8 @@ export default function Certificaciones({
           if (selectedId === id) setSelectedId(null);
           agregarNotificacion({ tipo: "success", mensaje: "Certificación eliminada exitosamente." });
           onRefresh?.();
-        } catch (err: any) {
-          agregarNotificacion({ tipo: "error", mensaje: err.message || "No fue posible eliminar la certificación." });
+        } catch (err) {
+          agregarNotificacion({ tipo: "error", mensaje: (err instanceof Error && err.message) || "No fue posible eliminar la certificación." });
         }
       },
     });

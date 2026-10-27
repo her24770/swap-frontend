@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+import { API_URL } from "../lib/config";
 
 export interface CrearPublicacionPayload {
   titulo: string;
@@ -48,7 +48,7 @@ export const imagenService = {
       formData.append("imagenes", file);
     }
 
-    const res = await fetch(`${BASE_URL}/api/publicacion/`, {
+    const res = await fetch(`${API_URL}/api/publicacion/`, {
       method: "POST",
       credentials: "include",
       body: formData,
@@ -83,7 +83,7 @@ export const imagenService = {
       formData.append("imagenes", file);
     }
 
-    const res = await fetch(`${BASE_URL}/api/publicacion/${id}`, {
+    const res = await fetch(`${API_URL}/api/publicacion/${id}`, {
       method: "PUT",
       credentials: "include",
       body: formData,
@@ -106,7 +106,7 @@ export const imagenService = {
     const formData = new FormData();
     formData.append("imagen", file);
 
-    const res = await fetch(`${BASE_URL}/api/imagen/perfil/${usuarioId}`, {
+    const res = await fetch(`${API_URL}/api/imagen/perfil/${usuarioId}`, {
       method: "PUT",
       credentials: "include",
       body: formData,

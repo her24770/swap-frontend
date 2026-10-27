@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { X, Check } from "lucide-react";
-import { apiClient } from "../../../../lib/apiClient";
+import { apiClient, type ApiError } from "../../../../lib/apiClient";
 import { useTodasEtiquetas, type EtiquetaBD } from "../../../../hooks/useTodasEtiquetas";
 import SearchBar from "../../../ui/SearchBar/SearchBar";
 import type { Tag } from "../../../../types/tag";
@@ -29,12 +29,17 @@ export default function UserTagsModal({
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!isOpen) return;
-        setSelectedIds(currentTags.map((tag) => tag.id));
-        setSearchQuery("");
-        setSaveError(null);
-    }, [currentTags, isOpen]);
+    const [previo, setPrevio] = useState({ isOpen, currentTags });
+
+    // Al abrir el modal se reinicia el formulario durante el render, sin efecto.
+    if (previo.isOpen !== isOpen || previo.currentTags !== currentTags) {
+        setPrevio({ isOpen, currentTags });
+        if (isOpen) {
+            setSelectedIds(currentTags.map((tag) => tag.id));
+            setSearchQuery("");
+            setSaveError(null);
+        }
+    }
 
     const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
@@ -92,8 +97,8 @@ export default function UserTagsModal({
             onSaved?.(nextTags);
             onClose();
             return response;
-        } catch (err: any) {
-            setSaveError(err.message || "No fue posible guardar las etiquetas.");
+        } catch (err) {
+            setSaveError((err as ApiError).message || "No fue posible guardar las etiquetas.");
         } finally {
             setSaving(false);
         }

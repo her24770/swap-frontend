@@ -26,7 +26,6 @@ const EMAIL_PRUEBA_BLOQUEADA = "bloqueado@uvg.edu.gt";
 export default function LoginForm() {
   const t = useTranslations('login');
   const tValidation = useTranslations('login.validation');
-  const tCommon = useTranslations('common');
 
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);

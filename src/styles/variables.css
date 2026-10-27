@@ -7,6 +7,7 @@
 
   /*Components Colors*/
   --swap-primary-color: #007329;
+  --swap-primary-accent-color: #007329;
   --swap-secondary-color: #F8FAFC;
   
   --swap-hover-color: rgba(9, 105, 46, 0.33);
@@ -39,11 +40,11 @@
   --swap-tipo-msg-background: #FBEAF0;
 
   /* Colores para las tags de padres e hijas */
-  --swap-tag-padre-bg: #2596be;
+  --swap-tag-padre-bg: #0b607d;
   --swap-tag-padre-text: #FFFFFF;
   --swap-tag-padre-border: #E0E7FF;
 
-  --swap-tag-hija-bg: #5e9fb7;
+  --swap-tag-hija-bg: #32677a;
   --swap-tag-hija-text: #ffffff;
   --swap-tag-hija-border: #E0E7FF;
 }
@@ -55,7 +56,8 @@
   --swap-tertiary-background: #334155;
 
   /*Components Colors*/
-  --swap-primary-color: #118a3f;
+  --swap-primary-color: #007329;
+  --swap-primary-accent-color: #22b95b;
   --swap-secondary-color: #1E293B;
 
   --swap-hover-color: rgba(36, 161, 84, 0.33);
@@ -88,11 +90,11 @@
   --swap-tipo-msg-background: #770b31;
 
   /* Colores para las tags de padres e hijas */
-  --swap-tag-padre-bg: #2596be;
+  --swap-tag-padre-bg: #0b607d;
   --swap-tag-padre-text: #FFFFFF;
   --swap-tag-padre-border: #334155;
 
-  --swap-tag-hija-bg: #5e9fb7;
+  --swap-tag-hija-bg: #32677a;
   --swap-tag-hija-text: #ffffff;
   --swap-tag-hija-border: #334155;
 }

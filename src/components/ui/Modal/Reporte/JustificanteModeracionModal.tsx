@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
@@ -48,13 +48,16 @@ export default function JustificanteModeracionModal({
   const [detalle, setDetalle] = useState("");
   const [dias, setDias] = useState<number | "">("");
 
-  useEffect(() => {
+  const resetKey = `${isOpen}|${tipoObjetivo}`;
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+  if (prevResetKey !== resetKey) {
+    setPrevResetKey(resetKey);
     if (isOpen) {
       setMotivoSeleccionado(null);
       setDetalle("");
       setDias("");
     }
-  }, [isOpen, tipoObjetivo]);
+  }
 
   if (!isOpen) return null;
 
