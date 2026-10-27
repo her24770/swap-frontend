@@ -236,7 +236,7 @@ export default function DetallePublicacion({
                 className={`post-modal__seller${onSellerClick && sellerId ? " post-modal__seller--clickable" : ""}`}
                 onClick={() => { if (sellerId) onSellerClick?.(sellerId); }}
                 disabled={!onSellerClick || !sellerId}
-                aria-label={t("actions.viewProfile")}
+                aria-label={`${sellerName}: ${t("actions.viewProfile")}`}
               >
                 <div className="post-modal__seller-avatar">
                   {sellerImageUrl ? (

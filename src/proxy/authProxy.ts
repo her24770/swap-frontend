@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Rutas que no requieren autenticación (sin el prefijo del idioma)
 const rutasPublicas = ["/login", "/registro", "/forgot-password", "/moderacion/login"];
+// Registrar aquí cada página protegida nueva para conservar el control de acceso.
+// Las rutas que no existen siguen libres para que Next pueda responder con 404.
+const rutasProtegidas = new Set([
+    "/", "/descubre", "/tutorias", "/materiales", "/negocios", "/Chat",
+    "/perfil", "/perfil/historial", "/moderacion", "/moderacion/descubre",
+    "/moderacion/publicaciones", "/moderacion/palabras", "/moderacion/reportes",
+    "/moderacion/usuarios", "/moderacion/moderadores",
+]);
 const locales = ["es", "en", "fr"];
 const defaultLocale = "es";
 
@@ -25,7 +33,13 @@ export function checkAuth(request: NextRequest) {
         : pathname.replace(new RegExp(`^/(${locales.join("|")})`), "") || "/";
 
     const esRutaDeModeracion = pathSinLocale.startsWith("/moderacion");
-    const esRutaPublica = rutasPublicas.some((ruta) => pathSinLocale.startsWith(ruta));
+    const esRutaPublica = rutasPublicas.includes(pathSinLocale);
+    const esRutaProtegida = rutasProtegidas.has(pathSinLocale)
+        || /^\/perfil\/[^/]+$/.test(pathSinLocale)
+        || /^\/moderacion\/perfil\/[^/]+$/.test(pathSinLocale);
+
+    // Las rutas desconocidas deben llegar al 404 de Next, aun sin sesión.
+    if (!esRutaPublica && !esRutaProtegida) return null;
 
     // 3. Determinar el locale actual para mantener al usuario en su idioma al redirigir
     const currentLocale = pathnameIsMissingLocale
@@ -38,7 +52,7 @@ export function checkAuth(request: NextRequest) {
     const destinoHome = esRutaDeModeracion ? "/moderacion" : "";
 
     // Si no hay token y la ruta es protegida → redirige a login (respetando el idioma)
-    if (!token && !esRutaPublica) {
+    if (!token && esRutaProtegida) {
         return NextResponse.redirect(new URL(`/${currentLocale}${destinoLogin}`, request.url));
     }
 

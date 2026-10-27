@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { Pencil, CreditCard, FileText, Camera, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import ProfilePicture from "../ProfilePicture/ProfilePicture";
 import UserRating from "../UserRating/UserRating";
 import UserContact from "../UserContact/UserContact";
@@ -27,11 +26,13 @@ import Certificaciones from "../../../users/Certificaciones/Certificaciones";
 interface UserProfileHeaderProps {
   user: UserProfileData;
   onSave?: (updated: Partial<UserProfileEditData>) => Promise<void> | void;
+  showCertificationsInitially?: boolean;
 }
 
 export default function UserProfileHeader({
   user,
   onSave,
+  showCertificationsInitially = false,
 }: UserProfileHeaderProps) {
   const t = useTranslations('profileHeader');
 
@@ -43,8 +44,7 @@ export default function UserProfileHeader({
   const [displayTags, setDisplayTags] = useState<UserTag[]>(user.tags ?? []);
   const [showAllTags, setShowAllTags] = useState(false);
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
-  const searchParams = useSearchParams();
-  const [showCerts, setShowCerts] = useState(searchParams.get("certificados") === "1");
+  const [showCerts, setShowCerts] = useState(showCertificationsInitially);
   const toast = useToast();
   const socket = useSocket();
   const { canEditProfile } = usePerspectivaInterna();

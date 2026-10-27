@@ -1,16 +1,20 @@
 "use client";
 import { Suspense, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { FloatingButton } from "../../ui/Button/FloatingButton/FloatingButton";
-import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
-import TourBienvenida from "../../ui/Onboarding/TourBienvenida";
 import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
 import "./layout.css";
+
+const CrearPublicacionForm = dynamic(
+  () => import("../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm")
+);
+const TourBienvenida = dynamic(() => import("../../ui/Onboarding/TourBienvenida"));
 
 interface LayoutProps {
   children: React.ReactNode;

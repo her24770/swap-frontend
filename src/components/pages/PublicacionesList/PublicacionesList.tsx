@@ -643,9 +643,10 @@ export default function PublicacionesList({
                         handleClose();
                         router.push(`${perfilBasePath}/${sellerId}?modo=tutor`);
                     }}
-                    onVerCertificados={(sellerId) => {
+                    onVerCertificados={() => {
+                        const sellerId = selectedPublicacion.usuario.id_usuario;
                         handleClose();
-                        router.push(`${perfilBasePath}/${sellerId}?modo=tutor&certificados=1`);
+                        router.push(`${perfilBasePath}/${sellerId}?modo=tutor&certificaciones=1`);
                     }}
                     onSolicitarTutoria={() => console.log("solicitar tutoría")}
                 />

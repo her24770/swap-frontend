@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { X, UserCircle2, Loader2 } from "lucide-react";
+import { X, UserCircle2, Loader2, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useToast } from "../../../../hooks/useToast";
@@ -66,9 +66,13 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
   const tDet = useTranslations("moderacion.reportes.detalle");
   const locale = useLocale();
   const r = reporte;
-  const tipoKey = r.publicacion ? "publicacion" : r.mensaje ? "mensaje" : "usuario";
+  const esSnapshotEliminada =
+    !r.publicacion &&
+    !r.mensaje &&
+    (r.observaciones?.includes("[Snapshot - Publicación Eliminada]") ?? false);
+  const tipoKey = (r.publicacion || esSnapshotEliminada) ? "publicacion" : r.mensaje ? "mensaje" : "usuario";
   const estadoKey = r.estadoRel.estado.toLowerCase();
-  const estadoLabel = t.has(`estados.${estadoKey}`) ? t(`estados.${estadoKey}`) : r.estadoRel.estado;
+  const estadoLabel = t.has?.(`estados.${estadoKey}`) ? t(`estados.${estadoKey}`) : r.estadoRel.estado;
   const [publicacionAbierta, setPublicacionAbierta] = useState(false);
   const [publicacionData, setPublicacionData] = useState<PublicacionDetalle | null>(null);
   const [cargandoPublicacion, setCargandoPublicacion] = useState(false);
@@ -151,10 +155,12 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
             <span className="detalle-reporte-modal__label">{tDet("labels.motivo")}</span>
             <span className="detalle-reporte-modal__val">{r.motivoRel.motivo}</span>
           </div>
-          <div className="detalle-reporte-modal__field">
-            <span className="detalle-reporte-modal__label">{tDet("labels.observaciones")}</span>
-            <p className="detalle-reporte-modal__obs">{r.observaciones}</p>
-          </div>
+          {!esSnapshotEliminada && r.observaciones && (
+            <div className="detalle-reporte-modal__field">
+              <span className="detalle-reporte-modal__label">{tDet("labels.observaciones")}</span>
+              <p className="detalle-reporte-modal__obs">{r.observaciones}</p>
+            </div>
+          )}
 
           {/* Mensaje reportado */}
           {r.mensaje && (
@@ -171,8 +177,8 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
             </div>
           )}
 
-          {/* Publicación vinculada */}
-          {r.publicacion && (
+          {/* Publicación vinculada o eliminada */}
+          {r.publicacion ? (
             <div className="detalle-reporte-modal__field">
               <span className="detalle-reporte-modal__label">{tDet("labels.publicacionVinculada")}</span>
               <div className="detalle-reporte-modal__publicacion-row">
@@ -191,7 +197,25 @@ export default function DetalleReporteModal({ reporte, onClose, onMarcarResuelto
                 </button>
               </div>
             </div>
-          )}
+          ) : esSnapshotEliminada ? (
+            <div className="detalle-reporte-modal__field">
+              <span className="detalle-reporte-modal__label">{tDet("labels.publicacionVinculada")}</span>
+              <div className="detalle-reporte-modal__snapshot-card">
+                <div className="detalle-reporte-modal__snapshot-header">
+                  <AlertCircle size={16} className="detalle-reporte-modal__snapshot-icon" />
+                  <span className="detalle-reporte-modal__snapshot-title">
+                    {tDet("publicacionEliminada.titulo")}
+                  </span>
+                </div>
+                <p className="detalle-reporte-modal__snapshot-desc">
+                  {tDet("publicacionEliminada.descripcion")}
+                </p>
+                <div className="detalle-reporte-modal__snapshot-box">
+                  {r.observaciones}
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           <hr className="detalle-reporte-modal__divider" />
 

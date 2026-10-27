@@ -339,7 +339,7 @@ export default function PostCard({
                 className={`post-card__like-button${likeado ? " post-card__like-button--liked" : ""}`}
                 onClick={toggleLike}
                 disabled={likeLoading}
-                aria-label={likeado ? "Quitar like" : "Dar like"}
+                aria-label={`${count} ${likeado ? "Quitar like" : "Dar like"}`}
                 title={likeado ? "Quitar like" : "Dar like"}
               >
                 <Heart size={18} fill={likeado ? "currentColor" : "none"} strokeWidth={2} />

@@ -125,7 +125,10 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
             </>
         ) : (
             <>
-                <UserProfileHeader user={user} />
+                <UserProfileHeader
+                    user={user}
+                    showCertificationsInitially={searchParams.get("certificaciones") === "1"}
+                />
 
                 <div className="perfil-page__mode-toolbar perfil-page__mode-toolbar--with-action">
                     <div

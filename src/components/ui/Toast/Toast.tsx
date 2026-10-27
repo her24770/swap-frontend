@@ -77,7 +77,7 @@ export default function ToastContainer() {
   const { notificaciones, eliminarNotificacion } = useUIStore();
 
   return (
-    <div className="toast-container" aria-label="Notificaciones">
+    <div className="toast-container" role="region" aria-label="Notificaciones">
       {notificaciones.map((n) => (
         <ToastItem
           key={n.id}
