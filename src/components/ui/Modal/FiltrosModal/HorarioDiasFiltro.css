@@ -1,0 +1,121 @@
+/* ── Horario ── */
+.filtros-panel__time-group {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex: 1 1 6.5rem;
+}
+
+.filtros-panel__time-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.5rem;
+  width: 100%;
+}
+
+.filtros-panel__time-label {
+  font-size: 0.8125rem;
+  font-family: var(--swap-font-textos);
+  color: var(--swap-tertiary-text-color);
+  flex-shrink: 0;
+}
+
+.filtros-panel__time-input {
+  flex: 1 1 6.5rem;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.4375rem 0.625rem;
+  box-sizing: border-box;
+  border: 1px solid var(--swap-primary-border-color);
+  border-radius: 0.5rem;
+  background-color: var(--swap-primary-background);
+  color: var(--swap-primary-text-color);
+  font-size: 0.8125rem;
+  font-family: var(--swap-font-textos);
+  outline: none;
+  transition: border-color 0.15s ease;
+  accent-color: var(--swap-primary-color);
+  color-scheme: light;
+}
+
+[data-theme="dark"] .filtros-panel__time-input {
+  color-scheme: dark;
+}
+
+.filtros-panel__time-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.85;
+  filter: invert(22%) sepia(95%) saturate(1200%) hue-rotate(115deg) brightness(90%);
+}
+
+[data-theme="dark"] .filtros-panel__time-input::-webkit-calendar-picker-indicator {
+  filter: invert(55%) sepia(40%) saturate(600%) hue-rotate(95deg) brightness(95%);
+}
+
+.filtros-panel__time-input:focus {
+  border-color: var(--swap-primary-color);
+}
+
+/* ── Días ── */
+.filtros-panel__days-row {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.filtros-panel__day-btn {
+  width: 2.125rem;
+  height: 2.125rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--swap-primary-border-color);
+  background-color: var(--swap-primary-background);
+  color: var(--swap-tertiary-text-color);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--swap-font-textos);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+@media (min-width: 30rem) {
+  .filtros-panel__days-row {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .filtros-panel__day-btn {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 1.75rem;
+    max-width: 2.125rem;
+  }
+}
+
+.filtros-panel__day-btn:hover {
+  border-color: var(--swap-primary-color);
+  color: var(--swap-primary-color);
+}
+
+.filtros-panel__day-btn--active {
+  background-color: var(--swap-primary-color);
+  border-color: var(--swap-primary-color);
+  color: var(--swap-secondary-text-color);
+}
+
+@media (min-width: 64rem) {
+  .filtros-panel__time-row {
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+  }
+
+  .filtros-panel__time-group {
+    flex: 1;
+  }
+}
