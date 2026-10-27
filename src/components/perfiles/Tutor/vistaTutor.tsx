@@ -87,16 +87,27 @@ export default function VistaTutor({
   const [horarioGuardando, setHorarioGuardando] = useState(false);
   const [cambiosPendientes, setCambiosPendientes] = useState<Set<string>>(new Set());
 
-  const fetchPublicaciones = useCallback(async () => {
-    if (!idUsuario) {
+  const [idUsuarioPrevio, setIdUsuarioPrevio] = useState(idUsuario);
+  if (idUsuarioPrevio !== idUsuario) {
+    setIdUsuarioPrevio(idUsuario);
+    setError(null);
+    setHorarioError(null);
+    if (idUsuario) {
+      setLoading(true);
+      setHorarioLoading(true);
+    } else {
       setCatalogTutorias([]);
       setLoading(false);
-      return;
+      setHorarioSlots([]);
+      setHorarioOriginal([]);
+      setHorarioLoading(false);
     }
+  }
+
+  const fetchPublicaciones = useCallback(async () => {
+    if (!idUsuario) return;
 
     try {
-      setLoading(true);
-      setError(null);
       const resTutorias = await apiClient.get<PublicacionesResponse>(
         `/api/publicacion/user/${idUsuario}?tipo=tutoria&all=true`
       );
@@ -129,16 +140,9 @@ export default function VistaTutor({
   }, [idUsuario]);
 
   const fetchHorario = useCallback(async () => {
-    if (!idUsuario) {
-      setHorarioSlots([]);
-      setHorarioOriginal([]);
-      setHorarioLoading(false);
-      return;
-    }
+    if (!idUsuario) return;
 
     try {
-      setHorarioLoading(true);
-      setHorarioError(null);
       const slots = await obtenerHorarioUsuario(idUsuario);
       setHorarioSlots(slots);
       setHorarioOriginal(slots);
@@ -186,11 +190,14 @@ export default function VistaTutor({
     });
   }, []);
 
+  // fetchPublicaciones/fetchHorario solo hacen setState después de un await
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchPublicaciones();
   }, [fetchPublicaciones]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHorario();
   }, [fetchHorario]);
 

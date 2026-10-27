@@ -46,9 +46,12 @@ export default function Layout({ children }: LayoutProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
 
-  useEffect(() => {
+  // Cierra el sidebar al cambiar de ruta
+  const [pathnamePrevio, setPathnamePrevio] = useState(pathname);
+  if (pathnamePrevio !== pathname) {
+    setPathnamePrevio(pathname);
     setSidebarOpen(false);
-  }, [pathname]);
+  }
 
   // El panel de moderador no comparte Navbar/Sidebar con la app de usuarios
   // (Navbar esta construido sobre la sesion de usuario: useAuth, notificaciones,

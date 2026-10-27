@@ -64,17 +64,30 @@ export default function HistorialAcuerdos({
   const safeCurrentPage = Math.min(currentPage, pageCount);
   const hasPagination = variant === "grid" && total > limit;
 
-  useEffect(() => {
+  // Al cambiar la consulta se reinicia el estado durante el render.
+  const [consultaPrevia, setConsultaPrevia] = useState({ idUsuario, requestTipo, currentPage, limit, searchQuery });
+  if (
+    consultaPrevia.idUsuario !== idUsuario ||
+    consultaPrevia.requestTipo !== requestTipo ||
+    consultaPrevia.currentPage !== currentPage ||
+    consultaPrevia.limit !== limit ||
+    consultaPrevia.searchQuery !== searchQuery
+  ) {
+    setConsultaPrevia({ idUsuario, requestTipo, currentPage, limit, searchQuery });
     if (!idUsuario) {
       setLoading(false);
       setAcuerdos([]);
       setTotal(0);
-      return;
+    } else {
+      setLoading(true);
+      setError(null);
     }
+  }
+
+  useEffect(() => {
+    if (!idUsuario) return;
 
     let isMounted = true;
-    setLoading(true);
-    setError(null);
 
     acuerdoService
       .getHistorialUsuario(idUsuario, requestTipo, { page: currentPage, limit, q: searchQuery })
