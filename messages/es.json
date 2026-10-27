@@ -752,6 +752,7 @@
 		},
 		"modal": {
 			"createPublicationAria": "Crear publicación",
+			"createAdAria": "Crear anuncio",
 			"editPublicationAria": "Editar publicación"
 		}
 	},

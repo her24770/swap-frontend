@@ -730,6 +730,7 @@
 		},
 		"modal": {
 			"createPublicationAria": "Créer une publication",
+			"createAdAria": "Créer une annonce",
 			"editPublicationAria": "Modifier la publication"
 		}
 	},

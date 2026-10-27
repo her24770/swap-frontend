@@ -10,7 +10,7 @@ import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
 import UserTagsModal from "../UserTagsModal/UserTagsModal";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
-import { apiClient } from "../../../../lib/apiClient";
+import { apiClient, type ApiError } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
 import type { Tag, UserTag } from "../../../../types/tag";
@@ -79,8 +79,8 @@ export default function UserProfileHeader({
           await apiClient.patch(`/api/user/${user.id_usuario}`, { url_foto_perfil: urlFoto });
           setDisplayImageUrl(`${urlFoto}?t=${Date.now()}`);
           toast.success("Foto de perfil actualizada exitosamente.");
-        } catch (err: any) {
-          toast.error(err.message || "No fue posible actualizar la foto de perfil.");
+        } catch (err) {
+          toast.error((err as ApiError).message || "No fue posible actualizar la foto de perfil.");
         } finally {
           setIsUploadingFoto(false);
         }
@@ -102,8 +102,23 @@ export default function UserProfileHeader({
   }, [user.id_usuario]);
 
   useEffect(() => {
-    fetchCertificaciones();
-  }, [fetchCertificaciones]);
+    if (!user.id_usuario) return;
+
+    let cancelado = false;
+
+    apiClient
+      .get<{ data: Certificacion[] }>(`/api/certificacion/user/${user.id_usuario}`)
+      .then((res) => {
+        if (!cancelado) setCertificaciones(res.data ?? []);
+      })
+      .catch(() => {
+        if (!cancelado) setCertificaciones([]);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [user.id_usuario]);
 
   /**
    * Escucha eventos de WebSocket ("notificacion:nueva").
@@ -126,9 +141,13 @@ export default function UserProfileHeader({
     };
   }, [socket, fetchCertificaciones]);
 
-  useEffect(() => {
+  const [tagsPrevios, setTagsPrevios] = useState(user.tags);
+
+  // Sincroniza las etiquetas mostradas cuando cambian las del perfil (durante el render, sin efecto)
+  if (tagsPrevios !== user.tags) {
+    setTagsPrevios(user.tags);
     setDisplayTags(user.tags ?? []);
-  }, [user.tags]);
+  }
 
   const sortedTags = useMemo(() => {
     return [...displayTags].sort((a, b) => {
@@ -153,7 +172,7 @@ export default function UserProfileHeader({
     [user.contacts]
   );
 
-  const handleSave = async (data: Parameters<typeof ActualizarPerfilModal>[0]["onSubmit"] extends (d: infer D) => any ? D : never) => {
+  const handleSave = async (data: Parameters<typeof ActualizarPerfilModal>[0]["onSubmit"] extends (d: infer D) => unknown ? D : never) => {
     try {
       setIsSaving(true);
       setSaveError(null);
@@ -192,8 +211,8 @@ export default function UserProfileHeader({
 
       setModalOpen(false);
       toast.success(t('toast.updateSuccess'));
-    } catch (err: any) {
-      toast.error(err.message || t('toast.updateErrorFallback'));
+    } catch (err) {
+      toast.error((err as ApiError).message || t('toast.updateErrorFallback'));
     } finally {
       setIsSaving(false);
     }
