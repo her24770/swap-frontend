@@ -67,6 +67,20 @@ swap-frontend/
 
 4. The app will be available at `http://localhost:3000`
 
+### Run with Docker Compose
+
+`docker compose up --build -d` requires the Buildx CLI plugin because the
+Dockerfile uses a BuildKit secret mount for the Server Actions key. Verify it
+with `docker buildx version`. On Manjaro/Arch, install `docker-buildx` with
+`sudo pacman -S docker-buildx`; on Debian/Ubuntu with Docker's repository,
+install `docker-buildx-plugin`.
+
+Before building, set `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` in your local `.env`
+to a stable base64 key generated with `openssl rand -base64 32`. Keep that key
+out of Git and reuse it for subsequent builds. Setting `DOCKER_BUILDKIT=0`
+cannot build this Dockerfile because the classic builder does not support
+secret mounts.
+
 ### Environment Variables
 
 See `.env.example` for all required variables. Key ones:

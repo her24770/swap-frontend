@@ -35,7 +35,7 @@ describe("ConfirmDialog", () => {
 
     render(<ConfirmDialog />);
 
-    await user.click(screen.getByRole("button", { name: "Confirmar" }));
+    await user.click(screen.getByRole("button", { name: "confirm" }));
 
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(useUIStore.getState().confirm.isOpen).toBe(false);
@@ -52,7 +52,7 @@ describe("ConfirmDialog", () => {
 
     render(<ConfirmDialog />);
 
-    await user.click(screen.getByRole("button", { name: "Cancelar" }));
+    await user.click(screen.getByRole("button", { name: "cancel" }));
 
     expect(useUIStore.getState().confirm.isOpen).toBe(false);
   });

@@ -11,6 +11,125 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  pruebas:
+    name: Pruebas
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
+      - name: Resumir cobertura
+        if: always()
+        run: node scripts/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+      - name: Publicar reporte de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-frontend-${{ github.run_id }}
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 14
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  e2e:
+    name: E2E Playwright
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: frontend
+      - name: Descargar backend para la copia ZAP
+        uses: actions/checkout@v4
+        with:
+          repository: her24770/swap-backend
+          ref: develop
+          path: backend
+      - name: Alinear backend con la exclusión de publicaciones propias
+        run: |
+          if git -C ../backend grep -Fq 'where.id_usuario = { not: idUsuario }' -- src/repository/repositorioPublicacion.ts; then
+            echo 'La exclusión ya está integrada en backend/develop.'
+          else
+            git -C ../backend fetch --depth=1 origin refs/heads/fix/CI
+            git -C ../backend checkout --detach FETCH_HEAD
+            git -C ../backend grep -Fq 'where.id_usuario = { not: idUsuario }' -- src/repository/repositorioPublicacion.ts
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Construir API efímera
+        run: docker build --target production -t swap-backend-api:latest ../backend
+      - name: Levantar copia aislada y datos de prueba
+        run: bash ../backend/security/zap/run-zap.sh up
+      - name: Ejecutar flujos en Chromium
+        run: npm run test:e2e
+      - name: Publicar capturas, videos y trazas al fallar
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-fallos-${{ github.run_id }}
+          path: frontend/test-results/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Apagar copia aislada
+        if: always()
+        run: bash ../backend/security/zap/run-zap.sh down
+
   auditoria-dependencias:
     name: Auditoría de dependencias
     runs-on: ubuntu-latest

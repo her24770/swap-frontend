@@ -1,4 +1,11 @@
 {
+	"systemPages": {
+		"error": { "eyebrow": "Une erreur s'est produite", "title": "Impossible de charger cette page", "description": "Un problème inattendu s'est produit. Réessayez ou retournez à l'accueil." },
+		"notFound": { "eyebrow": "Erreur 404", "title": "Cette page est introuvable", "description": "L'adresse a peut-être changé ou la page n'existe plus." },
+		"loading": { "title": "Chargement du contenu", "description": "Nous préparons cette page pour vous." },
+		"retry": "Réessayer",
+		"home": "Retour à l'accueil"
+	},
 	"layout": {
 		"meta": {
 			"title": "SWAP",
@@ -233,6 +240,7 @@
 		"rechazar": "Refuser",
 		"aceptar": "Accepter",
 		"formulario": {
+			"cerrarModal": "Fermer la demande de tutorat",
 			"nuevaSolicitud": "Nouvelle demande de tutorat",
 			"titulo": "Demande de tutorat",
 			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
@@ -593,7 +601,12 @@
         "panelTitulo": "Publication",
         "panelCerrarAria": "Fermer la publication",
         "meGusta": "{count} j'aime",
-        "toastPublicacionError": "Impossible de charger la publication."
+        "toastPublicacionError": "Impossible de charger la publication.",
+        "publicacionEliminada": {
+          "titulo": "Publication supprimée par l'auteur",
+          "descripcion": "Le signalement a été automatiquement résolu lors de la suppression de la publication.",
+          "registroHistorico": "Enregistrement historique capturé :"
+        }
       }
     }
 	},
