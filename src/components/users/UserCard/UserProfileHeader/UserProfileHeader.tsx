@@ -26,11 +26,13 @@ import Certificaciones from "../../../users/Certificaciones/Certificaciones";
 interface UserProfileHeaderProps {
   user: UserProfileData;
   onSave?: (updated: Partial<UserProfileEditData>) => Promise<void> | void;
+  showCertificationsInitially?: boolean;
 }
 
 export default function UserProfileHeader({
   user,
   onSave,
+  showCertificationsInitially = false,
 }: UserProfileHeaderProps) {
   const t = useTranslations('profileHeader');
 
@@ -42,7 +44,7 @@ export default function UserProfileHeader({
   const [displayTags, setDisplayTags] = useState<UserTag[]>(user.tags ?? []);
   const [showAllTags, setShowAllTags] = useState(false);
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
-  const [showCerts, setShowCerts] = useState(false);
+  const [showCerts, setShowCerts] = useState(showCertificationsInitially);
   const toast = useToast();
   const socket = useSocket();
   const { canEditProfile } = usePerspectivaInterna();
