@@ -32,6 +32,9 @@ export default function Layout({ children }: LayoutProps) {
 
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
   const isModeracionRoute = pathnameWithoutLocale.startsWith("/moderacion");
+  const versionFooter = (
+    <footer className="layout__version">Versión {process.env.NEXT_PUBLIC_APP_VERSION ?? "development"}</footer>
+  );
 
   useEffect(() => {
     if (!sidebarOpen) return;
@@ -61,7 +64,7 @@ export default function Layout({ children }: LayoutProps) {
   // (Navbar esta construido sobre la sesion de usuario: useAuth, notificaciones,
   // sockets). Arma su propio header en su propio layout anidado.
   if (isModeracionRoute) {
-    return <>{children}</>;
+    return <>{children}{versionFooter}</>;
   }
 
   return (
@@ -115,6 +118,7 @@ export default function Layout({ children }: LayoutProps) {
           <TourBienvenida usuario={usuario} onSidebarNeedOpen={setTourNeedsSidebarOpen} />
         </Suspense>
       )}
+      {versionFooter}
     </div>
   );
 }
