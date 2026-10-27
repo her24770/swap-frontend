@@ -1123,12 +1123,7 @@
 			"title": "Mensajes",
 			"subtitle": "Conversaciones activas",
 			"confirm": "Confirmar",
-			"delete": "Eliminar",
-			"tabs": {
-				"all": "Todas",
-				"sales": "Ventas",
-				"purchases": "Compras"
-			}
+			"delete": "Eliminar"
 		},
 		"system": {
 			"attachedImageMessage": "Imagen adjunta:",
