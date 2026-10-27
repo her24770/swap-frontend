@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import PublicacionesList from "../../../components/pages/PublicacionesList/PublicacionesList";
 import { usePublicaciones } from "../../../hooks/fetch/usePublicaciones";
 import { TAG_NEGOCIO } from "../../../lib/tags";
 import "../seccion.css";
 import {useDetallePublicacion} from "../../../hooks/useDetallePublicacion";
-import DetallePublicacion from "../../../components/ui/Modal/DetallePuclicacion/DetallePublicacion";
 import { useAnuncios } from "../../../hooks/fetch/useAnuncios";
 
 const ITEMS_PER_PAGE = 12;
@@ -15,7 +13,6 @@ const ITEMS_PER_PAGE = 12;
 export default function NegociosPage() {
   const t = useTranslations('negocios');
   const tTags = useTranslations('common.tags');
-  const router = useRouter();
   const [morePage, setMorePage] = useState(1);
 
   const { data: moreData, total: moreTotal, loading: moreLoading, error: moreError } = usePublicaciones({ tipo: "negocio", all: true, limit: ITEMS_PER_PAGE, page: morePage });
@@ -39,10 +36,7 @@ export default function NegociosPage() {
   };
 
   const{
-    selectedPublicacion,
-    loadingDetalle,
     handleDetallesClick,
-    handleClose,
   } = useDetallePublicacion();
 
 
