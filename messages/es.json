@@ -615,7 +615,12 @@
         "panelTitulo": "Publicación",
         "panelCerrarAria": "Cerrar publicación",
         "meGusta": "{count} me gusta",
-        "toastPublicacionError": "No fue posible cargar la publicación."
+        "toastPublicacionError": "No fue posible cargar la publicación.",
+        "publicacionEliminada": {
+          "titulo": "Publicación eliminada por el autor",
+          "descripcion": "El reporte fue cerrado automáticamente al eliminarse la publicación.",
+          "registroHistorico": "Registro histórico capturado:"
+        }
       }
     }
   },
