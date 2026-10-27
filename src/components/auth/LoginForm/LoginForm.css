@@ -103,7 +103,7 @@
 
 .login-form__toggle-password {
   position: absolute;
-  right: 0.75rem;
+  right: 0.25rem;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
@@ -112,6 +112,9 @@
   color: var(--swap-tertiary-text-color);
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
 }
 

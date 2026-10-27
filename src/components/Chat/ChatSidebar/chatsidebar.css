@@ -50,8 +50,8 @@
 }
 
 .chat-sidebar__tab--active {
-  color: var(--swap-primary-color);
-  border-bottom-color: var(--swap-primary-color);
+  color: var(--swap-primary-accent-color, var(--swap-primary-color));
+  border-bottom-color: var(--swap-primary-accent-color, var(--swap-primary-color));
 }
 
 .chat-sidebar__list {

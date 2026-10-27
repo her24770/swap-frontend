@@ -10,7 +10,7 @@ export default function Page() {
         src={bgImage}
         alt=""
         fill
-        priority
+        preload
         className="login-page__background"
       />
       <div className="login-page__content">
