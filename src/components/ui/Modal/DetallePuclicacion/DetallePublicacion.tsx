@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
+import { useToast } from "../../../../hooks/useToast";
 import { useRouter } from "next/navigation";
 import { X, Bookmark, Loader2, ChevronRight, Flag, AlertTriangle, Trash2 } from "lucide-react";
 import { UserCircle2 } from "lucide-react";
@@ -106,6 +107,7 @@ export default function DetallePublicacion({
   onEstadoChange,
 }: PostModalProps) {
   const t = useTranslations("posts");
+  const toast = useToast();
   const tSend = useTranslations("sendMessageModal");
   const tReporte = useTranslations("reporte");
   const locale = useLocale();
@@ -144,8 +146,8 @@ export default function DetallePublicacion({
         await guardados.guardarPublicacion(publicacionId);
       }
       onToggleSave?.();
-    } catch (error) {
-      console.error("Error al actualizar guardado:", error);
+    } catch {
+      toast.error(t("saveError"));
     } finally {
       setSaving(false);
     }

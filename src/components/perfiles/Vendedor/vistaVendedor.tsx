@@ -455,9 +455,19 @@ export default function VistaVendedor({
                     setEditOpen(true);
                   }}
                   onDeleteClick={() => handleEliminar(pub.id)}
-                  onEstadoChange={(nuevoEstado) =>
-                    console.log(`Cambiar estado de ${pub.id} a: ${nuevoEstado}`)
-                  }
+                  onEstadoChange={async (nuevoEstado) => {
+                    try {
+                      await apiClient.put(`/api/publicacion/${pub.id}`, { estado: nuevoEstado, etiquetas: [1] });
+                      setCatalogNegocio((prev) =>
+                        prev.map((p) => p.id === pub.id ? { ...p, estado: nuevoEstado } : p)
+                      );
+                    } catch (err) {
+                      agregarNotificacion({
+                        tipo: "error",
+                        mensaje: (err as ApiError).message || "No fue posible cambiar el estado.",
+                      });
+                    }
+                  }}
                   onDetallesClick={() => setSelectedPost(pub)}
                 />
               </div>
@@ -575,7 +585,6 @@ export default function VistaVendedor({
           sellerId={userId}
           sellerImageUrl={userImageUrl}
           estado={selectedPost.estado}
-          onAcordarCompra={() => console.log("acordar compra")}
         />
       )}
     </>

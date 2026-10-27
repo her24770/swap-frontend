@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SquarePlus, ChevronDown, Check, X, CloudUpload, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useToast } from "../../../../hooks/useToast";
 import { useFormCrearPublicacion, useFormEditarPublicacion, type UseFormEditarPublicacionReturn } from "../../../../hooks/useFormPublicacion";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useEstados } from "../../../../hooks/useEstados";
@@ -36,6 +37,7 @@ type PublicacionFormProps = CrearPublicacionFormProps | EditarPublicacionFormPro
 
 export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const t = useTranslations("publicacionForm");
+  const toast = useToast();
   const tTags = useTranslations("common.tags");
   const testado = useTranslations("posts.estado");
 
@@ -140,8 +142,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       setPendingCropFiles(restFiles);
       const src = await fileToDataUrl(firstFile);
       setImageToCrop(src);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      toast.error(t("imageLoadError"));
       setImageToCrop(null);
       setPendingCropFiles([]);
     }
@@ -165,8 +167,8 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       setPendingCropFiles(restFiles);
       const src = await fileToDataUrl(nextFile);
       setImageToCrop(src);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      toast.error(t("imageLoadError"));
       setImageToCrop(null);
       setPendingCropFiles([]);
     }

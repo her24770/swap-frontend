@@ -537,6 +537,7 @@
     },
     "reportes": {
       "title": "Signalements",
+      "errorCargar": "Impossible de charger les signalements",
       "searchPlaceholder": "Rechercher",
       "tabla": {
         "id": "ID du signalement",
@@ -758,7 +759,11 @@
 			"newPublication": "Nouvelle publication"
 		}
 	},
+	"imageCropper": {
+		"cropError": "Impossible de recadrer l'image"
+	},
 	"posts": {
+		"saveError": "Impossible de mettre à jour vos enregistrements",
 		"actions": {
 			"details": "Détails",
 			"edit": "Modifier",
@@ -831,6 +836,7 @@
 			"contact": "Contact"
 		},
 		"certification": {
+			"fullscreenError": "Impossible de passer en plein écran",
 			"title": "Certifications",
 			"add": "Ajouter une certification",
 			"noCert": "Il n'y a pas encore de certifications.",
@@ -954,6 +960,7 @@
 	},
 	"loading": "Chargement des publications...",
 	"publicacionForm": {
+		"imageLoadError": "Impossible de charger l'image sélectionnée",
 		"titleCreate": "Créer une publication",
 		"titleEdit": "Modifier la publication",
 		"fields": {

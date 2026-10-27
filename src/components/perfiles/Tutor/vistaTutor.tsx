@@ -496,7 +496,6 @@ export default function VistaTutor({
           sellerName={userName}
           sellerRating={userRating}
           sellerImageUrl={userImageUrl}
-          onSolicitarTutoria={() => console.log("Solicitar tutoría")}
           estado={selectedPost.estado}
         />
       )}

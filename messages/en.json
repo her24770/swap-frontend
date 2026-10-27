@@ -537,6 +537,7 @@
     },
     "reportes": {
       "title": "Reports",
+      "errorCargar": "Couldn't load the reports",
       "searchPlaceholder": "Search",
       "tabla": {
         "id": "Report ID",
@@ -758,7 +759,11 @@
 			"newPublication": "New post"
 		}
 	},
+	"imageCropper": {
+		"cropError": "Couldn't crop the image"
+	},
 	"posts": {
+		"saveError": "Couldn't update your saved posts",
 		"actions": {
 			"details": "Details",
 			"edit": "Edit",
@@ -831,6 +836,7 @@
 			"contact": "Contact"
 		},
 		"certification": {
+			"fullscreenError": "Couldn't toggle full screen",
 			"title": "Certification",
 			"add": "Add certification",
 			"noCert": "There are no certifications yet.",
@@ -954,6 +960,7 @@
 	},
 	"loading": "Loading publications...",
 	"publicacionForm": {
+		"imageLoadError": "Couldn't load the selected image",
 		"titleCreate": "Create post",
 		"titleEdit": "Edit post",
 		"fields": {

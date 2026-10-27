@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useToast } from "../../../hooks/useToast";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import type { Certificacion } from "../../../types/certificacion";
@@ -27,6 +28,7 @@ export default function Certificaciones({
   onRefresh,
 }: CertificacionesProps) {
   const t = useTranslations("profileHeader.certification");
+  const toast = useToast();
   const { mostrarConfirm, agregarNotificacion } = useUIStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(
@@ -64,8 +66,8 @@ export default function Certificaciones({
       } else {
         await document.exitFullscreen();
       }
-    } catch (err) {
-      console.error("Error toggling fullscreen:", err);
+    } catch {
+      toast.error(t("fullscreenError"));
     }
   };
 

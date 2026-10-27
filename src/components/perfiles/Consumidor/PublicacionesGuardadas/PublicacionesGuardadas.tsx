@@ -130,8 +130,6 @@ export default function PublicacionesGuardadas({
             setSelectedPublicacion(null);
             router.push(`/perfil/${sellerId}?modo=${modo}`);
           }}
-          onAcordarCompra={() => console.log("acordar compra")}
-          onSolicitarTutoria={() => console.log("solicitar tutoria")}
         />
       )}
     </section>

@@ -648,7 +648,6 @@ export default function PublicacionesList({
                         handleClose();
                         router.push(`${perfilBasePath}/${sellerId}?modo=tutor&certificaciones=1`);
                     }}
-                    onSolicitarTutoria={() => console.log("solicitar tutoría")}
                 />
             )}
 
