@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { Flag, AlertTriangle } from "lucide-react";
 import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfileHeader";
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
-import MiniChatWidget from "../../Chat/MiniChatWidget/MiniChatWidget";
 import EnviarMensajeButton from "./EnviarMensajeButton/EnviarMensajeButton";
 import ReporteModal from "../../ui/Modal/Reporte/ReporteModal";
 import JustificanteModeracionModal from "../../ui/Modal/Reporte/JustificanteModeracionModal";
@@ -229,14 +228,6 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
             </>
         )}
         </PerspectivaInternaProvider>
-
-        {user && !soloLectura && (
-            <MiniChatWidget
-                idUsuario={user.id_usuario}
-                nombre={user.name}
-                avatarUrl={user.imageUrl}
-            />
-        )}
 
         {user && (
             <ReporteModal

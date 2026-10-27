@@ -1094,12 +1094,7 @@
 			"title": "Messages",
 			"subtitle": "Active conversations",
 			"confirm": "Confirm",
-			"delete": "Delete",
-			"tabs": {
-				"all": "All",
-				"sales": "Sales",
-				"purchases": "Purchases"
-			}
+			"delete": "Delete"
 		},
 		"system": {
 			"attachedImageMessage": "Attached image:",

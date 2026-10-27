@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import type { FormEvent } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { Eye, EyeOff, ChevronRight, ChevronDown, Check, X } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useToast } from "../../../hooks/useToast";
 import { useRouter } from "../../../i18n/routing";
@@ -14,6 +14,10 @@ import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchem
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import TerminosyCondiciones from "../../../components/ui/Modal/TerminosyCondiciones/TerminosyCondiciones";
+import VerificacionCodigoForm from "./VerificacionCodigoForm";
+import EtiquetasSelector from "./EtiquetasSelector";
+import CampoPassword from "./CampoPassword";
+import TerminosCheckbox from "./TerminosCheckbox";
 import "../../ui/Button/Button.css"
 import "./RegistroForm.css";
 
@@ -39,10 +43,7 @@ export default function RegistroForm() {
   const router = useRouter();
   const toast = useToast();
   const login = useAuthStore((s) => s.login);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [verificationStep, setVerificationStep] = useState(false);
   const [pendingRegistration, setPendingRegistration] = useState<RegistroPayload | null>(null);
@@ -50,19 +51,8 @@ export default function RegistroForm() {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
   const [showTerminos, setShowTerminos] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const { etiquetas: etiquetasBD, loading: etiquetasLoading, error: etiquetasError } =
     useTodasEtiquetas({soloPadres : true});
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const {
     register,
@@ -93,13 +83,6 @@ export default function RegistroForm() {
       : [...current, id];
     setValue("etiquetas", updated, { shouldValidate: true, shouldDirty: true });
   };
-
-
-  const triggerLabel = etiquetasLoading
-    ? t("tagsLoading")
-    : selectedEtiquetas.length === 0
-      ? t("tagsPlaceholder")
-      : `${selectedEtiquetas.length} ${selectedEtiquetas.length === 1 ? "categoría seleccionada" : "categorías seleccionadas"}`;
 
   const onSubmit = async (data: RegistroFormData) => {
     try {
@@ -187,54 +170,19 @@ export default function RegistroForm() {
 
   if (verificationStep) {
     return (
-      <form onSubmit={handleVerificationSubmit} method="post" noValidate className="registro-form registro-form--verification">
-        <div className="registro-form__verification-header">
-          <h2 className="registro-form__verification-title">{t('verificationTitle')}</h2>
-          <p className="registro-form__verification-description">
-            {t('verificationDescription')}
-          </p>
-        </div>
-
-        <div className="registro-form__field">
-          <label className="registro-form__label">{t('verificationCodeLabel')}</label>
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={6}
-            value={verificationCode}
-            onChange={(event) => setVerificationCode(event.target.value.replace(/\D/g, "").slice(0, 6))}
-            placeholder={t('verificationCodePlaceholder')}
-            className="registro-form__input registro-form__input--code"
-          />
-        </div>
-
-        {serverError && (
-          <span className="registro-form__error">{serverError}</span>
-        )}
-
-        <button
-          type="submit"
-          disabled={isVerifying}
-          className="button button--large button--full-width"
-        >
-          {isVerifying ? t('submitting') : t('submitWithCode')}
-          {!isVerifying && <ChevronRight size={16} />}
-        </button>
-
-        <button
-          type="button"
-          className="registro-form__secondary-action registro-form__secondary-action--center"
-          onClick={() => {
-            setVerificationStep(false);
-            setVerificationCode("");
-            setPendingRegistration(null);
-            setServerError(null);
-          }}
-        >
-          {t('changeEmail')}
-        </button>
-      </form>
+      <VerificacionCodigoForm
+        code={verificationCode}
+        onCodeChange={setVerificationCode}
+        serverError={serverError}
+        isVerifying={isVerifying}
+        onSubmit={handleVerificationSubmit}
+        onCambiarCorreo={() => {
+          setVerificationStep(false);
+          setVerificationCode("");
+          setPendingRegistration(null);
+          setServerError(null);
+        }}
+      />
     );
   }
 
@@ -285,153 +233,42 @@ export default function RegistroForm() {
         )}
       </div>
 
-      {/*tags del perfil*/}
-      <div className="registro-form__field">
-        <label className = "registro-form__label">{t('tagsLabel')}</label>
-        <div ref={dropdownRef} className="registro-form__tags-dropdown">
-          <button
-            type="button"
-            disabled={etiquetasLoading}
-            onClick={() => setDropdownOpen((prev) => !(prev))}
-            className= {[
-              "registro-form__tags-trigger",
-              selectedEtiquetas.length > 0 ? "registro-form__tags-trigger--has-value" : "",
-              dropdownOpen ? "registro-form__tags-trigger--open" : "",
-              errors.etiquetas ? "registro-form__tags-trigger--error" : "",
-            ].join(" ")}>
-              <span>{triggerLabel}</span>
-              <ChevronDown size={16} className={`registro-form__tags-chevron${dropdownOpen ? " registro-form__tags-chevron--open" : ""}`} />
-            </button>
+      <EtiquetasSelector
+        etiquetas={etiquetasBD}
+        loading={etiquetasLoading}
+        loadError={etiquetasError}
+        fieldError={errors.etiquetas?.message}
+        selected={selectedEtiquetas}
+        onToggle={toggleEtiqueta}
+      />
 
-            {dropdownOpen && !etiquetasLoading && (
-              <div className="registro-form__tags-menu">
-                {etiquetasBD.map((etiqueta) => {
-                  const selected = selectedEtiquetas.includes(etiqueta.id_etiqueta);
-                  return (
-                    <button 
-                    key={etiqueta.id_etiqueta}
-                    type="button"
-                    onClick={() => toggleEtiqueta(etiqueta.id_etiqueta)}
-                    className={`registro-form__tags-option${selected ? " registro-form__tags-option--selected" : ""}`}
-                    >
-                      <span className={`registro-form__tags-checkbox${selected ? " registro-form__tags-checkbox--checked" : ""}`}>
-                        {selected && <Check size={11} strokeWidth={3} color="white" />}
-                      </span>
-                      {etiqueta.nombre}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-        </div>
+      <CampoPassword
+        label={t('passwordLabel')}
+        placeholder={t('passwordPlaceholder')}
+        registration={register("password")}
+        error={errors.password?.message}
+      />
 
-          {selectedEtiquetas.length > 0 && (
-            <div className="registro-form__tags-list">
-              {selectedEtiquetas.map((id) => {
-                const etiqueta = etiquetasBD.find((e) => e.id_etiqueta === id);
-                return etiqueta ?(
-                  <span key={id} className="registro-form__tag">
-                    {etiqueta.nombre}
-                    <button 
-                    type="button"
-                    onClick={() => toggleEtiqueta(id)}
-                    className="registro-form__tag-remove">
-                      <X size={11} strokeWidth = {2.5} />
-                    </button>
-                  </span>
-                ): null;
-              })}
-            </div>
-          )}
-        {etiquetasError && (
-          <span className="registro-form__error">{etiquetasError}</span>
-        )}
-        {errors.etiquetas && (
-          <span className="registro-form__error">{errors.etiquetas.message}</span>
-        )}
-      </div>
-
-      {/* Contraseña */}
-      <div className="registro-form__field">
-        <label className="registro-form__label">{t('passwordLabel')}</label>
-        <div className="registro-form__input-wrapper">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder={t('passwordPlaceholder')}
-            {...register("password")}
-            className={`registro-form__input registro-form__input--password${errors.password ? " registro-form__input--error" : ""}`}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((p) => !p)}
-            className="registro-form__toggle-password"
-          >
-            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-          </button>
-        </div>
-        {errors.password && (
-          <span className="registro-form__error">{errors.password.message}</span>
-        )}
-      </div>
-
-      {/* Confirmar contraseña */}
-      <div className="registro-form__field">
-        <label className="registro-form__label">{t('confirmPasswordLabel')}</label>
-        <div className="registro-form__input-wrapper">
-          <input
-            type={showConfirm ? "text" : "password"}
-            placeholder={t('confirmPasswordPlaceholder')}
-            {...register("confirmar_password")}
-            className={`registro-form__input registro-form__input--password${errors.confirmar_password ? " registro-form__input--error" : ""}`}
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirm((p) => !p)}
-            className="registro-form__toggle-password"
-          >
-            {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
-          </button>
-        </div>
-        {errors.confirmar_password && (
-          <span className="registro-form__error">{errors.confirmar_password.message}</span>
-        )}
-      </div>
+      <CampoPassword
+        label={t('confirmPasswordLabel')}
+        placeholder={t('confirmPasswordPlaceholder')}
+        registration={register("confirmar_password")}
+        error={errors.confirmar_password?.message}
+      />
 
       {serverError && (
         <span className="registro-form__error">{serverError}</span>
       )}
 
-      {/* Terminos y condiciones */}
-      <div className="registro-form__field">
-        <div className="registro-form__terms">
-          <button
-            type="button"
-            aria-pressed={aceptaTerminos}
-            onClick={() => {
-              setAceptaTerminos((prev) => !prev);
-              setTermsError(null);
-            }}
-            className="registro-form__terms-checkbox"
-          >
-            <span className={`registro-form__tags-checkbox${aceptaTerminos ? " registro-form__tags-checkbox--checked" : ""}${termsError ? " registro-form__tags-checkbox--error" : ""}`}>
-              {aceptaTerminos && <Check size={11} strokeWidth={3} color="white" />}
-            </span>
-          </button>
-          <p className="registro-form__terms-text">
-            {t('termsPrefix')}{" "}
-            <button
-              type="button"
-              className="registro-form__terms-link"
-              onClick={() => setShowTerminos(true)}
-            >
-              {t('termsLinkText')}
-            </button>
-          </p>
-        </div>
-        {termsError && (
-          <span className="registro-form__error">{termsError}</span>
-        )}
-      </div>
+      <TerminosCheckbox
+        accepted={aceptaTerminos}
+        error={termsError}
+        onToggle={() => {
+          setAceptaTerminos((prev) => !prev);
+          setTermsError(null);
+        }}
+        onOpenTerminos={() => setShowTerminos(true)}
+      />
 
       {/* Botón de submit */}
       <button

@@ -7,6 +7,7 @@ import { anuncioService } from "../../../../services/anuncioService";
 import type { Anuncio } from "../../../../types/anuncio"; // Ajusta la ruta a tus tipos
 import type { ApiError } from "../../../../lib/apiClient";
 import Image from "next/image";
+import "../FormularioModal.css";
 
 interface CrearAnuncioFormProps {
     anuncio?: Anuncio | null; // ◄— Recibe el objeto completo para activar el modo edición
