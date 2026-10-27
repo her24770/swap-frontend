@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { checkAuth } from "./proxy/authProxy";
+import { API_URL } from "./lib/config";
 
 
 const intlMiddleware = createIntlMiddleware({
@@ -11,7 +12,7 @@ const intlMiddleware = createIntlMiddleware({
   },
 });
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const apiUrl = API_URL;
 const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || apiUrl;
 const toWsUrl = (url: string) => url.replace(/^http/, "ws");
 const imageHosts = ["https://i.pravatar.cc", "https://*.r2.dev"];

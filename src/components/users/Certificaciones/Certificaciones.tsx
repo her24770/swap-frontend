@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useToast } from "../../../hooks/useToast";
+import { API_URL } from "../../../lib/config";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import type { Certificacion } from "../../../types/certificacion";
@@ -14,7 +15,6 @@ import "./Certificaciones.css";
 
 export type { Certificacion };
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 interface CertificacionesProps {
   certificaciones: Certificacion[];
@@ -77,7 +77,7 @@ export default function Certificaciones({
       mensaje: "¿Estás seguro de que deseas eliminar esta certificación? Esta acción no se puede deshacer.",
       onConfirm: async () => {
         try {
-          const res = await fetch(`${BASE_URL}/api/certificacion/${id}`, {
+          const res = await fetch(`${API_URL}/api/certificacion/${id}`, {
             method: "DELETE",
             credentials: "include",
           });

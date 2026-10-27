@@ -8,11 +8,11 @@ import { useTranslations } from "next-intl";
 import { schemaCertificacion, validateCertificacionPdf, type CertificacionFormData } from "../../../../schemas/zodSchemas";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useToast } from "../../../../hooks/useToast";
+import { API_URL } from "../../../../lib/config";
 import "../../../ui/Button/Button.css";
 import "../CrearPublicacionForm/CrearPublicacionForm.css";
 import "./SubirCertForm.css";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 interface BaseCertFormProps {
   onSuccess?: () => void;
@@ -107,7 +107,7 @@ export default function SubirCertForm(props: SubirCertFormProps) {
       formData.append("id_etiqueta", String(data.id_etiqueta));
       if (archivoPdf) formData.append("pdf", archivoPdf);
 
-      const res = await fetch(`${BASE_URL}/api/certificacion/`, {
+      const res = await fetch(`${API_URL}/api/certificacion/`, {
         method: "POST",
         credentials: "include",
         body: formData,
