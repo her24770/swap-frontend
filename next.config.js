@@ -31,7 +31,17 @@ const nextConfig = {
                 ],
             },
             {
-                // robots.txt y sitemap.xml no tienen ruta real 
+                source: '/api/:path*',
+                headers: [
+                    {
+                        key: 'Content-Security-Policy',
+                        value: "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+                    },
+                ],
+            },
+            {
+                // robots.txt, sitemap.xml y /api quedan fuera del matcher de proxy.ts (no pasan por el nonce),
+                // asi que reciben una CSP estatica restrictiva (no sirven HTML).
                 source: '/:path(robots\\.txt|sitemap\\.xml)',
                 headers: [
                     {

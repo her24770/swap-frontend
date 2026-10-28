@@ -26,10 +26,11 @@ function buildCsp(nonce: string) {
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}'${process.env.NODE_ENV !== "production" ? " 'unsafe-eval'" : ""}`,
-    // style-src utiliza unsafe-inline: se probo nonce (script-src lo usa), pero el split style-src/style-src-attr
-    // rompe el panel de notificaciones y el tour de bienvenida por sus <style> dinamicos no pasaban la validacion en
-    // en el navegador al abrirse. Se revierte a unsafe-inline y script-src se mantiene con nonce esto mitiga XSS.
-    "style-src 'self' 'unsafe-inline'",
+    // style-src usa nonce igual en desarrollo y produccion. Los style={{}} de React (tour, panel de notificaciones,
+    // toast, slider) se aplican por CSSOM en el cliente, que el CSP no bloquea.
+    `style-src 'self' 'nonce-${nonce}'`,
+    // next/image con `fill` emite style="" en el HTML del servidor; solo se permite en atributos, no en <style>.
+    "style-src-attr 'unsafe-inline'",
     `img-src 'self' data: blob: ${imageHosts.join(" ")} ${apiUrl}`,
     `connect-src 'self' ${connectHosts.join(" ")}`,
     `frame-src 'self' ${apiUrl} https://*.r2.dev blob: data:`,
@@ -55,7 +56,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
+  // Solo se excluyen archivos estaticos por extension al final de la ruta. Antes se excluia cualquier ruta con un
+  // punto, y rutas como /es/...uvg.jpg&w=640 quedaban sin CSP (alerta de ZAP).
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpe?g|gif|svg|webp|avif|ico|css|js|map|txt|xml|woff2?|ttf|otf)$).*)",
+  ],
 };
 
 
