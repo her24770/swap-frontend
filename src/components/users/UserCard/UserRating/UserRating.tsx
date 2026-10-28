@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Star } from "lucide-react";
 import './UserRating.css';
 
@@ -9,6 +10,8 @@ interface UserRatingProps {
 }
 
 export default function UserRating({ score, totalReviews }: UserRatingProps) {
+    const t = useTranslations("comments");
+
     return (
         <div className="user-rating">
         <div className="user-rating__stars">
@@ -29,7 +32,7 @@ export default function UserRating({ score, totalReviews }: UserRatingProps) {
             );
             })}
         </div>
-        <span className="user-rating__count">({totalReviews} reseñas)</span>
+        <span className="user-rating__count">{t("reviewsCount", { count: totalReviews })}</span>
         </div>
   );
 }

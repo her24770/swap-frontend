@@ -215,6 +215,7 @@ function HistorialPagination({
   compraFilter: TipoCompraHistorial;
   searchQuery: string;
 }) {
+  const t = useTranslations("perfil.history");
   const visiblePages = Math.min(VISIBLE_PAGINATION_PAGES, pageCount);
   const halfWindow = Math.floor(visiblePages / 2);
   let startPage = currentPage - halfWindow;
@@ -236,7 +237,7 @@ function HistorialPagination({
   };
 
   return (
-    <div className="publicaciones-list__pagination" aria-label="Paginacion de historial">
+    <div className="publicaciones-list__pagination" aria-label={t("paginationAria")}>
       <Link
         href={pageHref(Math.max(currentPage - 1, 1))}
         className={`publicaciones-list__pagination-btn publicaciones-list__pagination-btn--arrow${currentPage === 1 ? " historial-acuerdos__pagination-link--disabled" : ""}`}
@@ -274,6 +275,7 @@ function HistorialAcuerdosSkeleton({
   variant: "carousel" | "grid";
   count: number;
 }) {
+  const t = useTranslations("perfil.history");
   const items = Array.from({ length: count });
 
   if (variant === "carousel") {
@@ -289,7 +291,7 @@ function HistorialAcuerdosSkeleton({
   }
 
   return (
-    <div className="historial-acuerdos__grid" aria-busy="true" aria-label="Cargando historial">
+    <div className="historial-acuerdos__grid" aria-busy="true" aria-label={t("loadingAria")}>
       {items.map((_, index) => (
         <HistorialAcuerdoCardSkeleton key={index} />
       ))}

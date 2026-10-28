@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import ContactarUsuarioModal from "../../../ui/Modal/ContactarUsuario/ContactarUsuarioModal";
@@ -15,6 +15,7 @@ interface EnviarMensajeButtonProps {
 
 export default function EnviarMensajeButton({ userId, userName, userImageUrl }: EnviarMensajeButtonProps) {
   const locale = useLocale();
+  const t = useTranslations("perfil.actions");
   const router = useRouter();
   const [contactModalOpen, setContactModalOpen] = useState(false);
 
@@ -39,7 +40,7 @@ export default function EnviarMensajeButton({ userId, userName, userImageUrl }: 
         onClick={() => setContactModalOpen(true)}
       >
         <MessageCircle size={16} strokeWidth={1.8} aria-hidden />
-        Enviar mensaje
+        {t("sendMessage")}
       </button>
 
       {contactModalOpen && (

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "../Modal.css";
 import "./TerminosyCondiciones.css";
 import TerminosContenido from "./TerminosContenido";
@@ -15,6 +16,7 @@ type Tab = "terminos" | "privacidad";
 
 export default function TerminosyCondiciones({ isOpen, onClose }: TerminosyCondicionesProps) {
   const [activeTab, setActiveTab] = useState<Tab>("terminos");
+  const t = useTranslations("terminosModal");
 
   if (!isOpen) return null;
 
@@ -22,12 +24,12 @@ export default function TerminosyCondiciones({ isOpen, onClose }: TerminosyCondi
     <div className="modal-overlay" onClick={onClose}>
       <div className="terminos-modal" onClick={(e) => e.stopPropagation()}>
         <div className="terminos-modal__header">
-          <h3 className="terminos-modal__title">Términos y Política de Privacidad</h3>
+          <h3 className="terminos-modal__title">{t("title")}</h3>
           <button
             type="button"
             className="terminos-modal__close"
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label={t("closeAria")}
           >
             <X size={20} />
           </button>
@@ -41,7 +43,7 @@ export default function TerminosyCondiciones({ isOpen, onClose }: TerminosyCondi
             className={`terminos-modal__tab ${activeTab === "terminos" ? "terminos-modal__tab--active" : ""}`}
             onClick={() => setActiveTab("terminos")}
           >
-            Términos y Condiciones
+            {t("tabTerminos")}
           </button>
           <button
             type="button"
@@ -50,7 +52,7 @@ export default function TerminosyCondiciones({ isOpen, onClose }: TerminosyCondi
             className={`terminos-modal__tab ${activeTab === "privacidad" ? "terminos-modal__tab--active" : ""}`}
             onClick={() => setActiveTab("privacidad")}
           >
-            Política de Privacidad
+            {t("tabPrivacidad")}
           </button>
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import CarouselButton from "../CarouselButton/CarouselButton";
 import CarouselIndicator from "../CarouselIndicator/CarouselIndicator";
 import "./AnunciosCarousel.css";
@@ -16,6 +17,7 @@ const getStep = (track: HTMLDivElement) => {
 };
 
 export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: AnunciosCarouselProps) {
+  const t = useTranslations("anuncios.carousel");
   const trackRef = useRef<HTMLDivElement>(null);
   const items = React.Children.toArray(children);
   const itemsCount = items.length;
@@ -163,7 +165,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
           restartAutoPlay();
         }}
         disabled={isAtStart}
-        ariaLabel="Anuncio anterior"
+        ariaLabel={t("prevAria")}
       />
 
       <div className="a-carousel__track" ref={trackRef}>
@@ -181,7 +183,7 @@ export default function AnunciosCarousel({ children, autoPlayInterval = 8000 }: 
           restartAutoPlay();
         }}
         disabled={isAtEnd}
-        ariaLabel="Siguiente anuncio"
+        ariaLabel={t("nextAria")}
       />
 
       <CarouselIndicator

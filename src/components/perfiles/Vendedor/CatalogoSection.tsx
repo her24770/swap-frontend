@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { SquarePlus } from "lucide-react";
 import HorizontalCarousel from "../../ui/HorizontalCarousel/HorizontalCarousel";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import { PerfilPostCarouselSkeleton } from "../perfilLoading";
-import { postCardInfoItems, type CatalogPost } from "./catalogoVendedor";
+import { getPostCardInfoItems, type CatalogPost } from "./catalogoVendedor";
 
 interface CatalogoSectionProps {
   title: string;
@@ -29,6 +30,8 @@ export default function CatalogoSection({
   posts,
   renderCard,
 }: CatalogoSectionProps) {
+  const t = useTranslations("perfil");
+
   return (
     <section className="perfil-page__section">
       <div className="perfil-page__catalog-bar">
@@ -39,7 +42,7 @@ export default function CatalogoSection({
               <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
               {createLabel}
             </button>
-            <InfoHint ariaLabel="Ayuda sobre los íconos de las publicaciones" items={postCardInfoItems} />
+            <InfoHint ariaLabel={t("hints.catalogAria")} items={getPostCardInfoItems(t)} />
           </div>
         )}
       </div>

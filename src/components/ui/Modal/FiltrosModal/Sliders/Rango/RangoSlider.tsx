@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
+import { useTranslations } from "next-intl";
 import "./RangoSlider.css";
 
 interface RangoSliderProps {
@@ -23,6 +24,7 @@ export default function RangoSlider({
   formatLabel,
 }: RangoSliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("common.filtros");
 
   const pct = (v: number) => ((v - min) / (max - min)) * 100;
 
@@ -66,7 +68,7 @@ export default function RangoSlider({
           value={valueMin}
           onChange={handleMinChange}
           className="range-slider__input range-slider__input--min"
-          aria-label="Valor mínimo"
+          aria-label={t("minValueAria")}
           aria-valuemin={min}
           aria-valuemax={valueMax}
           aria-valuenow={valueMin}
@@ -80,7 +82,7 @@ export default function RangoSlider({
           value={valueMax}
           onChange={handleMaxChange}
           className="range-slider__input range-slider__input--max"
-          aria-label="Valor máximo"
+          aria-label={t("maxValueAria")}
           aria-valuemin={valueMin}
           aria-valuemax={max}
           aria-valuenow={valueMax}

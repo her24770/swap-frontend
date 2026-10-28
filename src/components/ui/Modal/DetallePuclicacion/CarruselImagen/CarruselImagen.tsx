@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { normalizeImageUrl } from "../../../../../lib/imageUrl";
 import Image from "next/image";
 import "./CarruselImagen.css";
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function CarruselImagen({ images, altText }: Props) {
+  const t = useTranslations("posts.carousel");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [brokenUrls, setBrokenUrls] = useState<Set<string>>(new Set());
 
@@ -37,7 +39,7 @@ export default function CarruselImagen({ images, altText }: Props) {
     return (
       <div className="image-carousel image-carousel--empty" role="img" aria-label={altText}>
         <ImageOff size={40} strokeWidth={1.25} aria-hidden />
-        <span>Sin imágenes</span>
+        <span>{t("noImages")}</span>
       </div>
     );
   }
@@ -68,7 +70,7 @@ export default function CarruselImagen({ images, altText }: Props) {
         <Image
           key={currentSrc}
           src={currentSrc}
-          alt={`${altText} - ${safeIndex + 1} de ${visibleImages.length}`}
+          alt={t("imageAlt", { alt: altText, current: safeIndex + 1, total: visibleImages.length })}
           width={800}
           height={600}
           className="image-carousel__img"
@@ -81,7 +83,7 @@ export default function CarruselImagen({ images, altText }: Props) {
               type="button"
               className="image-carousel__btn image-carousel__btn--prev"
               onClick={handlePrev}
-              aria-label="Imagen anterior"
+              aria-label={t("prevImageAria")}
             >
               <ChevronLeft size={20} />
             </button>
@@ -89,18 +91,18 @@ export default function CarruselImagen({ images, altText }: Props) {
               type="button"
               className="image-carousel__btn image-carousel__btn--next"
               onClick={handleNext}
-              aria-label="Imagen siguiente"
+              aria-label={t("nextImageAria")}
             >
               <ChevronRight size={20} />
             </button>
-            <div className="image-carousel__dots" role="tablist" aria-label="Imágenes de la publicación">
+            <div className="image-carousel__dots" role="tablist" aria-label={t("imagesAria")}>
               {visibleImages.map((_, index) => (
                 <button
                   key={index}
                   type="button"
                   role="tab"
                   aria-selected={index === safeIndex}
-                  aria-label={`Imagen ${index + 1}`}
+                  aria-label={t("dotAria", { number: index + 1 })}
                   className={`image-carousel__dot${index === safeIndex ? " image-carousel__dot--active" : ""}`}
                   onClick={(e) => {
                     e.stopPropagation();

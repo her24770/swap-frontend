@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { CircleAlert, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "./InfoHint.css";
 
 export interface InfoHintItem {
@@ -21,6 +22,7 @@ interface InfoHintProps {
 export function InfoHint({ items, ariaLabel = "Ayuda sobre los íconos" }: InfoHintProps) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("common.actions");
 
   useEffect(() => {
     if (!open) return;
@@ -49,7 +51,7 @@ export function InfoHint({ items, ariaLabel = "Ayuda sobre los íconos" }: InfoH
             type="button"
             className="swap-info-hint__close"
             onClick={() => setOpen(false)}
-            aria-label="Cerrar"
+            aria-label={t("close")}
           >
             <X size={14} />
           </button>

@@ -1,8 +1,19 @@
 {
 	"systemPages": {
-		"error": { "eyebrow": "Algo salió mal", "title": "No pudimos cargar esta página", "description": "Ocurrió un problema inesperado. Puedes intentarlo de nuevo o volver al inicio." },
-		"notFound": { "eyebrow": "Error 404", "title": "No encontramos esta página", "description": "Puede que la dirección haya cambiado o que la página ya no exista." },
-		"loading": { "title": "Cargando contenido", "description": "Estamos preparando la página para ti." },
+		"error": {
+			"eyebrow": "Algo salió mal",
+			"title": "No pudimos cargar esta página",
+			"description": "Ocurrió un problema inesperado. Puedes intentarlo de nuevo o volver al inicio."
+		},
+		"notFound": {
+			"eyebrow": "Error 404",
+			"title": "No encontramos esta página",
+			"description": "Puede que la dirección haya cambiado o que la página ya no exista."
+		},
+		"loading": {
+			"title": "Cargando contenido",
+			"description": "Estamos preparando la página para ti."
+		},
 		"retry": "Intentar de nuevo",
 		"home": "Volver al inicio"
 	},
@@ -17,7 +28,11 @@
 			"logo": "SWAP",
 			"viewProfile": "Ver perfil",
 			"myStore": "Mi tienda",
-			"logout": "Cerrar sesión"
+			"logout": "Cerrar sesión",
+			"openSettingsAria": "Abrir configuraciones",
+			"settingsTooltip": "Configuraciones",
+			"notificationsTooltip": "Notificaciones",
+			"openNotificationsAria": "Abrir notificaciones"
 		},
 		"sidebar": {
 			"descubre": "Descubre",
@@ -37,7 +52,9 @@
 			"tutorial": "Tutorial",
 			"tutorialDesc": "Vuelve a ver la guía de bienvenida",
 			"tutorialButton": "Reiniciar"
-		}
+		},
+		"version": "Versión {version}",
+		"createPublicationAria": "Crear publicación"
 	},
 	"onboarding": {
 		"welcome": {
@@ -164,7 +181,9 @@
 				"viernes": "Viernes",
 				"sabado": "Sábado",
 				"domingo": "Domingo"
-			}
+			},
+			"minValueAria": "Valor mínimo",
+			"maxValueAria": "Valor máximo"
 		},
 		"empty": {
 			"noResultsFor": "No se encontraron resultados para \"{query}\"",
@@ -185,7 +204,9 @@
 			"editPublication": "Editar publicación",
 			"publishing": "Publicando...",
 			"saving": "Guardando...",
-			"confirm": "Confirmar"
+			"confirm": "Confirmar",
+			"close": "Cerrar",
+			"apply": "Aplicar"
 		},
 		"people": {
 			"anonymous": "Anónimo",
@@ -313,51 +334,199 @@
 		}
 	},
 	"moderacion": {
-    "login": {
-      "title": "Panel de Moderación",
-      "subtitle": "Ingresa tus credenciales de moderador.",
-      "usuarioLabel": "Usuario",
-      "usuarioPlaceholder": "Ingresa tu usuario",
-      "passwordLabel": "Contraseña",
-      "passwordPlaceholder": "Ingresa tu contraseña",
-      "togglePasswordAria": "Mostrar u ocultar contraseña",
-      "submit": "Ingresar",
-      "submitting": "Ingresando...",
-      "toast": {
-        "welcomeBack": "Sesión de moderador iniciada",
-        "invalidCredentials": "Usuario o contraseña incorrectos.",
-        "loginErrorFallback": "No fue posible iniciar sesión"
-      },
-      "validation": {
-        "usuarioRequired": "El usuario es requerido",
-        "passwordRequired": "La contraseña es requerida"
-      }
-    },
-    "panel": {
-      "greeting": "Hola, {usuario}",
-      "nivelModerador": "Moderador",
-      "nivelSuperadmin": "Superadmin",
-      "logout": "Cerrar sesión",
-      "loading": "Verificando sesión...",
-      "comingSoon": "Próximamente",
-      "sections": {
-        "publicaciones": {
-          "title": "Publicaciones",
-          "description": "Visualizar y moderar publicaciones de la plataforma."
-        },
-        "reportes": {
-          "title": "Reportes",
-          "description": "Revisar y resolver reportes de usuarios."
-        },
-        "moderadores": {
-          "title": "Moderadores",
-          "description": "Gestionar cuentas de moderador."
-        },
-        "palabras": {
-          "title": "Palabras restringidas",
-          "description": "Gestionar el listado de palabras restringidas."
-        },
-        "usuarios": {
+		"login": {
+			"title": "Panel de Moderación",
+			"subtitle": "Ingresa tus credenciales de moderador.",
+			"usuarioLabel": "Usuario",
+			"usuarioPlaceholder": "Ingresa tu usuario",
+			"passwordLabel": "Contraseña",
+			"passwordPlaceholder": "Ingresa tu contraseña",
+			"togglePasswordAria": "Mostrar u ocultar contraseña",
+			"submit": "Ingresar",
+			"submitting": "Ingresando...",
+			"toast": {
+				"welcomeBack": "Sesión de moderador iniciada",
+				"invalidCredentials": "Usuario o contraseña incorrectos.",
+				"loginErrorFallback": "No fue posible iniciar sesión"
+			},
+			"validation": {
+				"usuarioRequired": "El usuario es requerido",
+				"passwordRequired": "La contraseña es requerida"
+			}
+		},
+		"panel": {
+			"greeting": "Hola, {usuario}",
+			"nivelModerador": "Moderador",
+			"nivelSuperadmin": "Superadmin",
+			"logout": "Cerrar sesión",
+			"loading": "Verificando sesión...",
+			"comingSoon": "Próximamente",
+			"sections": {
+				"publicaciones": {
+					"title": "Publicaciones",
+					"description": "Visualizar y moderar publicaciones de la plataforma."
+				},
+				"reportes": {
+					"title": "Reportes",
+					"description": "Revisar y resolver reportes de usuarios."
+				},
+				"moderadores": {
+					"title": "Moderadores",
+					"description": "Gestionar cuentas de moderador."
+				},
+				"palabras": {
+					"title": "Palabras restringidas",
+					"description": "Gestionar el listado de palabras restringidas."
+				},
+				"usuarios": {
+					"title": "Usuarios",
+					"subtitle": "Ver y buscar usuarios de la plataforma.",
+					"searchPlaceholder": "Buscar por nombre, correo o carnet...",
+					"resultsCount": "{count} usuarios",
+					"loading": "Cargando usuarios...",
+					"empty": "No se encontraron usuarios.",
+					"errorCarga": "No fue posible cargar los usuarios.",
+					"filtros": {
+						"conReportes": "Solo con reportes"
+					},
+					"sort": {
+						"nombreAsc": "Nombre (A-Z)",
+						"nombreDesc": "Nombre (Z-A)",
+						"reportesDesc": "Más reportados",
+						"calificacionAsc": "Calificación (menor a mayor)",
+						"calificacionDesc": "Calificación (mayor a menor)"
+					},
+					"tabla": {
+						"usuario": "Usuario",
+						"carnet": "Carnet",
+						"correo": "Correo",
+						"calificacion": "Calificación",
+						"reportes": "Reportes",
+						"acciones": "Acciones",
+						"sinCalificacion": "Sin calificación"
+					},
+					"acciones": {
+						"verPerfil": "Ver perfil"
+					},
+					"pagination": {
+						"anterior": "Anterior",
+						"siguiente": "Siguiente",
+						"paginaInfo": "Página {page} de {pageCount}"
+					}
+				}
+			},
+			"goToDashboardAria": "Ir al panel de moderación"
+		},
+		"publicaciones": {
+			"title": "Publicaciones",
+			"subtitle": "Visualiza, filtra y modera publicaciones de toda la plataforma.",
+			"resultsCount": "{count, plural, =1 {1 resultado} other {# resultados}}",
+			"searchPlaceholder": "Buscar por título, descripción, usuario o correo",
+			"tipos": {
+				"todos": "Todos los tipos",
+				"negocio": "Negocios",
+				"material": "Materiales",
+				"tutoria": "Tutorías"
+			},
+			"estados": {
+				"todos": "Todos los estados",
+				"pendiente": "Pendiente",
+				"activo": "Activo",
+				"inactivo": "Inactivo",
+				"disponible": "Disponible",
+				"reservado": "Reservado",
+				"vendido": "Vendido"
+			},
+			"sort": {
+				"fechaDesc": "Más recientes",
+				"fechaAsc": "Más antiguas",
+				"meGustaDesc": "Más likes",
+				"precioDesc": "Mayor precio",
+				"precioAsc": "Menor precio"
+			},
+			"motivosReactivacion": {
+				"errorModeracion": "Error de moderación",
+				"revisadaPermitida": "Publicación revisada y permitida",
+				"correccionUsuario": "Corrección aplicada por el usuario"
+			},
+			"acciones": {
+				"aprobar": "Aprobar",
+				"reactivar": "Reactivar",
+				"bajar": "Bajar",
+				"eliminar": "Eliminar",
+				"detalle": "Detalle"
+			},
+			"card": {
+				"sinImagen": "Sin imagen",
+				"sinTipo": "Sin tipo",
+				"usuarioDesconocido": "Usuario desconocido",
+				"sinCorreo": "Sin correo",
+				"estadoFallback": "Estado {estado}"
+			},
+			"loading": "Cargando publicaciones...",
+			"empty": "No hay publicaciones que coincidan con los filtros.",
+			"errorCarga": "No fue posible cargar publicaciones.",
+			"errorAccion": "No fue posible completar la acción.",
+			"toasts": {
+				"bajadaSuccess": "Publicación bajada exitosamente.",
+				"reactivadaSuccess": "Publicación reactivada exitosamente.",
+				"eliminadaSuccess": "Publicación eliminada exitosamente."
+			},
+			"pagination": {
+				"anterior": "Anterior",
+				"siguiente": "Siguiente",
+				"paginaInfo": "Página {page} de {pageCount}"
+			},
+			"justificante": {
+				"titulos": {
+					"bajar": "Bajar publicación",
+					"reactivar": "Reactivar publicación",
+					"eliminar": "Eliminar publicación"
+				},
+				"preguntas": {
+					"bajar": "¿Por qué quieres bajar la publicación?",
+					"reactivar": "¿Por qué quieres reactivar la publicación?",
+					"eliminar": "¿Por qué quieres eliminar la publicación?"
+				}
+			}
+		},
+		"palabras": {
+			"title": "Palabras restringidas",
+			"subtitle": "Gestionar el listado de palabras no permitidas en la plataforma.",
+			"searchPlaceholder": "Buscar palabra...",
+			"loading": "Cargando palabras...",
+			"empty": "No hay palabras restringidas todavía.",
+			"errorCarga": "No fue posible cargar las palabras restringidas.",
+			"errorAccion": "No fue posible completar la acción.",
+			"tabla": {
+				"palabra": "Palabra",
+				"acciones": "Acciones"
+			},
+			"acciones": {
+				"agregar": "Agregar",
+				"editar": "Editar",
+				"eliminar": "Eliminar"
+			},
+			"modal": {
+				"tituloCrear": "Agregar palabra restringida",
+				"tituloEditar": "Editar palabra restringida",
+				"label": "Palabra",
+				"placeholder": "Escribe la palabra...",
+				"cancelar": "Cancelar",
+				"guardar": "Guardar",
+				"cerrar": "Cerrar"
+			},
+			"confirmar": {
+				"titulo": "Eliminar palabra",
+				"mensaje": "¿Seguro que quieres eliminar \"{palabra}\" de la lista de palabras restringidas?"
+			},
+			"toasts": {
+				"creadaSuccess": "Palabra agregada exitosamente.",
+				"editadaSuccess": "Palabra actualizada exitosamente.",
+				"eliminadaSuccess": "Palabra eliminada exitosamente."
+			}
+		},
+		"usuarios": {
 			"title": "Usuarios",
 			"subtitle": "Ver y buscar usuarios de la plataforma.",
 			"searchPlaceholder": "Buscar por nombre, correo o carnet...",
@@ -365,275 +534,146 @@
 			"loading": "Cargando usuarios...",
 			"empty": "No se encontraron usuarios.",
 			"errorCarga": "No fue posible cargar los usuarios.",
-			"filtros": { "conReportes": "Solo con reportes" },
-			"sort": {
-				"nombreAsc": "Nombre (A-Z)", "nombreDesc": "Nombre (Z-A)",
-				"reportesDesc": "Más reportados",
-				"calificacionAsc": "Calificación (menor a mayor)", "calificacionDesc": "Calificación (mayor a menor)"
+			"filtros": {
+				"conReportes": "Solo con reportes"
 			},
-			"tabla": { "usuario": "Usuario", "carnet": "Carnet", "correo": "Correo", "calificacion": "Calificación", "reportes": "Reportes", "acciones": "Acciones", "sinCalificacion": "Sin calificación" },
-			"acciones": { "verPerfil": "Ver perfil" },
-			"pagination": { "anterior": "Anterior", "siguiente": "Siguiente", "paginaInfo": "Página {page} de {pageCount}" }
+			"sort": {
+				"nombreAsc": "Nombre (A-Z)",
+				"nombreDesc": "Nombre (Z-A)",
+				"reportesDesc": "Más reportados",
+				"calificacionAsc": "Calificación (menor a mayor)",
+				"calificacionDesc": "Calificación (mayor a menor)"
+			},
+			"tabla": {
+				"usuario": "Usuario",
+				"carnet": "Carnet",
+				"correo": "Correo",
+				"calificacion": "Calificación",
+				"reportes": "Reportes",
+				"estado": "Estado",
+				"acciones": "Acciones",
+				"sinCalificacion": "Sin calificación"
+			},
+			"estado": {
+				"activo": "Activo",
+				"bloqueado": "Bloqueado",
+				"suspendidoHasta": "Suspendido hasta {fecha}"
+			},
+			"acciones": {
+				"verPerfil": "Ver perfil",
+				"advertir": "Advertir",
+				"bloquear": "Bloquear",
+				"suspender": "Suspender",
+				"reactivar": "Reactivar"
+			},
+			"justificante": {
+				"titulos": {
+					"advertencia": "Enviar advertencia",
+					"bloquear": "Bloquear cuenta",
+					"suspender": "Suspender cuenta",
+					"reactivar": "Reactivar cuenta"
+				},
+				"preguntas": {
+					"advertencia": "¿Por qué quieres advertir a este usuario?",
+					"bloquear": "¿Por qué quieres bloquear esta cuenta?",
+					"suspender": "¿Por qué quieres suspender esta cuenta?",
+					"reactivar": "¿Por qué quieres reactivar esta cuenta?"
+				},
+				"motivosReactivacion": {
+					"suspensionCumplida": "Suspensión cumplida",
+					"apelacionAprobada": "Apelación aprobada",
+					"correccionUsuario": "Corrección realizada por el usuario"
+				}
+			},
+			"errorAccion": "No fue posible completar la acción.",
+			"toasts": {
+				"advertenciaSuccess": "Advertencia enviada exitosamente.",
+				"bloquearSuccess": "Cuenta bloqueada exitosamente.",
+				"suspenderSuccess": "Cuenta suspendida exitosamente.",
+				"reactivarSuccess": "Cuenta reactivada exitosamente."
+			},
+			"pagination": {
+				"anterior": "Anterior",
+				"siguiente": "Siguiente",
+				"paginaInfo": "Página {page} de {pageCount}"
+			}
+		},
+		"reportes": {
+			"title": "Reportes",
+			"errorCargar": "No fue posible cargar los reportes",
+			"searchPlaceholder": "Buscar",
+			"tabla": {
+				"id": "ID Reporte",
+				"tipo": "Tipo",
+				"fecha": "Fecha",
+				"estado": "Estado",
+				"reporto": "Reportó",
+				"reportado": "Reportado"
+			},
+			"filtros": {
+				"todos": "Todos"
+			},
+			"tipos": {
+				"publicacion": "Publicación",
+				"mensaje": "Mensaje",
+				"usuario": "Usuario"
+			},
+			"estados": {
+				"pendiente": "Pendiente",
+				"resuelto": "Resuelto",
+				"rechazado": "Rechazado"
+			},
+			"acciones": {
+				"verDetalles": "Ver detalles",
+				"cargando": "Cargando…"
+			},
+			"empty": "No se encontraron reportes",
+			"footEmpty": "0 de 0",
+			"footRange": "{from}–{to} de {total}",
+			"paginacion": {
+				"anterior": "Anterior",
+				"siguiente": "Siguiente"
+			},
+			"errorGenerico": "Error",
+			"toasts": {
+				"detalleError": "No fue posible cargar el detalle del reporte.",
+				"estadoActualizado": "Estado del reporte actualizado correctamente.",
+				"estadoError": "No fue posible actualizar el estado del reporte."
+			},
+			"detalle": {
+				"titulo": "Reporte #{id}",
+				"cerrarAria": "Cerrar",
+				"labels": {
+					"tipo": "Tipo",
+					"fecha": "Fecha",
+					"estado": "Estado",
+					"moderador": "Moderador",
+					"motivo": "Motivo",
+					"observaciones": "Observaciones",
+					"mensajeReportado": "Mensaje reportado",
+					"publicacionVinculada": "Publicación vinculada",
+					"reporto": "Reportó",
+					"reportado": "Reportado",
+					"evidencia": "Evidencia"
+				},
+				"evidenciaAlt": "Evidencia {n}",
+				"verPublicacion": "Ver publicación",
+				"ocultarPublicacion": "Ocultar publicación",
+				"cargando": "Cargando…",
+				"cerrar": "Cerrar",
+				"marcarResuelto": "Marcar resuelto",
+				"panelTitulo": "Publicación",
+				"panelCerrarAria": "Cerrar publicación",
+				"meGusta": "{count} me gusta",
+				"toastPublicacionError": "No fue posible cargar la publicación.",
+				"publicacionEliminada": {
+					"titulo": "Publicación eliminada por el autor",
+					"descripcion": "El reporte fue cerrado automáticamente al eliminarse la publicación.",
+					"registroHistorico": "Registro histórico capturado:"
+				}
+			}
 		}
-      }
-    },
-    "publicaciones": {
-      "title": "Publicaciones",
-      "subtitle": "Visualiza, filtra y modera publicaciones de toda la plataforma.",
-      "resultsCount": "{count, plural, =1 {1 resultado} other {# resultados}}",
-      "searchPlaceholder": "Buscar por título, descripción, usuario o correo",
-      "tipos": {
-        "todos": "Todos los tipos",
-        "negocio": "Negocios",
-        "material": "Materiales",
-        "tutoria": "Tutorías"
-      },
-      "estados": {
-        "todos": "Todos los estados",
-        "pendiente": "Pendiente",
-        "activo": "Activo",
-        "inactivo": "Inactivo",
-        "disponible": "Disponible",
-        "reservado": "Reservado",
-        "vendido": "Vendido"
-      },
-      "sort": {
-        "fechaDesc": "Más recientes",
-        "fechaAsc": "Más antiguas",
-        "meGustaDesc": "Más likes",
-        "precioDesc": "Mayor precio",
-        "precioAsc": "Menor precio"
-      },
-      "motivosReactivacion": {
-        "errorModeracion": "Error de moderación",
-        "revisadaPermitida": "Publicación revisada y permitida",
-        "correccionUsuario": "Corrección aplicada por el usuario"
-      },
-      "acciones": {
-        "aprobar": "Aprobar",
-        "reactivar": "Reactivar",
-        "bajar": "Bajar",
-        "eliminar": "Eliminar",
-        "detalle": "Detalle"
-      },
-      "card": {
-        "sinImagen": "Sin imagen",
-        "sinTipo": "Sin tipo",
-        "usuarioDesconocido": "Usuario desconocido",
-        "sinCorreo": "Sin correo",
-        "estadoFallback": "Estado {estado}"
-      },
-      "loading": "Cargando publicaciones...",
-      "empty": "No hay publicaciones que coincidan con los filtros.",
-      "errorCarga": "No fue posible cargar publicaciones.",
-      "errorAccion": "No fue posible completar la acción.",
-      "toasts": {
-        "bajadaSuccess": "Publicación bajada exitosamente.",
-        "reactivadaSuccess": "Publicación reactivada exitosamente.",
-        "eliminadaSuccess": "Publicación eliminada exitosamente."
-      },
-      "pagination": {
-        "anterior": "Anterior",
-        "siguiente": "Siguiente",
-        "paginaInfo": "Página {page} de {pageCount}"
-      },
-      "justificante": {
-        "titulos": {
-          "bajar": "Bajar publicación",
-          "reactivar": "Reactivar publicación",
-          "eliminar": "Eliminar publicación"
-        },
-        "preguntas": {
-          "bajar": "¿Por qué quieres bajar la publicación?",
-          "reactivar": "¿Por qué quieres reactivar la publicación?",
-          "eliminar": "¿Por qué quieres eliminar la publicación?"
-        }
-      }
-    },
-    "palabras": {
-      "title": "Palabras restringidas",
-      "subtitle": "Gestionar el listado de palabras no permitidas en la plataforma.",
-      "searchPlaceholder": "Buscar palabra...",
-      "loading": "Cargando palabras...",
-      "empty": "No hay palabras restringidas todavía.",
-      "errorCarga": "No fue posible cargar las palabras restringidas.",
-      "errorAccion": "No fue posible completar la acción.",
-      "tabla": {
-        "palabra": "Palabra",
-        "acciones": "Acciones"
-      },
-      "acciones": {
-        "agregar": "Agregar",
-        "editar": "Editar",
-        "eliminar": "Eliminar"
-      },
-      "modal": {
-        "tituloCrear": "Agregar palabra restringida",
-        "tituloEditar": "Editar palabra restringida",
-        "label": "Palabra",
-        "placeholder": "Escribe la palabra...",
-        "cancelar": "Cancelar",
-        "guardar": "Guardar",
-        "cerrar": "Cerrar"
-      },
-      "confirmar": {
-        "titulo": "Eliminar palabra",
-        "mensaje": "¿Seguro que quieres eliminar \"{palabra}\" de la lista de palabras restringidas?"
-      },
-      "toasts": {
-        "creadaSuccess": "Palabra agregada exitosamente.",
-        "editadaSuccess": "Palabra actualizada exitosamente.",
-        "eliminadaSuccess": "Palabra eliminada exitosamente."
-      }
-    },
-    "usuarios": {
-      "title": "Usuarios",
-      "subtitle": "Ver y buscar usuarios de la plataforma.",
-      "searchPlaceholder": "Buscar por nombre, correo o carnet...",
-      "resultsCount": "{count} usuarios",
-      "loading": "Cargando usuarios...",
-      "empty": "No se encontraron usuarios.",
-      "errorCarga": "No fue posible cargar los usuarios.",
-      "filtros": {
-        "conReportes": "Solo con reportes"
-      },
-      "sort": {
-        "nombreAsc": "Nombre (A-Z)",
-        "nombreDesc": "Nombre (Z-A)",
-        "reportesDesc": "Más reportados",
-        "calificacionAsc": "Calificación (menor a mayor)",
-        "calificacionDesc": "Calificación (mayor a menor)"
-      },
-      "tabla": {
-        "usuario": "Usuario",
-        "carnet": "Carnet",
-        "correo": "Correo",
-        "calificacion": "Calificación",
-        "reportes": "Reportes",
-        "estado": "Estado",
-        "acciones": "Acciones",
-        "sinCalificacion": "Sin calificación"
-      },
-      "estado": {
-        "activo": "Activo",
-        "bloqueado": "Bloqueado",
-        "suspendidoHasta": "Suspendido hasta {fecha}"
-      },
-      "acciones": {
-        "verPerfil": "Ver perfil",
-        "advertir": "Advertir",
-        "bloquear": "Bloquear",
-        "suspender": "Suspender",
-        "reactivar": "Reactivar"
-      },
-      "justificante": {
-        "titulos": {
-          "advertencia": "Enviar advertencia",
-          "bloquear": "Bloquear cuenta",
-          "suspender": "Suspender cuenta",
-          "reactivar": "Reactivar cuenta"
-        },
-        "preguntas": {
-          "advertencia": "¿Por qué quieres advertir a este usuario?",
-          "bloquear": "¿Por qué quieres bloquear esta cuenta?",
-          "suspender": "¿Por qué quieres suspender esta cuenta?",
-          "reactivar": "¿Por qué quieres reactivar esta cuenta?"
-        },
-        "motivosReactivacion": {
-          "suspensionCumplida": "Suspensión cumplida",
-          "apelacionAprobada": "Apelación aprobada",
-          "correccionUsuario": "Corrección realizada por el usuario"
-        }
-      },
-      "errorAccion": "No fue posible completar la acción.",
-      "toasts": {
-        "advertenciaSuccess": "Advertencia enviada exitosamente.",
-        "bloquearSuccess": "Cuenta bloqueada exitosamente.",
-        "suspenderSuccess": "Cuenta suspendida exitosamente.",
-        "reactivarSuccess": "Cuenta reactivada exitosamente."
-      },
-      "pagination": {
-        "anterior": "Anterior",
-        "siguiente": "Siguiente",
-        "paginaInfo": "Página {page} de {pageCount}"
-      }
-    },
-    "reportes": {
-      "title": "Reportes",
-      "errorCargar": "No fue posible cargar los reportes",
-      "searchPlaceholder": "Buscar",
-      "tabla": {
-        "id": "ID Reporte",
-        "tipo": "Tipo",
-        "fecha": "Fecha",
-        "estado": "Estado",
-        "reporto": "Reportó",
-        "reportado": "Reportado"
-      },
-      "filtros": {
-        "todos": "Todos"
-      },
-      "tipos": {
-        "publicacion": "Publicación",
-        "mensaje": "Mensaje",
-        "usuario": "Usuario"
-      },
-      "estados": {
-        "pendiente": "Pendiente",
-        "resuelto": "Resuelto",
-        "rechazado": "Rechazado"
-      },
-      "acciones": {
-        "verDetalles": "Ver detalles",
-        "cargando": "Cargando…"
-      },
-      "empty": "No se encontraron reportes",
-      "footEmpty": "0 de 0",
-      "footRange": "{from}–{to} de {total}",
-      "paginacion": {
-        "anterior": "Anterior",
-        "siguiente": "Siguiente"
-      },
-      "errorGenerico": "Error",
-      "toasts": {
-        "detalleError": "No fue posible cargar el detalle del reporte.",
-        "estadoActualizado": "Estado del reporte actualizado correctamente.",
-        "estadoError": "No fue posible actualizar el estado del reporte."
-      },
-      "detalle": {
-        "titulo": "Reporte #{id}",
-        "cerrarAria": "Cerrar",
-        "labels": {
-          "tipo": "Tipo",
-          "fecha": "Fecha",
-          "estado": "Estado",
-          "moderador": "Moderador",
-          "motivo": "Motivo",
-          "observaciones": "Observaciones",
-          "mensajeReportado": "Mensaje reportado",
-          "publicacionVinculada": "Publicación vinculada",
-          "reporto": "Reportó",
-          "reportado": "Reportado",
-          "evidencia": "Evidencia"
-        },
-        "evidenciaAlt": "Evidencia {n}",
-        "verPublicacion": "Ver publicación",
-        "ocultarPublicacion": "Ocultar publicación",
-        "cargando": "Cargando…",
-        "cerrar": "Cerrar",
-        "marcarResuelto": "Marcar resuelto",
-        "panelTitulo": "Publicación",
-        "panelCerrarAria": "Cerrar publicación",
-        "meGusta": "{count} me gusta",
-        "toastPublicacionError": "No fue posible cargar la publicación.",
-        "publicacionEliminada": {
-          "titulo": "Publicación eliminada por el autor",
-          "descripcion": "El reporte fue cerrado automáticamente al eliminarse la publicación.",
-          "registroHistorico": "Registro histórico capturado:"
-        }
-      }
-    }
-  },
+	},
 	"forgotPassword": {
 		"title": "Recuperar contraseña",
 		"emailLabel": "Correo electrónico",
@@ -734,7 +774,11 @@
 			"schedule": "Tu Horario",
 			"ads": "Anuncios",
 			"comments": "Comentarios y Reseñas",
-			"featured": "Publicaciones Destacadas"
+			"featured": "Publicaciones Destacadas",
+			"emptyCatalogMaterial": "Aún no tienes publicaciones de materiales.",
+			"emptyCatalogNegocio": "Aún no tienes publicaciones de negocio.",
+			"emptyCatalogTutoria": "Aún no tienes tutorías publicadas.",
+			"emptyAds": "Este estudiante aún no tiene anuncios publicados."
 		},
 		"history": {
 			"emptyProducts": "Aún no tienes productos comprados.",
@@ -753,7 +797,9 @@
 				"all": "Todos",
 				"materials": "Materiales",
 				"businesses": "Negocios"
-			}
+			},
+			"paginationAria": "Paginación de historial",
+			"loadingAria": "Cargando historial"
 		},
 		"actions": {
 			"newPublication": "Nueva publicación",
@@ -763,12 +809,55 @@
 			"editSchedule": "Editar Horario",
 			"newPostMaterial": "Nuevo material",
 			"newPostNegocio": "Nuevo negocio",
-			"newPostTutoria": "Nueva tutoría"
+			"newPostTutoria": "Nueva tutoría",
+			"sendMessage": "Enviar mensaje"
 		},
 		"modal": {
 			"createPublicationAria": "Crear publicación",
 			"createAdAria": "Crear anuncio",
-			"editPublicationAria": "Editar publicación"
+			"editPublicationAria": "Editar publicación",
+			"editAdAria": "Editar anuncio"
+		},
+		"invalidProfile": "Perfil no válido.",
+		"moderatorNoProfile": "Los moderadores no tienen un perfil de usuario propio.",
+		"saved": {
+			"empty": "Aún no tienes publicaciones guardadas.",
+			"loadingMoreAria": "Cargando más publicaciones guardadas"
+		},
+		"hints": {
+			"scheduleAria": "Ayuda sobre cómo editar tu horario",
+			"catalogAria": "Ayuda sobre los íconos de las publicaciones",
+			"adsAria": "Ayuda sobre los íconos de los anuncios",
+			"certsAria": "Ayuda sobre los íconos de certificaciones",
+			"post": {
+				"pin": "Destacar: resalta la publicación en tu catálogo.",
+				"edit": "Editar: modifica los datos de la publicación.",
+				"delete": "Eliminar: la borra de forma permanente, pide confirmar antes.",
+				"like": "Dar like: indica que la publicación te interesa.",
+				"save": "Guardar: la agrega a tu lista de publicaciones guardadas."
+			},
+			"ad": {
+				"edit": "Editar: modifica los datos del anuncio.",
+				"delete": "Eliminar: lo borra de forma permanente, pide confirmar antes."
+			},
+			"schedule": {
+				"edit": "Editar horario: activa el modo de edición de la cuadrícula.",
+				"toggle": "Toca cada casilla para marcarla como disponible o quitarla.",
+				"save": "Guardar cambios: confirma los espacios que marcaste.",
+				"visible": "Este horario es visible para todos los demás usuarios de la app."
+			},
+			"cert": {
+				"delete": "{delete}: la quita de tu lista, te pide confirmar antes de borrarla.",
+				"openPdf": "Abrir PDF: abre el certificado en una pestaña nueva.",
+				"fullscreen": "Pantalla completa: expande el visor del PDF para verlo más grande."
+			}
+		},
+		"horario": {
+			"disponible": "Disponible",
+			"noDisponible": "No Disponible",
+			"loadingAria": "Cargando horario...",
+			"ocupado": "Ocupado",
+			"headerHora": "HORA"
 		}
 	},
 	"vendedor": {
@@ -783,7 +872,10 @@
 		}
 	},
 	"imageCropper": {
-		"cropError": "No fue posible recortar la imagen"
+		"cropError": "No fue posible recortar la imagen",
+		"cancel": "Cancelar",
+		"apply": "Aplicar",
+		"zoom": "Zoom"
 	},
 	"posts": {
 		"saveError": "No fue posible actualizar tus guardados",
@@ -793,7 +885,9 @@
 			"edit": "Editar",
 			"acordar": "Acordar Compra",
 			"certificado": "Ver certificaciones",
-			"viewProfile": "Ver perfil"
+			"viewProfile": "Ver perfil",
+			"delete": "Eliminar publicación",
+			"viewProfileAria": "Ver perfil de {name}"
 		},
 		"save": {
 			"addAria": "Guardar publicación",
@@ -810,12 +904,6 @@
 			"generic": "Error al subir la imagen"
 		},
 		"estado": {
-			"activo": "Activo",
-			"disponible": "Disponible",
-			"reservado": "Reservado",
-			"vendido": "Vendido",
-			"inactivo": "Inactivo",
-			"pendiente": "Pendiente",
 			"1": "Disponible",
 			"2": "Leído",
 			"3": "Reservado",
@@ -825,7 +913,28 @@
 			"7": "Activo",
 			"8": "Inactivo",
 			"9": "Cancelado",
-			"10": "Completado"
+			"10": "Completado",
+			"activo": "Activo",
+			"disponible": "Disponible",
+			"reservado": "Reservado",
+			"vendido": "Vendido",
+			"inactivo": "Inactivo",
+			"pendiente": "Pendiente"
+		},
+		"pin": {
+			"pin": "Destacar publicación",
+			"unpin": "Quitar de destacados"
+		},
+		"loadingAria": "Cargando publicaciones",
+		"loadingCardAria": "Cargando publicación...",
+		"loadingUserAria": "Cargando usuario...",
+		"carousel": {
+			"noImages": "Sin imágenes",
+			"prevImageAria": "Imagen anterior",
+			"nextImageAria": "Imagen siguiente",
+			"imagesAria": "Imágenes de la publicación",
+			"imageAlt": "{alt} - {current} de {total}",
+			"dotAria": "Imagen {number}"
 		}
 	},
 	"comments": {
@@ -834,14 +943,17 @@
 			"edit": "Editar comentario",
 			"delete": "Eliminar comentario",
 			"editPrompt": "Edita tu comentario:",
-			"deleteConfirm": "¿Seguro que deseas eliminar este comentario?"
+			"deleteConfirm": "¿Seguro que deseas eliminar este comentario?",
+			"report": "Reportar",
+			"reportAria": "Reportar comentario"
 		},
 		"form": {
 			"starsAria": "{count} estrellas",
 			"placeholder": "Deja un comentario a {name}",
 			"sendAnonymous": "Enviar como anónimo"
 		},
-		"title": "Comentarios y Reseñas"
+		"title": "Comentarios y Reseñas",
+		"reviewsCount": "({count, plural, =1 {1 reseña} other {# reseñas}})"
 	},
 	"profileHeader": {
 		"toast": {
@@ -850,10 +962,13 @@
 		},
 		"actions": {
 			"editProfile": "Editar perfil",
-			"editTags": "Etiquetas"
+			"editTags": "Etiquetas",
+			"showLessTags": "Ver menos",
+			"showMoreTags": "Ver más (+{count})"
 		},
 		"aria": {
-			"editProfile": "Editar perfil"
+			"editProfile": "Editar perfil",
+			"changePhoto": "Cambiar foto de perfil"
 		},
 		"labels": {
 			"paymentMethod": "Método de pago:",
@@ -868,7 +983,23 @@
 			"select": "Selecciona una certificación para verla",
 			"delete": "Eliminar certificación",
 			"show": "Ver certificaciones",
-			"hide": "Ocultar certificaciones"
+			"hide": "Ocultar certificaciones",
+			"openPdfNewTab": "Abrir PDF en pestaña nueva",
+			"enterFullscreen": "Ver en pantalla completa",
+			"exitFullscreen": "Salir de pantalla completa",
+			"deleteConfirmTitle": "Eliminar certificación",
+			"deleteConfirmMessage": "¿Estás seguro de que deseas eliminar esta certificación? Esta acción no se puede deshacer.",
+			"deleteSuccess": "Certificación eliminada exitosamente.",
+			"deleteErrorFallback": "No fue posible eliminar la certificación."
+		},
+		"loadingAria": "Cargando perfil...",
+		"photo": {
+			"confirmTitle": "Cambiar foto de perfil",
+			"confirmMessage": "¿Deseas actualizar tu foto de perfil?",
+			"invalidFormat": "Formato no válido. Usa JPG, PNG o WebP.",
+			"tooLarge": "La imagen supera el límite de 5 MB.",
+			"success": "Foto de perfil actualizada exitosamente.",
+			"errorFallback": "No fue posible actualizar la foto de perfil."
 		}
 	},
 	"updateProfileModal": {
@@ -882,16 +1013,16 @@
 		"confirm": {
 			"submit": {
 				"title": "Confirmar cambios",
-				"message": "\u00bfSeguro que deseas actualizar tu perfil con estos cambios?"
+				"message": "¿Seguro que deseas actualizar tu perfil con estos cambios?"
 			},
 			"discard": {
 				"title": "Salir sin guardar",
-				"message": "Tienes cambios sin guardar. \u00bfDeseas salir de todos modos?"
+				"message": "Tienes cambios sin guardar. ¿Deseas salir de todos modos?"
 			},
 			"actions": {
 				"back": "Volver",
-				"confirmSave": "S\u00ed, actualizar",
-				"confirmDiscard": "S\u00ed, salir"
+				"confirmSave": "Sí, actualizar",
+				"confirmDiscard": "Sí, salir"
 			}
 		},
 		"form": {
@@ -943,7 +1074,12 @@
 			"sending": "Enviando..."
 		},
 		"exito": "Solicitud de acuerdo enviada",
-		"errorGenerico": "No se pudo enviar la solicitud. Intenta de nuevo."
+		"errorGenerico": "No se pudo enviar la solicitud. Intenta de nuevo.",
+		"seleccionPublicacion": {
+			"title": "Seleccionar publicación",
+			"description": "Selecciona la publicación sobre la que deseas crear el acuerdo.",
+			"closeAria": "Cerrar"
+		}
 	},
 	"accionesAcuerdo": {
 		"aceptar": "Aceptar",
@@ -1161,7 +1297,9 @@
 		},
 		"unread": "{count} sin leer",
 		"emptyNotificaciones": "Aquí encontrarás tus notificaciones",
-		"emptySolicitudes": "No tienes solicitudes pendientes"
+		"emptySolicitudes": "No tienes solicitudes pendientes",
+		"unreadAria": "No leída",
+		"dismissAria": "Descartar notificación"
 	},
 	"anuncioForm": {
 		"titleCreate": "Crear nuevo anuncio",
@@ -1247,6 +1385,49 @@
 			"Violencia, daño o actividades peligrosas": "Violencia, daño o actividades peligrosas",
 			"Desnudez o contenido sexual explícito": "Desnudez o contenido sexual explícito",
 			"Propiedad intelectual o derechos de autor": "Propiedad intelectual o derechos de autor"
+		}
+	},
+	"terminosModal": {
+		"title": "Términos y Política de Privacidad",
+		"closeAria": "Cerrar",
+		"tabTerminos": "Términos y Condiciones",
+		"tabPrivacidad": "Política de Privacidad"
+	},
+	"toast": {
+		"containerAria": "Notificaciones",
+		"closeAria": "Cerrar notificación",
+		"titles": {
+			"success": "Éxito",
+			"error": "Error",
+			"info": "Información",
+			"warning": "Advertencia"
+		}
+	},
+	"userTagsModal": {
+		"title": "Administrar etiquetas del perfil",
+		"ariaLabel": "Administrar etiquetas",
+		"closeAria": "Cerrar",
+		"subtitle": "Selecciona las etiquetas que quieres mantener. Las que no estén marcadas se eliminarán al guardar.",
+		"searchPlaceholder": "Buscar etiquetas por nombre",
+		"loading": "Cargando etiquetas...",
+		"empty": "No hay etiquetas disponibles.",
+		"emptySearch": "No hay etiquetas que coincidan con esa búsqueda.",
+		"cancel": "Cancelar",
+		"save": "Guardar cambios",
+		"saving": "Guardando...",
+		"errors": {
+			"min": "Selecciona al menos 3 etiquetas.",
+			"max": "No puedes seleccionar más de 20 etiquetas.",
+			"fallback": "No fue posible guardar las etiquetas."
+		}
+	},
+	"anuncios": {
+		"badge": "Anuncio",
+		"deleteAria": "Eliminar publicación",
+		"loadingAria": "Cargando anuncio...",
+		"carousel": {
+			"prevAria": "Anuncio anterior",
+			"nextAria": "Siguiente anuncio"
 		}
 	}
 }

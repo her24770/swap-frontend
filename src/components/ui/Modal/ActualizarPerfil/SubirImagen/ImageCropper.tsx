@@ -78,7 +78,7 @@ export default function ImageCropper({
             min={1}
             max={3}
             step={0.1}
-            aria-labelledby="Zoom"
+            aria-label={t("zoom")}
             onChange={(e) => {
               setZoom(Number(e.target.value));
             }}
@@ -87,10 +87,10 @@ export default function ImageCropper({
         </div>
         <div className="image-cropper-footer">
           <button className="button button--secondary" onClick={onCancel}>
-            Cancelar
+            {t("cancel")}
           </button>
           <button className="button button--medium" onClick={showCroppedImage}>
-            Aplicar
+            {t("apply")}
           </button>
         </div>
       </div>

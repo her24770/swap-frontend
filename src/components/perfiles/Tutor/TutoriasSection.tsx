@@ -42,7 +42,7 @@ export default function TutoriasSection({
     <CatalogoSection
       title={t("sections.catalog")}
       createLabel={t("actions.newPostTutoria")}
-      emptyMessage="Aún no tienes tutorías publicadas."
+      emptyMessage={t("sections.emptyCatalogTutoria")}
       canCreate={canCreate}
       onCreate={onCrear}
       loading={loading}

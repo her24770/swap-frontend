@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from '../../../../ui/Skeleton/Skeleton';
 import './HorarioSkeleton.css';
 
@@ -6,8 +7,10 @@ const HORAS = 9;
 const DIAS  = 7;
 
 export function HorarioSkeleton() {
+  const t = useTranslations("perfil.horario");
+
   return (
-    <div className="horario-sk" aria-label="Cargando horario..." aria-busy="true">
+    <div className="horario-sk" aria-label={t("loadingAria")} aria-busy="true">
 
       {/* Header*/}
       <div className="horario-sk__header">

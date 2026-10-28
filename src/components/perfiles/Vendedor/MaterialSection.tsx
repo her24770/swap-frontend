@@ -42,7 +42,7 @@ export default function MaterialSection({
     <CatalogoSection
       title={t("sections.catalogMaterial")}
       createLabel={t("actions.newPostMaterial")}
-      emptyMessage="Aún no tienes publicaciones de materiales."
+      emptyMessage={t("sections.emptyCatalogMaterial")}
       canCreate={canCreate}
       onCreate={onCrear}
       loading={loading}

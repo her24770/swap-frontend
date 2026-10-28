@@ -61,26 +61,26 @@ export default function UserProfileHeader({
 
     const allowed = ["image/jpeg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      toast.error("Formato no válido. Usa JPG, PNG o WebP.");
+      toast.error(t("photo.invalidFormat"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("La imagen supera el límite de 5 MB.");
+      toast.error(t("photo.tooLarge"));
       return;
     }
 
     mostrarConfirm({
-      titulo: "Cambiar foto de perfil",
-      mensaje: "¿Deseas actualizar tu foto de perfil?",
+      titulo: t("photo.confirmTitle"),
+      mensaje: t("photo.confirmMessage"),
       onConfirm: async () => {
         try {
           setIsUploadingFoto(true);
           const urlFoto = await imagenService.uploadFotoPerfil(user.id_usuario, file);
           await apiClient.patch(`/api/user/${user.id_usuario}`, { url_foto_perfil: urlFoto });
           setDisplayImageUrl(`${urlFoto}?t=${Date.now()}`);
-          toast.success("Foto de perfil actualizada exitosamente.");
+          toast.success(t("photo.success"));
         } catch (err) {
-          toast.error((err as ApiError).message || "No fue posible actualizar la foto de perfil.");
+          toast.error((err as ApiError).message || t("photo.errorFallback"));
         } finally {
           setIsUploadingFoto(false);
         }
@@ -235,7 +235,7 @@ export default function UserProfileHeader({
                   className="user-profile-header__photo-overlay"
                   onClick={() => !isUploadingFoto && photoInputRef.current?.click()}
                   role="button"
-                  aria-label="Cambiar foto de perfil"
+                  aria-label={t("aria.changePhoto")}
                 >
                   {isUploadingFoto
                     ? <Loader2 size={28} className="user-profile-header__upload-spinner" />
@@ -322,7 +322,7 @@ export default function UserProfileHeader({
                   onClick={() => setShowAllTags((prev) => !prev)}
                   aria-expanded={showAllTags}
                 >
-                  <span>{showAllTags ? "Ver menos" : `Ver más (+${sortedTags.length - 5})`}</span>
+                  <span>{showAllTags ? t("actions.showLessTags") : t("actions.showMoreTags", { count: sortedTags.length - 5 })}</span>
                   {showAllTags ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                 </button>
               )}

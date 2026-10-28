@@ -1,9 +1,12 @@
+import { useTranslations } from "next-intl";
 import { Skeleton } from '../../../ui/Skeleton/Skeleton';
 import './PostCardSkeleton.css';
 
 export function PostCardSkeleton() {
+  const t = useTranslations("posts");
+
   return (
-    <div className="pcs" aria-label="Cargando publicación..." aria-busy="true">
+    <div className="pcs" aria-label={t("loadingCardAria")} aria-busy="true">
 
       {/* Header con las tags y los btn*/}
       <div className="pcs__header">

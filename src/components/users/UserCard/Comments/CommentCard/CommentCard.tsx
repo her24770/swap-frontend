@@ -124,10 +124,10 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
             type="button"
             className="comment-item__report"
             onClick={() => setReporteAbierto(true)}
-            aria-label="Reportar comentario"
+            aria-label={t("reportAria")}
           >
             <Flag size={14} />
-            Reportar
+            {t("report")}
           </button>
           <ReporteModal
             isOpen={reporteAbierto}

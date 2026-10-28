@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { CheckCircle2, XCircle, Info, AlertTriangle, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useUIStore } from "../../../store/uiStore";
 import "./Toast.css";
 
@@ -12,13 +13,6 @@ const ICONS = {
   error:   <XCircle     size={16} strokeWidth={2.5} />,
   info:    <Info        size={16} strokeWidth={2.5} />,
   warning: <AlertTriangle size={16} strokeWidth={2.5} />,
-};
-
-const TITLES = {
-  success: "Éxito",
-  error:   "Error",
-  info:    "Información",
-  warning: "Advertencia",
 };
 
 interface ToastItemProps {
@@ -32,6 +26,7 @@ interface ToastItemProps {
 
 function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }: ToastItemProps) {
   const [exiting, setExiting] = useState(false);
+  const t = useTranslations("toast");
 
   const dismiss = useCallback(() => {
     setExiting(true);
@@ -52,7 +47,7 @@ function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }:
       <div className="toast__icon">{ICONS[tipo]}</div>
 
       <div className="toast__body">
-        <p className="toast__title">{titulo ?? TITLES[tipo]}</p>
+        <p className="toast__title">{titulo ?? t(`titles.${tipo}`)}</p>
         {mensaje && <p className="toast__message">{mensaje}</p>}
       </div>
 
@@ -60,7 +55,7 @@ function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }:
         type="button"
         className="toast__close"
         onClick={dismiss}
-        aria-label="Cerrar notificación"
+        aria-label={t("closeAria")}
       >
         <X size={14} strokeWidth={2.5} />
       </button>
@@ -75,9 +70,10 @@ function ToastItem({ id, tipo, titulo, mensaje, duracion = DURATION, onRemove }:
 
 export default function ToastContainer() {
   const { notificaciones, eliminarNotificacion } = useUIStore();
+  const t = useTranslations("toast");
 
   return (
-    <div className="toast-container" role="region" aria-label="Notificaciones">
+    <div className="toast-container" role="region" aria-label={t("containerAria")}>
       {notificaciones.map((n) => (
         <ToastItem
           key={n.id}
