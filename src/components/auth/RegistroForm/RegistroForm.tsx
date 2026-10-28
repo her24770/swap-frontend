@@ -10,7 +10,7 @@ import { useRouter } from "../../../i18n/routing";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { unwrapAuthResponse } from "../../../lib/authResponse";
-import { schemaRegistro, type RegistroFormData } from "../../../schemas/zodSchemas";
+import { schemaRegistro, type RegistroFormData, type RegistroFormInput } from "../../../schemas/zodSchemas";
 import { useAuthStore, type Rol, type Usuario } from "../../../store/authStore";
 import { useTodasEtiquetas } from "../../../hooks/useTodasEtiquetas";
 import TerminosyCondiciones from "../../../components/ui/Modal/TerminosyCondiciones/TerminosyCondiciones";
@@ -60,7 +60,7 @@ export default function RegistroForm() {
     setValue,
     control,
     formState: { errors, isSubmitting },
-  } = useForm<RegistroFormData>({
+  } = useForm<RegistroFormInput, unknown, RegistroFormData>({
     resolver: zodResolver(schemaRegistro),
     defaultValues: {
       nombre: "",
@@ -74,7 +74,7 @@ export default function RegistroForm() {
     },
   });
 
-  const selectedEtiquetas: number[] = useWatch({ control, name: "etiquetas" }) ?? [];
+  const selectedEtiquetas = (useWatch({ control, name: "etiquetas" }) ?? []) as number[];
 
   const toggleEtiqueta = (id: number) => {
     const current = selectedEtiquetas;

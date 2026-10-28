@@ -97,8 +97,9 @@ export const schemaCrearPublicacion = z.object({
     .or(z.literal("")),
 
   tipo_publicacion: z.enum(TIPOS_PUBLICACION, {
-    required_error: "Selecciona el tipo de publicación.",
-    invalid_type_error: "Tipo de publicación inválido.",
+    error: (issue) => issue.input === undefined
+      ? "Selecciona el tipo de publicación."
+      : "Tipo de publicación inválido.",
   }),
 
   /**
@@ -141,7 +142,7 @@ export const schemaEditarPublicacion = z.object({
 
   tipo_publicacion: z
     .enum(TIPOS_PUBLICACION, {
-      invalid_type_error: "Tipo de publicación inválido.",
+      error: "Tipo de publicación inválido.",
     })
     .optional(),
 
@@ -162,7 +163,7 @@ export const schemaEditarPublicacion = z.object({
   // Estados validos para edicion (incluye "pendiente" para publicaciones retenidas por fail-closed)
   estado: z
     .enum(["disponible", "vendido", "reservado", "activo", "inactivo", "pendiente"], {
-      invalid_type_error: "El estado proporcionado no es válido.",
+      error: "El estado proporcionado no es válido.",
     })
     .optional(),
 })
@@ -291,6 +292,10 @@ export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
 export type SolicitudTutoriaFormData = z.infer<typeof schemaSolicitudTutoria>;
 export type CertificacionFormData = z.infer<typeof schemaCertificacion>;
+export type RegistroFormInput = z.input<typeof schemaRegistro>;
+export type CrearPublicacionFormInput = z.input<typeof schemaCrearPublicacion>;
+export type EditarPublicacionFormInput = z.input<typeof schemaEditarPublicacion>;
+export type CertificacionFormInput = z.input<typeof schemaCertificacion>;
 export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
 
 /** Tamaño máximo por imagen: 5 MB */
