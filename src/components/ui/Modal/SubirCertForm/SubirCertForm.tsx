@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SquarePlus, FileText, CloudUpload, ChevronRight, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { schemaCertificacion, validateCertificacionPdf, type CertificacionFormData } from "../../../../schemas/zodSchemas";
+import { schemaCertificacion, validateCertificacionPdf, type CertificacionFormData, type CertificacionFormInput } from "../../../../schemas/zodSchemas";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useToast } from "../../../../hooks/useToast";
 import { API_URL } from "../../../../lib/config";
@@ -54,7 +54,7 @@ export default function SubirCertForm(props: SubirCertFormProps) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CertificacionFormData>({
+  } = useForm<CertificacionFormInput, unknown, CertificacionFormData>({
     resolver: zodResolver(schemaCertificacion),
     defaultValues: {
       nombre: defaultValues?.nombre ?? "",

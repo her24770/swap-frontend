@@ -11,7 +11,9 @@ import {
   schemaCrearPublicacion,
   schemaEditarPublicacion,
   type CrearPublicacionFormData,
+  type CrearPublicacionFormInput,
   type EditarPublicacionFormData,
+  type EditarPublicacionFormInput,
   type TipoPublicacion,
   TIPOS_PUBLICACION,
 } from "../schemas/zodSchemas";
@@ -46,7 +48,7 @@ function revocarPreviews(urls: string[]): void {
 // Hook: useFormCrearPublicacion
 
 export interface UseFormCrearPublicacionReturn {
-  form: UseFormReturn<CrearPublicacionFormData>;
+  form: UseFormReturn<CrearPublicacionFormInput, unknown, CrearPublicacionFormData>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   isSubmitting: boolean;
   serverError: string | null;
@@ -67,7 +69,7 @@ export function useFormCrearPublicacion(
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const form = useForm<CrearPublicacionFormData>({
+  const form = useForm<CrearPublicacionFormInput, unknown, CrearPublicacionFormData>({
     resolver: zodResolver(schemaCrearPublicacion),
     defaultValues: {
       titulo: "",
@@ -210,7 +212,7 @@ export function useFormCrearPublicacion(
 // Hook: useFormEditarPublicacion
 
 export interface UseFormEditarPublicacionReturn {
-  form: UseFormReturn<EditarPublicacionFormData>;
+  form: UseFormReturn<EditarPublicacionFormInput, unknown, EditarPublicacionFormData>;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   isSubmitting: boolean;
   serverError: string | null;
@@ -234,7 +236,7 @@ export function useFormEditarPublicacion(
   const [imagenesExistentes, setImagenesExistentes] = useState<string[]>(imagenesIniciales);
   const [imagenesAEliminar, setImagenesAEliminar] = useState<string[]>([]);
 
-  const form = useForm<EditarPublicacionFormData>({
+  const form = useForm<EditarPublicacionFormInput, unknown, EditarPublicacionFormData>({
     resolver: zodResolver(schemaEditarPublicacion),
     defaultValues: {
       titulo: defaults?.titulo ?? "",

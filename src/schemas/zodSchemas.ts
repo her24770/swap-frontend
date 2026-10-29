@@ -16,7 +16,6 @@ export const schemaRegistro = z.object({
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, "El apellido solo puede contener letras y espacios."),
 
   email_institucional: z
-    .string()
     .email("El correo no tiene un formato válido.")
     .endsWith("@uvg.edu.gt", "Debe ser un correo institucional (@uvg.edu.gt).")
     .regex(/^[a-zA-Z]+\d+@uvg\.edu\.gt$/, "Debe seguir el formato de correos (ej. tan25987@uvg.edu.gt)"),
@@ -30,7 +29,6 @@ export const schemaRegistro = z.object({
   confirmar_password: z.string(),
 
   url_foto_perfil: z
-    .string()
     .url("La URL de la foto no es válida.")
     .optional()
     .or(z.literal("")),
@@ -48,14 +46,13 @@ export const schemaRegistro = z.object({
 }).refine(
   (data) => data.password === data.confirmar_password,
   {
-    message: "Las contraseñas no coinciden.",
+    error: "Las contraseñas no coinciden.",
     path: ["confirmar_password"],
   }
 );
 
 export const schemaLogin = z.object({
   email_institucional: z
-    .string()
     .email("El correo no tiene un formato válido.")
     .endsWith("@uvg.edu.gt", "Debe ser un correo institucional (@uvg.edu.gt)."),
 
@@ -68,14 +65,14 @@ export const schemaLogin = z.object({
 export const TIPOS_PUBLICACION = ["material", "tutoria", "negocio"] as const;
 
 export const schemaImagen = z
-  .instanceof(File, { message: "Debe ser un archivo válido." })
+  .instanceof(File, { error: "Debe ser un archivo válido." })
   .refine(
     (file) => file.size <= MAX_IMAGE_SIZE_BYTES,
-    { message: "Cada imagen no puede superar los 5 MB." }
+    { error: "Cada imagen no puede superar los 5 MB." }
   )
   .refine(
     (file) => ACCEPTED_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_IMAGE_TYPES)[number]),
-    { message: "Formato no permitido. Usa JPG, PNG o WebP." }
+    { error: "Formato no permitido. Usa JPG, PNG o WebP." }
   );
 
 export const schemaCrearPublicacion = z.object({
@@ -97,8 +94,9 @@ export const schemaCrearPublicacion = z.object({
     .or(z.literal("")),
 
   tipo_publicacion: z.enum(TIPOS_PUBLICACION, {
-    required_error: "Selecciona el tipo de publicación.",
-    invalid_type_error: "Tipo de publicación inválido.",
+    error: (issue) => issue.input === undefined
+      ? "Selecciona el tipo de publicación."
+      : "Tipo de publicación inválido.",
   }),
 
   /**
@@ -141,7 +139,7 @@ export const schemaEditarPublicacion = z.object({
 
   tipo_publicacion: z
     .enum(TIPOS_PUBLICACION, {
-      invalid_type_error: "Tipo de publicación inválido.",
+      error: "Tipo de publicación inválido.",
     })
     .optional(),
 
@@ -162,12 +160,12 @@ export const schemaEditarPublicacion = z.object({
   // Estados validos para edicion (incluye "pendiente" para publicaciones retenidas por fail-closed)
   estado: z
     .enum(["disponible", "vendido", "reservado", "activo", "inactivo", "pendiente"], {
-      invalid_type_error: "El estado proporcionado no es válido.",
+      error: "El estado proporcionado no es válido.",
     })
     .optional(),
 })
   .refine((data) => Object.keys(data).some((k) => data[k as keyof typeof data] !== undefined), {
-    message: "Debes modificar al menos un campo.",
+    error: "Debes modificar al menos un campo.",
   });
 
 // ─── Perfil ───────────────────────────────────────────────────────────────────
@@ -190,7 +188,6 @@ export const schemaEditarPerfil = z.object({
     .optional(),
 
   url_foto_perfil: z
-    .string()
     .url("La URL de la foto no es válida.")
     .optional()
     .or(z.literal("")),
@@ -219,7 +216,7 @@ export const schemaCertificacion = z.object({
     .max(100, "El lugar de emisión no puede superar 100 caracteres."),
 
   id_etiqueta: z.coerce
-    .number({ message: "La etiqueta es obligatoria." })
+    .number({ error: "La etiqueta es obligatoria." })
     .int("El ID de etiqueta debe ser un entero.")
     .positive("Debes seleccionar una etiqueta válida."),
 });
@@ -253,7 +250,7 @@ export const schemaHorario = z.object({
     return new Date(data.fin_intervalo) > new Date(data.inicio_intervalo);
   },
   {
-    message: "La fecha de fin debe ser posterior a la de inicio.",
+    error: "La fecha de fin debe ser posterior a la de inicio.",
     path: ["fin_intervalo"],
   }
 );
@@ -291,6 +288,10 @@ export type EditarPerfilFormData = z.infer<typeof schemaEditarPerfil>;
 export type HorarioFormData = z.infer<typeof schemaHorario>;
 export type SolicitudTutoriaFormData = z.infer<typeof schemaSolicitudTutoria>;
 export type CertificacionFormData = z.infer<typeof schemaCertificacion>;
+export type RegistroFormInput = z.input<typeof schemaRegistro>;
+export type CrearPublicacionFormInput = z.input<typeof schemaCrearPublicacion>;
+export type EditarPublicacionFormInput = z.input<typeof schemaEditarPublicacion>;
+export type CertificacionFormInput = z.input<typeof schemaCertificacion>;
 export type TipoPublicacion = (typeof TIPOS_PUBLICACION)[number];
 
 /** Tamaño máximo por imagen: 5 MB */

@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { schemaRegistro, type RegistroFormData } from "../schemas/zodSchemas";
+import { schemaRegistro, type RegistroFormData, type RegistroFormInput } from "../schemas/zodSchemas";
 import { apiClient } from "../lib/apiClient";
 import { unwrapAuthResponse } from "../lib/authResponse";
 import { useAuthStore } from "../store/authStore";
@@ -12,7 +12,7 @@ import type { AuthResponse } from "../types/usuario";
 export function useFormRegistro() {
   const login = useAuthStore((s) => s.login);
 
-  const form = useForm<RegistroFormData>({
+  const form = useForm<RegistroFormInput, unknown, RegistroFormData>({
     resolver: zodResolver(schemaRegistro),
     defaultValues: {
       nombre: "",
