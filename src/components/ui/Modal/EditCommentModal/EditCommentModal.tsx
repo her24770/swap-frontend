@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, useWatch, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ResenaUpdateInput, schemaResenaUpdate } from "../../../../../src/schemas/schemaResenas";
 import { Star, X } from "lucide-react";
@@ -51,7 +51,6 @@ export default function EditCommentModal({
     register,
     handleSubmit,
     control,
-    watch,
     reset,
     formState: { errors, isValid, isDirty },
   } = useForm<ResenaUpdateInput>({
@@ -63,7 +62,13 @@ export default function EditCommentModal({
     },
   });
 
-  const currentContent = watch("contenido") || "";
+  const currentContent = useWatch({ control, name: "contenido" }) || "";
+
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) setHoverRating(0);
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -71,7 +76,6 @@ export default function EditCommentModal({
         calificacion: initialRating,
         contenido: comment,
       });
-      setHoverRating(0);
     }
   }, [comment, initialRating, isOpen, reset]);
 

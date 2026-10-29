@@ -78,7 +78,7 @@ export default function PublicacionesGuardadas({
       {loading && variant === "grid" && <PublicacionesGridSkeleton count={itemsPerPage} />}
 
       {!loading && guardados.length === 0 && (
-        <p className="perfil-page__coming-soon">Aún no tienes publicaciones guardadas.</p>
+        <p className="perfil-page__coming-soon">{t("saved.empty")}</p>
       )}
 
       {!loading && guardados.length > 0 && variant === "carousel" && (
@@ -104,7 +104,7 @@ export default function PublicacionesGuardadas({
             <div
               ref={sentinelRef}
               className="publicaciones-guardadas__infinite-sentinel"
-              aria-label="Cargando más publicaciones guardadas"
+              aria-label={t("saved.loadingMoreAria")}
             />
           )}
         </>
@@ -130,8 +130,6 @@ export default function PublicacionesGuardadas({
             setSelectedPublicacion(null);
             router.push(`/perfil/${sellerId}?modo=${modo}`);
           }}
-          onAcordarCompra={() => console.log("acordar compra")}
-          onSolicitarTutoria={() => console.log("solicitar tutoria")}
         />
       )}
     </section>

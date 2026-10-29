@@ -29,31 +29,6 @@
   margin: 0.125rem 0 0;
 }
 
-.chat-sidebar__tabs {
-  display: flex;
-  border-bottom: 1px solid var(--swap-primary-border-color);
-  padding: 0 0.5rem;
-}
-
-.chat-sidebar__tab {
-  flex: 1;
-  padding: 0.5rem 0.375rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  font-family: var(--swap-font-textos);
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--swap-tertiary-text-color);
-  cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-
-.chat-sidebar__tab--active {
-  color: var(--swap-primary-color);
-  border-bottom-color: var(--swap-primary-color);
-}
-
 .chat-sidebar__list {
   flex: 1;
   overflow-y: auto;

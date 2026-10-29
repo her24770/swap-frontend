@@ -25,10 +25,6 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDetailsClick = () => {
-    console.log(`Ver detalles de: ${title}`);
-  };
-
   const uploadImage = async (file: File) => {
     if (publicacionId === undefined) return;
 
@@ -124,7 +120,6 @@ export default function PostRes({ title, price, images, publicacionId }: PostRes
           <button
             type="button"
             className="button button--small"
-            onClick={handleDetailsClick}
           >
             {t("actions.details")} <ChevronRight size={14} />
           </button>

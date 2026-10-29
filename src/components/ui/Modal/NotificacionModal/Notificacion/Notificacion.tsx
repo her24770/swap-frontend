@@ -1,6 +1,7 @@
 "use client";
 
 import {X, MessageCircle, Heart, Bookmark, Bell, Handshake } from "lucide-react";
+import { useTranslations } from "next-intl";
 import "./Notificaciones.css";
 
 export type TipoNotificacion = "mensaje" | "like" | "guardado" | "sistema" | "oferta";
@@ -35,6 +36,7 @@ export default function Notificacion({
   onMarcarLeida,
   onAbrirChat,
 }: NotificacionProps) {
+  const t = useTranslations("notificaciones");
   const { id, tipo, titulo, descripcion, fecha, leida, } = notificacion;
 
   const esMensaje = tipo === "mensaje";
@@ -56,7 +58,7 @@ export default function Notificacion({
       }}
     >
       {/* Dot de no leída */}
-      {!leida && <span className="notificacion__dot" aria-label="No leída" />}
+      {!leida && <span className="notificacion__dot" aria-label={t("unreadAria")} />}
 
       <div className="notificacion__avatar">
         <span className="notificacion__avatar-icon" aria-hidden>
@@ -78,7 +80,7 @@ export default function Notificacion({
           e.stopPropagation();
           onDismiss(id);
         }}
-        aria-label="Descartar notificación"
+        aria-label={t("dismissAria")}
       >
         <X size={14} strokeWidth={2} />
       </button>

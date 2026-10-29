@@ -3,6 +3,7 @@ import { GuardadosProvider } from "../../src/context/GuardadosContext";
 import { useGuardados } from "../../src/hooks/useGuardados";
 import { publicacionService } from "../../src/services/publicacionService";
 import { useAuthStore } from "../../src/store/authStore";
+import type { Usuario } from "../../src/types/usuario";
 import { publicacionFixture } from "../fixtures/publicaciones";
 import { render, screen, userEvent, waitFor } from "../utils/render";
 
@@ -48,8 +49,8 @@ describe("GuardadosProvider", () => {
   it("loads saved publications for the authenticated user", async () => {
     vi.spyOn(publicacionService, "getGuardadas").mockResolvedValue([publicacionFixture]);
     useAuthStore.setState({
-      usuario: { id_usuario: 10, nombre: "Ana" } as any,
-      rol: "consumidor" as any,
+      usuario: { id_usuario: 10, nombre: "Ana" } as Usuario,
+      rol: "usuario",
     });
 
     render(
@@ -73,8 +74,8 @@ describe("GuardadosProvider", () => {
       .mockResolvedValue(undefined);
 
     useAuthStore.setState({
-      usuario: { id_usuario: 10, nombre: "Ana" } as any,
-      rol: "consumidor" as any,
+      usuario: { id_usuario: 10, nombre: "Ana" } as Usuario,
+      rol: "usuario",
     });
 
     render(

@@ -86,10 +86,13 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
+  // Cierra los menús al cambiar de ruta
+  const [pathnamePrevio, setPathnamePrevio] = useState(pathname);
+  if (pathnamePrevio !== pathname) {
+    setPathnamePrevio(pathname);
     setNotifOpen(false);
     setProfileOpen(false);
-  }, [pathname]);
+  }
 
   const toggleNotificaciones = () => {
     setProfileOpen(false);
@@ -121,13 +124,13 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
       <div className="navbar__right">
         {!isAuthRoute && (
           <>
-            <Tooltip label="Configuraciones" position="bottom">
+            <Tooltip label={t("settingsTooltip")} position="bottom">
               <button
                 onClick={() => {
                   setNotifOpen(false);
                   setIsSettingsOpen(true);
                 }}
-                aria-label="Abrir configuraciones"
+                aria-label={t("openSettingsAria")}
                 type="button"
                 data-tour="navbar-settings"
                 className="navbar__menu-btn"
@@ -139,11 +142,11 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
             <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
             <div ref={notifWrapperRef} className="navbar__notif">
-              <Tooltip label="Notificaciones" position="bottom">
+              <Tooltip label={t("notificationsTooltip")} position="bottom">
                 <button
                   ref={bellRef}
                   onClick={toggleNotificaciones}
-                  aria-label="Abrir notificaciones"
+                  aria-label={t("openNotificationsAria")}
                   aria-expanded={notifOpen}
                   type="button"
                   data-tour="navbar-notif"
@@ -217,7 +220,7 @@ export default function Navbar({ onMenuToggle, menuButtonRef }: NavbarProps) {
                   <div className="navbar__dropdown-divider" />
                   <button
                     type="button"
-                    title="Cerrar sesión"
+                    title={t("logout")}
                     onClick={logout}
                     className="navbar__dropdown-item navbar__dropdown-item--danger"
                   >

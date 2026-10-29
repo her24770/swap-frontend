@@ -24,3 +24,15 @@ export function useSearchParams() {
 export function resetNextNavigationMocks() {
   Object.values(routerMock).forEach((mock) => mock.mockReset());
 }
+
+export const redirectMock = vi.fn();
+
+/** Mock de `createNavigation` de next-intl para no cargar su módulo real en los tests. */
+export function createNavigation() {
+  return {
+    Link: "a",
+    redirect: redirectMock,
+    usePathname,
+    useRouter,
+  };
+}

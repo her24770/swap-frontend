@@ -11,8 +11,6 @@ describe("ChatSidebar", () => {
           { id_conversacion: 2, nombre: "Carlos Ruiz", preview: "Tutoría de cálculo", id_otro_usuario: 2, estado_conversacion: 1 },
         ]}
         selectedId={null}
-        tab="todas"
-        onTabChange={vi.fn()}
         onSelect={vi.fn()}
       />
     );

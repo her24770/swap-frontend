@@ -1,16 +1,21 @@
 "use client";
 import { Suspense, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
 import { stripLocalePrefix } from '../../../i18n/pathname';
 import { FloatingButton } from "../../ui/Button/FloatingButton/FloatingButton";
-import CrearPublicacionForm from "../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm";
-import TourBienvenida from "../../ui/Onboarding/TourBienvenida";
 import { useAuthStore } from "../../../store/authStore";
 import "../../ui/Modal/Modal.css";
 import "./layout.css";
+
+const CrearPublicacionForm = dynamic(
+  () => import("../../ui/Modal/CrearPublicacionForm/CrearPublicacionForm")
+);
+const TourBienvenida = dynamic(() => import("../../ui/Onboarding/TourBienvenida"));
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +33,10 @@ export default function Layout({ children }: LayoutProps) {
 
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
   const isModeracionRoute = pathnameWithoutLocale.startsWith("/moderacion");
+  const t = useTranslations("layout");
+  const versionFooter = (
+    <footer className="layout__version">{t("version", { version: process.env.NEXT_PUBLIC_APP_VERSION ?? "development" })}</footer>
+  );
 
   useEffect(() => {
     if (!sidebarOpen) return;
@@ -46,15 +55,18 @@ export default function Layout({ children }: LayoutProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
 
-  useEffect(() => {
+  // Cierra el sidebar al cambiar de ruta
+  const [pathnamePrevio, setPathnamePrevio] = useState(pathname);
+  if (pathnamePrevio !== pathname) {
+    setPathnamePrevio(pathname);
     setSidebarOpen(false);
-  }, [pathname]);
+  }
 
   // El panel de moderador no comparte Navbar/Sidebar con la app de usuarios
   // (Navbar esta construido sobre la sesion de usuario: useAuth, notificaciones,
   // sockets). Arma su propio header en su propio layout anidado.
   if (isModeracionRoute) {
-    return <>{children}</>;
+    return <>{children}{versionFooter}</>;
   }
 
   return (
@@ -80,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
           onClick={() => {
             if (!document.querySelector(".modal-overlay")) setCrearOpen(true);
           }}
-          ariaLabel="Crear publicación"
+          ariaLabel={t("createPublicationAria")}
         />
         </div>
       )}
@@ -92,7 +104,7 @@ export default function Layout({ children }: LayoutProps) {
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Crear publicación"
+            aria-label={t("createPublicationAria")}
           >
             <CrearPublicacionForm
               mode="crear"
@@ -108,6 +120,7 @@ export default function Layout({ children }: LayoutProps) {
           <TourBienvenida usuario={usuario} onSidebarNeedOpen={setTourNeedsSidebarOpen} />
         </Suspense>
       )}
+      {versionFooter}
     </div>
   );
 }

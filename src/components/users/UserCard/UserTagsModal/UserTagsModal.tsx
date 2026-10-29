@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { X, Check } from "lucide-react";
-import { apiClient } from "../../../../lib/apiClient";
+import { useTranslations } from "next-intl";
+import { apiClient, type ApiError } from "../../../../lib/apiClient";
 import { useTodasEtiquetas, type EtiquetaBD } from "../../../../hooks/useTodasEtiquetas";
 import SearchBar from "../../../ui/SearchBar/SearchBar";
 import type { Tag } from "../../../../types/tag";
@@ -23,18 +24,24 @@ export default function UserTagsModal({
     onClose,
     onSaved,
 }: UserTagsModalProps) {
+    const t = useTranslations("userTagsModal");
     const { etiquetas, loading, error } = useTodasEtiquetas();
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!isOpen) return;
-        setSelectedIds(currentTags.map((tag) => tag.id));
-        setSearchQuery("");
-        setSaveError(null);
-    }, [currentTags, isOpen]);
+    const [previo, setPrevio] = useState({ isOpen, currentTags });
+
+    // Al abrir el modal se reinicia el formulario durante el render, sin efecto.
+    if (previo.isOpen !== isOpen || previo.currentTags !== currentTags) {
+        setPrevio({ isOpen, currentTags });
+        if (isOpen) {
+            setSelectedIds(currentTags.map((tag) => tag.id));
+            setSearchQuery("");
+            setSaveError(null);
+        }
+    }
 
     const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
@@ -65,11 +72,11 @@ export default function UserTagsModal({
     const handleSave = async () => {
         // validate number of tags
         if (selectedIds.length < 3) {
-            setSaveError("Selecciona al menos 3 etiquetas.");
+            setSaveError(t("errors.min"));
             return;
         }
         if (selectedIds.length > 20) {
-            setSaveError("No puedes seleccionar más de 20 etiquetas.");
+            setSaveError(t("errors.max"));
             return;
         }
 
@@ -92,8 +99,8 @@ export default function UserTagsModal({
             onSaved?.(nextTags);
             onClose();
             return response;
-        } catch (err: any) {
-            setSaveError(err.message || "No fue posible guardar las etiquetas.");
+        } catch (err) {
+            setSaveError((err as ApiError).message || t("errors.fallback"));
         } finally {
             setSaving(false);
         }
@@ -107,27 +114,27 @@ export default function UserTagsModal({
                 className="user-tags-modal__panel"
                 role="dialog"
                 aria-modal="true"
-                aria-label="Administrar etiquetas"
+                aria-label={t("ariaLabel")}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="user-tags-modal__header">
                     <div>
-                        <h2 className="user-tags-modal__title">Administrar etiquetas del perfil</h2>
+                        <h2 className="user-tags-modal__title">{t("title")}</h2>
                     </div>
-                    <button type="button" className="user-tags-modal__close" onClick={onClose} aria-label="Cerrar">
+                    <button type="button" className="user-tags-modal__close" onClick={onClose} aria-label={t("closeAria")}>
                         <X size={18} />
                     </button>
                 </div>
 
                 <p className="user-tags-modal__subtitle">
-                    Selecciona las etiquetas que quieres mantener. Las que no estén marcadas se eliminarán al guardar.
+                    {t("subtitle")}
                 </p>
 
                 <div className="user-tags-modal__search">
                     <SearchBar
                         value={searchQuery}
                         onChange={setSearchQuery}
-                        placeholder="Buscar etiquetas por nombre"
+                        placeholder={t("searchPlaceholder")}
                     />
                 </div>
 
@@ -136,11 +143,11 @@ export default function UserTagsModal({
 
                 <div className="user-tags-modal__content">
                     {loading ? (
-                        <p className="user-tags-modal__empty">Cargando etiquetas...</p>
+                        <p className="user-tags-modal__empty">{t("loading")}</p>
                     ) : etiquetas.length === 0 ? (
-                        <p className="user-tags-modal__empty">No hay etiquetas disponibles.</p>
+                        <p className="user-tags-modal__empty">{t("empty")}</p>
                     ) : filteredEtiquetas.length === 0 ? (
-                        <p className="user-tags-modal__empty">No hay etiquetas que coincidan con esa búsqueda.</p>
+                        <p className="user-tags-modal__empty">{t("emptySearch")}</p>
                     ) : (
                         <div className="user-tags-modal__grid">
                             {filteredEtiquetas.map((tag: EtiquetaBD) => {
@@ -165,7 +172,7 @@ export default function UserTagsModal({
 
                 <div className="user-tags-modal__footer">
                     <button type="button" className="cancel-btn" onClick={onClose} disabled={saving}>
-                        Cancelar
+                        {t("cancel")}
                     </button>
                     <button
                         type="button"
@@ -173,7 +180,7 @@ export default function UserTagsModal({
                         onClick={handleSave}
                         disabled={saving || loading || selectedIds.length < 3 || selectedIds.length > 20}
                     >
-                        {saving ? "Guardando..." : "Guardar cambios"}
+                        {saving ? t("saving") : t("save")}
                     </button>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { Skeleton } from '../../../../ui/Skeleton/Skeleton';
 import './AdBannerSkeleton.css';
 
@@ -6,8 +7,10 @@ interface AdBannerSkeletonProps {
 }
 
 export function AdBannerSkeleton({ showActions = false }: AdBannerSkeletonProps) {
+  const t = useTranslations("anuncios");
+
   return (
-    <div className="abs" aria-label="Cargando anuncio..." aria-busy="true">
+    <div className="abs" aria-label={t("loadingAria")} aria-busy="true">
 
       {/* Botones editar/eliminar opcionales */}
       {showActions && (

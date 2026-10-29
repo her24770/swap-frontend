@@ -5,7 +5,7 @@ import ReporteModal from "../../../../ui/Modal/Reporte/ReporteModal";
 import { useAuthStore } from "../../../../../store/authStore";
 import { SquarePen, Star, Trash2, Flag } from "lucide-react";
 import "./CommentCard.css";
-import { useFormatter, useTranslations } from "next-intl";
+import { useFormatter, useNow, useTranslations } from "next-intl";
 import { useResena } from "../../../../../hooks/useResena";
 import EditCommentModal, {
   type EditCommentData,
@@ -32,8 +32,9 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
   const { editarResenaExistente, eliminarResena, loading, error, setError } = useResena();
   const t = useTranslations('comments.actions');
   const [modalAction, setModalAction] = useState<ResenaAction | null>(null);
-  const format = useFormatter(); 
-  const formattedTimeAgo = format.relativeTime(new Date(timeAgo));
+  const format = useFormatter();
+  const now = useNow();
+  const formattedTimeAgo = format.relativeTime(new Date(timeAgo), now);
 
 
 
@@ -115,7 +116,7 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
           </div>
         )}
       </div>
-      <p className="comment-item__text">"{comment}"</p>
+      <p className="comment-item__text">&quot;{comment}&quot;</p>
       {error && <p className="comment-item__error" role="alert">{error}</p>}
       {!esComentarioPropio && (
         <>
@@ -123,10 +124,10 @@ export default function CommentCard({ commentId, authorId, idResena, authorName,
             type="button"
             className="comment-item__report"
             onClick={() => setReporteAbierto(true)}
-            aria-label="Reportar comentario"
+            aria-label={t("reportAria")}
           >
             <Flag size={14} />
-            Reportar
+            {t("report")}
           </button>
           <ReporteModal
             isOpen={reporteAbierto}

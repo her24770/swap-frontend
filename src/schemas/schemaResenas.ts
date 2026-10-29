@@ -5,24 +5,31 @@ import { z } from "zod";
 export const schemaResena = z.object({
     id_receptor: z
         .number({
-            required_error: "El ID del estudiante receptor es obligatorio",
-            invalid_type_error: "El ID del receptor debe ser un número entero",
+            error: (issue) => issue.input === undefined
+            ? "El ID del estudiante receptor es obligatorio"
+            : "El ID del receptor debe ser un número entero"
         })
         .int()
         .positive(),
     tipo_resena: z.string({
-        required_error: "El tipo de reseña es obligatorio",
+        error: (issue) => issue.input === undefined
+        ? "El tipo de reseña es obligatorio"
+        : "El tipo de reseña no es válido"
     }),
     calificacion: z
         .number({
-            required_error: "La puntuación de estrellas es obligatoria",
+            error: (issue) => issue.input === undefined
+            ? "La puntuación de estrellas es obligatoria"
+            : "La calificación debe ser un número entero"
         })
         .int("La calificación debe ser un número entero (estrellas completas)")
         .min(1, "La calificación mínima es 1 estrella")
         .max(5, "La calificación máxima es 5 estrellas"),
     contenido: z
         .string({
-            required_error: "El comentario de la reseña es obligatorio",
+            error: (issue) => issue.input === undefined
+            ? "El comentario de la reseña es obligatorio"
+            : "El comentario no es válido"
         })
         .min(10, "La reseña debe detallar tu experiencia (mínimo 10 caracteres)")
         .max(500, "El comentario no puede superar los 500 caracteres"),

@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfileHeader";
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
 import VistaConsumidor from "../Consumidor/vistaConsumidor";
 import VistaVendedor from "../Vendedor/vistaVendedor";
 import VistaTutor from "../Tutor/vistaTutor";
-import { apiClient } from "../../../lib/apiClient";
+import { apiClient, type ApiError } from "../../../lib/apiClient";
 import { unwrapAuthResponse } from "../../../lib/authResponse";
 import { getPerfilPublico } from "../../../services/perfilService";
 import {
@@ -19,6 +19,7 @@ import { useModeradorAuthStore } from "../../../store/moderadorAuthStore";
 import type { ApiResult } from "../../../types/ApiResult";
 import type { AuthResponse } from "../../../types/usuario";
 import type { UserProfileData } from "../../../types/perfil";
+import type { Contact } from "../../../types/comment";
 import { useResenas } from "../../../hooks/fetch/useResenasUsuario";
 import { UserProfileHeaderSkeleton } from "../../users/UserCard/UserProfileHeader/UserProfileHeadearSkeleton/UserProfileHeaderSkeleton";
 import { PerfilModeToggleSkeleton } from "../perfilLoading";
@@ -36,7 +37,7 @@ export default function PerfilInterno() {
   const idUsuario = useAuthStore((s) => s.usuario?.id_usuario);
   const login = useAuthStore((s) => s.login);
   const moderador = useModeradorAuthStore((s) => s.moderador);
-  const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(idUsuario, mode);
+  const { data: ResenasUsuario, refetch: refetchResenas } = useResenas(idUsuario, mode);
 
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function PerfilInterno() {
         if (!usuarioId) {
           // Si solo hay sesion de moderador (sin sesion de usuario), NO se resuelve /api/auth/me
           if (moderador) {
-            setError("Los moderadores no tienen un perfil de usuario propio.");
+            setError(t("moderatorNoProfile"));
             return;
           }
 
@@ -61,8 +62,8 @@ export default function PerfilInterno() {
         }
 
         setUser(await getPerfilPublico(usuarioId));
-      } catch (err: any) {
-        setError(err.message || "No fue posible cargar tu perfil.");
+      } catch (err) {
+        setError((err as ApiError).message || "No fue posible cargar tu perfil.");
       }
     };
 
@@ -103,8 +104,8 @@ export default function PerfilInterno() {
                       description: updated.description ?? prev.description,
                       imageUrl: updated.imageUrl ?? prev.imageUrl,
                       contacts: updated.contacts
-                        ? updated.contacts.map((c: any) => ({
-                            platform: c.tipo_contacto,
+                        ? updated.contacts.map((c) => ({
+                            platform: c.tipo_contacto as Contact["platform"],
                             url: c.valor,
                           }))
                         : prev.contacts,

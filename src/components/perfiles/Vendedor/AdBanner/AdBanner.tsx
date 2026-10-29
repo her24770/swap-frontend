@@ -12,10 +12,11 @@ export interface AdBannerData {
   onDeleteClick?: () => void;
 }
 
-interface AdBannerProps extends AdBannerData {}
+type AdBannerProps = AdBannerData;
 
 export default function AdBanner({ imageUrl, title, description, onEditClick, onDeleteClick }: AdBannerProps) {
   const t = useTranslations("posts");
+  const tAnuncios = useTranslations("anuncios");
   const { canEditCards } = usePerspectivaInterna();
 
   // Validación defensiva por si llega un string vacío "" desde el backend
@@ -26,7 +27,7 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
       {tieneImagen && (
         <Image 
           src={imageUrl} 
-          alt={title || "Anuncio del vendedor"} 
+          alt={title || t("aria.adBannerImage")}
           fill 
           className="ad-banner__img img-cover"
           unoptimized
@@ -50,14 +51,14 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
               type="button"
               className="ad-card__delete-button"
               onClick={onDeleteClick}
-              aria-label="Eliminar publicación"
-              title="Eliminar publicación"
+              aria-label={t("actions.delete")}
+              title={t("actions.delete")}
             >
               <Trash2 size={24} strokeWidth={2} />
             </button>
           )}
         </div>
-        <span className="ad-banner__badge">Anuncio</span>
+        <span className="ad-banner__badge">{tAnuncios("badge")}</span>
         {title && <h3 className="ad-banner__title">{title}</h3>}
         {description && <p className="ad-banner__description">{description}</p>}
       </div>

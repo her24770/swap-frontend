@@ -2,15 +2,17 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { schemaRegistro, type RegistroFormData } from "../schemas/zodSchemas";
+import { schemaRegistro, type RegistroFormData, type RegistroFormInput } from "../schemas/zodSchemas";
 import { apiClient } from "../lib/apiClient";
 import { unwrapAuthResponse } from "../lib/authResponse";
 import { useAuthStore } from "../store/authStore";
+import type { ApiResult } from "../types/ApiResult";
+import type { AuthResponse } from "../types/usuario";
 
 export function useFormRegistro() {
   const login = useAuthStore((s) => s.login);
 
-  const form = useForm<RegistroFormData>({
+  const form = useForm<RegistroFormInput, unknown, RegistroFormData>({
     resolver: zodResolver(schemaRegistro),
     defaultValues: {
       nombre: "",
@@ -26,7 +28,6 @@ export function useFormRegistro() {
 
   const onSubmit = form.handleSubmit(async (data) => {
     // confirmar_password no se envía al backend
-    const { confirmar_password: _, ...payload } = data;
     const match = data.email_institucional.match(/^[a-zA-Z]+(\d+)@uvg\.edu\.gt$/);
 
     if (!match) {
@@ -34,7 +35,7 @@ export function useFormRegistro() {
     }
 
     const carnet = Number(match[1]);
-    const respuesta = await apiClient.post<{ usuario: any; rol: any }>(
+    const respuesta = await apiClient.post<ApiResult<AuthResponse> | AuthResponse>(
       "/api/auth/register",
       {
         nombre: `${data.nombre} ${data.apellido}`.trim(),

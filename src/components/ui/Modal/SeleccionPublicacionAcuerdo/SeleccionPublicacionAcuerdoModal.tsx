@@ -1,6 +1,7 @@
 "use client";
 
 import { X, ChevronRight, Tag, DollarSign } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { PublicacionAcuerdo } from "../SolicitudAcuerdo/SolicitudAcuerdoModal";
 import "../../Button/Button.css";
 import "../Modal.css";
@@ -19,6 +20,7 @@ export default function SeleccionPublicacionAcuerdoModal({
   onClose,
   onSelect,
 }: SeleccionPublicacionAcuerdoModalProps) {
+  const t = useTranslations("solicitudAcuerdoModal.seleccionPublicacion");
   if (!isOpen) return null;
 
   return (
@@ -30,10 +32,10 @@ export default function SeleccionPublicacionAcuerdoModal({
         <div className="seleccion-publicacion-acuerdo__header">
           <div>
             <h2 className="seleccion-publicacion-acuerdo__title">
-              Seleccionar publicación
+              {t("title")}
             </h2>
             <p className="seleccion-publicacion-acuerdo__description">
-              Selecciona la publicación sobre la que deseas crear el acuerdo.
+              {t("description")}
             </p>
           </div>
 
@@ -41,7 +43,7 @@ export default function SeleccionPublicacionAcuerdoModal({
             type="button"
             className="seleccion-publicacion-acuerdo__close"
             onClick={onClose}
-            aria-label="Cerrar"
+            aria-label={t("closeAria")}
           >
             <X size={20} />
           </button>

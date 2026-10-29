@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Loader2, Flag, Eye, AlertTriangle, Ban, Clock, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -61,25 +61,38 @@ export default function UsuariosModeracion() {
     limit: ITEMS_PER_PAGE,
   }), [conReportes, order, page, q, sort]);
 
-  const cargarUsuarios = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await usuarioService.getModeracion(filters);
-      setUsuarios(response.usuarios);
-      setTotal(response.total);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("errorCarga"));
-      setUsuarios([]);
-      setTotal(0);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters, t]);
+  // Al cambiar los filtros se reinicia la carga durante el render.
+  const [filtersPrevios, setFiltersPrevios] = useState(filters);
+  if (filtersPrevios !== filters) {
+    setFiltersPrevios(filters);
+    setLoading(true);
+    setError(null);
+  }
 
   useEffect(() => {
-    void cargarUsuarios();
-  }, [cargarUsuarios]);
+    let cancelado = false;
+
+    usuarioService
+      .getModeracion(filters)
+      .then((response) => {
+        if (cancelado) return;
+        setUsuarios(response.usuarios);
+        setTotal(response.total);
+      })
+      .catch((err) => {
+        if (cancelado) return;
+        setError(err instanceof Error ? err.message : t("errorCarga"));
+        setUsuarios([]);
+        setTotal(0);
+      })
+      .finally(() => {
+        if (!cancelado) setLoading(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [filters, t]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {

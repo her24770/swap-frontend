@@ -9,7 +9,7 @@ import UserContact from "../UserContact/UserContact";
 import ActualizarPerfilModal from "../../../ui/Modal/ActualizarPerfil/ActualizarPerfilModal";
 import UserTagsModal from "../UserTagsModal/UserTagsModal";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
-import { apiClient } from "../../../../lib/apiClient";
+import { apiClient, type ApiError } from "../../../../lib/apiClient";
 import { imagenService } from "../../../../services/imagenService";
 import type { UserProfileData, UserProfileEditData } from "../../../../types/perfil";
 import type { Tag, UserTag } from "../../../../types/tag";
@@ -26,11 +26,13 @@ import Certificaciones from "../../../users/Certificaciones/Certificaciones";
 interface UserProfileHeaderProps {
   user: UserProfileData;
   onSave?: (updated: Partial<UserProfileEditData>) => Promise<void> | void;
+  showCertificationsInitially?: boolean;
 }
 
 export default function UserProfileHeader({
   user,
   onSave,
+  showCertificationsInitially = false,
 }: UserProfileHeaderProps) {
   const t = useTranslations('profileHeader');
 
@@ -42,7 +44,7 @@ export default function UserProfileHeader({
   const [displayTags, setDisplayTags] = useState<UserTag[]>(user.tags ?? []);
   const [showAllTags, setShowAllTags] = useState(false);
   const [certificaciones, setCertificaciones] = useState<Certificacion[]>([]);
-  const [showCerts, setShowCerts] = useState(false);
+  const [showCerts, setShowCerts] = useState(showCertificationsInitially);
   const toast = useToast();
   const socket = useSocket();
   const { canEditProfile } = usePerspectivaInterna();
@@ -59,26 +61,26 @@ export default function UserProfileHeader({
 
     const allowed = ["image/jpeg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      toast.error("Formato no válido. Usa JPG, PNG o WebP.");
+      toast.error(t("photo.invalidFormat"));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("La imagen supera el límite de 5 MB.");
+      toast.error(t("photo.tooLarge"));
       return;
     }
 
     mostrarConfirm({
-      titulo: "Cambiar foto de perfil",
-      mensaje: "¿Deseas actualizar tu foto de perfil?",
+      titulo: t("photo.confirmTitle"),
+      mensaje: t("photo.confirmMessage"),
       onConfirm: async () => {
         try {
           setIsUploadingFoto(true);
           const urlFoto = await imagenService.uploadFotoPerfil(user.id_usuario, file);
           await apiClient.patch(`/api/user/${user.id_usuario}`, { url_foto_perfil: urlFoto });
           setDisplayImageUrl(`${urlFoto}?t=${Date.now()}`);
-          toast.success("Foto de perfil actualizada exitosamente.");
-        } catch (err: any) {
-          toast.error(err.message || "No fue posible actualizar la foto de perfil.");
+          toast.success(t("photo.success"));
+        } catch (err) {
+          toast.error((err as ApiError).message || t("photo.errorFallback"));
         } finally {
           setIsUploadingFoto(false);
         }
@@ -100,8 +102,23 @@ export default function UserProfileHeader({
   }, [user.id_usuario]);
 
   useEffect(() => {
-    fetchCertificaciones();
-  }, [fetchCertificaciones]);
+    if (!user.id_usuario) return;
+
+    let cancelado = false;
+
+    apiClient
+      .get<{ data: Certificacion[] }>(`/api/certificacion/user/${user.id_usuario}`)
+      .then((res) => {
+        if (!cancelado) setCertificaciones(res.data ?? []);
+      })
+      .catch(() => {
+        if (!cancelado) setCertificaciones([]);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [user.id_usuario]);
 
   /**
    * Escucha eventos de WebSocket ("notificacion:nueva").
@@ -124,9 +141,13 @@ export default function UserProfileHeader({
     };
   }, [socket, fetchCertificaciones]);
 
-  useEffect(() => {
+  const [tagsPrevios, setTagsPrevios] = useState(user.tags);
+
+  // Sincroniza las etiquetas mostradas cuando cambian las del perfil (durante el render, sin efecto)
+  if (tagsPrevios !== user.tags) {
+    setTagsPrevios(user.tags);
     setDisplayTags(user.tags ?? []);
-  }, [user.tags]);
+  }
 
   const sortedTags = useMemo(() => {
     return [...displayTags].sort((a, b) => {
@@ -151,7 +172,7 @@ export default function UserProfileHeader({
     [user.contacts]
   );
 
-  const handleSave = async (data: Parameters<typeof ActualizarPerfilModal>[0]["onSubmit"] extends (d: infer D) => any ? D : never) => {
+  const handleSave = async (data: Parameters<typeof ActualizarPerfilModal>[0]["onSubmit"] extends (d: infer D) => unknown ? D : never) => {
     try {
       setIsSaving(true);
       setSaveError(null);
@@ -190,8 +211,8 @@ export default function UserProfileHeader({
 
       setModalOpen(false);
       toast.success(t('toast.updateSuccess'));
-    } catch (err: any) {
-      toast.error(err.message || t('toast.updateErrorFallback'));
+    } catch (err) {
+      toast.error((err as ApiError).message || t('toast.updateErrorFallback'));
     } finally {
       setIsSaving(false);
     }
@@ -214,7 +235,7 @@ export default function UserProfileHeader({
                   className="user-profile-header__photo-overlay"
                   onClick={() => !isUploadingFoto && photoInputRef.current?.click()}
                   role="button"
-                  aria-label="Cambiar foto de perfil"
+                  aria-label={t("aria.changePhoto")}
                 >
                   {isUploadingFoto
                     ? <Loader2 size={28} className="user-profile-header__upload-spinner" />
@@ -301,7 +322,7 @@ export default function UserProfileHeader({
                   onClick={() => setShowAllTags((prev) => !prev)}
                   aria-expanded={showAllTags}
                 >
-                  <span>{showAllTags ? "Ver menos" : `Ver más (+${sortedTags.length - 5})`}</span>
+                  <span>{showAllTags ? t("actions.showLessTags") : t("actions.showMoreTags", { count: sortedTags.length - 5 })}</span>
                   {showAllTags ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                 </button>
               )}

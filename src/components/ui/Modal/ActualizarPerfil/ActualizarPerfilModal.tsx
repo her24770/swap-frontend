@@ -90,7 +90,10 @@ export default function ActualizarPerfilModal({
   }, [nombre, apellido, descripcion, contacts, foto, initialNombre, initialApellido, initialDescripcion, initialContacts]);
 
   //Resetea el forms cada vez que abre,con los datos iniciales
-  useEffect(() => {
+  const resetKey = JSON.stringify([isOpen, initialNombre, initialApellido, initialDescripcion, initialContacts]);
+  const [prevResetKey, setPrevResetKey] = useState(resetKey);
+  if (prevResetKey !== resetKey) {
+    setPrevResetKey(resetKey);
     if (isOpen) {
       setNombre(initialNombre);
       setApellido(initialApellido);
@@ -114,7 +117,7 @@ export default function ActualizarPerfilModal({
       setFoto(null);
       setPreviewUrl(null);
     }
-  }, [isOpen, initialNombre, initialApellido, initialDescripcion, initialContacts]);
+  }
 
   useEffect(() => {
     return () => {

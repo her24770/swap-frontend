@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { Flag, AlertTriangle } from "lucide-react";
 import UserProfileHeader from "../../users/UserCard/UserProfileHeader/UserProfileHeader";
 import CommentSection from "../../users/UserCard/Comments/CommentSection";
-import MiniChatWidget from "../../Chat/MiniChatWidget/MiniChatWidget";
 import EnviarMensajeButton from "./EnviarMensajeButton/EnviarMensajeButton";
 import ReporteModal from "../../ui/Modal/Reporte/ReporteModal";
 import JustificanteModeracionModal from "../../ui/Modal/Reporte/JustificanteModeracionModal";
@@ -44,7 +43,7 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
     const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
     const [advertenciaAbierta, setAdvertenciaAbierta] = useState(false);
     const [enviandoAdvertencia, setEnviandoAdvertencia] = useState(false);
-    const { data: ResenasUsuario, loading: loadingResenas, error: errorResenas, refetch: refetchResenas } = useResenas(userId, mode);
+    const { data: ResenasUsuario, refetch: refetchResenas } = useResenas(userId, mode);
     const { agregarNotificacion } = useUIStore();
 
     const handleEnviarAdvertencia = async (payload: { motivo: string; detalle: string }) => {
@@ -78,10 +77,12 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
         [t]
     );
 
-    useEffect(() => {
+    // useResenas ya vuelve a consultar al cambiar `mode`.
+    const [initialModePrevio, setInitialModePrevio] = useState(initialMode);
+    if (initialModePrevio !== initialMode) {
+        setInitialModePrevio(initialMode);
         setMode(initialMode);
-        refetchResenas();
-    }, [initialMode]);
+    }
     
 
     
@@ -90,8 +91,8 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
         try {
             setError(null);
             setUser(await getPerfilPublico(userId));
-        } catch (err: any) {
-            setError(err.message || "No fue posible cargar el perfil.");
+        } catch (err) {
+            setError((err instanceof Error && err.message) || "No fue posible cargar el perfil.");
         }
         };
 
@@ -123,7 +124,10 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
             </>
         ) : (
             <>
-                <UserProfileHeader user={user} />
+                <UserProfileHeader
+                    user={user}
+                    showCertificationsInitially={searchParams.get("certificaciones") === "1"}
+                />
 
                 <div className="perfil-page__mode-toolbar perfil-page__mode-toolbar--with-action">
                     <div
@@ -224,14 +228,6 @@ export default function PerfilExterno({ userId, soloLectura = false }: PerfilExt
             </>
         )}
         </PerspectivaInternaProvider>
-
-        {user && !soloLectura && (
-            <MiniChatWidget
-                idUsuario={user.id_usuario}
-                nombre={user.name}
-                avatarUrl={user.imageUrl}
-            />
-        )}
 
         {user && (
             <ReporteModal

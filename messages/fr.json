@@ -1,4 +1,22 @@
 {
+	"systemPages": {
+		"error": {
+			"eyebrow": "Une erreur s'est produite",
+			"title": "Impossible de charger cette page",
+			"description": "Un problème inattendu s'est produit. Réessayez ou retournez à l'accueil."
+		},
+		"notFound": {
+			"eyebrow": "Erreur 404",
+			"title": "Cette page est introuvable",
+			"description": "L'adresse a peut-être changé ou la page n'existe plus."
+		},
+		"loading": {
+			"title": "Chargement du contenu",
+			"description": "Nous préparons cette page pour vous."
+		},
+		"retry": "Réessayer",
+		"home": "Retour à l'accueil"
+	},
 	"layout": {
 		"meta": {
 			"title": "SWAP",
@@ -10,7 +28,11 @@
 			"logo": "SWAP",
 			"viewProfile": "Voir le profil",
 			"myStore": "Ma boutique",
-			"logout": "Se déconnecter"
+			"logout": "Se déconnecter",
+			"openSettingsAria": "Ouvrir les paramètres",
+			"settingsTooltip": "Paramètres",
+			"notificationsTooltip": "Notifications",
+			"openNotificationsAria": "Ouvrir les notifications"
 		},
 		"sidebar": {
 			"descubre": "Découvrir",
@@ -30,7 +52,9 @@
 			"tutorial": "Tutoriel",
 			"tutorialDesc": "Revoir le guide de bienvenue",
 			"tutorialButton": "Redémarrer"
-		}
+		},
+		"version": "Version {version}",
+		"createPublicationAria": "Créer une publication"
 	},
 	"onboarding": {
 		"welcome": {
@@ -157,7 +181,9 @@
 				"viernes": "Vendredi",
 				"sabado": "Samedi",
 				"domingo": "Dimanche"
-			}
+			},
+			"minValueAria": "Valeur minimale",
+			"maxValueAria": "Valeur maximale"
 		},
 		"empty": {
 			"noResultsFor": "Aucun résultat pour \"{query}\"",
@@ -178,7 +204,9 @@
 			"editPublication": "Modifier la publication",
 			"publishing": "Publication...",
 			"saving": "Enregistrement...",
-			"confirm": "Confirmer"
+			"confirm": "Confirmer",
+			"close": "Fermer",
+			"apply": "Appliquer"
 		},
 		"people": {
 			"anonymous": "Anonyme",
@@ -218,6 +246,7 @@
 		}
 	},
 	"tutorias": {
+		"errorAccion": "Impossible de traiter la demande. Veuillez réessayer.",
 		"title": "TUTORAT",
 		"loading": "Chargement des tutorats...",
 		"empty": {
@@ -233,6 +262,7 @@
 		"rechazar": "Refuser",
 		"aceptar": "Accepter",
 		"formulario": {
+			"cerrarModal": "Fermer la demande de tutorat",
 			"nuevaSolicitud": "Nouvelle demande de tutorat",
 			"titulo": "Demande de tutorat",
 			"descripcion": "Veuillez remplir le formulaire pour demander un tutorat.",
@@ -343,8 +373,49 @@
 				"moderadores": {
 					"title": "Modérateurs",
 					"description": "Gérer les comptes de modérateur."
+				},
+				"palabras": {
+					"title": "Mots restreints",
+					"description": "Gérer la liste des mots restreints."
+				},
+				"usuarios": {
+					"title": "Utilisateurs",
+					"subtitle": "Afficher et rechercher les utilisateurs de la plateforme.",
+					"searchPlaceholder": "Rechercher par nom, email ou identifiant...",
+					"resultsCount": "{count} utilisateurs",
+					"loading": "Chargement des utilisateurs...",
+					"empty": "Aucun utilisateur trouvé.",
+					"errorCarga": "Impossible de charger les utilisateurs.",
+					"filtros": {
+						"conReportes": "Avec signalements seulement"
+					},
+					"sort": {
+						"nombreAsc": "Nom (A-Z)",
+						"nombreDesc": "Nom (Z-A)",
+						"reportesDesc": "Les plus signalés",
+						"calificacionAsc": "Note (croissant)",
+						"calificacionDesc": "Note (décroissant)"
+					},
+					"tabla": {
+						"usuario": "Utilisateur",
+						"carnet": "Identifiant",
+						"correo": "Email",
+						"calificacion": "Note",
+						"reportes": "Signalements",
+						"acciones": "Actions",
+						"sinCalificacion": "Pas de note"
+					},
+					"acciones": {
+						"verPerfil": "Voir le profil"
+					},
+					"pagination": {
+						"anterior": "Précédent",
+						"siguiente": "Suivant",
+						"paginaInfo": "Page {page} sur {pageCount}"
+					}
 				}
-			}
+			},
+			"goToDashboardAria": "Aller au tableau de bord de modération"
 		},
 		"publicaciones": {
 			"title": "Publications",
@@ -419,183 +490,189 @@
 				}
 			}
 		},
-    "palabras": {
-      "title": "Mots restreints",
-      "subtitle": "Gérer la liste des mots non autorisés sur la plateforme.",
-      "searchPlaceholder": "Rechercher un mot...",
-      "loading": "Chargement des mots...",
-      "empty": "Aucun mot restreint pour le moment.",
-      "errorCarga": "Impossible de charger les mots restreints.",
-      "errorAccion": "Impossible de terminer l'action.",
-      "tabla": {
-        "palabra": "Mot",
-        "acciones": "Actions"
-      },
-      "acciones": {
-        "agregar": "Ajouter",
-        "editar": "Modifier",
-        "eliminar": "Supprimer"
-      },
-      "modal": {
-        "tituloCrear": "Ajouter un mot restreint",
-        "tituloEditar": "Modifier le mot restreint",
-        "label": "Mot",
-        "placeholder": "Écrire le mot...",
-        "cancelar": "Annuler",
-        "guardar": "Enregistrer",
-        "cerrar": "Fermer"
-      },
-      "confirmar": {
-        "titulo": "Supprimer le mot",
-        "mensaje": "Voulez-vous vraiment supprimer \"{palabra}\" de la liste des mots restreints ?"
-      },
-      "toasts": {
-        "creadaSuccess": "Mot ajouté avec succès.",
-        "editadaSuccess": "Mot mis à jour avec succès.",
-        "eliminadaSuccess": "Mot supprimé avec succès."
-      }
-    },
-    "usuarios": {
-      "title": "Utilisateurs",
-      "subtitle": "Voir et rechercher les utilisateurs de la plateforme.",
-      "searchPlaceholder": "Rechercher par nom, email ou identifiant...",
-      "resultsCount": "{count} utilisateurs",
-      "loading": "Chargement des utilisateurs...",
-      "empty": "Aucun utilisateur trouvé.",
-      "errorCarga": "Impossible de charger les utilisateurs.",
-      "filtros": {
-        "conReportes": "Avec signalements seulement"
-      },
-      "sort": {
-        "nombreAsc": "Nom (A-Z)",
-        "nombreDesc": "Nom (Z-A)",
-        "reportesDesc": "Les plus signalés",
-        "calificacionAsc": "Note (croissant)",
-        "calificacionDesc": "Note (décroissant)"
-      },
-      "tabla": {
-        "usuario": "Utilisateur",
-        "carnet": "Identifiant",
-        "correo": "Email",
-        "calificacion": "Note",
-        "reportes": "Signalements",
-        "estado": "Statut",
-        "acciones": "Actions",
-        "sinCalificacion": "Pas de note"
-      },
-      "estado": {
-        "activo": "Actif",
-        "bloqueado": "Bloqué",
-        "suspendidoHasta": "Suspendu jusqu'au {fecha}"
-      },
-      "acciones": {
-        "verPerfil": "Voir le profil",
-        "advertir": "Avertir",
-        "bloquear": "Bloquer",
-        "suspender": "Suspendre",
-        "reactivar": "Réactiver"
-      },
-      "justificante": {
-        "titulos": {
-          "advertencia": "Envoyer un avertissement",
-          "bloquear": "Bloquer le compte",
-          "suspender": "Suspendre le compte",
-          "reactivar": "Réactiver le compte"
-        },
-        "preguntas": {
-          "advertencia": "Pourquoi voulez-vous avertir cet utilisateur ?",
-          "bloquear": "Pourquoi voulez-vous bloquer ce compte ?",
-          "suspender": "Pourquoi voulez-vous suspendre ce compte ?",
-          "reactivar": "Pourquoi voulez-vous réactiver ce compte ?"
-        },
-        "motivosReactivacion": {
-          "suspensionCumplida": "Suspension terminée",
-          "apelacionAprobada": "Appel approuvé",
-          "correccionUsuario": "Correction effectuée par l'utilisateur"
-        }
-      },
-      "errorAccion": "Impossible de terminer l'action.",
-      "toasts": {
-        "advertenciaSuccess": "Avertissement envoyé avec succès.",
-        "bloquearSuccess": "Compte bloqué avec succès.",
-        "suspenderSuccess": "Compte suspendu avec succès.",
-        "reactivarSuccess": "Compte réactivé avec succès."
-      },
-      "pagination": {
-        "anterior": "Précédent",
-        "siguiente": "Suivant",
-        "paginaInfo": "Page {page} sur {pageCount}"
-      }
-    },
-    "reportes": {
-      "title": "Signalements",
-      "searchPlaceholder": "Rechercher",
-      "tabla": {
-        "id": "ID du signalement",
-        "tipo": "Type",
-        "fecha": "Date",
-        "estado": "Statut",
-        "reporto": "Signalé par",
-        "reportado": "Signalé"
-      },
-      "filtros": {
-        "todos": "Tous"
-      },
-      "tipos": {
-        "publicacion": "Publication",
-        "mensaje": "Message",
-        "usuario": "Utilisateur"
-      },
-      "estados": {
-        "pendiente": "En attente",
-        "resuelto": "Résolu",
-        "rechazado": "Rejeté"
-      },
-      "acciones": {
-        "verDetalles": "Voir les détails",
-        "cargando": "Chargement…"
-      },
-      "empty": "Aucun signalement trouvé",
-      "footEmpty": "0 sur 0",
-      "footRange": "{from}–{to} sur {total}",
-      "paginacion": {
-        "anterior": "Précédent",
-        "siguiente": "Suivant"
-      },
-      "errorGenerico": "Erreur",
-      "toasts": {
-        "detalleError": "Impossible de charger les détails du signalement.",
-        "estadoActualizado": "Statut du signalement mis à jour avec succès.",
-        "estadoError": "Impossible de mettre à jour le statut du signalement."
-      },
-      "detalle": {
-        "titulo": "Signalement n°{id}",
-        "cerrarAria": "Fermer",
-        "labels": {
-          "tipo": "Type",
-          "fecha": "Date",
-          "estado": "Statut",
-          "moderador": "Modérateur",
-          "motivo": "Motif",
-          "observaciones": "Observations",
-          "mensajeReportado": "Message signalé",
-          "publicacionVinculada": "Publication liée",
-          "reporto": "Signalé par",
-          "reportado": "Signalé",
-          "evidencia": "Preuve"
-        },
-        "evidenciaAlt": "Preuve {n}",
-        "verPublicacion": "Voir la publication",
-        "ocultarPublicacion": "Masquer la publication",
-        "cargando": "Chargement…",
-        "cerrar": "Fermer",
-        "marcarResuelto": "Marquer comme résolu",
-        "panelTitulo": "Publication",
-        "panelCerrarAria": "Fermer la publication",
-        "meGusta": "{count} j'aime",
-        "toastPublicacionError": "Impossible de charger la publication."
-      }
-    }
+		"palabras": {
+			"title": "Mots restreints",
+			"subtitle": "Gérer la liste des mots non autorisés sur la plateforme.",
+			"searchPlaceholder": "Rechercher un mot...",
+			"loading": "Chargement des mots...",
+			"empty": "Aucun mot restreint pour le moment.",
+			"errorCarga": "Impossible de charger les mots restreints.",
+			"errorAccion": "Impossible de terminer l'action.",
+			"tabla": {
+				"palabra": "Mot",
+				"acciones": "Actions"
+			},
+			"acciones": {
+				"agregar": "Ajouter",
+				"editar": "Modifier",
+				"eliminar": "Supprimer"
+			},
+			"modal": {
+				"tituloCrear": "Ajouter un mot restreint",
+				"tituloEditar": "Modifier le mot restreint",
+				"label": "Mot",
+				"placeholder": "Écrire le mot...",
+				"cancelar": "Annuler",
+				"guardar": "Enregistrer",
+				"cerrar": "Fermer"
+			},
+			"confirmar": {
+				"titulo": "Supprimer le mot",
+				"mensaje": "Voulez-vous vraiment supprimer \"{palabra}\" de la liste des mots restreints ?"
+			},
+			"toasts": {
+				"creadaSuccess": "Mot ajouté avec succès.",
+				"editadaSuccess": "Mot mis à jour avec succès.",
+				"eliminadaSuccess": "Mot supprimé avec succès."
+			}
+		},
+		"usuarios": {
+			"title": "Utilisateurs",
+			"subtitle": "Voir et rechercher les utilisateurs de la plateforme.",
+			"searchPlaceholder": "Rechercher par nom, email ou identifiant...",
+			"resultsCount": "{count} utilisateurs",
+			"loading": "Chargement des utilisateurs...",
+			"empty": "Aucun utilisateur trouvé.",
+			"errorCarga": "Impossible de charger les utilisateurs.",
+			"filtros": {
+				"conReportes": "Avec signalements seulement"
+			},
+			"sort": {
+				"nombreAsc": "Nom (A-Z)",
+				"nombreDesc": "Nom (Z-A)",
+				"reportesDesc": "Les plus signalés",
+				"calificacionAsc": "Note (croissant)",
+				"calificacionDesc": "Note (décroissant)"
+			},
+			"tabla": {
+				"usuario": "Utilisateur",
+				"carnet": "Identifiant",
+				"correo": "Email",
+				"calificacion": "Note",
+				"reportes": "Signalements",
+				"estado": "Statut",
+				"acciones": "Actions",
+				"sinCalificacion": "Pas de note"
+			},
+			"estado": {
+				"activo": "Actif",
+				"bloqueado": "Bloqué",
+				"suspendidoHasta": "Suspendu jusqu'au {fecha}"
+			},
+			"acciones": {
+				"verPerfil": "Voir le profil",
+				"advertir": "Avertir",
+				"bloquear": "Bloquer",
+				"suspender": "Suspendre",
+				"reactivar": "Réactiver"
+			},
+			"justificante": {
+				"titulos": {
+					"advertencia": "Envoyer un avertissement",
+					"bloquear": "Bloquer le compte",
+					"suspender": "Suspendre le compte",
+					"reactivar": "Réactiver le compte"
+				},
+				"preguntas": {
+					"advertencia": "Pourquoi voulez-vous avertir cet utilisateur ?",
+					"bloquear": "Pourquoi voulez-vous bloquer ce compte ?",
+					"suspender": "Pourquoi voulez-vous suspendre ce compte ?",
+					"reactivar": "Pourquoi voulez-vous réactiver ce compte ?"
+				},
+				"motivosReactivacion": {
+					"suspensionCumplida": "Suspension terminée",
+					"apelacionAprobada": "Appel approuvé",
+					"correccionUsuario": "Correction effectuée par l'utilisateur"
+				}
+			},
+			"errorAccion": "Impossible de terminer l'action.",
+			"toasts": {
+				"advertenciaSuccess": "Avertissement envoyé avec succès.",
+				"bloquearSuccess": "Compte bloqué avec succès.",
+				"suspenderSuccess": "Compte suspendu avec succès.",
+				"reactivarSuccess": "Compte réactivé avec succès."
+			},
+			"pagination": {
+				"anterior": "Précédent",
+				"siguiente": "Suivant",
+				"paginaInfo": "Page {page} sur {pageCount}"
+			}
+		},
+		"reportes": {
+			"title": "Signalements",
+			"errorCargar": "Impossible de charger les signalements",
+			"searchPlaceholder": "Rechercher",
+			"tabla": {
+				"id": "ID du signalement",
+				"tipo": "Type",
+				"fecha": "Date",
+				"estado": "Statut",
+				"reporto": "Signalé par",
+				"reportado": "Signalé"
+			},
+			"filtros": {
+				"todos": "Tous"
+			},
+			"tipos": {
+				"publicacion": "Publication",
+				"mensaje": "Message",
+				"usuario": "Utilisateur"
+			},
+			"estados": {
+				"pendiente": "En attente",
+				"resuelto": "Résolu",
+				"rechazado": "Rejeté"
+			},
+			"acciones": {
+				"verDetalles": "Voir les détails",
+				"cargando": "Chargement…"
+			},
+			"empty": "Aucun signalement trouvé",
+			"footEmpty": "0 sur 0",
+			"footRange": "{from}–{to} sur {total}",
+			"paginacion": {
+				"anterior": "Précédent",
+				"siguiente": "Suivant"
+			},
+			"errorGenerico": "Erreur",
+			"toasts": {
+				"detalleError": "Impossible de charger les détails du signalement.",
+				"estadoActualizado": "Statut du signalement mis à jour avec succès.",
+				"estadoError": "Impossible de mettre à jour le statut du signalement."
+			},
+			"detalle": {
+				"titulo": "Signalement n°{id}",
+				"cerrarAria": "Fermer",
+				"labels": {
+					"tipo": "Type",
+					"fecha": "Date",
+					"estado": "Statut",
+					"moderador": "Modérateur",
+					"motivo": "Motif",
+					"observaciones": "Observations",
+					"mensajeReportado": "Message signalé",
+					"publicacionVinculada": "Publication liée",
+					"reporto": "Signalé par",
+					"reportado": "Signalé",
+					"evidencia": "Preuve"
+				},
+				"evidenciaAlt": "Preuve {n}",
+				"verPublicacion": "Voir la publication",
+				"ocultarPublicacion": "Masquer la publication",
+				"cargando": "Chargement…",
+				"cerrar": "Fermer",
+				"marcarResuelto": "Marquer comme résolu",
+				"panelTitulo": "Publication",
+				"panelCerrarAria": "Fermer la publication",
+				"meGusta": "{count} j'aime",
+				"toastPublicacionError": "Impossible de charger la publication.",
+				"publicacionEliminada": {
+					"titulo": "Publication supprimée par l'auteur",
+					"descripcion": "Le signalement a été automatiquement résolu lors de la suppression de la publication.",
+					"registroHistorico": "Enregistrement historique capturé :"
+				}
+			}
+		}
 	},
 	"forgotPassword": {
 		"title": "Réinitialiser le mot de passe",
@@ -697,7 +774,11 @@
 			"schedule": "Horaire",
 			"ads": "Annonces",
 			"comments": "Commentaires et avis",
-			"featured": "Publications en vedette"
+			"featured": "Publications en vedette",
+			"emptyCatalogMaterial": "Vous n'avez pas encore de publications de matériel.",
+			"emptyCatalogNegocio": "Vous n'avez pas encore de publications d'entreprise.",
+			"emptyCatalogTutoria": "Vous n'avez pas encore de tutorats publiés.",
+			"emptyAds": "Cet étudiant n'a pas encore d'annonces publiées."
 		},
 		"history": {
 			"emptyProducts": "Vous n'avez pas encore acheté de produits.",
@@ -716,7 +797,9 @@
 				"all": "Tous",
 				"materials": "Matériels",
 				"businesses": "Commerces"
-			}
+			},
+			"paginationAria": "Pagination de l'historique",
+			"loadingAria": "Chargement de l'historique"
 		},
 		"actions": {
 			"newPublication": "Nouvelle publication",
@@ -726,11 +809,55 @@
 			"editSchedule": "Modifier l'horaire",
 			"newPostMaterial": "Nouveau matériel",
 			"newPostNegocio": "Nouveau business",
-			"newPostTutoria": "Nouvelle tutoriale"
+			"newPostTutoria": "Nouvelle tutoriale",
+			"sendMessage": "Envoyer un message"
 		},
 		"modal": {
 			"createPublicationAria": "Créer une publication",
-			"editPublicationAria": "Modifier la publication"
+			"createAdAria": "Créer une annonce",
+			"editPublicationAria": "Modifier la publication",
+			"editAdAria": "Modifier l'annonce"
+		},
+		"invalidProfile": "Profil non valide.",
+		"moderatorNoProfile": "Les modérateurs n'ont pas leur propre profil utilisateur.",
+		"saved": {
+			"empty": "Vous n'avez pas encore de publications enregistrées.",
+			"loadingMoreAria": "Chargement de plus de publications enregistrées"
+		},
+		"hints": {
+			"scheduleAria": "Aide pour modifier votre emploi du temps",
+			"catalogAria": "Aide sur les icônes de publication",
+			"adsAria": "Aide sur les icônes d'annonce",
+			"certsAria": "Aide sur les icônes de certification",
+			"post": {
+				"pin": "Mettre en avant : met en valeur la publication dans votre catalogue.",
+				"edit": "Modifier : modifie les détails de la publication.",
+				"delete": "Supprimer : supprime définitivement, demande confirmation.",
+				"like": "Aimer : indique que la publication vous intéresse.",
+				"save": "Enregistrer : l'ajoute à votre liste de publications enregistrées."
+			},
+			"ad": {
+				"edit": "Modifier : modifie les détails de l'annonce.",
+				"delete": "Supprimer : supprime définitivement, demande confirmation."
+			},
+			"schedule": {
+				"edit": "Modifier l'horaire : active le mode d'édition de la grille.",
+				"toggle": "Appuyez sur chaque case pour la marquer comme disponible ou la retirer.",
+				"save": "Enregistrer les modifications : confirme les créneaux sélectionnés.",
+				"visible": "Cet horaire est visible par tous les autres utilisateurs de l'application."
+			},
+			"cert": {
+				"delete": "{delete} : le retire de votre liste, demande confirmation.",
+				"openPdf": "Ouvrir le PDF : ouvre le certificat dans un nouvel onglet.",
+				"fullscreen": "Plein écran : agrandit le visualiseur PDF pour le voir en plus grand."
+			}
+		},
+		"horario": {
+			"disponible": "Disponible",
+			"noDisponible": "Indisponible",
+			"loadingAria": "Chargement de l'horaire...",
+			"ocupado": "Occupé",
+			"headerHora": "HEURE"
 		}
 	},
 	"vendedor": {
@@ -744,13 +871,23 @@
 			"newPublication": "Nouvelle publication"
 		}
 	},
+	"imageCropper": {
+		"cropError": "Impossible de recadrer l'image",
+		"cancel": "Annuler",
+		"apply": "Appliquer",
+		"zoom": "Zoom"
+	},
 	"posts": {
+		"saveError": "Impossible de mettre à jour vos enregistrements",
+		"detalleError": "Impossible de charger les détails de la publication",
 		"actions": {
 			"details": "Détails",
 			"edit": "Modifier",
 			"acordar": "Convenir d'un achat",
 			"certificado": "Voir les certificats",
-			"viewProfile": "Voir le profil"
+			"viewProfile": "Voir le profil",
+			"delete": "Supprimer la publication",
+			"viewProfileAria": "Voir le profil de {name}"
 		},
 		"save": {
 			"addAria": "Enregistrer la publication",
@@ -758,7 +895,8 @@
 		},
 		"tutorTopicsLabel": "Thèmes de tutorat",
 		"aria": {
-			"uploadImage": "Téléverser une image"
+			"uploadImage": "Téléverser une image",
+			"adBannerImage": "Image de l’annonce du vendeur"
 		},
 		"uploadErrors": {
 			"invalidType": "Seules les images JPG, PNG ou WEBP sont autorisées",
@@ -766,12 +904,6 @@
 			"generic": "Erreur lors du téléversement de l'image"
 		},
 		"estado": {
-			"activo": "Actif",
-			"disponible": "Disponible",
-			"reservado": "Réservé",
-			"vendido": "Vendu",
-			"inactivo": "Inactif",
-			"pendiente": "En attente",
 			"1": "Disponible",
 			"2": "Lu",
 			"3": "Réservé",
@@ -781,7 +913,28 @@
 			"7": "Accepté",
 			"8": "Inactif",
 			"9": "Annulé",
-			"10": "Terminé"
+			"10": "Terminé",
+			"activo": "Actif",
+			"disponible": "Disponible",
+			"reservado": "Réservé",
+			"vendido": "Vendu",
+			"inactivo": "Inactif",
+			"pendiente": "En attente"
+		},
+		"pin": {
+			"pin": "Mettre la publication en avant",
+			"unpin": "Retirer des favoris"
+		},
+		"loadingAria": "Chargement des publications",
+		"loadingCardAria": "Chargement de la publication...",
+		"loadingUserAria": "Chargement de l'utilisateur...",
+		"carousel": {
+			"noImages": "Aucune image",
+			"prevImageAria": "Image précédente",
+			"nextImageAria": "Image suivante",
+			"imagesAria": "Images de la publication",
+			"imageAlt": "{alt} - {current} sur {total}",
+			"dotAria": "Image {number}"
 		}
 	},
 	"comments": {
@@ -790,14 +943,17 @@
 			"edit": "Modifier le commentaire",
 			"delete": "Supprimer le commentaire",
 			"editPrompt": "Modifiez votre commentaire :",
-			"deleteConfirm": "Voulez-vous vraiment supprimer ce commentaire ?"
+			"deleteConfirm": "Voulez-vous vraiment supprimer ce commentaire ?",
+			"report": "Signaler",
+			"reportAria": "Signaler le commentaire"
 		},
 		"form": {
 			"starsAria": "{count} étoiles",
 			"placeholder": "Laissez un commentaire à {name}",
 			"sendAnonymous": "Envoyer anonymement"
 		},
-		"title": "Commentaires et avis"
+		"title": "Commentaires et avis",
+		"reviewsCount": "({count, plural, =1 {1 avis} other {# avis}})"
 	},
 	"profileHeader": {
 		"toast": {
@@ -806,16 +962,20 @@
 		},
 		"actions": {
 			"editProfile": "Modifier le profil",
-			"editTags": "Etiquettes"
+			"editTags": "Etiquettes",
+			"showLessTags": "Voir moins",
+			"showMoreTags": "Voir plus (+{count})"
 		},
 		"aria": {
-			"editProfile": "Modifier le profil"
+			"editProfile": "Modifier le profil",
+			"changePhoto": "Changer la photo de profil"
 		},
 		"labels": {
 			"paymentMethod": "Moyen de paiement :",
 			"contact": "Contact"
 		},
 		"certification": {
+			"fullscreenError": "Impossible de passer en plein écran",
 			"title": "Certifications",
 			"add": "Ajouter une certification",
 			"noCert": "Il n'y a pas encore de certifications.",
@@ -823,7 +983,23 @@
 			"select": "Sélectionnez une certification pour l'afficher",
 			"delete": "Supprimer la certification",
 			"show": "Voir les certifications",
-			"hide": "Masquer les certifications"
+			"hide": "Masquer les certifications",
+			"openPdfNewTab": "Ouvrir le PDF dans un nouvel onglet",
+			"enterFullscreen": "Afficher en plein écran",
+			"exitFullscreen": "Quitter le plein écran",
+			"deleteConfirmTitle": "Supprimer la certification",
+			"deleteConfirmMessage": "Êtes-vous sûr de vouloir supprimer cette certification ? Cette action est irréversible.",
+			"deleteSuccess": "Certification supprimée avec succès.",
+			"deleteErrorFallback": "Impossible de supprimer la certification."
+		},
+		"loadingAria": "Chargement du profil...",
+		"photo": {
+			"confirmTitle": "Changer la photo de profil",
+			"confirmMessage": "Voulez-vous mettre à jour votre photo de profil ?",
+			"invalidFormat": "Format non valide. Utilisez JPG, PNG ou WebP.",
+			"tooLarge": "L'image dépasse la limite de 5 Mo.",
+			"success": "Photo de profil mise à jour avec succès.",
+			"errorFallback": "Impossible de mettre à jour la photo de profil."
 		}
 	},
 	"updateProfileModal": {
@@ -898,7 +1074,12 @@
 			"sending": "Envoi..."
 		},
 		"exito": "Demande d'accord envoyée",
-		"errorGenerico": "Impossible d'envoyer la demande. Réessayez."
+		"errorGenerico": "Impossible d'envoyer la demande. Réessayez.",
+		"seleccionPublicacion": {
+			"title": "Sélectionner une publication",
+			"description": "Sélectionnez la publication pour laquelle vous souhaitez créer l'accord.",
+			"closeAria": "Fermer"
+		}
 	},
 	"accionesAcuerdo": {
 		"aceptar": "Accepter",
@@ -939,6 +1120,7 @@
 	},
 	"loading": "Chargement des publications...",
 	"publicacionForm": {
+		"imageLoadError": "Impossible de charger l'image sélectionnée",
 		"titleCreate": "Créer une publication",
 		"titleEdit": "Modifier la publication",
 		"fields": {
@@ -961,6 +1143,8 @@
 			"photo": "Photo du produit",
 			"uploadText": "Cliquez ou glissez une image pour la téléverser",
 			"uploadHint": "PNG, JPG ou WEBP (max. 5 Mo)",
+			"existingImageAlt": "Image actuelle de la publication {n}",
+			"newImageAlt": "Aperçu de la nouvelle image {n}",
 			"removeImageAria": "Supprimer l'image",
 			"removeTagAria": "Supprimer {tag}"
 		},
@@ -970,6 +1154,13 @@
 			"publishing": "Publication...",
 			"saveChanges": "Enregistrer les modifications",
 			"saving": "Enregistrement..."
+		},
+		"estado": {
+			"activo": "Actif",
+			"disponible": "Disponible",
+			"reservado": "Réservé",
+			"vendido": "Vendu",
+			"inactivo": "Inactif"
 		}
 	},
 	"certificacionForm": {
@@ -1068,12 +1259,7 @@
 			"title": "Messages",
 			"subtitle": "Conversations actives",
 			"confirm": "Confirmer",
-			"delete": "Supprimer",
-			"tabs": {
-				"all": "Toutes",
-				"sales": "Ventes",
-				"purchases": "Achats"
-			}
+			"delete": "Supprimer"
 		},
 		"system": {
 			"attachedImageMessage": "Image jointe :",
@@ -1111,7 +1297,9 @@
 		},
 		"unread": "{count} non lues",
 		"emptyNotificaciones": "Vos notifications apparaîtront ici",
-		"emptySolicitudes": "Vous n'avez aucune demande en attente"
+		"emptySolicitudes": "Vous n'avez aucune demande en attente",
+		"unreadAria": "Non lue",
+		"dismissAria": "Ignorer la notification"
 	},
 	"anuncioForm": {
 		"titleCreate": "Créer une nouvelle annonce",
@@ -1197,6 +1385,49 @@
 			"Violencia, daño o actividades peligrosas": "Violence, préjudice ou activités dangereuses",
 			"Desnudez o contenido sexual explícito": "Nudité ou contenu sexuel explicite",
 			"Propiedad intelectual o derechos de autor": "Propriété intellectuelle ou droits d'auteur"
+		}
+	},
+	"terminosModal": {
+		"title": "Conditions et politique de confidentialité",
+		"closeAria": "Fermer",
+		"tabTerminos": "Conditions générales",
+		"tabPrivacidad": "Politique de confidentialité"
+	},
+	"toast": {
+		"containerAria": "Notifications",
+		"closeAria": "Fermer la notification",
+		"titles": {
+			"success": "Succès",
+			"error": "Erreur",
+			"info": "Information",
+			"warning": "Avertissement"
+		}
+	},
+	"userTagsModal": {
+		"title": "Gérer les tags du profil",
+		"ariaLabel": "Gérer les tags",
+		"closeAria": "Fermer",
+		"subtitle": "Sélectionnez les tags que vous souhaitez conserver. Les tags non cochés seront supprimés lors de l'enregistrement.",
+		"searchPlaceholder": "Rechercher des tags par nom",
+		"loading": "Chargement des tags...",
+		"empty": "Aucun tag disponible.",
+		"emptySearch": "Aucun tag ne correspond à cette recherche.",
+		"cancel": "Annuler",
+		"save": "Enregistrer les modifications",
+		"saving": "Enregistrement...",
+		"errors": {
+			"min": "Sélectionnez au moins 3 tags.",
+			"max": "Vous ne pouvez pas sélectionner plus de 20 tags.",
+			"fallback": "Impossible d'enregistrer les tags."
+		}
+	},
+	"anuncios": {
+		"badge": "Annonce",
+		"deleteAria": "Supprimer la publication",
+		"loadingAria": "Chargement de l'annonce...",
+		"carousel": {
+			"prevAria": "Annonce précédente",
+			"nextAria": "Annonce suivante"
 		}
 	}
 }

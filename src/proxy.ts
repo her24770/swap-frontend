@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { checkAuth } from "./proxy/authProxy";
+import { API_URL } from "./lib/config";
 
 
 const intlMiddleware = createIntlMiddleware({
@@ -11,7 +12,7 @@ const intlMiddleware = createIntlMiddleware({
   },
 });
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const apiUrl = API_URL;
 const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || apiUrl;
 const toWsUrl = (url: string) => url.replace(/^http/, "ws");
 const imageHosts = ["https://i.pravatar.cc", "https://*.r2.dev"];
@@ -42,6 +43,8 @@ export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   
   request.headers.set("x-nonce", nonce);
+  const locale = request.nextUrl.pathname.split("/")[1];
+  request.headers.set("x-swap-locale", ["es", "en", "fr"].includes(locale) ? locale : "es");
 
   const authRedirect = checkAuth(request);
   const response = authRedirect ?? intlMiddleware(request);

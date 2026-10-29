@@ -15,22 +15,22 @@
 
 /* Colores de estados */
 .estado-tag--green {
-  background-color: rgba(34, 197, 94, 0.85);
+  background-color: #147a37;
   color: white;
 }
 
 .estado-tag--gray {
-  background-color: rgba(107, 114, 128, 0.85);
+  background-color: #4b5563;
   color: white;
 }
 
 .estado-tag--blue {
-  background-color: rgba(59, 130, 246, 0.85);
+  background-color: #1d4ed8;
   color: white;
 }
 
 .estado-tag--orange {
-  background-color: rgba(249, 115, 22, 0.85);
+  background-color: #9a3412;
   color: white;
 }
 

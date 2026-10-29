@@ -8,6 +8,8 @@
  * - En error 403: llama al handler de permisos (configurable).
  */
 
+import { redirect, routing } from "../i18n/routing";
+import { API_URL } from "./config";
 import { useAuthStore } from "../store/authStore";
 import { useModeradorAuthStore } from "../store/moderadorAuthStore";
 
@@ -29,8 +31,6 @@ export function setForbiddenHandler(handler: ForbiddenHandler): void {
   onForbidden = handler;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-
 function buildHeaders(extra?: HeadersInit): Headers {
   return new Headers({
     "Content-Type": "application/json",
@@ -49,6 +49,12 @@ async function parseErrorBody(response: Response, fallback: string): Promise<{ m
 
 let cerrandoSesion = false;
 
+/** Locale de la URL actual (primer segmento), o el predeterminado si no es válido. */
+function localeActual(): (typeof routing.locales)[number] {
+  const segmento = window.location.pathname.split("/")[1];
+  return routing.locales.find((l) => l === segmento) ?? routing.defaultLocale;
+}
+
 async function forzarCierreSesion(destino: "usuario" | "moderador"): Promise<void> {
   if (cerrandoSesion || typeof window === "undefined") return;
   cerrandoSesion = true;
@@ -61,17 +67,17 @@ async function forzarCierreSesion(destino: "usuario" | "moderador"): Promise<voi
   // cookie swap-token, que es la misma para usuario y moderador — no existe
   // (ni hace falta) un /api/moderador/logout aparte.
   try {
-    await fetch(`${BASE_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+    await fetch(`${API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
   } catch {
     // si falla la llamada, igual seguimos limpiando el estado local y redirigiendo
   }
 
   if (destino === "moderador") {
     useModeradorAuthStore.getState().logout();
-    window.location.href = "/moderacion/login";
+    redirect({ href: "/moderacion/login", locale: localeActual() });
   } else {
     useAuthStore.getState().logout();
-    window.location.href = "/login";
+    redirect({ href: "/login", locale: localeActual() });
   }
 }
 
@@ -122,7 +128,7 @@ interface ApiClientRequestOptions extends RequestInit {
 
 async function get<T>(path: string, options?: ApiClientRequestOptions): Promise<T> {
   const { skipUnauthorizedRedirect, ...fetchOptions } = options ?? {};
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     method: "GET",
     headers: buildHeaders(fetchOptions?.headers),
     credentials: "include",
@@ -134,7 +140,7 @@ async function get<T>(path: string, options?: ApiClientRequestOptions): Promise<
 async function post<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
   const isFormData = body instanceof FormData; // Para permitir enviar FormData 
 
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     method: "POST",
     headers: isFormData ? options?.headers : buildHeaders(options?.headers), // No setear Content-Type si es FormData, el navegador lo hará automáticamente
     credentials: "include",
@@ -149,7 +155,7 @@ async function post<T>(path: string, body?: unknown, options?: RequestInit): Pro
 async function put<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
   const isFormData = body instanceof FormData;
 
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     method: "PUT",
     headers: isFormData ? options?.headers : buildHeaders(options?.headers),
     credentials: "include",
@@ -160,7 +166,7 @@ async function put<T>(path: string, body?: unknown, options?: RequestInit): Prom
 }
 
 async function patch<T>(path: string, body?: unknown, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     method: "PATCH",
     headers: buildHeaders(options?.headers),
     credentials: "include",
@@ -171,7 +177,7 @@ async function patch<T>(path: string, body?: unknown, options?: RequestInit): Pr
 }
 
 async function del<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     method: "DELETE",
     headers: buildHeaders(options?.headers),
     credentials: "include",

@@ -1,9 +1,12 @@
+import { useTranslations } from 'next-intl';
 import { Skeleton } from '../../../../ui/Skeleton/Skeleton';
 import './UserProfileHeaderSkeleton.css';
 
 export function UserProfileHeaderSkeleton() {
+  const t = useTranslations("profileHeader");
+
   return (
-    <div className="uphs" aria-label="Cargando perfil..." aria-busy="true">
+    <div className="uphs" aria-label={t("loadingAria")} aria-busy="true">
 
       <div className="uphs__avatar-col">
         <Skeleton variant="circle" className="uphs__avatar" />

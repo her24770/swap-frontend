@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Plus, FileText, FileX, Maximize2, Minimize2, Trash2, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useToast } from "../../../hooks/useToast";
+import { API_URL } from "../../../lib/config";
 import SubirCertForm from "../../ui/Modal/SubirCertForm/SubirCertForm";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import type { Certificacion } from "../../../types/certificacion";
@@ -13,7 +15,6 @@ import "./Certificaciones.css";
 
 export type { Certificacion };
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 interface CertificacionesProps {
   certificaciones: Certificacion[];
@@ -27,6 +28,8 @@ export default function Certificaciones({
   onRefresh,
 }: CertificacionesProps) {
   const t = useTranslations("profileHeader.certification");
+  const tPerfil = useTranslations("perfil");
+  const toast = useToast();
   const { mostrarConfirm, agregarNotificacion } = useUIStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(
@@ -64,18 +67,18 @@ export default function Certificaciones({
       } else {
         await document.exitFullscreen();
       }
-    } catch (err) {
-      console.error("Error toggling fullscreen:", err);
+    } catch {
+      toast.error(t("fullscreenError"));
     }
   };
 
   const handleEliminar = (id: number) => {
     mostrarConfirm({
-      titulo: "Eliminar certificación",
-      mensaje: "¿Estás seguro de que deseas eliminar esta certificación? Esta acción no se puede deshacer.",
+      titulo: t("deleteConfirmTitle"),
+      mensaje: t("deleteConfirmMessage"),
       onConfirm: async () => {
         try {
-          const res = await fetch(`${BASE_URL}/api/certificacion/${id}`, {
+          const res = await fetch(`${API_URL}/api/certificacion/${id}`, {
             method: "DELETE",
             credentials: "include",
           });
@@ -84,10 +87,10 @@ export default function Certificaciones({
             throw new Error(json.message ?? `Error ${res.status}`);
           }
           if (selectedId === id) setSelectedId(null);
-          agregarNotificacion({ tipo: "success", mensaje: "Certificación eliminada exitosamente." });
+          agregarNotificacion({ tipo: "success", mensaje: t("deleteSuccess") });
           onRefresh?.();
-        } catch (err: any) {
-          agregarNotificacion({ tipo: "error", mensaje: err.message || "No fue posible eliminar la certificación." });
+        } catch (err) {
+          agregarNotificacion({ tipo: "error", mensaje: (err instanceof Error && err.message) || t("deleteErrorFallback") });
         }
       },
     });
@@ -109,11 +112,11 @@ export default function Certificaciones({
                 {t("add")}
               </button>
               <InfoHint
-                ariaLabel="Ayuda sobre los íconos de certificaciones"
+                ariaLabel={tPerfil("hints.certsAria")}
                 items={[
-                  { icon: <Trash2 size={16} strokeWidth={2} />, label: `${t("delete")}: la quita de tu lista, te pide confirmar antes de borrarla.` },
-                  { icon: <ExternalLink size={16} />, label: "Abrir PDF: abre el certificado en una pestaña nueva." },
-                  { icon: <Maximize2 size={16} />, label: "Pantalla completa: expande el visor del PDF para verlo más grande." },
+                  { icon: <Trash2 size={16} strokeWidth={2} />, label: tPerfil("hints.cert.delete", { delete: t("delete") }) },
+                  { icon: <ExternalLink size={16} />, label: tPerfil("hints.cert.openPdf") },
+                  { icon: <Maximize2 size={16} />, label: tPerfil("hints.cert.fullscreen") },
                 ]}
               />
             </div>
@@ -174,7 +177,7 @@ export default function Certificaciones({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="certificaciones__btn-fullscreen"
-                        title="Abrir PDF en pestaña nueva"
+                        title={t("openPdfNewTab")}
                       >
                         <ExternalLink size={16} />
                       </a>
@@ -182,7 +185,7 @@ export default function Certificaciones({
                         type="button"
                         className="certificaciones__btn-fullscreen"
                         onClick={toggleFullscreen}
-                        title={isFullscreen ? "Salir de pantalla completa" : "Ver en pantalla completa"}
+                        title={isFullscreen ? t("exitFullscreen") : t("enterFullscreen")}
                       >
                         {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
                       </button>
@@ -229,7 +232,7 @@ export default function Certificaciones({
               onClick={(e) => e.stopPropagation()}
               role="dialog"
               aria-modal="true"
-              aria-label="Agregar certificación"
+              aria-label={t("add")}
             >
               <div className="perfil-page__crear-pub-modal-content">
                 <SubirCertForm

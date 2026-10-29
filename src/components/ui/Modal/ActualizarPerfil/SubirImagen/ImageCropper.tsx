@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import Cropper from "react-easy-crop";
+import { useToast } from "../../../../../hooks/useToast";
 import type { Area } from "react-easy-crop";
 import getCroppedImg from "../../../../../utils/cropImage";
 import "./ImageCropper.css";
@@ -20,6 +22,8 @@ export default function ImageCropper({
   aspect = 1,
   cropShape = "round",
 }: ImageCropperProps) {
+  const t = useTranslations("imageCropper");
+  const toast = useToast();
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
@@ -46,10 +50,10 @@ export default function ImageCropper({
       if (croppedFile) {
         onCropComplete(croppedFile);
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
+      toast.error(t("cropError"));
     }
-  }, [croppedAreaPixels, imageSrc, onCropComplete]);
+  }, [croppedAreaPixels, imageSrc, onCropComplete, toast, t]);
 
   return (
     <div className="image-cropper-overlay">
@@ -74,7 +78,7 @@ export default function ImageCropper({
             min={1}
             max={3}
             step={0.1}
-            aria-labelledby="Zoom"
+            aria-label={t("zoom")}
             onChange={(e) => {
               setZoom(Number(e.target.value));
             }}
@@ -83,10 +87,10 @@ export default function ImageCropper({
         </div>
         <div className="image-cropper-footer">
           <button className="button button--secondary" onClick={onCancel}>
-            Cancelar
+            {t("cancel")}
           </button>
           <button className="button button--medium" onClick={showCroppedImage}>
-            Aplicar
+            {t("apply")}
           </button>
         </div>
       </div>

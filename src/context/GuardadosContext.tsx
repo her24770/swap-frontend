@@ -20,7 +20,14 @@ export const GuardadosContext = createContext<GuardadosContextValue | null>(null
 export function GuardadosProvider({ children }: { children: React.ReactNode }) {
   const usuario = useAuthStore((state) => state.usuario);
   const [guardados, setGuardados] = useState<Publicacion[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(usuario));
+  const [usuarioPrevio, setUsuarioPrevio] = useState(usuario);
+
+  if (usuarioPrevio !== usuario) {
+    setUsuarioPrevio(usuario);
+    setLoading(Boolean(usuario));
+    if (!usuario) setGuardados([]);
+  }
 
   const cargarGuardados = useCallback(async () => {
     if (!usuario) {
@@ -38,8 +45,24 @@ export function GuardadosProvider({ children }: { children: React.ReactNode }) {
   }, [usuario]);
 
   useEffect(() => {
-    void cargarGuardados();
-  }, [cargarGuardados]);
+    if (!usuario) return;
+
+    let cancelado = false;
+
+    publicacionService
+      .getGuardadas()
+      .then((publicaciones) => {
+        if (cancelado) return;
+        setGuardados(publicaciones.map((publicacion) => ({ ...publicacion, esGuardada: true })));
+      })
+      .finally(() => {
+        if (!cancelado) setLoading(false);
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [usuario]);
 
   const idsGuardados = useMemo(
     () => new Set(guardados.map((publicacion) => publicacion.id_publicacion)),

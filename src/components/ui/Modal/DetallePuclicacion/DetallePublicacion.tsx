@@ -1,19 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { X, Bookmark, Loader2, ChevronRight, Flag, AlertTriangle, Trash2 } from "lucide-react";
-import { UserCircle2 } from "lucide-react";
+import { X } from "lucide-react";
 import { useAuthStore } from "../../../../store/authStore";
-import { useUIStore } from "../../../../store/uiStore";
-import { useGuardados } from "../../../../hooks/useGuardados";
-import EstadoTag from "../../../posts/PostCard/EstadoTag/EstadoTag";
 import type { EstadoOpcion } from "../../../../hooks/useEstados";
 import CarruselImagen from "./CarruselImagen/CarruselImagen";
+import VendedorHeader from "./VendedorHeader";
+import BarraLikes from "./BarraLikes";
+import AccionesContacto from "./AccionesContacto";
+import AccionesModerador from "./AccionesModerador";
+import { useAccionesModerador } from "./useAccionesModerador";
 import EnviarMensajePanel, { TipoPublicacionMensaje } from "../EnviarMensaje/EnviarMensaje";
 import "../../Button/Button.css";
 import "../Modal.css";
@@ -22,7 +22,6 @@ import TagBadge from "../../TagBadge/TagBadge";
 import type { Tag } from "../../../../types/tag";
 import type { ImagenPublicacion } from "../../../../types/publicacion";
 import { normalizeImageUrl } from "../../../../lib/imageUrl";
-import { usuarioService } from "../../../../services/usuarioService";
 import ModalSolicitudTutoria from "../Solicitud/Tutoria/SolicitudTutoriaModal"
 import ReporteModal from "../Reporte/ReporteModal";
 import JustificanteModeracionModal from "../Reporte/JustificanteModeracionModal";
@@ -66,12 +65,13 @@ interface PostModalProps {
   onEstadoChange?: (nuevoEstado: string) => void;
   onAcordarCompra?: () => void;
   onSolicitarTutoria?: () => void;
-  onVerCertificados?: () => void;
+  onVerCertificados?: (sellerId: number) => void;
   onSellerClick?: (sellerId: number) => void;
   onToggleSave?: () => void;
   isSaved?: boolean;
   showActions?: boolean;
   soloLectura?: boolean;
+  onEliminada?: () => void;
   actionsSlot?: ReactNode;
 }
 
@@ -100,26 +100,23 @@ export default function DetallePublicacion({
   isSaved = false,
   showActions = true,
   soloLectura = false,
+  onEliminada,
   actionsSlot,
   estado,
   estadosDisponibles = [],
   onEstadoChange,
 }: PostModalProps) {
-  const t = useTranslations("posts");
   const tSend = useTranslations("sendMessageModal");
   const tReporte = useTranslations("reporte");
+  const tModeracion = useTranslations("moderacion.publicaciones");
   const locale = useLocale();
   const router = useRouter();
-  const guardados = useGuardados();
-  const { agregarNotificacion, mostrarConfirm } = useUIStore();
   const idUsuarioActual = useAuthStore((state) => state.usuario?.id_usuario);
-  const [saving, setSaving] = useState(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
   const [solicitudTutoriaAbierta, setSolicitudTutoriaAbierta] = useState(false);
   const [reportePublicacionAbierto, setReportePublicacionAbierto] = useState(false);
-  const [advertenciaAbierta, setAdvertenciaAbierta] = useState(false);
-  const [enviandoAdvertencia, setEnviandoAdvertencia] = useState(false);
+  const moderador = useAccionesModerador({ sellerId, publicacionId, onClose, onEliminada });
 
   if (!isOpen) return null;
 
@@ -128,64 +125,7 @@ export default function DetallePublicacion({
   );
 
   const carouselImages = buildCarouselImageUrls(imagenes, images, imageUrl);
-
-  const MAX_STARS = 5;
-  const guardada = publicacionId ? guardados.isSaved(publicacionId) : isSaved;
-  const normalizedImageUrl = useMemo(
-    () => carouselImages[0] ?? normalizeImageUrl(imageUrl ?? ""),
-    [carouselImages, imageUrl],
-  );
-
-  const handleToggleSave = async () => {
-    if (saving) return;
-    if (!publicacionId) { onToggleSave?.(); return; }
-    try {
-      setSaving(true);
-      if (guardada) {
-        await guardados.eliminarGuardado(publicacionId);
-      } else {
-        await guardados.guardarPublicacion(publicacionId);
-      }
-      onToggleSave?.();
-    } catch (error) {
-      console.error("Error al actualizar guardado:", error);
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleAdvertenciaModerador = async (payload: { motivo: string; detalle: string }) => {
-    if (!sellerId) return;
-    try {
-      setEnviandoAdvertencia(true);
-      await usuarioService.crearAdvertencia(sellerId, {
-        motivo: payload.motivo,
-        detalle: payload.detalle || undefined,
-      });
-      agregarNotificacion({ tipo: "success", mensaje: "Advertencia enviada exitosamente." });
-      setAdvertenciaAbierta(false);
-    } catch (error) {
-      agregarNotificacion({
-        tipo: "error",
-        mensaje: error instanceof Error ? error.message : "No fue posible enviar la advertencia.",
-      });
-    } finally {
-      setEnviandoAdvertencia(false);
-    }
-  };
-
-  const handleEliminarModerador = () => {
-    mostrarConfirm({
-      titulo: "Eliminar publicación",
-      mensaje: "¿Seguro que deseas eliminar esta publicación como moderador? Esta acción no se puede deshacer.",
-      onConfirm: () => {
-        agregarNotificacion({
-          tipo: "info",
-          mensaje: "Eliminar publicación: función en desarrollo, aún no disponible.",
-        });
-      },
-    });
-  };
+  const normalizedImageUrl = carouselImages[0] ?? normalizeImageUrl(imageUrl ?? "");
 
   const handleOpenMessageModal = (callback?: () => void) => {
     if (esPropiaPublicacion) return;
@@ -230,52 +170,16 @@ export default function DetallePublicacion({
 
         <div className="post-modal__body">
           <div className="post-modal__detail">
-            <div className="post-modal__top">
-              <button
-                type="button"
-                className={`post-modal__seller${onSellerClick && sellerId ? " post-modal__seller--clickable" : ""}`}
-                onClick={() => { if (sellerId) onSellerClick?.(sellerId); }}
-                disabled={!onSellerClick || !sellerId}
-                aria-label={t("actions.viewProfile")}
-              >
-                <div className="post-modal__seller-avatar">
-                  {sellerImageUrl ? (
-                    <Image
-                      src={sellerImageUrl}
-                      alt={sellerName}
-                      fill
-                      className="post-modal__seller-img img-cover"
-                      unoptimized
-                    />
-                  ) : (
-                    <UserCircle2 size={40} strokeWidth={1} className="post-modal__seller-placeholder" />
-                  )}
-                </div>
-                <div className="post-modal__seller-info">
-                  <span className="post-modal__seller-name">{sellerName}</span>
-                  <div className="post-modal__stars">
-                    {Array.from({ length: MAX_STARS }).map((_, i) => (
-                      <span
-                        key={i}
-                        className={`post-modal__star${i < sellerRating ? " post-modal__star--filled" : ""}`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </button>
-
-              {estado !== undefined && (
-                <div className="post-modal__estado">
-                  <EstadoTag
-                    estado={estado}
-                    estadosDisponibles={estadosDisponibles}
-                    onEstadoChange={onEstadoChange}
-                  />
-                </div>
-              )}
-            </div>
+            <VendedorHeader
+              sellerName={sellerName}
+              sellerRating={sellerRating}
+              sellerId={sellerId}
+              sellerImageUrl={sellerImageUrl}
+              onSellerClick={onSellerClick}
+              estado={estado}
+              estadosDisponibles={estadosDisponibles}
+              onEstadoChange={onEstadoChange}
+            />
 
             <div className="post-modal__carousel">
               <CarruselImagen images={carouselImages} altText={title} />
@@ -302,97 +206,38 @@ export default function DetallePublicacion({
               </div>
             )}
 
-            {showActions && !soloLectura && (type === "tutoria" || (type === "venta" && !esPropiaPublicacion && !expandido)) && (
-              <div className="post-modal__actions">
-                {type === "venta" && !esPropiaPublicacion && !expandido && (
-                  <button
-                    type="button"
-                    className="button button--medium button--full-width"
-                    onClick={() => handleOpenMessageModal(onAcordarCompra)}
-                  >
-                    {t("actions.acordar")} <ChevronRight size={16} />
-                  </button>
-                )}
-                {type === "tutoria" && (
-                  <>
-                    <button
-                      type="button"
-                      className="button button--medium button--warning button--full-width"
-                      onClick={onVerCertificados}
-                    >
-                      {t("actions.certificado")}
-                    </button>
-                    {!esPropiaPublicacion && !expandido && (
-                      <button
-                        type="button"
-                        className="button button--medium button--full-width"
-                        onClick={() => handleOpenMessageModal(onSolicitarTutoria)}
-                      >
-                        {tSend("requestTutoring")} <ChevronRight size={16} />
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
+            <AccionesContacto
+              type={type}
+              showActions={showActions}
+              soloLectura={soloLectura}
+              esPropiaPublicacion={esPropiaPublicacion}
+              expandido={expandido}
+              sellerId={sellerId}
+              onAcordarCompra={onAcordarCompra}
+              onSolicitarTutoria={onSolicitarTutoria}
+              onVerCertificados={onVerCertificados}
+              onAbrirMensaje={handleOpenMessageModal}
+            />
 
-            <div className="post-modal__likes">
-              {!soloLectura && (
-                <>
-                  {!esPropiaPublicacion && publicacionId && (
-                    <button
-                      type="button"
-                      className="post-modal__report"
-                      onClick={() => setReportePublicacionAbierto(true)}
-                      aria-label={tReporte("moderador.reportarPublicacionAria")}
-                    >
-                      <Flag size={18} />
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className={`post-modal__save${guardada ? " post-modal__save--saved" : ""}`}
-                    onClick={handleToggleSave}
-                    aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
-                    disabled={saving}
-                  >
-                    {saving
-                      ? <Loader2 size={18} className="post-modal__save-spinner" />
-                      : <Bookmark size={18} />
-                    }
-                  </button>
-                </>
-              )}
-              <span className="post-modal__likes-count">{likes}</span>
-            </div>
+            <BarraLikes
+              likes={likes}
+              soloLectura={soloLectura}
+              esPropiaPublicacion={esPropiaPublicacion}
+              publicacionId={publicacionId}
+              isSaved={isSaved}
+              onToggleSave={onToggleSave}
+              onReportar={() => setReportePublicacionAbierto(true)}
+            />
 
             {soloLectura && (
-              <div className="post-modal__actions post-modal__actions--moderador">
-                {publicacionId && (
-                  <button
-                    type="button"
-                    className="button button--medium button--secondary button--full-width"
-                    onClick={() => setReportePublicacionAbierto(true)}
-                  >
-                    <Flag size={16} /> {tReporte("moderador.reportar")}
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="button button--medium button--warning button--full-width"
-                  onClick={() => setAdvertenciaAbierta(true)}
-                  disabled={!sellerId}
-                >
-                  <AlertTriangle size={16} /> {tReporte("moderador.advertencia")}
-                </button>
-                <button
-                  type="button"
-                  className="button button--medium button--danger button--full-width"
-                  onClick={handleEliminarModerador}
-                >
-                  <Trash2 size={16} /> {tReporte("moderador.eliminarPublicacion")}
-                </button>
-              </div>
+              <AccionesModerador
+                publicacionId={publicacionId}
+                sellerId={sellerId}
+                ocultarEliminar={Boolean(actionsSlot)}
+                onReportar={() => setReportePublicacionAbierto(true)}
+                onAdvertir={() => moderador.setAdvertenciaAbierta(true)}
+                onEliminar={() => moderador.setEliminarAbierto(true)}
+              />
             )}
           </div>
 
@@ -435,13 +280,22 @@ export default function DetallePublicacion({
       />
     )}
     <JustificanteModeracionModal
-      isOpen={advertenciaAbierta}
+      isOpen={moderador.advertenciaAbierta}
       tipoObjetivo="usuario"
       titulo={tReporte("moderador.advertenciaTitulo")}
       pregunta={tReporte("moderador.advertenciaPregunta")}
-      enviando={enviandoAdvertencia}
-      onClose={() => setAdvertenciaAbierta(false)}
-      onSubmit={handleAdvertenciaModerador}
+      enviando={moderador.enviandoAdvertencia}
+      onClose={() => moderador.setAdvertenciaAbierta(false)}
+      onSubmit={moderador.handleAdvertenciaModerador}
+    />
+    <JustificanteModeracionModal
+      isOpen={moderador.eliminarAbierto}
+      tipoObjetivo="publicacion"
+      titulo={tModeracion("justificante.titulos.eliminar")}
+      pregunta={tModeracion("justificante.preguntas.eliminar")}
+      enviando={moderador.eliminando}
+      onClose={() => moderador.setEliminarAbierto(false)}
+      onSubmit={moderador.handleEliminarModerador}
     />
     </>
   );

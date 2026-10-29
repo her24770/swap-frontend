@@ -5,14 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SquarePlus, FileText, CloudUpload, ChevronRight, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { schemaCertificacion, validateCertificacionPdf, type CertificacionFormData } from "../../../../schemas/zodSchemas";
+import { schemaCertificacion, validateCertificacionPdf, type CertificacionFormData, type CertificacionFormInput } from "../../../../schemas/zodSchemas";
 import { useTodasEtiquetas } from "../../../../hooks/useTodasEtiquetas";
 import { useToast } from "../../../../hooks/useToast";
+import { API_URL } from "../../../../lib/config";
 import "../../../ui/Button/Button.css";
-import "../CrearPublicacionForm/CrearPublicacionForm.css";
+import "../FormularioModal.css";
 import "./SubirCertForm.css";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
 interface BaseCertFormProps {
   onSuccess?: () => void;
@@ -54,7 +54,7 @@ export default function SubirCertForm(props: SubirCertFormProps) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CertificacionFormData>({
+  } = useForm<CertificacionFormInput, unknown, CertificacionFormData>({
     resolver: zodResolver(schemaCertificacion),
     defaultValues: {
       nombre: defaultValues?.nombre ?? "",
@@ -107,7 +107,7 @@ export default function SubirCertForm(props: SubirCertFormProps) {
       formData.append("id_etiqueta", String(data.id_etiqueta));
       if (archivoPdf) formData.append("pdf", archivoPdf);
 
-      const res = await fetch(`${BASE_URL}/api/certificacion/`, {
+      const res = await fetch(`${API_URL}/api/certificacion/`, {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -128,8 +128,8 @@ export default function SubirCertForm(props: SubirCertFormProps) {
       setArchivoPdf(null);
       setNombreArchivo(null);
       onSuccess?.();
-    } catch (err: any) {
-      setServerError(err.message || "No fue posible guardar la certificación.");
+    } catch (err) {
+      setServerError((err instanceof Error && err.message) || "No fue posible guardar la certificación.");
     } finally {
       setIsSubmitting(false);
     }

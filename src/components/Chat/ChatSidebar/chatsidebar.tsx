@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { UserCircle2 } from "lucide-react";
-import type { ConversacionPreview, TabMensajes } from "../../../types/chat";
+import type { ConversacionPreview } from "../../../types/chat";
 import AcuerdoPendienteBadge from "../../conversaciones/AcuerdoPendienteBadge/AcuerdoPendienteBadge";
+import Image from "next/image";
 import "./chatsidebar.css";
 import SearchContactsBar from "../../ui/SearchContactsBar/SearchContactsBar";
 
@@ -14,8 +15,6 @@ const normalizeSearch = (value: string) =>
 interface ChatSidebarProps {
   conversaciones: ConversacionPreview[];
   selectedId: number | null;
-  tab: TabMensajes;
-  onTabChange: (tab: TabMensajes) => void;
   onSelect: (conv: ConversacionPreview) => void;
   onConfirmar?: (id: number) => void;
   onEliminar?: (id: number) => void;
@@ -24,17 +23,12 @@ interface ChatSidebarProps {
 }
 
 export default function ChatSidebar({
-  conversaciones, selectedId, tab,
-  onTabChange, onSelect, onConfirmar, onEliminar,
+  conversaciones, selectedId,
+  onSelect, onConfirmar, onEliminar,
   acuerdosPendientesPorConversacion = {},
 }: ChatSidebarProps) {
   const t = useTranslations("chat.sidebar");
   const [search, setSearch] = useState("");
-  const tabs: { key: TabMensajes; label: string }[] = [
-    { key: "todas", label: t("tabs.all") },
-    { key: "ventas", label: t("tabs.sales") },
-    { key: "compras", label: t("tabs.purchases") },
-  ];
   const query = normalizeSearch(search.trim());
   const filteredConversations = query
     ? conversaciones.filter(({ nombre, preview }) =>
@@ -46,19 +40,6 @@ export default function ChatSidebar({
       <div className="chat-sidebar__head">
         <h1 className="chat-sidebar__title">{t("title")}</h1>
         <p className="chat-sidebar__sub">{t("subtitle")}</p>
-      </div>
-
-      <div className="chat-sidebar__tabs">
-        {tabs.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className={`chat-sidebar__tab${tab === key ? " chat-sidebar__tab--active" : ""}`}
-            onClick={() => onTabChange(key)}
-          >
-            {label}
-          </button>
-        ))}
       </div>
 
       <div className="chat-sidebar__list">
@@ -74,7 +55,7 @@ export default function ChatSidebar({
           >
             <div className="chat-sidebar__avatar">
               {conv.avatarUrl
-                ? <img src={conv.avatarUrl} alt={conv.nombre} className="chat-sidebar__avatar-img" />
+                ? <Image src={conv.avatarUrl} alt={conv.nombre} width={40} height={40} className="chat-sidebar__avatar-img" />
                 : <UserCircle2 size={22} strokeWidth={1.2} />
               }
             </div>

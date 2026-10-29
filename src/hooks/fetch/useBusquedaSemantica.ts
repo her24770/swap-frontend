@@ -9,12 +9,18 @@ interface BusquedaResponse {
 export function useBusquedaSemantica(query: string, tipo?: string) {
     const [results, setResults] = useState<Publicacion[]>([]);
     const [loading, setLoading] = useState(false);
+    const vacia = !query.trim();
+    const [vaciaPrevia, setVaciaPrevia] = useState(vacia);
+
+    // Al vaciar la búsqueda se limpian los resultados durante el render
+    // (evita llamar setState de forma síncrona dentro del efecto).
+    if (vaciaPrevia !== vacia) {
+        setVaciaPrevia(vacia);
+        if (vacia) setResults([]);
+    }
 
     useEffect(() => {
-        if (!query.trim()) {
-            setResults([]);
-            return;
-        }
+        if (!query.trim()) return;
 
         const timer = setTimeout(async () => {
             setLoading(true);

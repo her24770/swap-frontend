@@ -35,7 +35,7 @@ describe("ToastContainer", () => {
 
     render(<ToastContainer />);
 
-    expect(screen.getByText("Advertencia")).toBeInTheDocument();
+    expect(screen.getByText("titles.warning")).toBeInTheDocument();
   });
 
   it("removes a notification after clicking the close button", async () => {
@@ -53,7 +53,7 @@ describe("ToastContainer", () => {
 
     render(<ToastContainer />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Cerrar notificación" }));
+    fireEvent.click(screen.getByRole("button", { name: "closeAria" }));
 
     act(() => {
       vi.advanceTimersByTime(280);

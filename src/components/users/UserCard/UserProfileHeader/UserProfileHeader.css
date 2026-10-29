@@ -135,9 +135,9 @@
   font-family: var(--swap-font-subtitulos);
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--swap-primary-color);
+  color: var(--swap-primary-accent-color, var(--swap-primary-color));
   background-color: transparent;
-  border: 1.5px solid var(--swap-primary-color);
+  border: 1.5px solid var(--swap-primary-accent-color, var(--swap-primary-color));
   border-radius: 9999px;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -152,9 +152,9 @@
   font-family: var(--swap-font-subtitulos);
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--swap-primary-color);
+  color: var(--swap-primary-accent-color, var(--swap-primary-color));
   background-color: transparent;
-  border: 1.5px solid var(--swap-primary-color);
+  border: 1.5px solid var(--swap-primary-accent-color, var(--swap-primary-color));
   border-radius: 9999px;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -278,7 +278,7 @@
   font-family: var(--swap-font-textos);
   font-weight: 600;
   color: var(--swap-secondary-text-color);
-  background-color: #bb7600;
+  background-color: #7a4a00;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
