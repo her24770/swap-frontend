@@ -40,7 +40,7 @@ export default function NegocioSection({
     <CatalogoSection
       title={t("sections.catalogNegocio")}
       createLabel={t("actions.newPostNegocio")}
-      emptyMessage="Aún no tienes publicaciones de negocio."
+      emptyMessage={t("sections.emptyCatalogNegocio")}
       canCreate={canCreate}
       onCreate={onCrear}
       loading={loading}

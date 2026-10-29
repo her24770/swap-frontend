@@ -1,9 +1,12 @@
+import { useTranslations } from "next-intl";
 import { Skeleton } from '../../../ui/Skeleton/Skeleton';
 import './UserResCardSkeleton.css';
 
 export function UserResCardSkeleton() {
+  const t = useTranslations("posts");
+
   return (
-    <div className="urcs" aria-label="Cargando usuario..." aria-busy="true">
+    <div className="urcs" aria-label={t("loadingUserAria")} aria-busy="true">
 
       <Skeleton variant="circle" className="urcs__avatar" />
 

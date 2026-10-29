@@ -14,6 +14,19 @@ export interface CatalogPost {
   isPinned: boolean;
 }
 
+export const getPostCardInfoItems = (t: (key: string) => string) => [
+  { icon: <Pin size={16} strokeWidth={2} />, label: t("hints.post.pin") },
+  { icon: <SquarePen size={16} strokeWidth={2} />, label: t("hints.post.edit") },
+  { icon: <Trash2 size={16} strokeWidth={2} />, label: t("hints.post.delete") },
+  { icon: <Heart size={16} strokeWidth={2} />, label: t("hints.post.like") },
+  { icon: <Bookmark size={16} strokeWidth={2} />, label: t("hints.post.save") },
+];
+
+export const getAdBannerInfoItems = (t: (key: string) => string) => [
+  { icon: <SquarePen size={16} strokeWidth={2} />, label: t("hints.ad.edit") },
+  { icon: <Trash2 size={16} strokeWidth={2} />, label: t("hints.ad.delete") },
+];
+
 export const postCardInfoItems = [
   { icon: <Pin size={16} strokeWidth={2} />, label: "Destacar: resalta la publicación en tu catálogo." },
   { icon: <SquarePen size={16} strokeWidth={2} />, label: "Editar: modifica los datos de la publicación." },

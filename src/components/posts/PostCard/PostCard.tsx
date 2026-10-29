@@ -244,8 +244,8 @@ export default function PostCard({
               className={`post-card__pin-button${pinned ? " post-card__pin-button--pinned" : ""}`}
               onClick={handleTogglePin}
               disabled={isPinning}
-              aria-label={pinned ? "Quitar de destacados" : "Destacar publicación"}
-              title={pinned ? "Quitar de destacados" : "Destacar publicación"}
+              aria-label={pinned ? t("pin.unpin") : t("pin.pin")}
+              title={pinned ? t("pin.unpin") : t("pin.pin")}
             >
               {isPinning ? (
                 <Loader2 size={20} className="post-card__upload-spinner" />
@@ -274,8 +274,8 @@ export default function PostCard({
               type="button"
               className="post-card__delete-button"
               onClick={onDeleteClick}
-              aria-label="Eliminar publicación"
-              title="Eliminar publicación"
+              aria-label={t("actions.delete")}
+              title={t("actions.delete")}
             >
               <Trash2 size={24} strokeWidth={2} />
             </button>
@@ -353,8 +353,8 @@ export default function PostCard({
                 type="button"
                 className={`post-card__save-button${visuallySaved ? " post-card__save-button--saved" : ""}`}
                 onClick={handleToggleSave}
-                aria-label={guardada ? "Eliminar de guardados" : "Guardar publicación"}
-                title={guardada ? "Eliminar de guardados" : "Guardar publicación"}
+                aria-label={guardada ? t("save.removeAria") : t("save.addAria")}
+                title={guardada ? t("save.removeAria") : t("save.addAria")}
                 disabled={isSaving}
               >
                 {isSaving ? (

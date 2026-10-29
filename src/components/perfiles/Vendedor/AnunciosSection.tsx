@@ -5,7 +5,7 @@ import AnunciosCarousel from "../../ui/AnunciosCarousel/AnunciosCarousel";
 import { InfoHint } from "../../ui/InfoHint/InfoHint";
 import type { Anuncio } from "../../../types/anuncio";
 import { PerfilAdBannerSkeleton } from "../perfilLoading";
-import { adBannerInfoItems } from "./catalogoVendedor";
+import { getAdBannerInfoItems } from "./catalogoVendedor";
 
 interface AnunciosSectionProps {
   anuncios: Anuncio[] | null | undefined;
@@ -39,7 +39,7 @@ export default function AnunciosSection({
               <SquarePlus size={18} strokeWidth={1.8} aria-hidden />
               {t("actions.createAd")}
             </button>
-            <InfoHint ariaLabel="Ayuda sobre los íconos de los anuncios" items={adBannerInfoItems} />
+            <InfoHint ariaLabel={t("hints.adsAria")} items={getAdBannerInfoItems(t)} />
           </div>
         )}
       </div>
@@ -51,7 +51,7 @@ export default function AnunciosSection({
       )}
 
       {!loading && !error && anuncios && anuncios.length === 0 && (
-        <p className="perfil-page__coming-soon">Este estudiante aún no tiene anuncios publicados.</p>
+        <p className="perfil-page__coming-soon">{t("sections.emptyAds")}</p>
       )}
 
       {!loading && !error && anuncios && anuncios.length > 0 && (

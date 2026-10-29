@@ -5,13 +5,6 @@ import HorarioSemanal from "./Horario/Horario";
 import { HorarioSkeleton } from "./Horario/HorarioSkeleton/HorarioSkeleton";
 import type { useHorarioTutor } from "./useHorarioTutor";
 
-const horarioInfoItems = [
-  { icon: <Pencil size={16} strokeWidth={2} />, label: "Editar horario: activa el modo de edición de la cuadrícula." },
-  { icon: <MousePointerClick size={16} strokeWidth={2} />, label: "Toca cada casilla para marcarla como disponible o quitarla." },
-  { icon: <Save size={16} strokeWidth={2} />, label: "Guardar cambios: confirma los espacios que marcaste." },
-  { icon: <Eye size={16} strokeWidth={2} />, label: "Este horario es visible para todos los demás usuarios de la app." },
-];
-
 interface HorarioSectionProps {
   horario: ReturnType<typeof useHorarioTutor>;
   canEdit: boolean;
@@ -20,6 +13,7 @@ interface HorarioSectionProps {
 // Sección del horario semanal del tutor.
 export default function HorarioSection({ horario, canEdit }: HorarioSectionProps) {
   const t = useTranslations("perfil");
+  const tCommon = useTranslations("common.actions");
   const {
     horarioSlots,
     horarioLoading,
@@ -32,6 +26,13 @@ export default function HorarioSection({ horario, canEdit }: HorarioSectionProps
     handleCancelarHorario,
     handleGuardarHorario,
   } = horario;
+
+  const horarioInfoItems = [
+    { icon: <Pencil size={16} strokeWidth={2} />, label: t("hints.schedule.edit") },
+    { icon: <MousePointerClick size={16} strokeWidth={2} />, label: t("hints.schedule.toggle") },
+    { icon: <Save size={16} strokeWidth={2} />, label: t("hints.schedule.save") },
+    { icon: <Eye size={16} strokeWidth={2} />, label: t("hints.schedule.visible") },
+  ];
 
   return (
     <section className="perfil-page__section">
@@ -58,7 +59,7 @@ export default function HorarioSection({ horario, canEdit }: HorarioSectionProps
                   disabled={horarioGuardando}
                 >
                   <X size={18} strokeWidth={1.8} aria-hidden />
-                  Cancelar
+                  {tCommon("cancel")}
                 </button>
                 <button
                   type="button"
@@ -67,11 +68,11 @@ export default function HorarioSection({ horario, canEdit }: HorarioSectionProps
                   disabled={horarioGuardando || cambiosPendientes.size === 0}
                 >
                   <Save size={18} strokeWidth={1.8} aria-hidden />
-                  {horarioGuardando ? "Guardando..." : "Guardar cambios"}
+                  {horarioGuardando ? tCommon("saving") : tCommon("saveChanges")}
                 </button>
               </div>
             )}
-            <InfoHint ariaLabel="Ayuda sobre cómo editar tu horario" items={horarioInfoItems} />
+            <InfoHint ariaLabel={t("hints.scheduleAria")} items={horarioInfoItems} />
           </div>
         )}
       </div>

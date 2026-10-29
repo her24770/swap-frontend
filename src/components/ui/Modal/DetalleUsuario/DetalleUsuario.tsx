@@ -44,6 +44,7 @@ export default function DetalleUsuario({
   onVerPerfil,
 }: DetalleUsuarioProps) {
   const t = useTranslations("posts");
+  const tCommon = useTranslations("common.actions");
   const tReporte = useTranslations("reporte");
   const [reporteUsuarioAbierto, setReporteUsuarioAbierto] = useState(false);
 
@@ -58,7 +59,7 @@ export default function DetalleUsuario({
           type="button"
           className="post-modal__close"
           onClick={onClose}
-          aria-label="Cerrar"
+          aria-label={tCommon("close")}
         >
           <X size={20} />
         </button>
@@ -71,7 +72,7 @@ export default function DetalleUsuario({
               if (userId !== undefined) onVerPerfil?.(userId);
             }}
             disabled={!canOpenProfile}
-            aria-label={`Ver perfil de ${userName}`}
+            aria-label={t("actions.viewProfileAria", { name: userName })}
           >
             <div className="post-modal__seller-avatar">
               {userImageUrl ? (

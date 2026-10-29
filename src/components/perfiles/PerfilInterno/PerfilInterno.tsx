@@ -49,7 +49,7 @@ export default function PerfilInterno() {
         if (!usuarioId) {
           // Si solo hay sesion de moderador (sin sesion de usuario), NO se resuelve /api/auth/me
           if (moderador) {
-            setError("Los moderadores no tienen un perfil de usuario propio.");
+            setError(t("moderatorNoProfile"));
             return;
           }
 

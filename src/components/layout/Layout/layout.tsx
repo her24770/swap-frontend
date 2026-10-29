@@ -2,6 +2,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import { AUTH_ROUTES } from "../../../lib/authRoutes";
@@ -32,8 +33,9 @@ export default function Layout({ children }: LayoutProps) {
 
   const isAuthRoute = AUTH_ROUTES.includes(pathnameWithoutLocale);
   const isModeracionRoute = pathnameWithoutLocale.startsWith("/moderacion");
+  const t = useTranslations("layout");
   const versionFooter = (
-    <footer className="layout__version">Versión {process.env.NEXT_PUBLIC_APP_VERSION ?? "development"}</footer>
+    <footer className="layout__version">{t("version", { version: process.env.NEXT_PUBLIC_APP_VERSION ?? "development" })}</footer>
   );
 
   useEffect(() => {
@@ -90,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
           onClick={() => {
             if (!document.querySelector(".modal-overlay")) setCrearOpen(true);
           }}
-          ariaLabel="Crear publicación"
+          ariaLabel={t("createPublicationAria")}
         />
         </div>
       )}
@@ -102,7 +104,7 @@ export default function Layout({ children }: LayoutProps) {
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
-            aria-label="Crear publicación"
+            aria-label={t("createPublicationAria")}
           >
             <CrearPublicacionForm
               mode="crear"

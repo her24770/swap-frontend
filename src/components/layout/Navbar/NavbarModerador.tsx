@@ -55,16 +55,16 @@ export default function NavbarModerador({ onMenuToggle, menuButtonRef }: NavbarM
             <Menu size={28} strokeWidth={2} />
           </button>
         </Tooltip>
-        <Link href="/moderacion" className="navbar__logo-link" aria-label="Ir al panel de moderación" title="Ir al panel de moderación">
+        <Link href="/moderacion" className="navbar__logo-link" aria-label={tPanel("goToDashboardAria")} title={tPanel("goToDashboardAria")}>
           <LogoCompleto className="navbar__logo" />
         </Link>
       </div>
 
       <div className="navbar__right">
-        <Tooltip label="Configuraciones" position="bottom">
+        <Tooltip label={t("settingsTooltip")} position="bottom">
           <button
             onClick={() => setIsSettingsOpen(true)}
-            aria-label="Abrir configuraciones"
+            aria-label={t("openSettingsAria")}
             type="button"
             className="navbar__menu-btn"
           >

@@ -154,7 +154,7 @@ export default function VistaVendedor({
 
       {canCreatePublication && anuncioModalOpen && (
         <PerfilModal
-          ariaLabel={anuncioEditando ? "Editar anuncio" : t("modal.createAdAria")}
+          ariaLabel={anuncioEditando ? t("modal.editAdAria") : t("modal.createAdAria")}
           onClose={cerrarAnuncioModal}
         >
           <CrearAnuncioForm

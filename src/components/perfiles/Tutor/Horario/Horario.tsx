@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { useTranslations } from "next-intl";
 import type { DiaHorario, EspacioHorario, EstadoHorario } from "../../../../types/horario";
 import "./Horario.css";
 
@@ -10,14 +11,14 @@ interface HorarioSemanalProps {
   onToggleSlot?: (dia: DiaHorario, hora: number) => void;
 }
 
-const DIAS: { key: DiaHorario; label: string; abbr: string }[] = [
-  { key: "lunes", label: "Lunes", abbr: "L" },
-  { key: "martes", label: "Martes", abbr: "M" },
-  { key: "miercoles", label: "Miércoles", abbr: "X" },
-  { key: "jueves", label: "Jueves", abbr: "J" },
-  { key: "viernes", label: "Viernes", abbr: "V" },
-  { key: "sabado", label: "Sábado", abbr: "S" },
-  { key: "domingo", label: "Domingo", abbr: "D" },
+const DIAS: { key: DiaHorario; defaultLabel: string; defaultAbbr: string }[] = [
+  { key: "lunes", defaultLabel: "Lunes", defaultAbbr: "L" },
+  { key: "martes", defaultLabel: "Martes", defaultAbbr: "M" },
+  { key: "miercoles", defaultLabel: "Miércoles", defaultAbbr: "X" },
+  { key: "jueves", defaultLabel: "Jueves", defaultAbbr: "J" },
+  { key: "viernes", defaultLabel: "Viernes", defaultAbbr: "V" },
+  { key: "sabado", defaultLabel: "Sábado", defaultAbbr: "S" },
+  { key: "domingo", defaultLabel: "Domingo", defaultAbbr: "D" },
 ];
 const HORAS = [7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20];
 
@@ -40,17 +41,20 @@ export default function HorarioSemanal({
   pendingKeys,
   onToggleSlot,
 }: HorarioSemanalProps) {
+  const t = useTranslations("perfil.horario");
+  const tFiltros = useTranslations("common.filtros");
+
   return (
     <div className="horario">
       <div className="horario__header">
         <div className="horario__legend">
           <div className="horario__legend-item">
             <span className="horario__dot horario__dot--disponible" />
-            Disponible
+            {t("disponible")}
           </div>
           <div className="horario__legend-item">
             <span className="horario__dot horario__dot--no-disponible" />
-            No Disponible
+            {t("noDisponible")}
           </div>
         </div>
       </div>
@@ -60,16 +64,20 @@ export default function HorarioSemanal({
 
           {/* Header de los dias */}
           <div className="horario__col-header horario__col-header--hora">
-            HORA
+            {t("headerHora")}
           </div>
-          {DIAS.map((dia) => (
-            <div key={dia.key} className="horario__col-header">
-              <span className="horario__col-header-full">{dia.label}</span>
-              <span className="horario__col-header-abbr" aria-hidden="true">
-                {dia.abbr}
-              </span>
-            </div>
-          ))}
+          {DIAS.map((dia) => {
+            const diaLabel = tFiltros(`daysAria.${dia.key}`);
+            const diaAbbr = tFiltros(`daysShort.${dia.key}`);
+            return (
+              <div key={dia.key} className="horario__col-header">
+                <span className="horario__col-header-full">{diaLabel}</span>
+                <span className="horario__col-header-abbr" aria-hidden="true">
+                  {diaAbbr}
+                </span>
+              </div>
+            );
+          })}
 
           {/* Filas por hora */}
           {HORAS.map((hora) => (
@@ -83,6 +91,7 @@ export default function HorarioSemanal({
                 const className = `horario__slot horario__slot--${estado.replace("_", "-")}${
                   editable ? " horario__slot--editable" : ""
                 }${pendingKeys?.has(key) ? " horario__slot--pending" : ""}`;
+                const diaLabel = tFiltros(`daysAria.${dia.key}`);
 
                 if (editable) {
                   return (
@@ -92,11 +101,11 @@ export default function HorarioSemanal({
                       className={className}
                       disabled={disabled}
                       aria-pressed={estado === "disponible"}
-                      aria-label={`${dia.label} ${formatHora(hora)}`}
+                      aria-label={`${diaLabel} ${formatHora(hora)}`}
                       onClick={() => onToggleSlot?.(dia.key, hora)}
                     >
-                      {estado === "disponible" && "Disponible"}
-                      {estado === "ocupado" && "Ocupado"}
+                      {estado === "disponible" && t("disponible")}
+                      {estado === "ocupado" && t("ocupado")}
                     </button>
                   );
                 }
@@ -106,8 +115,8 @@ export default function HorarioSemanal({
                     key={key}
                     className={className}
                   >
-                    {estado === "disponible" && "Disponible"}
-                    {estado === "ocupado" && "Ocupado"}
+                    {estado === "disponible" && t("disponible")}
+                    {estado === "ocupado" && t("ocupado")}
                   </div>
                 );
               })}
