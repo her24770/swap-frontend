@@ -1137,6 +1137,8 @@
 			"typePlaceholder": "Select type",
 			"category": "Category",
 			"categoryTriggerEmpty": "Select category",
+			"categorySearchPlaceholder": "Search category...",
+			"categorySearchEmpty": "No matching categories.",
 			"categoryTriggerOne": "1 category selected",
 			"categoryTriggerMany": "{count} categories selected",
 			"featured": "Featured post",

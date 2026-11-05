@@ -1137,6 +1137,8 @@
 			"typePlaceholder": "Sélectionner un type",
 			"category": "Catégorie",
 			"categoryTriggerEmpty": "Sélectionner une catégorie",
+			"categorySearchPlaceholder": "Rechercher une catégorie...",
+			"categorySearchEmpty": "Aucune catégorie correspondante.",
 			"categoryTriggerOne": "1 catégorie sélectionnée",
 			"categoryTriggerMany": "{count} catégories sélectionnées",
 			"featured": "Publication mise en avant",

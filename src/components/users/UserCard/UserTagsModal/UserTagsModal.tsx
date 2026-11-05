@@ -26,7 +26,7 @@ export default function UserTagsModal({
 }: UserTagsModalProps) {
     const t = useTranslations("userTagsModal");
     const { etiquetas, loading, error } = useTodasEtiquetas();
-    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [selectedIds, setSelectedIds] = useState<number[]>(() => currentTags.map((tag) => tag.id));
     const [searchQuery, setSearchQuery] = useState("");
     const [saving, setSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
