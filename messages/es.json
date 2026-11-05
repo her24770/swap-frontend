@@ -1137,6 +1137,8 @@
 			"typePlaceholder": "Seleccionar tipo",
 			"category": "Categoría",
 			"categoryTriggerEmpty": "Seleccionar categoría",
+			"categorySearchPlaceholder": "Buscar categoría...",
+			"categorySearchEmpty": "No hay categorías que coincidan.",
 			"categoryTriggerOne": "1 categoría seleccionada",
 			"categoryTriggerMany": "{count} categorías seleccionadas",
 			"featured": "Publicación Destacada",

@@ -35,7 +35,7 @@ export default function PublicacionesDetalleModales({
 
     const navigateToTutorProfile = (userId: number, verCertificados = false) => {
         onCloseTutor();
-        router.push(`${perfilBasePath}/${userId}?modo=tutor${verCertificados ? "&certificados=1" : ""}`);
+        router.push(`${perfilBasePath}/${userId}?modo=tutor${verCertificados ? "&certificaciones=1" : ""}`);
     };
 
     return (

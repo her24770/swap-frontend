@@ -10,11 +10,12 @@ export interface AdBannerData {
   description?: string;
   onEditClick?: () => void;
   onDeleteClick?: () => void;
+  onClick?: () => void;
 }
 
 type AdBannerProps = AdBannerData;
 
-export default function AdBanner({ imageUrl, title, description, onEditClick, onDeleteClick }: AdBannerProps) {
+export default function AdBanner({ imageUrl, title, description, onEditClick, onDeleteClick, onClick }: AdBannerProps) {
   const t = useTranslations("posts");
   const tAnuncios = useTranslations("anuncios");
   const { canEditCards } = usePerspectivaInterna();
@@ -23,7 +24,22 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
   const tieneImagen = imageUrl && imageUrl.trim() !== "";
 
   return (
-    <div className={`ad-banner${tieneImagen ? " ad-banner--image" : ""}`}>
+    <div
+      className={`ad-banner${tieneImagen ? " ad-banner--image" : ""}${onClick ? " ad-banner--clickable" : ""}`}
+      {...(onClick
+        ? {
+            role: "link",
+            tabIndex: 0,
+            onClick,
+            onKeyDown: (e: React.KeyboardEvent) => {
+              if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                onClick();
+              }
+            },
+          }
+        : {})}
+    >
       {tieneImagen && (
         <Image 
           src={imageUrl} 
@@ -39,7 +55,7 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
             <button
               type="button"
               className="ad-card__edit-button"
-              onClick={onEditClick}
+              onClick={(e) => { e.stopPropagation(); onEditClick(); }}
               aria-label={t("actions.edit")}
               title={t("actions.edit")}
             >
@@ -50,7 +66,7 @@ export default function AdBanner({ imageUrl, title, description, onEditClick, on
             <button
               type="button"
               className="ad-card__delete-button"
-              onClick={onDeleteClick}
+              onClick={(e) => { e.stopPropagation(); onDeleteClick(); }}
               aria-label={t("actions.delete")}
               title={t("actions.delete")}
             >

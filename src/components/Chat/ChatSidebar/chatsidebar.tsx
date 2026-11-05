@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { UserCircle2 } from "lucide-react";
+import Avatar from "../../ui/Avatar/Avatar";
 import type { ConversacionPreview } from "../../../types/chat";
 import AcuerdoPendienteBadge from "../../conversaciones/AcuerdoPendienteBadge/AcuerdoPendienteBadge";
-import Image from "next/image";
 import "./chatsidebar.css";
 import SearchContactsBar from "../../ui/SearchContactsBar/SearchContactsBar";
 
@@ -54,10 +53,7 @@ export default function ChatSidebar({
             tabIndex={0}
           >
             <div className="chat-sidebar__avatar">
-              {conv.avatarUrl
-                ? <Image src={conv.avatarUrl} alt={conv.nombre} width={40} height={40} className="chat-sidebar__avatar-img" />
-                : <UserCircle2 size={22} strokeWidth={1.2} />
-              }
+              <Avatar src={conv.avatarUrl} name={conv.nombre} size={40} className="chat-sidebar__avatar-img" />
             </div>
             <div className="chat-sidebar__info">
               <div className="chat-sidebar__top-row">

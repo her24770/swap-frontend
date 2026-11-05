@@ -1,12 +1,12 @@
-import { UserCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Avatar from "../../../ui/Avatar/Avatar";
 import type { Mensaje } from "../../../../types/chat";
-import Image from "next/image";
 import "./MensajesBurbuja.css";
 
 interface MensajesBurbujaProps {
   mensajes: Mensaje[];
   avatarUrl?: string;
+  nombreOtro?: string;
   idUsuarioActual?: number;
 }
 
@@ -57,6 +57,7 @@ function formatMessageTime(value: string): string {
 export default function MensajesBurbuja({
   mensajes,
   avatarUrl,
+  nombreOtro = "",
   idUsuarioActual,
 }: MensajesBurbujaProps) {
   const t = useTranslations("chat.messages");
@@ -79,11 +80,7 @@ export default function MensajesBurbuja({
             <div className={`mensajes-burbuja__msg${esMio ? " mensajes-burbuja__msg--mio" : ""}`}>
               {!esMio && (
                 <div className="mensajes-burbuja__avatar">
-                  {avatarUrl ? (
-                    <Image src={avatarUrl} alt={t("avatarAlt")} width={28} height={28} className="mensajes-burbuja__avatar-img" />
-                  ) : (
-                    <UserCircle2 size={18} strokeWidth={1.2} />
-                  )}
+                  <Avatar src={avatarUrl} name={nombreOtro} alt={t("avatarAlt")} size={28} className="mensajes-burbuja__avatar-img" />
                 </div>
               )}
               <div className={`mensajes-burbuja__bubble${esMio ? " mensajes-burbuja__bubble--mio" : " mensajes-burbuja__bubble--otro"}`}>

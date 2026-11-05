@@ -1,6 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import PostCard from "../../../components/posts/PostCard/PostCard";
 import { useDetallePublicacion } from "../../../hooks/useDetallePublicacion";
 import { useBusquedaSemantica } from "../../../hooks/fetch/useBusquedaSemantica";
@@ -68,6 +69,7 @@ export default function PublicacionesList({
     soloLectura = false,
     perfilBasePath = "/perfil",
 }: Props) {
+    const router = useRouter();
     const t = useTranslations("seccion");
     const tEmpty = useTranslations("common.empty");
     const tTags = useTranslations("common.tags");
@@ -195,7 +197,7 @@ export default function PublicacionesList({
             price={parseFloat(p.precio)}
             description={p.descripcion}
             images={p.imagenes.map((img) => img.url_imagen)}
-            estado={p.estado}
+            estado={p.estadoRel?.estado ?? p.estado}
             onDetallesClick={() => handleCardClick(p)}
             initialLikeado={p.likeado ?? false}
             initialLikes={p.me_gusta}
@@ -311,6 +313,7 @@ export default function PublicacionesList({
                                                         imageUrl={ad.imagen_url}
                                                         title={ad.titulo}
                                                         description={ad.descripcion}
+                                                        onClick={ad.id_usuario ? () => router.push(`${perfilBasePath}/${ad.id_usuario}`) : undefined}
                                                     />
                                                 </div>
                                             ))}

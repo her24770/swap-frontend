@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Check, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Check, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { EtiquetaBD } from "../../../../hooks/useTodasEtiquetas";
 import "./CategoriasSelector.css";
@@ -17,13 +17,21 @@ interface CategoriasSelectorProps {
 export default function CategoriasSelector({ etiquetas, selected, onToggle, error }: CategoriasSelectorProps) {
   const t = useTranslations("publicacionForm");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [query, setQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const normalize = (v: string) => v.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const filtered = useMemo(() => {
+    const q = normalize(query.trim());
+    return q ? etiquetas.filter((e) => normalize(e.nombre).includes(q)) : etiquetas;
+  }, [etiquetas, query]);
 
   // Cierra el dropdown al clickear fuera
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
+        setQuery("");
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -43,7 +51,7 @@ export default function CategoriasSelector({ etiquetas, selected, onToggle, erro
       <div className="crear-publicacion__categories-dropdown" ref={dropdownRef}>
         <button
           type="button"
-          onClick={() => setDropdownOpen((prev) => !prev)}
+          onClick={() => { setDropdownOpen((prev) => !prev); setQuery(""); }}
           className={[
             "crear-publicacion__categories-trigger",
             selected.length > 0 ? "crear-publicacion__categories-trigger--has-value" : "",
@@ -60,7 +68,22 @@ export default function CategoriasSelector({ etiquetas, selected, onToggle, erro
 
         {dropdownOpen && (
           <div className="crear-publicacion__categories-menu">
-            {etiquetas.map((etiqueta) => {
+            <div className="crear-publicacion__categories-search">
+              <Search size={14} aria-hidden />
+              <input
+                type="text"
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t("fields.categorySearchPlaceholder")}
+                aria-label={t("fields.categorySearchPlaceholder")}
+                className="crear-publicacion__categories-search-input"
+              />
+            </div>
+            {filtered.length === 0 && (
+              <p className="crear-publicacion__categories-empty">{t("fields.categorySearchEmpty")}</p>
+            )}
+            {filtered.map((etiqueta) => {
               const isSelected = selected.includes(etiqueta.id_etiqueta);
               return (
                 <button

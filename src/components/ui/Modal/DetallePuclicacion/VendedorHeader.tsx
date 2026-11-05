@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { UserCircle2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Avatar from "../../Avatar/Avatar";
 import EstadoTag from "../../../posts/PostCard/EstadoTag/EstadoTag";
 import type { EstadoOpcion } from "../../../../hooks/useEstados";
 
@@ -42,17 +41,13 @@ export default function VendedorHeader({
         aria-label={`${sellerName}: ${t("actions.viewProfile")}`}
       >
         <div className="post-modal__seller-avatar">
-          {sellerImageUrl ? (
-            <Image
-              src={sellerImageUrl}
-              alt={sellerName}
-              fill
-              className="post-modal__seller-img img-cover"
-              unoptimized
-            />
-          ) : (
-            <UserCircle2 size={40} strokeWidth={1} className="post-modal__seller-placeholder" />
-          )}
+          <Avatar
+            src={sellerImageUrl}
+            name={sellerName}
+            size={48}
+            fill
+            className="post-modal__seller-img img-cover"
+          />
         </div>
         <div className="post-modal__seller-info">
           <span className="post-modal__seller-name">{sellerName}</span>

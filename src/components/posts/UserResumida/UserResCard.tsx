@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { ChevronRight, UserCircle2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Avatar from "../../ui/Avatar/Avatar";
 import "../../ui/Button/Button.css";
 import "./UserResCard.css";
 
@@ -28,21 +28,13 @@ export default function UserResCard({
     <article className="user-res-card">
       {/* Avatar */}
       <div className="user-res-card__avatar">
-        {userImageUrl ? (
-          <Image
-            src={userImageUrl}
-            alt={userName}
-            fill
-            className="user-res-card__avatar-img img-cover"
-            unoptimized
-          />
-        ) : (
-          <UserCircle2
-            size={40}
-            strokeWidth={1}
-            className="user-res-card__avatar-placeholder"
-          />
-        )}
+        <Avatar
+          src={userImageUrl}
+          name={userName}
+          size={48}
+          fill
+          className="user-res-card__avatar-img img-cover"
+        />
       </div>
 
       {/* Info */}
