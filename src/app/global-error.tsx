@@ -3,6 +3,7 @@
 import SystemPage from "../components/ui/SystemPage/SystemPage";
 import { globalCopy } from "../components/ui/SystemPage/globalCopy";
 import { useBrowserPageSettings } from "../components/ui/SystemPage/useBrowserPageSettings";
+import { jockey, palanquin, lato } from "../styles/fonts";
 import "./[locale]/globals.css";
 
 export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -10,7 +11,7 @@ export default function GlobalError({ reset }: { error: Error & { digest?: strin
   const t = globalCopy[locale];
 
   return (
-    <html lang={locale} data-theme={theme}>
+    <html lang={locale} data-theme={theme} className={`${jockey.variable} ${palanquin.variable} ${lato.variable}`}>
       <body>
         <SystemPage
           kind="error"
