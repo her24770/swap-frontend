@@ -17,6 +17,10 @@
 
 }
 
+.ad-banner--clickable {
+  cursor: pointer;
+}
+
 .ad-banner:hover {
   transform: translateY(-4px);
 
