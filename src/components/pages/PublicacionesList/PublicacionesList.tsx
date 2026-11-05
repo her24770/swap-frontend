@@ -197,7 +197,7 @@ export default function PublicacionesList({
             price={parseFloat(p.precio)}
             description={p.descripcion}
             images={p.imagenes.map((img) => img.url_imagen)}
-            estado={p.estado}
+            estado={p.estadoRel?.estado ?? p.estado}
             onDetallesClick={() => handleCardClick(p)}
             initialLikeado={p.likeado ?? false}
             initialLikes={p.me_gusta}
