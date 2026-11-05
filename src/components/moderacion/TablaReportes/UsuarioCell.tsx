@@ -1,8 +1,4 @@
-import Image from "next/image";
-
-function initials(nombre: string) {
-  return nombre.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
-}
+import Avatar from "../../ui/Avatar/Avatar";
 
 interface UsuarioCellProps {
   nombre: string;
@@ -14,11 +10,7 @@ export default function UsuarioCell({ nombre, email, foto }: UsuarioCellProps) {
   return (
     <div className="tabla-reportes__user-cell">
       <div className="tabla-reportes__avatar">
-        {foto ? (
-          <Image src={foto} alt={nombre} fill className="img-cover" unoptimized />
-        ) : (
-          <span>{initials(nombre)}</span>
-        )}
+        <Avatar src={foto} name={nombre} size={32} fill className="img-cover" />
       </div>
       <div className="tabla-reportes__user-info">
         <span className="tabla-reportes__user-name">{nombre}</span>

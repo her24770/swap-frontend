@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { ChevronLeft, ChevronRight, Loader2, Flag, Eye, AlertTriangle, Ban, Clock, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Avatar from "../../ui/Avatar/Avatar";
 import SearchBar from "../../ui/SearchBar/SearchBar";
 import { Link } from "../../../i18n/routing";
 import { usuarioService } from "../../../services/usuarioService";
@@ -224,15 +224,12 @@ export default function UsuariosModeracion() {
                   <td>
                     <div className="usuarios-moderacion__usuario-cell">
                       <div className="usuarios-moderacion__avatar">
-                        {usuario.url_foto_perfil ? (
-                          <Image
-                            src={normalizeImageUrl(usuario.url_foto_perfil)}
-                            alt={usuario.nombre}
-                            fill
-                            sizes="32px"
-                            unoptimized
-                          />
-                        ) : null}
+                        <Avatar
+                          src={usuario.url_foto_perfil ? normalizeImageUrl(usuario.url_foto_perfil) : undefined}
+                          name={usuario.nombre}
+                          size={32}
+                          fill
+                        />
                       </div>
                       <span>{usuario.nombre}</span>
                     </div>
