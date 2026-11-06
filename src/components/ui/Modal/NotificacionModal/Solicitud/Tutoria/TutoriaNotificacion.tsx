@@ -2,9 +2,9 @@
 
 import { useState, type ButtonHTMLAttributes, type ElementType, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { BookOpen, CalendarDays, Check, Clock3, MapPin, UserCircle2, X, Loader2 } from "lucide-react";
+import Avatar from "../../../../Avatar/Avatar";
+import { BookOpen, CalendarDays, Check, Clock3, MapPin, X, Loader2 } from "lucide-react";
 import "./TutoriaNotificacion.css";
-import Image from "next/image";
 
 export interface SolicitudTutoriaNotificacion {
   id: number;
@@ -99,17 +99,12 @@ export default function TarjetaNotificacionSolicitud({
     <article className="tutoria-notificacion">
       <header className="tutoria-notificacion__header">
         <span className="tutoria-notificacion__avatar" aria-hidden="true">
-          {solicitud.avatarUrl ? (
-            <Image
-              src={solicitud.avatarUrl}
-              alt={solicitud.alumno}
-              width={40}
-              height={40}
-              className="tutoria-notificacion__avatar-img"
-            />
-          ) : (
-            <UserCircle2 size={24} />
-          )}
+          <Avatar
+            src={solicitud.avatarUrl}
+            name={solicitud.alumno}
+            size={40}
+            className="tutoria-notificacion__avatar-img"
+          />
         </span>
         <div>
           <p className="tutoria-notificacion__eyebrow">{headerText}</p>

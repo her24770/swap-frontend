@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Calendar, ChevronLeft, MapPin, MoreVertical, UserCircle2 } from "lucide-react";
+import Avatar from "../../ui/Avatar/Avatar";
+import { Calendar, ChevronLeft, MapPin, MoreVertical } from "lucide-react";
 import AcuerdoBanner from "./AcuerdoBanner/AcuerdoBanner";
 import ChatPanel from "../ChatPanel/ChatPanel";
 import ChatInput from "./ChatInput/ChatInput";
@@ -11,7 +12,6 @@ import MensajesBurbuja from "./MensajesBurbuja/MensajesBurbuja";
 import { useAuthStore } from "../../../store/authStore";
 import type { AcuerdoHistorial } from "../../../types/acuerdo";
 import type { ConversacionPreview, Mensaje, TipoPanel } from "../../../types/chat";
-import Image from "next/image";
 import "./ChatPrincipal.css";
 
 interface ChatprincipalProps {
@@ -90,16 +90,7 @@ export default function Chatprincipal({
             aria-label={t("header.viewProfile")}
           >
             <div className="chat-principal__avatar">
-              {conversacion.avatarUrl ? (
-                <Image
-                  src={conversacion.avatarUrl}
-                  alt={conversacion.nombre}
-                  width={32}
-                  height={32}
-                />
-              ) : (
-                <UserCircle2 size={22} strokeWidth={1.2} />
-              )}
+              <Avatar src={conversacion.avatarUrl} name={conversacion.nombre} size={32} />
             </div>
 
             <span className="chat-principal__name">
@@ -166,6 +157,7 @@ export default function Chatprincipal({
         <MensajesBurbuja
           mensajes={mensajes}
           avatarUrl={conversacion.avatarUrl}
+          nombreOtro={conversacion.nombre}
           idUsuarioActual={idUsuarioActual}
         />
         {panel === "acuerdo" && acuerdo && (

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { LogoCompleto } from "../Icono/Logo";
 import "./SystemPage.css";
 
 type SystemPageProps = {
@@ -12,10 +13,8 @@ type SystemPageProps = {
 export default function SystemPage({ kind, eyebrow, title, description, actions }: SystemPageProps) {
   return (
     <section className={`system-page system-page--${kind}`} aria-live={kind === "loading" ? "polite" : "off"}>
-      <div className="system-page__card" role={kind === "error" ? "alert" : undefined}>
-        <div className="system-page__emblem" aria-hidden="true">
-          <span className="system-page__emblem-mark">{kind === "loading" ? "S" : kind === "not-found" ? "?" : "!"}</span>
-        </div>
+      <div className="system-page__content" role={kind === "error" ? "alert" : undefined}>
+        <LogoCompleto className="system-page__logo" />
         {eyebrow && <p className="system-page__eyebrow">{eyebrow}</p>}
         <h1 className="system-page__title">{title}</h1>
         <p className="system-page__description">{description}</p>

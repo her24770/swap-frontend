@@ -12,7 +12,7 @@ const mapPublicaciones = (data: Publicacion[]): CatalogPost[] =>
     price: typeof pub.precio === "string" ? parseFloat(pub.precio) : pub.precio,
     description: pub.descripcion,
     tags: mapPublicacionEtiquetasToTags(pub.etiquetas, { name: "Tutoría" }),
-    estado: pub.estadoRel?.estado ?? "activo",
+    estado: "activo",
     images: pub.imagenes?.map((img) => img.url_imagen) || [],
     tipo: "tutoria",
     categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],

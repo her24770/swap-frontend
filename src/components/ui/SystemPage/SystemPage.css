@@ -8,49 +8,29 @@
   color: var(--swap-primary-text-color);
 }
 
-.system-page__card {
+.system-page__content {
   width: min(100%, 540px);
-  padding: clamp(2rem, 5vw, 3.5rem);
   text-align: center;
-  border: 1px solid var(--swap-primary-border-color);
-  border-radius: 1.5rem;
-  background: var(--swap-secondary-background);
-  box-shadow: 0 16px 40px var(--swap-hover-color);
 }
 
-.system-page__emblem {
-  display: grid;
-  place-items: center;
-  width: 5.5rem;
-  height: 5.5rem;
-  margin: 0 auto 1.5rem;
-  border: 2px solid var(--swap-primary-color);
-  border-radius: 50%;
-  background: var(--swap-active-color);
+.system-page__logo {
+  display: block;
+  height: 3.5rem;
+  width: auto;
+  margin: 0 auto 2rem;
   color: var(--swap-primary-color);
 }
 
-.system-page--error .system-page__emblem {
-  border-color: var(--swap-danger-color);
-  background: var(--swap-danger-background);
-  color: var(--swap-danger-color);
-}
-
-.system-page__emblem-mark {
-  font-family: var(--swap-font-titulos, sans-serif);
-  font-size: 3.25rem;
-  line-height: 1;
-}
-
-.system-page--loading .system-page__emblem {
+.system-page--loading .system-page__logo {
   animation: system-page-pulse 1.6s ease-in-out infinite;
 }
 
 .system-page__eyebrow {
   margin: 0 0 0.75rem;
   color: var(--swap-primary-color);
+  font-family: var(--swap-font-subtitulos);
   font-size: 0.82rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -59,7 +39,7 @@
 
 .system-page__title {
   margin: 0;
-  font-family: var(--swap-font-titulos, sans-serif);
+  font-family: var(--swap-font-titulos);
   font-size: clamp(2rem, 5vw, 3rem);
   line-height: 1.12;
 }
@@ -89,8 +69,9 @@
   border-radius: 0.7rem;
   background: var(--swap-primary-color);
   color: var(--swap-secondary-text-color);
-  font: inherit;
-  font-weight: 700;
+  font-family: var(--swap-font-subtitulos);
+  font-size: 1rem;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 }
@@ -125,6 +106,6 @@
 @keyframes system-page-pulse { 50% { transform: scale(1.06); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .system-page--loading .system-page__emblem,
+  .system-page--loading .system-page__logo,
   .system-page__progress span { animation: none; }
 }

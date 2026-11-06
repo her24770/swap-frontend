@@ -278,14 +278,18 @@
   font-family: var(--swap-font-textos);
   font-weight: 600;
   color: var(--swap-secondary-text-color);
-  background-color: #7a4a00;
+  background-color: #d97706;
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
+}
+
+.certificacion-btn:hover {
+  background-color: #7a4a00;
 }
 
 .certificacion-btn:active {
   transform: scale(0.98);
-  background-color: #d97706;
+  background-color: #7a4a00;
 }

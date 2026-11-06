@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
-import { X, ChevronRight, Flag, UserCircle2 } from "lucide-react";
+import { X, ChevronRight, Flag } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Avatar from "../../Avatar/Avatar";
 import TagBadge from "../../../ui/TagBadge/TagBadge";
 import ReporteModal from "../Reporte/ReporteModal";
 import type { Tag } from "../../../../types/tag";
@@ -75,21 +75,13 @@ export default function DetalleUsuario({
             aria-label={t("actions.viewProfileAria", { name: userName })}
           >
             <div className="post-modal__seller-avatar">
-              {userImageUrl ? (
-                <Image
-                  src={userImageUrl}
-                  alt={userName}
-                  fill
-                  className="post-modal__seller-img img-cover"
-                  unoptimized
-                />
-              ) : (
-                <UserCircle2
-                  size={40}
-                  strokeWidth={1}
-                  className="post-modal__seller-placeholder"
-                />
-              )}
+              <Avatar
+                src={userImageUrl}
+                name={userName}
+                size={48}
+                fill
+                className="post-modal__seller-img img-cover"
+              />
             </div>
             <div className="post-modal__seller-info">
               <span className="post-modal__seller-name">{userName}</span>

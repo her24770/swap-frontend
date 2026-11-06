@@ -14,7 +14,7 @@ const mapPublicaciones = (data: Publicacion[], tipoPub: string): CatalogPost[] =
     tags: mapPublicacionEtiquetasToTags(pub.etiquetas, {
       name: tipoPub === "material" ? "Material" : "Negocio",
     }),
-    estado: pub.estadoRel?.estado ?? "activo",
+    estado: tipoPub === "negocio" ? "activo" : (pub.estadoRel?.estado ?? "activo"),
     images: pub.imagenes?.map((img) => img.url_imagen) || [],
     tipo: tipoPub,
     categorias: pub.etiquetas?.map((e) => e.id_etiqueta) || [],

@@ -57,6 +57,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
   const { etiquetas: etiquetasBD } = useTodasEtiquetas();
   const tipoEditar = isEditing ? (props as { defaultValues?: { tipo_publicacion?: string } }).defaultValues?.tipo_publicacion ?? "material" : "material";
   const estadosDisponibles = useEstados(tipoEditar);
+  const tieneEstado = tipoEditar === "material";
 
   const { resetForm } = createHook;
 
@@ -105,7 +106,7 @@ export default function CrearPublicacionForm(props: PublicacionFormProps) {
       <form onSubmit={onSubmit} noValidate>
         <div className="crear-publicacion__fields">
 
-          {isEditing && (
+          {isEditing && tieneEstado && (
             <div className="crear-publicacion__field">
               <label className="crear-publicacion__label">{t("fields.status")}</label>
               <select {...register("estado")} className="crear-publicacion__select">

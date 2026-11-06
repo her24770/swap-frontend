@@ -1137,6 +1137,8 @@
 			"typePlaceholder": "Sélectionner un type",
 			"category": "Catégorie",
 			"categoryTriggerEmpty": "Sélectionner une catégorie",
+			"categorySearchPlaceholder": "Rechercher une catégorie...",
+			"categorySearchEmpty": "Aucune catégorie correspondante.",
 			"categoryTriggerOne": "1 catégorie sélectionnée",
 			"categoryTriggerMany": "{count} catégories sélectionnées",
 			"featured": "Publication mise en avant",
@@ -1269,7 +1271,8 @@
 			"newAgreementProposalSent": "Vous avez envoyé une nouvelle proposition d'accord.",
 			"agreementCompleted": "Accord marqué comme terminé.",
 			"agreementActionError": "Impossible de traiter l'action. Réessayez.",
-			"noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord."
+			"noPublicationForAgreement": "Cette conversation n'a pas encore de publication associée pour créer un accord.",
+			"waitForInterestedUser": "Attendez que l'utilisateur intéressé par votre publication envoie la proposition d'accord."
 		}
 	},
 	"sendMessageModal": {
