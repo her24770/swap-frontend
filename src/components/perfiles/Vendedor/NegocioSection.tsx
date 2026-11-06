@@ -1,13 +1,10 @@
-import type { Dispatch, SetStateAction } from "react";
 import { useTranslations } from "next-intl";
 import PostCard from "../../posts/PostCard/PostCard";
 import type { CatalogPost } from "./catalogoVendedor";
-import { useCambiarEstadoPost } from "./useCambiarEstadoPost";
 import CatalogoSection from "./CatalogoSection";
 
 interface NegocioSectionProps {
   posts: CatalogPost[];
-  setPosts: Dispatch<SetStateAction<CatalogPost[]>>;
   loading: boolean;
   error: string | null;
   soloLectura: boolean;
@@ -22,7 +19,6 @@ interface NegocioSectionProps {
 // Catálogo de productos y negocios.
 export default function NegocioSection({
   posts,
-  setPosts,
   loading,
   error,
   soloLectura,
@@ -34,7 +30,6 @@ export default function NegocioSection({
   onDetalles,
 }: NegocioSectionProps) {
   const t = useTranslations("perfil");
-  const cambiarEstado = useCambiarEstadoPost(setPosts);
 
   return (
     <CatalogoSection
@@ -60,7 +55,6 @@ export default function NegocioSection({
           onPinChange={(newPinned) => onPinChange(pub.id, newPinned)}
           onEditClick={() => onEditar(pub)}
           onDeleteClick={() => onEliminar(pub.id)}
-          onEstadoChange={(nuevoEstado) => cambiarEstado(pub, nuevoEstado)}
           onDetallesClick={() => onDetalles(pub)}
         />
       )}
