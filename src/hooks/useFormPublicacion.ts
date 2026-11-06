@@ -313,7 +313,8 @@ export function useFormEditarPublicacion(
         descripcion: data.descripcion,
         precio: data.precio,
         tipo_publicacion: data.tipo_publicacion,
-        estado: data.estado,
+        // Solo los materiales tienen estado; tutorías y negocios no lo envían.
+        estado: data.tipo_publicacion === "material" ? data.estado : undefined,
         etiquetas: data.categorias?.length ? data.categorias : undefined,
         imagenes: data.imagenesNuevas ?? [],
         imagenesEliminar: imagenesAEliminar.length ? imagenesAEliminar : undefined,

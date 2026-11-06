@@ -61,7 +61,7 @@ export default function PublicacionesDetalleModales({
                     sellerRating={selectedPublicacion.usuario.calificacion ?? 0}
                     sellerId={selectedPublicacion.usuario.id_usuario}
                     sellerImageUrl={selectedPublicacion.usuario.url_foto_perfil}
-                    estado={selectedPublicacion.estadoRel?.estado}
+                    estado={selectedPublicacion.tipoPerfil?.tipo_perfil === "tutoria" || selectedPublicacion.tipoPerfil?.tipo_perfil === "negocio" ? "activo" : selectedPublicacion.estadoRel?.estado}
                     onSellerClick={(sellerId) => {
                         onClosePublicacion();
                         router.push(`${perfilBasePath}/${sellerId}?modo=tutor`);

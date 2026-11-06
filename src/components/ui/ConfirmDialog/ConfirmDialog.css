@@ -22,6 +22,8 @@
   margin: 0;
   color: var(--swap-primary-text-color);
   font-family: var(--swap-font-titulos);
+  font-size: 1.375rem;
+  font-weight: 500;
 }
 
 .confirm-dialog__message {
@@ -29,6 +31,8 @@
   color: var(--swap-tertiary-text-color);
   font-family: var(--swap-font-textos);
   font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .confirm-dialog__footer {

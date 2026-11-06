@@ -1,10 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useTranslations } from "next-intl";
 import PostCard from "../../posts/PostCard/PostCard";
-import { useEstados } from "../../../hooks/useEstados";
 import type { CatalogPost } from "../Vendedor/catalogoVendedor";
 import CatalogoSection from "../Vendedor/CatalogoSection";
-import { useCambiarEstadoPost } from "../Vendedor/useCambiarEstadoPost";
 
 interface TutoriasSectionProps {
   posts: CatalogPost[];
@@ -35,8 +33,6 @@ export default function TutoriasSection({
   onDetalles,
 }: TutoriasSectionProps) {
   const t = useTranslations("perfil");
-  const estadosTutoria = useEstados("tutoria");
-  const cambiarEstado = useCambiarEstadoPost(setPosts);
 
   return (
     <CatalogoSection
@@ -58,7 +54,6 @@ export default function TutoriasSection({
           description={pub.description}
           images={pub.images}
           estado={pub.estado}
-          estadosDisponibles={estadosTutoria}
           isPinned={pub.isPinned}
           onPinChange={(newPinned) => onPinChange(pub.id, newPinned)}
           onEditClick={() => onEditar(pub)}
@@ -70,7 +65,6 @@ export default function TutoriasSection({
               )
             );
           }}
-          onEstadoChange={(nuevoEstado) => cambiarEstado(pub, nuevoEstado)}
           onDetallesClick={() => onDetalles(pub)}
         />
       )}

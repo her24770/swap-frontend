@@ -102,7 +102,6 @@ export default function VistaVendedor({
 
       <NegocioSection
         posts={catalogo.catalogNegocio}
-        setPosts={catalogo.setCatalogNegocio}
         loading={catalogo.loading}
         error={catalogo.error}
         soloLectura={soloLectura}

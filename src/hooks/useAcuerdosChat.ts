@@ -213,9 +213,14 @@ export function useAcuerdosChat(
     setAcuerdoEditando(null);
 
     if (publicacionesDisponiblesParaAcuerdo.length === 0) {
+      // Si todas las publicaciones de la conversación son del usuario actual, es el
+      // interesado quien debe hacer la propuesta de acuerdo.
+      const soloPublicacionesPropias = (selected?.contextos ?? []).length > 0;
       agregarNotificacion({
         tipo: "info",
-        mensaje: t("system.noPublicationForAgreement"),
+        mensaje: t(soloPublicacionesPropias
+          ? "system.waitForInterestedUser"
+          : "system.noPublicationForAgreement"),
       });
       return;
     }

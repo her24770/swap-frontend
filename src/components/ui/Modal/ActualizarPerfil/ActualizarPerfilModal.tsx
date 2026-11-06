@@ -214,6 +214,7 @@ export default function ActualizarPerfilModal({
                 onFileChange={handleFileChange}
                 previewUrl={previewUrl}
                 currentProfileImage={initialFoto}
+                userName={`${nombre} ${apellido}`}
               />
             </div>
           </div>
