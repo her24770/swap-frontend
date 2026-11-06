@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { CloudUpload, UserCircle2 } from "lucide-react";
+import { CloudUpload } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Avatar from "../../../Avatar/Avatar";
 import ImageCropper from "./ImageCropper";
 import "./SubirImagen.css";
 
@@ -11,9 +12,11 @@ interface SubirImagenProps {
   onFileChange: (file: File) => void;
   previewUrl: string | null;
   currentProfileImage?: string | null;
+  /** Nombre del usuario, usado para mostrar las iniciales cuando no hay foto. */
+  userName?: string;
 }
 
-export default function SubirImagen({ onFileChange, previewUrl, currentProfileImage }: SubirImagenProps) {
+export default function SubirImagen({ onFileChange, previewUrl, currentProfileImage, userName = "" }: SubirImagenProps) {
   const t = useTranslations("updateProfileModal.imageUpload");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -83,22 +86,17 @@ export default function SubirImagen({ onFileChange, previewUrl, currentProfileIm
             unoptimized
             className="profile-image-upload__img"
           />
-        ) : currentProfileImage ? (
+        ) : (
           <div className="profile-image-upload__current">
-            <Image
+            <Avatar
               src={currentProfileImage}
+              name={userName}
               alt={t("currentImageAlt")}
+              size={112}
               fill
               className="img-cover"
-              unoptimized
             />
           </div>
-        ) : (
-          <UserCircle2
-            size={96}
-            strokeWidth={1}
-            className="profile-image-upload__placeholder"
-          />
         )}
       </div>
 

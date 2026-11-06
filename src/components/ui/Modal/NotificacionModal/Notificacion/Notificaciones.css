@@ -87,9 +87,7 @@
   font-weight: 600;
   color: var(--swap-primary-text-color);
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .notificacion__descripcion {
@@ -98,10 +96,7 @@
   color: var(--swap-tertiary-text-color);
   line-height: 1.45;
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
 .notificacion__fecha {
